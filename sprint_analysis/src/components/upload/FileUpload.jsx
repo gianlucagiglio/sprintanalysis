@@ -48,7 +48,7 @@ export default function FileUpload() {
             <BarChart3 className="h-8 w-8 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Sprint Analysis</h1>
+            <h1 className="text-3xl font-bold tracking-tight">FlowMetrics</h1>
             <p className="text-muted-foreground mt-2 text-sm leading-relaxed max-w-md mx-auto">
               Upload your Sprint Excel file to analyze effort distribution,
               classification coverage, and team velocity.

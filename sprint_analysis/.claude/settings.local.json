@@ -16,7 +16,8 @@
       "Bash(curl:*)",
       "Bash(del:*)",
       "Bash(grep:*)",
-      "Bash(if not exist \"C:\\\\Users\\\\Gianluca\\\\King Folder\\\\React\\\\Claude Code\\\\sprint_analysis\\\\tests\" mkdir \"C:\\\\Users\\\\Gianluca\\\\King Folder\\\\React\\\\Claude Code\\\\sprint_analysis\\\\tests\")"
+      "Bash(if not exist \"C:\\\\Users\\\\Gianluca\\\\King Folder\\\\React\\\\Claude Code\\\\sprint_analysis\\\\tests\" mkdir \"C:\\\\Users\\\\Gianluca\\\\King Folder\\\\React\\\\Claude Code\\\\sprint_analysis\\\\tests\")",
+      "Bash(cd:*)"
     ]
   }
 }

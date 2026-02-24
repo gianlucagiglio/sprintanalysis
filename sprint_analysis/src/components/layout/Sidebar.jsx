@@ -71,7 +71,7 @@ export default function Sidebar() {
             <BarChart3 className="h-4 w-4 text-white" />
           </div>
           <div>
-            <h1 className="text-sm font-bold tracking-tight text-white">Sprint Analysis</h1>
+            <h1 className="text-sm font-bold tracking-tight text-white">FlowMetrics</h1>
             <p className="text-[11px] text-slate-400">Dashboard</p>
           </div>
         </div>
@@ -111,7 +111,7 @@ export default function Sidebar() {
         ))}
       </nav>
       <div className="px-5 py-4 border-t border-white/10">
-        <p className="text-[11px] text-slate-500">Sprint Analysis v2.0</p>
+        <p className="text-[11px] text-slate-500">FlowMetrics v2.0</p>
       </div>
     </aside>
   )
