@@ -95,19 +95,22 @@ export function classifyItems(items) {
     }
   })
 
-  // 3. Propagate classification from Feature to children
+  // 3. Propagate classification from Feature to all descendants.
+  //    Walk the full parent chain so any item under a Feature inherits
+  //    the Feature's classification (strategic, ktlo, small change, etc.)
   byId.forEach(item => {
     if (item.type !== 'Feature' && item.type !== 'Epic') {
-      if (item.parent && byId.has(item.parent)) {
-        const parent = byId.get(item.parent)
-        if (parent.type === 'Feature') {
-          item.classification = parent.classification
-        } else if (parent.parent && byId.has(parent.parent)) {
-          const grandparent = byId.get(parent.parent)
-          if (grandparent.type === 'Feature') {
-            item.classification = grandparent.classification
-          }
+      let current = item
+      const visited = new Set()
+      while (current.parent && !visited.has(current.parent)) {
+        visited.add(current.parent)
+        const ancestor = byId.get(current.parent)
+        if (!ancestor) break
+        if (ancestor.type === 'Feature') {
+          item.classification = ancestor.classification
+          break
         }
+        current = ancestor
       }
       if (!item.classification) {
         item.classification = classifyByTags(item.tags)
