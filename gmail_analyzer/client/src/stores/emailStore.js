@@ -3,25 +3,55 @@ import { persist } from 'zustand/middleware';
 import { clusterBySender } from '../lib/clustering';
 import { categorize } from '../lib/categorizer';
 
-// Custom storage that silently handles quota errors
-const safeStorage = {
-  getItem: (name) => {
+// IndexedDB storage — no 5MB limit like localStorage
+const DB_NAME = 'gmail-analyzer';
+const STORE_NAME = 'state';
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(STORE_NAME);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+const idbStorage = {
+  getItem: async (name) => {
     try {
-      return localStorage.getItem(name);
+      const db = await openDB();
+      return new Promise((resolve) => {
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const req = tx.objectStore(STORE_NAME).get(name);
+        req.onsuccess = () => resolve(req.result ?? null);
+        req.onerror = () => resolve(null);
+      });
     } catch {
       return null;
     }
   },
-  setItem: (name, value) => {
+  setItem: async (name, value) => {
     try {
-      localStorage.setItem(name, value);
+      const db = await openDB();
+      return new Promise((resolve) => {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).put(value, name);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => resolve();
+      });
     } catch {
-      // Quota exceeded — silently ignore, data lives in memory
+      // ignore
     }
   },
-  removeItem: (name) => {
+  removeItem: async (name) => {
     try {
-      localStorage.removeItem(name);
+      const db = await openDB();
+      return new Promise((resolve) => {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).delete(name);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => resolve();
+      });
     } catch {
       // ignore
     }
@@ -154,31 +184,43 @@ const useEmailStore = create(
         return eventSource;
       },
 
-      // Remove emails by sender (after delete action)
+      // Remove sender cluster (after delete action)
+      // Works from clusters directly — no need for raw emails
       removeEmailsBySender: (senderEmail) => {
         set((s) => {
-          const emails = s.emails.filter(
-            (e) => extractEmail(e.from) !== senderEmail
+          // If raw emails are in memory, filter them too
+          const emails = s.emails.length > 0
+            ? s.emails.filter((e) => extractEmail(e.from) !== senderEmail)
+            : s.emails;
+
+          const clusters = s.clusters.filter(
+            (c) => c.email !== senderEmail
           );
-          return {
-            emails,
-            clusters: clusterBySender(emails),
-          };
+
+          return { emails, clusters };
         });
       },
 
-      // Mark emails as read by sender
+      // Mark sender as read
+      // Works from clusters directly — no need for raw emails
       markReadBySender: (senderEmail) => {
         set((s) => {
-          const emails = s.emails.map((e) =>
-            extractEmail(e.from) === senderEmail
-              ? { ...e, labelIds: e.labelIds.filter((l) => l !== 'UNREAD') }
-              : e
+          // If raw emails are in memory, update them too
+          const emails = s.emails.length > 0
+            ? s.emails.map((e) =>
+                extractEmail(e.from) === senderEmail
+                  ? { ...e, labelIds: e.labelIds.filter((l) => l !== 'UNREAD') }
+                  : e
+              )
+            : s.emails;
+
+          const clusters = s.clusters.map((c) =>
+            c.email === senderEmail
+              ? { ...c, unread: 0, unreadRatio: 0 }
+              : c
           );
-          return {
-            emails,
-            clusters: clusterBySender(emails),
-          };
+
+          return { emails, clusters };
         });
       },
 
@@ -192,8 +234,8 @@ const useEmailStore = create(
         }),
     }),
     {
-      name: 'gmail-analyzer-emails',
-      storage: safeStorage,
+      name: 'gmail-analyzer-data',
+      storage: idbStorage,
       partialize: (state) => ({
         clusters: state.clusters,
         lastScanDate: state.lastScanDate,
@@ -201,6 +243,9 @@ const useEmailStore = create(
     }
   )
 );
+
+// Clean up old localStorage entry from previous storage backend
+try { localStorage.removeItem('gmail-analyzer-emails'); } catch { /* ignore */ }
 
 function extractEmail(from) {
   const match = from.match(/<(.+?)>/);

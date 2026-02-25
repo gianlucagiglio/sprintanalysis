@@ -7,8 +7,10 @@ import {
   LogOut,
   Mail,
   Menu,
+  Trash2,
 } from 'lucide-react';
 import useAuthStore from '../../stores/authStore';
+import useEmailStore from '../../stores/emailStore';
 import useUiStore from '../../stores/uiStore';
 import { cn } from '../ui/cn';
 
@@ -21,6 +23,8 @@ const navItems = [
 export default function Sidebar() {
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
+  const clearData = useEmailStore((s) => s.clearData);
+  const hasClusters = useEmailStore((s) => s.clusters.length > 0);
   const { sidebarOpen, toggleSidebar } = useUiStore();
 
   return (
@@ -81,6 +85,22 @@ export default function Sidebar() {
               <p className="text-[10px] text-text-muted truncate">{user.email}</p>
             </div>
           </div>
+        )}
+        {hasClusters && (
+          <button
+            onClick={() => {
+              if (window.confirm('Cancellare tutti i dati della scansione?')) {
+                clearData();
+              }
+            }}
+            className={cn(
+              'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:bg-surface-hover hover:text-danger transition-colors w-full cursor-pointer',
+            )}
+            title="Cancella dati scansione"
+          >
+            <Trash2 size={18} />
+            {sidebarOpen && <span>Cancella dati</span>}
+          </button>
         )}
         <button
           onClick={logout}
