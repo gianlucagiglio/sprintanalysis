@@ -1,9 +1,12 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import env from './config/env.js';
 import logger from './utils/logger.js';
 import analyzeRoutes from './routes/analyze.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 app.use(cors({ origin: true }));
@@ -16,6 +19,15 @@ app.use('/api/analyze', analyzeRoutes);
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+
+// Serve client in production
+if (env.NODE_ENV === 'production') {
+  const clientDist = path.join(__dirname, '../../client/dist');
+  app.use(express.static(clientDist));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
 
 // Error handler
 app.use((err, req, res, next) => {
