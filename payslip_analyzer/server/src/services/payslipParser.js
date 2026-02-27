@@ -60,6 +60,16 @@ export function parsePayslip(rawText) {
     result.competenze.totale_competenze = result.elementi_retribuzione.totale;
   }
 
+  // Debug ferie/permessi: aggiunge il testo raw catturato per diagnostica
+  const ferieDebugMatch = text.match(/\nFerie\n(.+?)ORE/);
+  if (ferieDebugMatch) {
+    result._debug_ferie_raw = ferieDebugMatch[1];
+  }
+  const permDebugMatch = text.match(/Perm\.?\s*P\.?A\.?R\.?\n(.+?)ORE/);
+  if (permDebugMatch) {
+    result._debug_permessi_raw = permDebugMatch[1];
+  }
+
   // Note automatiche
   if (result.ore.telelavoro && result.ore.telelavoro > 0) {
     result.note.push(`${result.ore.telelavoro} ore in smart working/telelavoro`);
@@ -487,29 +497,37 @@ function extractFeriePermessi(text, lines) {
     permessi_par: { goduti: null, residui: null },
   };
 
-  // Ferie: "Ferie\n56,0000066,00000ORE"
-  // Formato: goduto + residuo concatenati con trailing zeros
-  const ferieMatch = text.match(/\nFerie\n([\d.,]+?)0{3,}([\d.,]+?)0{3,}ORE/);
-  if (ferieMatch) {
-    result.ferie.godute = parseNum(ferieMatch[1]);
-    result.ferie.residue = parseNum(ferieMatch[2]);
+  // Ferie: "Ferie\n56,0000066,00000ORE" (mesi normali: 2 valori)
+  // Anno fine: "Ferie\n160,0000088,0000072,00000ORE" (3 valori: maturato+goduto+residuo)
+  // Usiamo extractConcatenatedNumbers per gestire entrambi i casi
+  const ferieFullMatch = text.match(/\nFerie\n(.+?)ORE/);
+  if (ferieFullMatch) {
+    const nums = extractConcatenatedNumbers(ferieFullMatch[1]);
+    console.log('[DEBUG FERIE] raw:', JSON.stringify(ferieFullMatch[1]), '→ nums:', nums);
+    if (nums.length >= 2) {
+      result.ferie.godute = nums[0];
+      result.ferie.residue = nums[nums.length - 1];
+    } else if (nums.length === 1) {
+      result.ferie.residue = nums[0];
+    }
+  } else {
+    console.log('[DEBUG FERIE] nessun match su testo');
   }
 
   // Permessi P.A.R: "Perm.P.A.R\n34,666666,0000046,66666ORE"
-  // Formato più complesso: goduto + goduto_ap + residuo (o residuo_ap + residuo)
-  const permMatch = text.match(/Perm\.?\s*P\.?A\.?R\.?\n([\d.,]+)/);
-  if (permMatch) {
-    // Estraiamo i numeri dalla stringa concatenata
-    const fullStr = permMatch[1];
-    // Cerchiamo pattern con la riga completa
-    const permFullMatch = text.match(/Perm\.?\s*P\.?A\.?R\.?\n(.+?)ORE/);
-    if (permFullMatch) {
-      const nums = extractConcatenatedNumbers(permFullMatch[1]);
-      if (nums.length >= 2) {
-        result.permessi_par.goduti = nums[0];
-        result.permessi_par.residui = nums[nums.length - 1];
-      }
+  // Stessa logica: primo=goduti, ultimo=residui
+  const permFullMatch = text.match(/Perm\.?\s*P\.?A\.?R\.?\n(.+?)ORE/);
+  if (permFullMatch) {
+    const nums = extractConcatenatedNumbers(permFullMatch[1]);
+    console.log('[DEBUG PERMESSI] raw:', JSON.stringify(permFullMatch[1]), '→ nums:', nums);
+    if (nums.length >= 2) {
+      result.permessi_par.goduti = nums[0];
+      result.permessi_par.residui = nums[nums.length - 1];
+    } else if (nums.length === 1) {
+      result.permessi_par.residui = nums[0];
     }
+  } else {
+    console.log('[DEBUG PERMESSI] nessun match su testo');
   }
 
   return result;
