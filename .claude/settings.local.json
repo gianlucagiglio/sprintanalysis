@@ -4,7 +4,8 @@
       "Bash(dir:*)",
       "Bash(npm install:*)",
       "Bash(npx vite build:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(node scripts/generate-samples.js:*)"
     ]
   }
 }

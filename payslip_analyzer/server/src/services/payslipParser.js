@@ -60,16 +60,6 @@ export function parsePayslip(rawText) {
     result.competenze.totale_competenze = result.elementi_retribuzione.totale;
   }
 
-  // Debug ferie/permessi: aggiunge il testo raw catturato per diagnostica
-  const ferieDebugMatch = text.match(/\nFerie\n(.+?)ORE/);
-  if (ferieDebugMatch) {
-    result._debug_ferie_raw = ferieDebugMatch[1];
-  }
-  const permDebugMatch = text.match(/Perm\.?\s*P\.?A\.?R\.?\n(.+?)ORE/);
-  if (permDebugMatch) {
-    result._debug_permessi_raw = permDebugMatch[1];
-  }
-
   // Note automatiche
   if (result.ore.telelavoro && result.ore.telelavoro > 0) {
     result.note.push(`${result.ore.telelavoro} ore in smart working/telelavoro`);
@@ -503,15 +493,12 @@ function extractFeriePermessi(text, lines) {
   const ferieFullMatch = text.match(/\nFerie\n(.+?)ORE/);
   if (ferieFullMatch) {
     const nums = extractConcatenatedNumbers(ferieFullMatch[1]);
-    console.log('[DEBUG FERIE] raw:', JSON.stringify(ferieFullMatch[1]), '→ nums:', nums);
     if (nums.length >= 2) {
       result.ferie.godute = nums[0];
       result.ferie.residue = nums[nums.length - 1];
     } else if (nums.length === 1) {
       result.ferie.residue = nums[0];
     }
-  } else {
-    console.log('[DEBUG FERIE] nessun match su testo');
   }
 
   // Permessi P.A.R: "Perm.P.A.R\n34,666666,0000046,66666ORE"
@@ -519,15 +506,12 @@ function extractFeriePermessi(text, lines) {
   const permFullMatch = text.match(/Perm\.?\s*P\.?A\.?R\.?\n(.+?)ORE/);
   if (permFullMatch) {
     const nums = extractConcatenatedNumbers(permFullMatch[1]);
-    console.log('[DEBUG PERMESSI] raw:', JSON.stringify(permFullMatch[1]), '→ nums:', nums);
     if (nums.length >= 2) {
       result.permessi_par.goduti = nums[0];
       result.permessi_par.residui = nums[nums.length - 1];
     } else if (nums.length === 1) {
       result.permessi_par.residui = nums[0];
     }
-  } else {
-    console.log('[DEBUG PERMESSI] nessun match su testo');
   }
 
   return result;
