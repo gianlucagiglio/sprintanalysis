@@ -113,8 +113,52 @@ const BONUS = [
   { descrizione: 'Premio risultato', importo: 1200.00 }, // Dicembre
 ];
 
-// Buono pasto: 6€/giorno, ~15 GG/mese lavorati in sede
+// Buono pasto elettronico: 8€/giorno, GG in sede (non in telelavoro)
+const BUONI_PASTO_VALORE = 8.00;
 const BUONI_PASTO_GG = [17, 15, 17, 14, 17, 15, 17, 5, 17, 15, 17, 12];
+
+// Indennità trasferta Italia (€46.48/gg esente fino a €46.48) e Estero (€77.47/gg)
+// Trasferte: [{ tipo, giorni, importo_giorno, rimborso_spese }] per mese
+const TRASFERTE = [
+  null,                                                                         // Gen
+  [{ tipo: 'Italia', giorni: 2, importo_giorno: 46.48, luogo: 'Milano' }],     // Feb - trasferta cliente
+  null,                                                                         // Mar
+  null,                                                                         // Apr
+  [                                                                             // Mag - fiera + cliente
+    { tipo: 'Italia', giorni: 3, importo_giorno: 46.48, luogo: 'Roma' },
+    { tipo: 'Italia', giorni: 1, importo_giorno: 46.48, luogo: 'Firenze' },
+  ],
+  null,                                                                         // Giu
+  null,                                                                         // Lug
+  null,                                                                         // Ago
+  [{ tipo: 'Estero', giorni: 4, importo_giorno: 77.47, luogo: 'Monaco' }],     // Set - fiera estera
+  [{ tipo: 'Italia', giorni: 2, importo_giorno: 46.48, luogo: 'Torino' }],     // Ott
+  [{ tipo: 'Italia', giorni: 1, importo_giorno: 46.48, luogo: 'Padova' }],     // Nov
+  null,                                                                         // Dic
+];
+
+// Rimborsi spese (note spese rimborsate): non tassabili, appaiono separati
+// [{ descrizione, importo }]
+const RIMBORSI_SPESE = [
+  null,                                                                         // Gen
+  [{ descrizione: 'Rimb. treno A/R Milano', importo: 86.40 },
+   { descrizione: 'Rimb. taxi sede cliente', importo: 24.50 }],                // Feb
+  null,                                                                         // Mar
+  null,                                                                         // Apr
+  [{ descrizione: 'Rimb. volo A/R Roma', importo: 148.00 },
+   { descrizione: 'Rimb. hotel Roma 2 notti', importo: 240.00 },
+   { descrizione: 'Rimb. treno A/R Firenze', importo: 52.30 }],                // Mag
+  null,                                                                         // Giu
+  null,                                                                         // Lug
+  null,                                                                         // Ago
+  [{ descrizione: 'Rimb. volo A/R Monaco', importo: 215.00 },
+   { descrizione: 'Rimb. hotel Monaco 3 notti', importo: 420.00 },
+   { descrizione: 'Rimb. trasporti locali', importo: 67.80 }],                 // Set
+  [{ descrizione: 'Rimb. treno A/R Torino', importo: 74.60 },
+   { descrizione: 'Rimb. pranzo cliente', importo: 32.00 }],                   // Ott
+  [{ descrizione: 'Rimb. autostrada Padova', importo: 28.40 }],                // Nov
+  null,                                                                         // Dic
+];
 
 // ── Calcoli fiscali ────────────────────────────────
 
@@ -190,14 +234,39 @@ function generatePayslipText(meseIdx) {
   // Competenze
   const retribuzioneMese = round(TOTALE_RETRIBUZIONE * (oreTotali / 168));
   const straordinarioImporto = oreStra > 0 ? round(oreStra * (TOTALE_RETRIBUZIONE / 168) * 1.25) : 0;
-  const buoniPasto = round(BUONI_PASTO_GG[meseIdx] * 6);
+  const buoniPastoGG = BUONI_PASTO_GG[meseIdx];
+  const buoniPasto = round(buoniPastoGG * BUONI_PASTO_VALORE);
   const bonus = BONUS[meseIdx];
+  const trasferte = TRASFERTE[meseIdx];
+  const rimborsi = RIMBORSI_SPESE[meseIdx];
 
-  let totaleCompetenze = retribuzioneMese + straordinarioImporto;
+  // Calcolo indennità trasferta
+  let totaleTrasferte = 0;
+  if (trasferte) {
+    for (const t of trasferte) {
+      totaleTrasferte += round(t.giorni * t.importo_giorno);
+    }
+  }
+
+  // Calcolo rimborsi spese (non tassabili)
+  let totaleRimborsi = 0;
+  if (rimborsi) {
+    for (const r of rimborsi) {
+      totaleRimborsi += r.importo;
+    }
+    totaleRimborsi = round(totaleRimborsi);
+  }
+
+  // Totale competenze: retribuzione + straordinario + bonus + trasferte
+  // (buoni pasto sono "in kind" e non entrano nel totale competenze tassabile)
+  // (rimborsi spese sono esenti e non entrano nel totale competenze)
+  let totaleCompetenze = retribuzioneMese + straordinarioImporto + totaleTrasferte;
   if (bonus) totaleCompetenze += bonus.importo;
+  totaleCompetenze = round(totaleCompetenze);
 
-  // Imponibile INPS = totale competenze (senza buoni pasto in kind)
-  const imponibileInps = totaleCompetenze;
+  // Imponibile INPS: competenze tassabili (trasferta esente fino a soglia, ma per semplicità tassiamo tutto)
+  // In realtà l'indennità trasferta Italia è esente fino a €46.48/gg — semplifichiamo
+  const imponibileInps = round(retribuzioneMese + straordinarioImporto + (bonus ? bonus.importo : 0));
 
   // Contributi INPS
   const inpsIvs = round(imponibileInps * ALIQUOTA_INPS / 100);
@@ -224,8 +293,8 @@ function generatePayslipText(meseIdx) {
   // Totale trattenute
   const totaleTrattenute = round(inpsIvs + inpsCig + irpefMese + addRegMese + addComMese + accComMese);
 
-  // Netto
-  const netto = round(totaleCompetenze - totaleTrattenute);
+  // Netto: competenze - trattenute + rimborsi spese (esenti)
+  const netto = round(totaleCompetenze - totaleTrattenute + totaleRimborsi);
 
   // TFR
   const tfrQuota = round(totaleCompetenze / 13.5);
@@ -321,11 +390,33 @@ function generatePayslipText(meseIdx) {
     ln(fmtIt(bonus.importo));
   }
 
-  // Buono pasto
+  // Indennità trasferta
+  if (trasferte) {
+    for (const t of trasferte) {
+      const importo = round(t.giorni * t.importo_giorno);
+      ln(`**Z00030`);
+      ln(`Ind. trasferta ${t.tipo} - ${t.luogo}`);
+      ln(fmtIt(importo));
+    }
+  }
+
+  // Buono pasto elettronico
   if (buoniPasto > 0) {
     ln('Buono pasto Elettronico');
-    ln(`${fmtFerie(6.0)}${fmtFerie(BUONI_PASTO_GG[meseIdx])}GG`);
+    ln(`${fmtFerie(BUONI_PASTO_VALORE)}${fmtFerie(buoniPastoGG)}GG`);
     ln(`()${fmtIt(buoniPasto)}`);
+  }
+
+  // Rimborsi spese (note spese) — esenti, non tassabili
+  if (rimborsi) {
+    for (const r of rimborsi) {
+      ln(`**Z00050`);
+      ln(r.descrizione);
+      ln(fmtIt(r.importo));
+    }
+    ln(`**Z00051`);
+    ln('Totale rimborsi spese');
+    ln(fmtIt(totaleRimborsi));
   }
   ln('');
 
@@ -475,15 +566,10 @@ async function main() {
     await createPdf(text, outputPath);
 
     // Stampa un riepilogo
-    const [oreO, oreT, oreS] = ORE_MESE[i];
-    const oreTot = oreO + oreT + oreS;
-    const ret = round(TOTALE_RETRIBUZIONE * (oreTot / 168));
-    const stra = oreS > 0 ? round(oreS * (TOTALE_RETRIBUZIONE / 168) * 1.25) : 0;
-    let comp = ret + stra;
-    if (BONUS[i]) comp += BONUS[i].importo;
-    const inps = round(comp * ALIQUOTA_INPS / 100);
     const netto = text.match(/([\d.,]+)€/)?.[1] || '?';
-    console.log(`  ${MESI[i].padEnd(10)} → ${fileName}  |  Lordo: ${fmtIt(comp).padStart(10)}  |  Netto: ${netto.padStart(10)}€  |  Ferie res: ${FERIE[i].residue}`);
+    const trasfInfo = TRASFERTE[i] ? ` Trasf: ${TRASFERTE[i].map(t => t.luogo).join('+')}` : '';
+    const rimbInfo = RIMBORSI_SPESE[i] ? ` Rimb: ${fmtIt(RIMBORSI_SPESE[i].reduce((s,r) => s+r.importo, 0))}` : '';
+    console.log(`  ${MESI[i].padEnd(10)} → ${fileName}  |  Netto: ${netto.padStart(10)}€  |  Ferie: ${String(FERIE[i].residue).padStart(6)}${trasfInfo}${rimbInfo}`);
   }
 
   console.log(`\n✓ 12 PDF generati in: ${OUTPUT_DIR}`);
