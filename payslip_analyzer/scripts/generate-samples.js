@@ -137,27 +137,21 @@ const TRASFERTE = [
   null,                                                                         // Dic
 ];
 
-// Rimborsi spese (note spese rimborsate): non tassabili, appaiono separati
-// [{ descrizione, importo }]
+// Rimborso spese anticipate (nota spese): voce unica in busta paga con importo totale
+// In busta appare come "Rimborso spese anticipate" + importo totale
 const RIMBORSI_SPESE = [
-  null,                                                                         // Gen
-  [{ descrizione: 'Rimb. treno A/R Milano', importo: 86.40 },
-   { descrizione: 'Rimb. taxi sede cliente', importo: 24.50 }],                // Feb
-  null,                                                                         // Mar
-  null,                                                                         // Apr
-  [{ descrizione: 'Rimb. volo A/R Roma', importo: 148.00 },
-   { descrizione: 'Rimb. hotel Roma 2 notti', importo: 240.00 },
-   { descrizione: 'Rimb. treno A/R Firenze', importo: 52.30 }],                // Mag
-  null,                                                                         // Giu
-  null,                                                                         // Lug
-  null,                                                                         // Ago
-  [{ descrizione: 'Rimb. volo A/R Monaco', importo: 215.00 },
-   { descrizione: 'Rimb. hotel Monaco 3 notti', importo: 420.00 },
-   { descrizione: 'Rimb. trasporti locali', importo: 67.80 }],                 // Set
-  [{ descrizione: 'Rimb. treno A/R Torino', importo: 74.60 },
-   { descrizione: 'Rimb. pranzo cliente', importo: 32.00 }],                   // Ott
-  [{ descrizione: 'Rimb. autostrada Padova', importo: 28.40 }],                // Nov
-  null,                                                                         // Dic
+  null,       // Gen
+  110.90,     // Feb — trasferta Milano (treno 86.40 + taxi 24.50)
+  null,       // Mar
+  null,       // Apr
+  440.30,     // Mag — trasferte Roma+Firenze (volo 148 + hotel 240 + treno 52.30)
+  null,       // Giu
+  null,       // Lug
+  null,       // Ago
+  702.80,     // Set — trasferta Monaco (volo 215 + hotel 420 + trasporti 67.80)
+  106.60,     // Ott — trasferta Torino (treno 74.60 + pranzo 32)
+  28.40,      // Nov — trasferta Padova (autostrada)
+  null,       // Dic
 ];
 
 // ── Calcoli fiscali ────────────────────────────────
@@ -238,7 +232,7 @@ function generatePayslipText(meseIdx) {
   const buoniPasto = round(buoniPastoGG * BUONI_PASTO_VALORE);
   const bonus = BONUS[meseIdx];
   const trasferte = TRASFERTE[meseIdx];
-  const rimborsi = RIMBORSI_SPESE[meseIdx];
+  const totaleRimborsi = RIMBORSI_SPESE[meseIdx] || 0;
 
   // Calcolo indennità trasferta
   let totaleTrasferte = 0;
@@ -246,15 +240,6 @@ function generatePayslipText(meseIdx) {
     for (const t of trasferte) {
       totaleTrasferte += round(t.giorni * t.importo_giorno);
     }
-  }
-
-  // Calcolo rimborsi spese (non tassabili)
-  let totaleRimborsi = 0;
-  if (rimborsi) {
-    for (const r of rimborsi) {
-      totaleRimborsi += r.importo;
-    }
-    totaleRimborsi = round(totaleRimborsi);
   }
 
   // Totale competenze: retribuzione + straordinario + bonus + trasferte
@@ -407,15 +392,10 @@ function generatePayslipText(meseIdx) {
     ln(`()${fmtIt(buoniPasto)}`);
   }
 
-  // Rimborsi spese (note spese) — esenti, non tassabili
-  if (rimborsi) {
-    for (const r of rimborsi) {
-      ln(`**Z00050`);
-      ln(r.descrizione);
-      ln(fmtIt(r.importo));
-    }
-    ln(`**Z00051`);
-    ln('Totale rimborsi spese');
+  // Rimborso spese anticipate (nota spese) — voce unica
+  if (totaleRimborsi > 0) {
+    ln(`**Z00050`);
+    ln('Rimborso spese anticipate');
     ln(fmtIt(totaleRimborsi));
   }
   ln('');
@@ -568,7 +548,7 @@ async function main() {
     // Stampa un riepilogo
     const netto = text.match(/([\d.,]+)€/)?.[1] || '?';
     const trasfInfo = TRASFERTE[i] ? ` Trasf: ${TRASFERTE[i].map(t => t.luogo).join('+')}` : '';
-    const rimbInfo = RIMBORSI_SPESE[i] ? ` Rimb: ${fmtIt(RIMBORSI_SPESE[i].reduce((s,r) => s+r.importo, 0))}` : '';
+    const rimbInfo = RIMBORSI_SPESE[i] ? ` Rimb: ${fmtIt(RIMBORSI_SPESE[i])}` : '';
     console.log(`  ${MESI[i].padEnd(10)} → ${fileName}  |  Netto: ${netto.padStart(10)}€  |  Ferie: ${String(FERIE[i].residue).padStart(6)}${trasfInfo}${rimbInfo}`);
   }
 

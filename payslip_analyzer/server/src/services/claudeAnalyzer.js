@@ -4,65 +4,88 @@ import logger from '../utils/logger.js';
 
 const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
 
-const SYSTEM_PROMPT = `Sei un esperto analista di buste paga italiane. Il tuo compito è estrarre tutti i dati dalla busta paga fornita e restituirli in formato JSON strutturato.
+const SYSTEM_PROMPT = `Sei un esperto analista di buste paga italiane. Estrai TUTTI i dati dalla busta paga e restituiscili in JSON strutturato.
 
-IMPORTANTE:
-- Estrai TUTTI i valori numerici esattamente come appaiono nel documento
-- Se un campo non è presente nella busta paga, usa null
-- I valori monetari devono essere numeri (non stringhe), con 2 decimali
-- Le ore devono essere numeri
-- Le aliquote devono essere percentuali (es. 9.19 per 9,19%)
-- Il campo "note" deve contenere osservazioni rilevanti (anomalie, voci particolari, etc.)
+REGOLE:
+- Estrai i valori numerici esattamente come appaiono
+- Se un campo non è presente, usa null
+- Valori monetari: numeri con 2 decimali (non stringhe)
+- Ore: numeri decimali
+- Aliquote: percentuali (es. 9.19 per 9,19%)
+- Il campo "note" contiene osservazioni (anomalie, voci particolari, trasferte, rimborsi, etc.)
+- Rispondi SOLO con il JSON, senza markdown, senza backtick, senza testo prima o dopo`;
 
-Rispondi SOLO con il JSON, senza markdown o testo aggiuntivo.`;
-
-const USER_PROMPT = `Analizza questa busta paga e restituisci un JSON con questa struttura esatta:
+const USER_PROMPT = `Analizza questa busta paga e restituisci un JSON con ESATTAMENTE questa struttura.
+Rispetta i nomi dei campi — il frontend dipende da questi nomi esatti.
 
 {
   "periodo": "Mese Anno",
   "azienda": "Nome Azienda",
   "dipendente": "Nome Cognome",
-  "qualifica": "Qualifica",
-  "livello": "Livello - CCNL",
+  "codice_fiscale": "CODICE FISCALE o null",
+  "qualifica": "Impiegato/Operaio/Dirigente/Quadro o null",
+  "livello": "es. 5S, 3A, etc. o null",
+  "data_nascita": "dd-mm-yyyy o null",
+  "data_assunzione": "dd-mm-yyyy o null",
+  "elementi_retribuzione": {
+    "voci": [{"voce": "Paga base", "importo": 0.00}],
+    "totale": 0.00
+  },
   "competenze": {
-    "paga_base": 0.00,
-    "contingenza": 0.00,
-    "superminimo": 0.00,
-    "straordinari": 0.00,
-    "altri": [{"voce": "nome", "importo": 0.00}],
-    "totale_lordo": 0.00
+    "voci": [{"descrizione": "Retribuzione", "importo": 0.00}],
+    "totale_competenze": 0.00
   },
   "ore": {
-    "ordinarie": 0,
-    "straordinario": 0,
-    "ferie_maturate": 0,
-    "ferie_godute": 0,
-    "ferie_residue": 0,
-    "permessi_residui": 0,
-    "rol_residui": 0
+    "ordinarie": null,
+    "straordinario": null,
+    "telelavoro": null,
+    "rol_par": null
   },
   "trattenute": {
-    "inps_dipendente": {"imponibile": 0.00, "aliquota": 0.00, "importo": 0.00},
-    "irpef_lorda": 0.00,
-    "detrazioni_lavoro": 0.00,
-    "irpef_netta": 0.00,
-    "addizionale_regionale": 0.00,
-    "addizionale_comunale": 0.00,
-    "altre_trattenute": [{"voce": "nome", "importo": 0.00}],
+    "contributi_inps": [
+      {"descrizione": "Contributo IVS", "imponibile": 0.00, "aliquota": 9.19, "importo": 0.00}
+    ],
+    "irpef_lorda": null,
+    "ritenute_irpef": null,
+    "addizionale_regionale": {"residuo": null, "regione": "nome", "importo_mese": 0.00},
+    "addizionale_comunale": {"residuo": null, "comune": "nome", "importo_mese": 0.00},
+    "acconto_addizionale_comunale": {"residuo": null, "comune": "nome", "importo_mese": null},
+    "altre": [{"voce": "nome", "importo": 0.00}],
     "totale_trattenute": 0.00
   },
   "netto": 0.00,
   "tfr": {
-    "maturato_mese": 0.00,
-    "accantonato_totale": 0.00
+    "retribuzione_utile": null,
+    "quota_mese": null
   },
-  "inps_azienda": {
-    "imponibile": 0.00,
-    "aliquota": 0.00,
-    "importo": 0.00
+  "ferie_permessi": {
+    "ferie": {"godute": null, "residue": null},
+    "permessi_par": {"goduti": null, "residui": null}
   },
-  "note": []
+  "progressivi": {
+    "imponibile_inps": null,
+    "imponibile_irpef": null,
+    "irpef_pagata": null
+  },
+  "costo_azienda": {
+    "voci": [{"descrizione": "nome", "importo": 0.00}],
+    "totale": 0.00
+  },
+  "banca": {
+    "nome": null,
+    "abi": null,
+    "cab": null
+  },
+  "note": ["osservazione 1", "osservazione 2"]
 }
+
+NOTE IMPORTANTI:
+- "competenze.totale_competenze" è il totale lordo del mese (somma di tutte le competenze)
+- "trattenute.contributi_inps" è un ARRAY (possono esserci più contributi: IVS, CIG, etc.)
+- "addizionale_regionale/comunale" sono OGGETTI con importo_mese, non numeri semplici
+- Se trovi indennità trasferta, rimborsi spese o buoni pasto, aggiungili alle voci competenze
+- Se non trovi un sottooggetto (es. addizionale_regionale), metti null per l'intero campo
+- Il campo "note" deve includere eventuali anomalie, trasferte, rimborsi e voci particolari
 
 Testo della busta paga:
 ---
@@ -97,6 +120,6 @@ export async function analyzePayslip(payslipText) {
   }
 
   const parsed = JSON.parse(jsonMatch[0]);
-  logger.info({ periodo: parsed.periodo, netto: parsed.netto }, 'Analisi completata');
+  logger.info({ periodo: parsed.periodo, netto: parsed.netto }, 'Analisi Claude completata');
   return parsed;
 }

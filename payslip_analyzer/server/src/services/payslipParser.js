@@ -67,6 +67,10 @@ export function parsePayslip(rawText) {
   if (result.competenze.voci.some(v => v.descrizione.toLowerCase().includes('bonus'))) {
     result.note.push('Presenza di bonus nel mese');
   }
+  const rimborsoVoce = result.competenze.voci.find(v => v.descrizione.toLowerCase().includes('rimborso spese'));
+  if (rimborsoVoce) {
+    result.note.push(`Rimborso spese anticipate: €${rimborsoVoce.importo.toFixed(2)}`);
+  }
 
   return result;
 }
@@ -270,6 +274,35 @@ function extractCompetenze(text, lines) {
   if (buonoPasto) {
     const importo = parseNum(buonoPasto[1]);
     if (importo) voci.push({ descrizione: 'Buono pasto', importo, in_kind: true });
+  }
+
+  // Rimborso spese anticipate — cerca con o senza prefisso **, vari formati
+  const hasRimborso = voci.some(v => v.descrizione.toLowerCase().includes('rimborso spese'));
+  if (!hasRimborso) {
+    const rimborsoPatterns = [
+      // "Rimborso spese anticipate\n110,90"
+      /[Rr]imborso\s+spese\s+anticipat[ei]?\n([\d.,]+)/,
+      // "Rimb. spese anticipate\n110,90"
+      /[Rr]imb\.?\s+spese\s+anticipat[ei]?\n([\d.,]+)/,
+      // "Rimborso spese\n110,90"
+      /[Rr]imborso\s+spese\n([\d.,]+)/,
+      // "RIMBORSO SPESE ANTICIPATE\n110,90" (tutto maiuscolo)
+      /RIMBORSO\s+SPESE[^\n]*\n([\d.,]+)/,
+      // "Rimborso spese anticipate 110,90" (stessa riga)
+      /[Rr]imborso\s+spese\s+anticipat[ei]?\s+([\d.,]+)/,
+      // "Rimb.spese ant.\n110,90" (abbreviato senza spazi)
+      /[Rr]imb\.?\s*spese\s*ant[.\w]*\n([\d.,]+)/,
+    ];
+    for (const rx of rimborsoPatterns) {
+      const rm = text.match(rx);
+      if (rm) {
+        const importo = parseNum(rm[1]);
+        if (importo != null) {
+          voci.push({ descrizione: 'Rimborso spese anticipate', importo });
+          break;
+        }
+      }
+    }
   }
 
   // Arrotondamento

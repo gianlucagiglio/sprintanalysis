@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import Layout from './components/layout/Layout';
 import PdfUpload from './components/upload/PdfUpload';
 import Summary from './components/results/Summary';
@@ -10,7 +10,22 @@ import Button from './components/ui/Button';
 import Card from './components/ui/Card';
 import { analyzePdf } from './lib/api';
 import CompareMonths from './components/compare/CompareMonths';
-import { RotateCcw, FileText, ChevronDown, ChevronUp, Plus, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { RotateCcw, FileText, ChevronDown, ChevronUp, Plus, CheckCircle, AlertCircle, Loader2, Receipt, CalendarDays } from 'lucide-react';
+
+const MESI = {
+  gennaio: 0, febbraio: 1, marzo: 2, aprile: 3, maggio: 4, giugno: 5,
+  luglio: 6, agosto: 7, settembre: 8, ottobre: 9, novembre: 10, dicembre: 11,
+};
+
+function parsePeriodo(periodo) {
+  if (!periodo) return null;
+  const parts = periodo.trim().toLowerCase().split(/\s+/);
+  if (parts.length < 2) return null;
+  const mese = MESI[parts[0]];
+  const anno = parseInt(parts[1], 10);
+  if (mese == null || isNaN(anno)) return null;
+  return new Date(anno, mese, 1);
+}
 
 function formatCurrency(value) {
   if (value == null) return '—';
@@ -98,6 +113,20 @@ export default function App() {
 
   const hasResults = payslips.length > 0;
 
+  // Lista ordinata per data (più recente prima), con indice originale preservato
+  const sortedPayslips = useMemo(() => {
+    const withIdx = payslips.map((ps, idx) => ({ ps, originalIdx: idx }));
+    return withIdx.sort((a, b) => {
+      const dateA = parsePeriodo(a.ps.data?.periodo);
+      const dateB = parsePeriodo(b.ps.data?.periodo);
+      // Payslips senza data (loading/error) vanno in fondo
+      if (!dateA && !dateB) return 0;
+      if (!dateA) return 1;
+      if (!dateB) return -1;
+      return dateB - dateA; // più recente prima
+    });
+  }, [payslips]);
+
   return (
     <Layout>
       {/* Upload area — sempre visibile se non c'è nulla, o come bottone "aggiungi" */}
@@ -165,20 +194,72 @@ export default function App() {
             </div>
           </div>
 
+          {/* Sezione rimborsi spese anticipate */}
+          {(() => {
+            const isRimborso = (desc) => {
+              if (!desc) return false;
+              const d = desc.toLowerCase();
+              return d.includes('rimborso spese') || d.includes('rimb. spese')
+                || d.includes('nota spese') || d.includes('note spese')
+                || d.includes('rimborso anticipat');
+            };
+            const rimborsi = payslips
+              .filter(ps => ps.data && !ps.loading && !ps.error)
+              .map(ps => {
+                // Cerca in competenze.voci
+                const voce = ps.data.competenze?.voci?.find(v => isRimborso(v.descrizione));
+                // Cerca anche in competenze.altri (schema Claude)
+                const altroVoce = !voce && ps.data.competenze?.altri?.find(v => isRimborso(v.voce));
+                const importo = voce?.importo ?? altroVoce?.importo;
+                return importo ? { periodo: ps.data.periodo, importo } : null;
+              })
+              .filter(Boolean);
+            if (rimborsi.length === 0) return null;
+            const totale = rimborsi.reduce((s, r) => s + r.importo, 0);
+            return (
+              <Card>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider flex items-center gap-2">
+                    <Receipt className="w-4 h-4" />
+                    Rimborsi spese anticipate
+                  </h3>
+                  <div className="text-right">
+                    <span className="text-text-muted text-xs">Totale rimborsato </span>
+                    <span className="font-mono text-lg font-semibold text-netto">{formatCurrency(totale)}</span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                  {rimborsi.map((r, i) => (
+                    <div key={i} className="bg-bg rounded-lg px-3 py-2.5 border border-border/50">
+                      <div className="flex items-center gap-1.5 text-text-muted text-xs mb-1">
+                        <CalendarDays className="w-3 h-3" />
+                        {r.periodo}
+                      </div>
+                      <p className="font-mono font-semibold text-sm">{formatCurrency(r.importo)}</p>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            );
+          })()}
+
           {/* Sezione comparativa — appare con 2+ buste completate */}
           {payslips.filter(ps => ps.data && !ps.loading && !ps.error).length >= 2 && (
             <CompareMonths payslips={payslips} />
           )}
 
-          {/* Lista accordion */}
-          {payslips.map((ps, idx) => (
-            <div key={idx} className="border border-border rounded-xl overflow-hidden">
+          {/* Lista accordion — ordinata per data, più recente prima */}
+          {sortedPayslips.map(({ ps, originalIdx }) => (
+            <div key={originalIdx} className="border border-border rounded-xl overflow-hidden">
               {/* Header clickabile */}
-              <button
-                onClick={() => !ps.loading && ps.data && toggleExpand(idx)}
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => !ps.loading && ps.data && toggleExpand(originalIdx)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); !ps.loading && ps.data && toggleExpand(originalIdx); } }}
                 className={`w-full flex items-center gap-3 px-5 py-4 text-left transition-colors
                   ${ps.data ? 'hover:bg-surface-hover cursor-pointer' : 'cursor-default'}
-                  ${expandedIdx === idx ? 'bg-surface' : ''}
+                  ${expandedIdx === originalIdx ? 'bg-surface' : ''}
                 `}
               >
                 {ps.loading && <Loader2 className="w-5 h-5 text-accent animate-spin shrink-0" />}
@@ -216,21 +297,21 @@ export default function App() {
                 </div>
 
                 {ps.data && (
-                  expandedIdx === idx
+                  expandedIdx === originalIdx
                     ? <ChevronUp className="w-5 h-5 text-text-muted shrink-0" />
                     : <ChevronDown className="w-5 h-5 text-text-muted shrink-0" />
                 )}
 
                 <button
-                  onClick={(e) => { e.stopPropagation(); handleRemove(idx); }}
+                  onClick={(e) => { e.stopPropagation(); handleRemove(originalIdx); }}
                   className="text-text-muted hover:text-danger text-xs px-2 py-1 rounded transition-colors shrink-0"
                 >
                   Rimuovi
                 </button>
-              </button>
+              </div>
 
               {/* Contenuto espanso */}
-              {expandedIdx === idx && ps.data && (
+              {expandedIdx === originalIdx && ps.data && (
                 <div className="border-t border-border px-5 py-6 space-y-6 bg-bg">
                   <Summary data={ps.data} />
                   <DeductionsBreakdown data={ps.data} />
