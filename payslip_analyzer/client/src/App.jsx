@@ -65,38 +65,47 @@ export default function App() {
 
     setPayslips((prev) => [...prev, ...newSlots]);
 
-    const promises = files.map(async (file, i) => {
-      try {
-        const response = await analyzePdf(file);
-        setPayslips((prev) => {
-          const updated = [...prev];
-          updated[startIdx + i] = {
-            fileName: file.name,
-            data: response.data,
-            error: null,
-            loading: false,
-          };
-          return updated;
-        });
-      } catch (err) {
-        const message =
-          err.response?.data?.error ||
-          err.response?.data?.details ||
-          'Errore durante l\'analisi.';
-        setPayslips((prev) => {
-          const updated = [...prev];
-          updated[startIdx + i] = {
-            fileName: file.name,
-            data: null,
-            error: message,
-            loading: false,
-          };
-          return updated;
-        });
-      }
-    });
+    // Processa max 2 file alla volta per non sovraccaricare il server
+    const CONCURRENCY = 2;
+    let nextIdx = 0;
 
-    await Promise.all(promises);
+    async function processNext() {
+      while (nextIdx < files.length) {
+        const i = nextIdx++;
+        const file = files[i];
+        try {
+          const response = await analyzePdf(file);
+          setPayslips((prev) => {
+            const updated = [...prev];
+            updated[startIdx + i] = {
+              fileName: file.name,
+              data: response.data,
+              error: null,
+              loading: false,
+            };
+            return updated;
+          });
+        } catch (err) {
+          const message =
+            err.response?.data?.error ||
+            err.response?.data?.details ||
+            'Errore durante l\'analisi.';
+          setPayslips((prev) => {
+            const updated = [...prev];
+            updated[startIdx + i] = {
+              fileName: file.name,
+              data: null,
+              error: message,
+              loading: false,
+            };
+            return updated;
+          });
+        }
+      }
+    }
+
+    const workers = Array.from({ length: Math.min(CONCURRENCY, files.length) }, () => processNext());
+    await Promise.all(workers);
     setUploading(false);
 
     if (files.length === 1) {
