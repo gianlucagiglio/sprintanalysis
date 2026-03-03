@@ -93,10 +93,10 @@ export default function CompareMonths({ payslips }) {
 
   const ferieData = sorted.map((d) => ({
     name: shortPeriodo(d.periodo),
-    'Ferie residue': safe(d.ferie_permessi?.ferie?.residue),
-    'Permessi residui': safe(d.ferie_permessi?.permessi_par?.residui),
+    'Ferie disponibili': safe(d.ferie_permessi?.ferie?.residue) + safe(d.ferie_permessi?.ferie?.residue_ap),
+    'Permessi disponibili': safe(d.ferie_permessi?.permessi_par?.residui) + safe(d.ferie_permessi?.permessi_par?.residui_ap),
   }));
-  const hasFerieData = ferieData.some((d) => d['Ferie residue'] > 0 || d['Permessi residui'] > 0);
+  const hasFerieData = ferieData.some((d) => d['Ferie disponibili'] > 0 || d['Permessi disponibili'] > 0);
 
   const tfrData = sorted.map((d, i) => ({
     name: shortPeriodo(d.periodo),
@@ -123,8 +123,16 @@ export default function CompareMonths({ payslips }) {
     { key: 'tfr', label: 'TFR quota mese', get: (d) => d.tfr?.quota_mese ?? d.tfr?.maturato_mese, cur: true },
     { key: 'ore', label: 'Ore totali', get: (d) => getOreTotali(d), cur: false },
     { key: 'strao', label: 'Straordinario', get: (d) => d.ore?.straordinario, cur: false },
-    { key: 'ferie', label: 'Ferie residue', get: (d) => d.ferie_permessi?.ferie?.residue, cur: false },
-    { key: 'perm', label: 'Permessi residui', get: (d) => d.ferie_permessi?.permessi_par?.residui, cur: false },
+    { key: 'ferie', label: 'Ferie disponibili', get: (d) => {
+      const r = d.ferie_permessi?.ferie?.residue;
+      const ap = d.ferie_permessi?.ferie?.residue_ap;
+      return r != null || ap != null ? safe(r) + safe(ap) : null;
+    }, cur: false },
+    { key: 'perm', label: 'Permessi disponibili', get: (d) => {
+      const r = d.ferie_permessi?.permessi_par?.residui;
+      const ap = d.ferie_permessi?.permessi_par?.residui_ap;
+      return r != null || ap != null ? safe(r) + safe(ap) : null;
+    }, cur: false },
     { key: 'pressione', label: 'Pressione fiscale %', get: (d) => {
       const l = safe(d.competenze?.totale_competenze);
       return l > 0 ? Math.round((safe(d.trattenute?.totale_trattenute) / l) * 1000) / 10 : null;
@@ -291,7 +299,7 @@ export default function CompareMonths({ payslips }) {
           {/* Ferie e permessi */}
           {hasFerieData && (
             <Card>
-              <SectionTitle icon={CalendarDays}>Ferie e permessi residui</SectionTitle>
+              <SectionTitle icon={CalendarDays}>Ferie e permessi disponibili</SectionTitle>
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={ferieData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
@@ -299,13 +307,13 @@ export default function CompareMonths({ payslips }) {
                   <YAxis {...CHART_AXIS_PROPS.y} />
                   <Tooltip content={<ChartTooltip formatter={(v) => `${fmtNum(v)} ore`} />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
                   <Legend formatter={(v) => <span className="text-text-muted text-sm">{v}</span>} />
-                  <Line type="monotone" dataKey="Ferie residue" stroke="var(--color-accent)" strokeWidth={2} dot={{ r: 4, fill: 'var(--color-accent)' }} />
-                  <Line type="monotone" dataKey="Permessi residui" stroke="var(--color-warning)" strokeWidth={2} dot={{ r: 4, fill: 'var(--color-warning)' }} />
+                  <Line type="monotone" dataKey="Ferie disponibili" stroke="var(--color-accent)" strokeWidth={2} dot={{ r: 4, fill: 'var(--color-accent)' }} />
+                  <Line type="monotone" dataKey="Permessi disponibili" stroke="var(--color-warning)" strokeWidth={2} dot={{ r: 4, fill: 'var(--color-warning)' }} />
                 </LineChart>
               </ResponsiveContainer>
               <div className="flex items-center gap-6 mt-3 pt-3 border-t border-border text-sm text-text-muted">
-                <span>Ferie ultimo mese: <strong className="font-mono">{fmtNum(ferieData[ferieData.length - 1]?.['Ferie residue'])}</strong> ore</span>
-                <span>Permessi ultimo mese: <strong className="font-mono">{fmtNum(ferieData[ferieData.length - 1]?.['Permessi residui'])}</strong> ore</span>
+                <span>Ferie ultimo mese: <strong className="font-mono">{fmtNum(ferieData[ferieData.length - 1]?.['Ferie disponibili'])}</strong> ore</span>
+                <span>Permessi ultimo mese: <strong className="font-mono">{fmtNum(ferieData[ferieData.length - 1]?.['Permessi disponibili'])}</strong> ore</span>
               </div>
             </Card>
           )}

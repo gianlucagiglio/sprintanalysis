@@ -59,8 +59,8 @@ Rispetta i nomi dei campi — il frontend dipende da questi nomi esatti.
     "quota_mese": null
   },
   "ferie_permessi": {
-    "ferie": {"godute": null, "residue": null},
-    "permessi_par": {"goduti": null, "residui": null}
+    "ferie": {"godute": null, "residue": null, "godute_ap": null, "residue_ap": null},
+    "permessi_par": {"goduti": null, "residui": null, "goduti_ap": null, "residui_ap": null}
   },
   "progressivi": {
     "imponibile_inps": null,
@@ -86,6 +86,9 @@ NOTE IMPORTANTI:
 - Se trovi indennità trasferta, rimborsi spese o buoni pasto, aggiungili alle voci competenze
 - Se non trovi un sottooggetto (es. addizionale_regionale), metti null per l'intero campo
 - Il campo "note" deve includere eventuali anomalie, trasferte, rimborsi e voci particolari
+- FERIE E PERMESSI: la busta paga ha 4 colonne: Goduto, Residuo, Goduto AP, Residuo AP.
+  "residue"/"residui" è il residuo dell'anno corrente, "residue_ap"/"residui_ap" è il residuo dell'anno precedente.
+  Estrai entrambi i valori separatamente. Il saldo disponibile = residuo + residuo_ap.
 
 Testo della busta paga:
 ---

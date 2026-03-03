@@ -21,10 +21,16 @@ export default function TimeOffSummary({ data }) {
   const { ore, ferie_permessi } = data;
 
   const hasOre = ore && (ore.ordinarie != null || ore.telelavoro != null);
-  const hasFerie = ferie_permessi?.ferie?.residue != null;
-  const hasPermessi = ferie_permessi?.permessi_par?.residui != null;
+  const hasFerie = ferie_permessi?.ferie?.residue != null || ferie_permessi?.ferie?.residue_ap != null;
+  const hasPermessi = ferie_permessi?.permessi_par?.residui != null || ferie_permessi?.permessi_par?.residui_ap != null;
 
   if (!hasOre && !hasFerie && !hasPermessi) return null;
+
+  // Saldo disponibile = Residuo + Residuo AP
+  const ferieSaldo = (ferie_permessi?.ferie?.residue ?? 0) + (ferie_permessi?.ferie?.residue_ap ?? 0);
+  const permessiSaldo = (ferie_permessi?.permessi_par?.residui ?? 0) + (ferie_permessi?.permessi_par?.residui_ap ?? 0);
+  const hasApFerie = ferie_permessi?.ferie?.residue_ap != null;
+  const hasApPermessi = ferie_permessi?.permessi_par?.residui_ap != null;
 
   return (
     <Card>
@@ -34,20 +40,26 @@ export default function TimeOffSummary({ data }) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {hasFerie && (
-          <TimeOffCard icon={CalendarDays} label="Ferie residue" value={ferie_permessi.ferie.residue} />
+          <TimeOffCard icon={CalendarDays} label="Ferie disponibili" value={ferieSaldo} />
         )}
         {hasPermessi && (
-          <TimeOffCard icon={Clock} label="Permessi PAR residui" value={ferie_permessi.permessi_par.residui} />
+          <TimeOffCard icon={Clock} label="Permessi PAR disponibili" value={permessiSaldo} />
         )}
       </div>
 
-      {ferie_permessi && (
+      {ferie_permessi && (hasFerie || hasPermessi) && (
         <div className="mt-3 pt-3 border-t border-border grid grid-cols-2 gap-2 text-sm text-text-muted">
-          {ferie_permessi.ferie?.godute != null && (
-            <span>Ferie godute: <strong className="text-text font-mono">{ferie_permessi.ferie.godute}</strong> ore</span>
+          {hasFerie && ferie_permessi.ferie?.residue != null && (
+            <span>Ferie residue anno: <strong className="text-text font-mono">{ferie_permessi.ferie.residue}</strong> ore</span>
           )}
-          {ferie_permessi.permessi_par?.goduti != null && (
-            <span>Perm. goduti: <strong className="text-text font-mono">{ferie_permessi.permessi_par.goduti}</strong> ore</span>
+          {hasApFerie && (
+            <span>Ferie residue AP: <strong className="text-text font-mono">{ferie_permessi.ferie.residue_ap}</strong> ore</span>
+          )}
+          {hasPermessi && ferie_permessi.permessi_par?.residui != null && (
+            <span>Permessi residui anno: <strong className="text-text font-mono">{ferie_permessi.permessi_par.residui}</strong> ore</span>
+          )}
+          {hasApPermessi && (
+            <span>Permessi residui AP: <strong className="text-text font-mono">{ferie_permessi.permessi_par.residui_ap}</strong> ore</span>
           )}
         </div>
       )}

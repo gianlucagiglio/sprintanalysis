@@ -516,32 +516,49 @@ function extractTfr(text) {
 
 function extractFeriePermessi(text, lines) {
   const result = {
-    ferie: { godute: null, residue: null },
-    permessi_par: { goduti: null, residui: null },
+    ferie: { godute: null, residue: null, godute_ap: null, residue_ap: null },
+    permessi_par: { goduti: null, residui: null, goduti_ap: null, residui_ap: null },
   };
 
-  // Ferie: "Ferie\n56,0000066,00000ORE" (mesi normali: 2 valori)
-  // Anno fine: "Ferie\n160,0000088,0000072,00000ORE" (3 valori: maturato+goduto+residuo)
-  // Usiamo extractConcatenatedNumbers per gestire entrambi i casi
+  // Zucchetti layout colonne: Goduto | Residuo | Goduto AP | Residuo AP
+  // I valori sono concatenati con 5 decimali: "56,0000013,3000072,00000106,00000ORE"
   const ferieFullMatch = text.match(/\nFerie\n(.+?)ORE/);
   if (ferieFullMatch) {
     const nums = extractConcatenatedNumbers(ferieFullMatch[1]);
-    if (nums.length >= 2) {
+    if (nums.length >= 4) {
+      // 4 colonne: Goduto, Residuo, Goduto AP, Residuo AP
       result.ferie.godute = nums[0];
-      result.ferie.residue = nums[nums.length - 1];
+      result.ferie.residue = nums[1];
+      result.ferie.godute_ap = nums[2];
+      result.ferie.residue_ap = nums[3];
+    } else if (nums.length === 3) {
+      result.ferie.godute = nums[0];
+      result.ferie.residue = nums[1];
+      result.ferie.residue_ap = nums[2];
+    } else if (nums.length === 2) {
+      result.ferie.godute = nums[0];
+      result.ferie.residue = nums[1];
     } else if (nums.length === 1) {
       result.ferie.residue = nums[0];
     }
   }
 
-  // Permessi P.A.R: "Perm.P.A.R\n34,666666,0000046,66666ORE"
-  // Stessa logica: primo=goduti, ultimo=residui
+  // Permessi P.A.R: stessa logica 4 colonne
   const permFullMatch = text.match(/Perm\.?\s*P\.?A\.?R\.?\n(.+?)ORE/);
   if (permFullMatch) {
     const nums = extractConcatenatedNumbers(permFullMatch[1]);
-    if (nums.length >= 2) {
+    if (nums.length >= 4) {
       result.permessi_par.goduti = nums[0];
-      result.permessi_par.residui = nums[nums.length - 1];
+      result.permessi_par.residui = nums[1];
+      result.permessi_par.goduti_ap = nums[2];
+      result.permessi_par.residui_ap = nums[3];
+    } else if (nums.length === 3) {
+      result.permessi_par.goduti = nums[0];
+      result.permessi_par.residui = nums[1];
+      result.permessi_par.residui_ap = nums[2];
+    } else if (nums.length === 2) {
+      result.permessi_par.goduti = nums[0];
+      result.permessi_par.residui = nums[1];
     } else if (nums.length === 1) {
       result.permessi_par.residui = nums[0];
     }
