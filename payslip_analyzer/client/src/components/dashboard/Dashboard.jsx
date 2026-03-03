@@ -15,6 +15,14 @@ function formatCurrency(value) {
   return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(value);
 }
 
+function isEsclusoDaRal(desc) {
+  if (!desc) return false;
+  const d = desc.toLowerCase();
+  return d.includes('rimborso spese') || d.includes('rimb. spese')
+    || d.includes('nota spese') || d.includes('note spese')
+    || d.includes('rimborso anticipat') || d.includes('730');
+}
+
 function isRimborso(desc) {
   if (!desc) return false;
   const d = desc.toLowerCase();
@@ -44,6 +52,14 @@ export default function Dashboard({ payslips }) {
     [completed]
   );
 
+  const rimborsi730 = useMemo(() =>
+    completed.map(ps => {
+      const voce = ps.data.competenze?.voci?.find(v => v.descrizione?.toLowerCase().includes('730'));
+      return voce ? { periodo: ps.data.periodo, importo: voce.importo } : null;
+    }).filter(Boolean),
+    [completed]
+  );
+
   // Single payslip view
   if (sorted.length === 1) {
     const d = sorted[0];
@@ -66,6 +82,7 @@ export default function Dashboard({ payslips }) {
         </div>
 
         <RimborsiCard rimborsi={rimborsi} />
+        <Rimborsi730Card rimborsi730={rimborsi730} />
 
         <Card>
           <p className="text-text-muted text-sm text-center py-4">
@@ -90,11 +107,17 @@ export default function Dashboard({ payslips }) {
   const netti = sorted.map(d => safe(d.netto));
   const lordi = sorted.map(d => safe(d.competenze?.totale_competenze));
   const trattenuteArr = sorted.map(d => safe(d.trattenute?.totale_trattenute));
+  // Valori depurati da rimborsi 730 e rimborso spese (per calcolo RAL)
+  const nettiRal = sorted.map(d => safe(d.netto_ral ?? d.netto));
+  const lordiRal = sorted.map(d => safe(d.lordo_ral ?? d.competenze?.totale_competenze));
 
   const nettoMedio = avg(netti);
   const nettoTotale = sum(netti);
   const lordoMedio = avg(lordi);
   const trattenuteMedie = avg(trattenuteArr);
+  // Medie depurate per proiezione RAL
+  const nettoMedioRal = avg(nettiRal);
+  const lordoMedioRal = avg(lordiRal);
 
   const meseMigliore = sorted.reduce((best, d) => safe(d.netto) > safe(best.netto) ? d : best);
   const mesePeggiore = sorted.reduce((worst, d) => safe(d.netto) < safe(worst.netto) ? d : worst);
@@ -147,12 +170,13 @@ export default function Dashboard({ payslips }) {
       />
 
       <RimborsiCard rimborsi={rimborsi} />
+      <Rimborsi730Card rimborsi730={rimborsi730} />
 
       <MonthlyBarChart data={mainChartData} />
 
       <AnnualProjection
-        nettoMedio={nettoMedio}
-        lordoMedio={lordoMedio}
+        nettoMedio={nettoMedioRal}
+        lordoMedio={lordoMedioRal}
         trattenuteMedie={trattenuteMedie}
         tfrQuote={tfrQuote}
         breakdownData={breakdownData}
@@ -180,8 +204,41 @@ function RimborsiCard({ rimborsi }) {
           <span className="font-mono text-lg font-semibold text-netto">{formatCurrency(totale)}</span>
         </div>
       </div>
+      <p className="text-text-muted text-xs mb-3 italic">Esclusi dal calcolo RAL</p>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
         {rimborsi.map((r, i) => (
+          <div key={i} className="bg-bg rounded-lg px-3 py-2.5 border border-border/50">
+            <div className="flex items-center gap-1.5 text-text-muted text-xs mb-1">
+              <CalendarDays className="w-3 h-3" />
+              {r.periodo}
+            </div>
+            <p className="font-mono font-semibold text-sm">{formatCurrency(r.importo)}</p>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+function Rimborsi730Card({ rimborsi730 }) {
+  if (!rimborsi730.length) return null;
+  const totale = rimborsi730.reduce((s, r) => s + r.importo, 0);
+
+  return (
+    <Card>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider flex items-center gap-2">
+          <Receipt className="w-4 h-4" />
+          Rimborsi 730 (sostituto d'imposta)
+        </h3>
+        <div className="text-right">
+          <span className="text-text-muted text-xs">Totale rimborsato </span>
+          <span className="font-mono text-lg font-semibold text-netto">{formatCurrency(totale)}</span>
+        </div>
+      </div>
+      <p className="text-text-muted text-xs mb-3 italic">Esclusi dal calcolo RAL</p>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        {rimborsi730.map((r, i) => (
           <div key={i} className="bg-bg rounded-lg px-3 py-2.5 border border-border/50">
             <div className="flex items-center gap-1.5 text-text-muted text-xs mb-1">
               <CalendarDays className="w-3 h-3" />

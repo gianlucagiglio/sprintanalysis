@@ -60,6 +60,27 @@ export function parsePayslip(rawText) {
     result.competenze.totale_competenze = result.elementi_retribuzione.totale;
   }
 
+  // Flag voci escluse da RAL: rimborsi 730 e rimborso spese anticipate
+  for (const voce of result.competenze.voci) {
+    const desc = voce.descrizione.toLowerCase();
+    if (desc.includes('730') || desc.includes('rimborso spese')) {
+      voce.escludi_da_ral = true;
+    }
+  }
+
+  // Calcola totale voci escluse da RAL
+  const totaleEsclusoRal = result.competenze.voci
+    .filter(v => v.escludi_da_ral)
+    .reduce((sum, v) => sum + (v.importo || 0), 0);
+
+  // Lordo e netto depurati da voci non-RAL (730, rimborsi spese)
+  result.lordo_ral = result.competenze.totale_competenze != null
+    ? Math.round((result.competenze.totale_competenze - totaleEsclusoRal) * 100) / 100
+    : null;
+  result.netto_ral = result.netto != null
+    ? Math.round((result.netto - totaleEsclusoRal) * 100) / 100
+    : null;
+
   // Note automatiche
   if (result.ore.telelavoro && result.ore.telelavoro > 0) {
     result.note.push(`${result.ore.telelavoro} ore in smart working/telelavoro`);
@@ -69,7 +90,11 @@ export function parsePayslip(rawText) {
   }
   const rimborsoVoce = result.competenze.voci.find(v => v.descrizione.toLowerCase().includes('rimborso spese'));
   if (rimborsoVoce) {
-    result.note.push(`Rimborso spese anticipate: €${rimborsoVoce.importo.toFixed(2)}`);
+    result.note.push(`Rimborso spese anticipate: €${rimborsoVoce.importo.toFixed(2)} (escluso da RAL)`);
+  }
+  const rimborso730Voce = result.competenze.voci.find(v => v.descrizione.toLowerCase().includes('730'));
+  if (rimborso730Voce) {
+    result.note.push(`Rimborsi 730: €${rimborso730Voce.importo.toFixed(2)} (escluso da RAL)`);
   }
 
   return result;

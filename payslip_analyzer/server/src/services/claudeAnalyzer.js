@@ -54,6 +54,8 @@ Rispetta i nomi dei campi — il frontend dipende da questi nomi esatti.
     "totale_trattenute": 0.00
   },
   "netto": 0.00,
+  "lordo_ral": 0.00,
+  "netto_ral": 0.00,
   "tfr": {
     "retribuzione_utile": null,
     "quota_mese": null
@@ -84,6 +86,9 @@ NOTE IMPORTANTI:
 - "trattenute.contributi_inps" è un ARRAY (possono esserci più contributi: IVS, CIG, etc.)
 - "addizionale_regionale/comunale" sono OGGETTI con importo_mese, non numeri semplici
 - Se trovi indennità trasferta, rimborsi spese o buoni pasto, aggiungili alle voci competenze
+- IMPORTANTE: "Rimborsi 730" (sostituto d'imposta) e "Rimborso spese anticipate" NON fanno parte della RAL.
+  Aggiungili alle voci competenze ma con il flag "escludi_da_ral": true.
+  Calcola anche "lordo_ral" (totale_competenze meno queste voci) e "netto_ral" (netto meno queste voci).
 - Se non trovi un sottooggetto (es. addizionale_regionale), metti null per l'intero campo
 - Il campo "note" deve includere eventuali anomalie, trasferte, rimborsi e voci particolari
 - FERIE E PERMESSI: la busta paga ha 4 colonne: Goduto, Residuo, Goduto AP, Residuo AP.

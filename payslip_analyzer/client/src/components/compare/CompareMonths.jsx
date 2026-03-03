@@ -31,6 +31,9 @@ export default function CompareMonths({ payslips }) {
   // ── Computed data ──────────────────────────────────
   const netti = sorted.map((d) => safe(d.netto));
   const lordi = sorted.map((d) => safe(d.competenze?.totale_competenze));
+  // Valori depurati da rimborsi 730 e rimborso spese (per calcolo RAL)
+  const nettiRal = sorted.map((d) => safe(d.netto_ral ?? d.netto));
+  const lordiRal = sorted.map((d) => safe(d.lordo_ral ?? d.competenze?.totale_competenze));
   const trattenuteArr = sorted.map((d) => safe(d.trattenute?.totale_trattenute));
 
   const nettoMedio = avg(netti);
