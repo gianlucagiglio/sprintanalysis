@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import Layout from './components/layout/Layout';
 import PdfUpload from './components/upload/PdfUpload';
 import Summary from './components/results/Summary';
@@ -135,9 +135,11 @@ export default function App() {
   }, [payslips]);
 
   // If on analysis tab but not enough payslips, fallback to dashboard
-  if (activeTab === 'analysis' && completedCount < 2) {
-    setActiveTab('dashboard');
-  }
+  useEffect(() => {
+    if (activeTab === 'analysis' && completedCount < 2) {
+      setActiveTab('dashboard');
+    }
+  }, [activeTab, completedCount]);
 
   // ── Header actions (Aggiungi + Azzera) ──
   const headerActions = hasResults ? (
