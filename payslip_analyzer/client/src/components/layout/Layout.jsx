@@ -7,6 +7,7 @@ export default function Layout({ children, tabBar, headerActions }) {
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-3">
           <FileText className="w-6 h-6 text-accent" />
           <h1 className="text-lg font-semibold">Payslip Analyzer</h1>
+          <span className="text-xs font-mono text-text-muted bg-surface px-1.5 py-0.5 rounded border border-border">v1.2.0</span>
           <span className="text-text-muted text-sm ml-auto hidden sm:inline">Analizzatore Busta Paga</span>
           {headerActions && <div className="flex items-center gap-2 ml-auto sm:ml-0">{headerActions}</div>}
         </div>
