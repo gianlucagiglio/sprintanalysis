@@ -8,9 +8,15 @@ import TimeOffSummary from './components/results/TimeOffSummary';
 import Progress from './components/ui/Progress';
 import Button from './components/ui/Button';
 import Card from './components/ui/Card';
-import { analyzePdf } from './lib/api';
+import { Tabs, Tab } from './components/ui/Tabs';
+import Dashboard from './components/dashboard/Dashboard';
 import CompareMonths from './components/compare/CompareMonths';
-import { RotateCcw, FileText, ChevronDown, ChevronUp, Plus, CheckCircle, AlertCircle, Loader2, Receipt, CalendarDays } from 'lucide-react';
+import { analyzePdf } from './lib/api';
+import {
+  RotateCcw, FileText, ChevronDown, ChevronUp, Plus,
+  CheckCircle, AlertCircle, Loader2,
+  LayoutDashboard, BarChart3,
+} from 'lucide-react';
 
 const MESI = {
   gennaio: 0, febbraio: 1, marzo: 2, aprile: 3, maggio: 4, giugno: 5,
@@ -36,15 +42,19 @@ function formatCurrency(value) {
 }
 
 export default function App() {
-  // Array di { fileName, data, error, loading }
   const [payslips, setPayslips] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [expandedIdx, setExpandedIdx] = useState(null);
+  const [activeTab, setActiveTab] = useState('dashboard');
+
+  const completedCount = useMemo(
+    () => payslips.filter(ps => ps.data && !ps.loading && !ps.error).length,
+    [payslips]
+  );
 
   const handleFilesSelected = useCallback(async (files) => {
     setUploading(true);
 
-    // Aggiungi slot per ogni file in stato loading
     const startIdx = payslips.length;
     const newSlots = files.map((f) => ({
       fileName: f.name,
@@ -55,7 +65,6 @@ export default function App() {
 
     setPayslips((prev) => [...prev, ...newSlots]);
 
-    // Analizza ogni file in parallelo
     const promises = files.map(async (file, i) => {
       try {
         const response = await analyzePdf(file);
@@ -90,7 +99,6 @@ export default function App() {
     await Promise.all(promises);
     setUploading(false);
 
-    // Espandi automaticamente se è un solo file
     if (files.length === 1) {
       setExpandedIdx(startIdx);
     }
@@ -99,6 +107,7 @@ export default function App() {
   const handleReset = useCallback(() => {
     setPayslips([]);
     setExpandedIdx(null);
+    setActiveTab('dashboard');
   }, []);
 
   const handleRemove = useCallback((idx) => {
@@ -113,23 +122,65 @@ export default function App() {
 
   const hasResults = payslips.length > 0;
 
-  // Lista ordinata per data (più recente prima), con indice originale preservato
   const sortedPayslips = useMemo(() => {
     const withIdx = payslips.map((ps, idx) => ({ ps, originalIdx: idx }));
     return withIdx.sort((a, b) => {
       const dateA = parsePeriodo(a.ps.data?.periodo);
       const dateB = parsePeriodo(b.ps.data?.periodo);
-      // Payslips senza data (loading/error) vanno in fondo
       if (!dateA && !dateB) return 0;
       if (!dateA) return 1;
       if (!dateB) return -1;
-      return dateB - dateA; // più recente prima
+      return dateB - dateA;
     });
   }, [payslips]);
 
+  // If on analysis tab but not enough payslips, fallback to dashboard
+  if (activeTab === 'analysis' && completedCount < 2) {
+    setActiveTab('dashboard');
+  }
+
+  // ── Header actions (Aggiungi + Azzera) ──
+  const headerActions = hasResults ? (
+    <>
+      <label className="cursor-pointer">
+        <input
+          type="file"
+          accept=".pdf"
+          multiple
+          className="hidden"
+          onChange={(e) => {
+            if (e.target.files?.length) {
+              handleFilesSelected(Array.from(e.target.files));
+              e.target.value = '';
+            }
+          }}
+        />
+        <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg font-medium transition-colors bg-accent hover:bg-accent-hover text-white text-sm cursor-pointer">
+          <Plus className="w-4 h-4" />
+          Aggiungi
+        </span>
+      </label>
+      <Button onClick={handleReset} variant="ghost" className="!py-1.5 !px-3 !text-sm">
+        <span className="flex items-center gap-2">
+          <RotateCcw className="w-3.5 h-3.5" />
+          Azzera
+        </span>
+      </Button>
+    </>
+  ) : null;
+
+  // ── Tab bar ──
+  const tabBar = hasResults ? (
+    <Tabs value={activeTab} onChange={setActiveTab}>
+      <Tab value="dashboard" label="Dashboard" icon={LayoutDashboard} />
+      <Tab value="payslips" label="Buste Paga" icon={FileText} badge={payslips.length} />
+      <Tab value="analysis" label="Analisi" icon={BarChart3} disabled={completedCount < 2} />
+    </Tabs>
+  ) : null;
+
   return (
-    <Layout>
-      {/* Upload area — sempre visibile se non c'è nulla, o come bottone "aggiungi" */}
+    <Layout tabBar={tabBar} headerActions={headerActions}>
+      {/* Upload area — full-page when no payslips */}
       {!hasResults && !uploading && (
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
@@ -158,100 +209,23 @@ export default function App() {
         </div>
       )}
 
-      {/* Lista buste paga */}
-      {hasResults && (
+      {/* ═══ TAB: Dashboard ═══ */}
+      {hasResults && activeTab === 'dashboard' && (
+        <Dashboard payslips={payslips} />
+      )}
+
+      {/* ═══ TAB: Buste Paga ═══ */}
+      {hasResults && activeTab === 'payslips' && (
         <div className="space-y-4">
-          {/* Header con azioni */}
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">
               {payslips.length} {payslips.length === 1 ? 'busta paga' : 'buste paga'}
             </h2>
-            <div className="flex items-center gap-2">
-              <label className="cursor-pointer">
-                <input
-                  type="file"
-                  accept=".pdf"
-                  multiple
-                  className="hidden"
-                  onChange={(e) => {
-                    if (e.target.files?.length) {
-                      handleFilesSelected(Array.from(e.target.files));
-                      e.target.value = '';
-                    }
-                  }}
-                />
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors bg-accent hover:bg-accent-hover text-white text-sm cursor-pointer">
-                  <Plus className="w-4 h-4" />
-                  Aggiungi
-                </span>
-              </label>
-              <Button onClick={handleReset} variant="ghost">
-                <span className="flex items-center gap-2">
-                  <RotateCcw className="w-4 h-4" />
-                  Azzera
-                </span>
-              </Button>
-            </div>
           </div>
 
-          {/* Sezione rimborsi spese anticipate */}
-          {(() => {
-            const isRimborso = (desc) => {
-              if (!desc) return false;
-              const d = desc.toLowerCase();
-              return d.includes('rimborso spese') || d.includes('rimb. spese')
-                || d.includes('nota spese') || d.includes('note spese')
-                || d.includes('rimborso anticipat');
-            };
-            const rimborsi = payslips
-              .filter(ps => ps.data && !ps.loading && !ps.error)
-              .map(ps => {
-                // Cerca in competenze.voci
-                const voce = ps.data.competenze?.voci?.find(v => isRimborso(v.descrizione));
-                // Cerca anche in competenze.altri (schema Claude)
-                const altroVoce = !voce && ps.data.competenze?.altri?.find(v => isRimborso(v.voce));
-                const importo = voce?.importo ?? altroVoce?.importo;
-                return importo ? { periodo: ps.data.periodo, importo } : null;
-              })
-              .filter(Boolean);
-            if (rimborsi.length === 0) return null;
-            const totale = rimborsi.reduce((s, r) => s + r.importo, 0);
-            return (
-              <Card>
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider flex items-center gap-2">
-                    <Receipt className="w-4 h-4" />
-                    Rimborsi spese anticipate
-                  </h3>
-                  <div className="text-right">
-                    <span className="text-text-muted text-xs">Totale rimborsato </span>
-                    <span className="font-mono text-lg font-semibold text-netto">{formatCurrency(totale)}</span>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                  {rimborsi.map((r, i) => (
-                    <div key={i} className="bg-bg rounded-lg px-3 py-2.5 border border-border/50">
-                      <div className="flex items-center gap-1.5 text-text-muted text-xs mb-1">
-                        <CalendarDays className="w-3 h-3" />
-                        {r.periodo}
-                      </div>
-                      <p className="font-mono font-semibold text-sm">{formatCurrency(r.importo)}</p>
-                    </div>
-                  ))}
-                </div>
-              </Card>
-            );
-          })()}
-
-          {/* Sezione comparativa — appare con 2+ buste completate */}
-          {payslips.filter(ps => ps.data && !ps.loading && !ps.error).length >= 2 && (
-            <CompareMonths payslips={payslips} />
-          )}
-
-          {/* Lista accordion — ordinata per data, più recente prima */}
+          {/* Lista accordion */}
           {sortedPayslips.map(({ ps, originalIdx }) => (
             <div key={originalIdx} className="border border-border rounded-xl overflow-hidden">
-              {/* Header clickabile */}
               <div
                 role="button"
                 tabIndex={0}
@@ -418,6 +392,11 @@ export default function App() {
             </div>
           ))}
         </div>
+      )}
+
+      {/* ═══ TAB: Analisi ═══ */}
+      {hasResults && activeTab === 'analysis' && completedCount >= 2 && (
+        <CompareMonths payslips={payslips} />
       )}
     </Layout>
   );
