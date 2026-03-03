@@ -1,0 +1,117 @@
+Zucchetti HR Software
+TECHSOLUTIONS S.R.L.
+VIA EMILIA 142, BOLOGNA
+
+Luglio
+2024
+
+ROSSI MARCO
+RSSMRC85A15F205X
+15-01-1985
+01-09-2020
+IMPLivello 5S
+
+PAGA BASE
+1.916,45000
+CONTINGENZA
+524,22000
+S.MINIMO
+350,00000
+E.D.R.
+10,33000
+Centro di costo
+001 - Produzione
+
+Ore ordinarie
+88,00hm
+SmartWork./Telelav
+80,00hm
+Ore straordinarie
+8,00hm
+
+**Z00001
+Retribuzione
+2.934,38
+**Z00015
+Lavoro straordinario 25%
+166,73
+Buono pasto Elettronico
+8,0000017,00000GG
+()136,00
+
+*Z00000
+Contributo IVS
+3.101,11
+%
+9,19000284,99
+*Z00010
+Contributo CIG
+3.101,11
+%
+0,300009,30
+
+IRPEF lorda
+584,33
+Ritenute IRPEF
+584,33
+Imponibile IRPEF
+2.806,82
+
+F09110
+Addizionale regionale
+Residuo183,67
+EMILIA ROMAGNA
+36,74
+F09130
+Addizionale comunale
+Residuo69,20
+BOLOGNA
+13,84
+F09140
+Acconto addiz. comunale
+Residuo41,54
+BOLOGNA
+8,30
+
+937,50
+3.101,11
+Goduto
+
+Ferie
+16,00000101,31000ORE
+Perm.P.A.R.
+12,0000051,31000ORE
+
+Retribuzione utile T.F.R.3.101,11
+Quota T.F.R.229,71
+
+*003350
+Contrib. INPS C/Ditta
+C/Ditta
+()738,37
+*003350
+INAIL
+C/Ditta
+()12,40
+*003350
+F.do sicurezza metalm.-OPNC
+C/Ditta
+()0,50
+*003350
+Contributo EBM Salute
+C/Ditta
+()5,00
+
+Imp. INPS
+19.500,71
+Imp. IRPEF
+17.650,11
+IRPEF pagata
+3.236,18
+
+2.163,61€
+
+INTESA SANPAOLO SPA
+SEDE DI BOLOGNA
+ABI03069CAB02300
+C/C000001234567

@@ -113,6 +113,10 @@ export default function App() {
     }
   }, [payslips.length]);
 
+  const handleSamplesLoaded = useCallback((results) => {
+    setPayslips((prev) => [...prev, ...results]);
+  }, []);
+
   const handleReset = useCallback(() => {
     setPayslips([]);
     setExpandedIdx(null);
@@ -204,6 +208,7 @@ export default function App() {
           </div>
           <PdfUpload
             onFilesSelected={handleFilesSelected}
+            onSamplesLoaded={handleSamplesLoaded}
             isLoading={uploading}
           />
         </div>

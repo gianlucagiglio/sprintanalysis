@@ -1,9 +1,9 @@
 import { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload, FileText, AlertCircle, FolderOpen, Check } from 'lucide-react';
-import { getSampleList, downloadSample } from '../../lib/api';
+import { getSampleList, analyzeSample } from '../../lib/api';
 
-export default function PdfUpload({ onFilesSelected, isLoading, error }) {
+export default function PdfUpload({ onFilesSelected, onSamplesLoaded, isLoading, error }) {
   const [samples, setSamples] = useState([]);
   const [showSamples, setShowSamples] = useState(false);
   const [selectedSamples, setSelectedSamples] = useState(new Set());
@@ -52,10 +52,12 @@ export default function PdfUpload({ onFilesSelected, isLoading, error }) {
     if (selectedSamples.size === 0) return;
     setLoadingSamples(true);
     try {
-      const files = await Promise.all(
-        [...selectedSamples].map(f => downloadSample(f))
-      );
-      onFilesSelected(files);
+      const results = [];
+      for (const filename of [...selectedSamples].sort()) {
+        const response = await analyzeSample(filename);
+        results.push({ fileName: filename, data: response.data, error: null, loading: false });
+      }
+      onSamplesLoaded?.(results);
       setShowSamples(false);
       setSelectedSamples(new Set());
     } catch {

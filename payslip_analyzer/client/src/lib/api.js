@@ -31,13 +31,11 @@ export async function getSampleList() {
 }
 
 /**
- * Scarica un sample PDF come File object.
+ * Analizza un sample direttamente dal testo (bypassa pdf-parse).
  * @param {string} filename - Nome del file sample
- * @returns {Promise<File>}
+ * @returns {Promise<object>} I dati strutturati della busta paga
  */
-export async function downloadSample(filename) {
-  const { data } = await api.get(`/api/samples/${filename}`, {
-    responseType: 'blob',
-  });
-  return new File([data], filename, { type: 'application/pdf' });
+export async function analyzeSample(filename) {
+  const { data } = await api.post('/api/samples/analyze', { filename });
+  return data;
 }

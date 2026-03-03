@@ -15,7 +15,6 @@ app.use(express.json());
 
 // Routes
 app.use('/api/analyze', analyzeRoutes);
-app.use('/api/samples', samplesRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

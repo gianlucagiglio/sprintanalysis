@@ -1,0 +1,100 @@
+Zucchetti HR Software
+TECHSOLUTIONS S.R.L.
+VIA EMILIA 142, BOLOGNA
+
+Dicembre
+2024
+
+ROSSI MARCO
+RSSMRC85A15F205X
+15-01-1985
+01-09-2020
+IMPLivello 5S
+
+PAGA BASE
+1.916,45000
+CONTINGENZA
+524,22000
+S.MINIMO
+350,00000
+E.D.R.
+10,33000
+Centro di costo
+001 - Produzione
+
+Ore ordinarie
+72,00hm
+SmartWork./Telelav
+64,00hm
+
+**Z00001
+Retribuzione
+2.267,48
+**003069
+Premio risultato
+1.200,00
+Buono pasto Elettronico
+8,0000012,00000GG
+()96,00
+
+*Z00000
+Contributo IVS
+3.467,48
+%
+9,19000318,66
+*Z00010
+Contributo CIG
+3.467,48
+%
+0,3000010,40
+
+IRPEF lorda
+729,18
+Ritenute IRPEF
+729,18
+Imponibile IRPEF
+3.138,42
+
+
+1.058,24
+3.467,48
+Goduto
+
+Ferie
+159,96000112,0000071,96000ORE
+Perm.P.A.R.
+16,0000083,96000ORE
+
+Retribuzione utile T.F.R.3.467,48
+Quota T.F.R.256,85
+
+*003350
+Contrib. INPS C/Ditta
+C/Ditta
+()825,61
+*003350
+INAIL
+C/Ditta
+()13,87
+*003350
+F.do sicurezza metalm.-OPNC
+C/Ditta
+()0,50
+*003350
+Contributo EBM Salute
+C/Ditta
+()5,00
+
+Imp. INPS
+32.284,02
+Imp. IRPEF
+29.220,30
+IRPEF pagata
+5.360,63
+
+2.409,24€
+
+INTESA SANPAOLO SPA
+SEDE DI BOLOGNA
+ABI03069CAB02300
+C/C000001234567

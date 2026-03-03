@@ -2,6 +2,8 @@ import { Router } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import { parsePayslip } from '../services/payslipParser.js';
+import logger from '../utils/logger.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const router = Router();
@@ -23,9 +25,34 @@ router.get('/', (req, res) => {
   }
 });
 
+// POST /api/samples/analyze — analizza un sample direttamente dal testo
+router.post('/analyze', (req, res) => {
+  const { filename } = req.body;
+  if (!filename) {
+    return res.status(400).json({ error: 'filename richiesto' });
+  }
+
+  const baseName = path.basename(filename, '.pdf');
+  const textPath = path.join(SAMPLES_DIR, baseName + '.txt');
+
+  if (!fs.existsSync(textPath)) {
+    return res.status(404).json({ error: 'File di testo sample non trovato' });
+  }
+
+  try {
+    const text = fs.readFileSync(textPath, 'utf-8');
+    logger.info({ filename, textLength: text.length }, 'Analisi sample da testo');
+    const result = parsePayslip(text);
+    res.json({ success: true, data: result, source: 'regex' });
+  } catch (err) {
+    logger.error({ err, filename }, 'Errore analisi sample');
+    res.status(500).json({ error: 'Errore durante l\'analisi del sample' });
+  }
+});
+
 // GET /api/samples/:filename — scarica un sample PDF
 router.get('/:filename', (req, res) => {
-  const filename = path.basename(req.params.filename); // prevent traversal
+  const filename = path.basename(req.params.filename);
   const filePath = path.join(SAMPLES_DIR, filename);
 
   if (!fs.existsSync(filePath) || !filename.endsWith('.pdf')) {

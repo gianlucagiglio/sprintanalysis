@@ -541,9 +541,12 @@ async function main() {
   for (let i = 0; i < 12; i++) {
     const text = generatePayslipText(i);
     const fileName = `busta_${MESI[i].toLowerCase()}_${ANNO}.pdf`;
+    const textFileName = `busta_${MESI[i].toLowerCase()}_${ANNO}.txt`;
     const outputPath = path.join(OUTPUT_DIR, fileName);
+    const textOutputPath = path.join(OUTPUT_DIR, textFileName);
 
     await createPdf(text, outputPath);
+    fs.writeFileSync(textOutputPath, text, 'utf-8');
 
     // Stampa un riepilogo
     const netto = text.match(/([\d.,]+)€/)?.[1] || '?';
