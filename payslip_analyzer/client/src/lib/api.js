@@ -27,7 +27,7 @@ export async function analyzePdf(file) {
  */
 export async function getSampleList() {
   const { data } = await api.get('/api/samples');
-  return data.files;
+  return Array.isArray(data?.files) ? data.files : [];
 }
 
 /**
