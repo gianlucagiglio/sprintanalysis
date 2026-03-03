@@ -15,20 +15,11 @@ function formatCurrency(value) {
   return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(value);
 }
 
-function isEsclusoDaRal(desc) {
-  if (!desc) return false;
-  const d = desc.toLowerCase();
-  return d.includes('rimborso spese') || d.includes('rimb. spese')
-    || d.includes('nota spese') || d.includes('note spese')
-    || d.includes('rimborso anticipat') || d.includes('730');
-}
-
 function isRimborso(desc) {
   if (!desc) return false;
   const d = desc.toLowerCase();
-  return d.includes('rimborso spese') || d.includes('rimb. spese')
-    || d.includes('nota spese') || d.includes('note spese')
-    || d.includes('rimborso anticipat');
+  return /rimborso|rimborsi|rimborse|rimb\./.test(d)
+    || d.includes('nota spese') || d.includes('note spese');
 }
 
 export default function Dashboard({ payslips }) {
@@ -42,21 +33,14 @@ export default function Dashboard({ payslips }) {
     [completed]
   );
 
-  const rimborsi = useMemo(() =>
-    completed.map(ps => {
-      const voce = ps.data.competenze?.voci?.find(v => isRimborso(v.descrizione));
-      const altroVoce = !voce && ps.data.competenze?.altri?.find(v => isRimborso(v.voce));
-      const importo = voce?.importo ?? altroVoce?.importo;
-      return importo ? { periodo: ps.data.periodo, importo } : null;
-    }).filter(Boolean),
-    [completed]
-  );
-
-  const rimborsi730 = useMemo(() =>
-    completed.map(ps => {
-      const voce = ps.data.competenze?.voci?.find(v => v.descrizione?.toLowerCase().includes('730'));
-      return voce ? { periodo: ps.data.periodo, importo: voce.importo } : null;
-    }).filter(Boolean),
+  // Raccogli tutte le voci escluse da RAL (rimborsi di qualsiasi tipo, 730, etc.)
+  const vociEscluseRal = useMemo(() =>
+    completed.flatMap(ps => {
+      const voci = ps.data.competenze?.voci?.filter(v =>
+        v.escludi_da_ral || isRimborso(v.descrizione) || v.descrizione?.toLowerCase().includes('730')
+      ) || [];
+      return voci.map(v => ({ periodo: ps.data.periodo, descrizione: v.descrizione, importo: v.importo }));
+    }),
     [completed]
   );
 
@@ -81,8 +65,7 @@ export default function Dashboard({ payslips }) {
           </Card>
         </div>
 
-        <RimborsiCard rimborsi={rimborsi} />
-        <Rimborsi730Card rimborsi730={rimborsi730} />
+        <VociEscluseRalCard voci={vociEscluseRal} />
 
         <Card>
           <p className="text-text-muted text-sm text-center py-4">
@@ -169,8 +152,7 @@ export default function Dashboard({ payslips }) {
         sorted={sorted}
       />
 
-      <RimborsiCard rimborsi={rimborsi} />
-      <Rimborsi730Card rimborsi730={rimborsi730} />
+      <VociEscluseRalCard voci={vociEscluseRal} />
 
       <MonthlyBarChart data={mainChartData} />
 
@@ -188,63 +170,32 @@ export default function Dashboard({ payslips }) {
   );
 }
 
-function RimborsiCard({ rimborsi }) {
-  if (!rimborsi.length) return null;
-  const totale = rimborsi.reduce((s, r) => s + r.importo, 0);
+function VociEscluseRalCard({ voci }) {
+  if (!voci.length) return null;
+  const totale = voci.reduce((s, v) => s + v.importo, 0);
 
   return (
     <Card>
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider flex items-center gap-2">
           <Receipt className="w-4 h-4" />
-          Rimborsi spese anticipate
+          Voci escluse dalla RAL
         </h3>
         <div className="text-right">
-          <span className="text-text-muted text-xs">Totale rimborsato </span>
+          <span className="text-text-muted text-xs">Totale escluso </span>
           <span className="font-mono text-lg font-semibold text-netto">{formatCurrency(totale)}</span>
         </div>
       </div>
-      <p className="text-text-muted text-xs mb-3 italic">Esclusi dal calcolo RAL</p>
+      <p className="text-text-muted text-xs mb-3 italic">Rimborsi e sostituto d'imposta 730 non concorrono al calcolo della RAL</p>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-        {rimborsi.map((r, i) => (
+        {voci.map((v, i) => (
           <div key={i} className="bg-bg rounded-lg px-3 py-2.5 border border-border/50">
             <div className="flex items-center gap-1.5 text-text-muted text-xs mb-1">
               <CalendarDays className="w-3 h-3" />
-              {r.periodo}
+              {v.periodo}
             </div>
-            <p className="font-mono font-semibold text-sm">{formatCurrency(r.importo)}</p>
-          </div>
-        ))}
-      </div>
-    </Card>
-  );
-}
-
-function Rimborsi730Card({ rimborsi730 }) {
-  if (!rimborsi730.length) return null;
-  const totale = rimborsi730.reduce((s, r) => s + r.importo, 0);
-
-  return (
-    <Card>
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider flex items-center gap-2">
-          <Receipt className="w-4 h-4" />
-          Rimborsi 730 (sostituto d'imposta)
-        </h3>
-        <div className="text-right">
-          <span className="text-text-muted text-xs">Totale rimborsato </span>
-          <span className="font-mono text-lg font-semibold text-netto">{formatCurrency(totale)}</span>
-        </div>
-      </div>
-      <p className="text-text-muted text-xs mb-3 italic">Esclusi dal calcolo RAL</p>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-        {rimborsi730.map((r, i) => (
-          <div key={i} className="bg-bg rounded-lg px-3 py-2.5 border border-border/50">
-            <div className="flex items-center gap-1.5 text-text-muted text-xs mb-1">
-              <CalendarDays className="w-3 h-3" />
-              {r.periodo}
-            </div>
-            <p className="font-mono font-semibold text-sm">{formatCurrency(r.importo)}</p>
+            <p className="text-text-muted text-xs">{v.descrizione}</p>
+            <p className="font-mono font-semibold text-sm">{formatCurrency(v.importo)}</p>
           </div>
         ))}
       </div>

@@ -60,10 +60,10 @@ export function parsePayslip(rawText) {
     result.competenze.totale_competenze = result.elementi_retribuzione.totale;
   }
 
-  // Flag voci escluse da RAL: rimborsi 730 e rimborso spese anticipate
+  // Flag voci escluse da RAL: tutti i rimborsi (730, spese, etc.)
   for (const voce of result.competenze.voci) {
     const desc = voce.descrizione.toLowerCase();
-    if (desc.includes('730') || desc.includes('rimborso spese')) {
+    if (desc.includes('730') || /rimborso|rimborsi|rimborse|rimb\./.test(desc)) {
       voce.escludi_da_ral = true;
     }
   }
@@ -88,13 +88,9 @@ export function parsePayslip(rawText) {
   if (result.competenze.voci.some(v => v.descrizione.toLowerCase().includes('bonus'))) {
     result.note.push('Presenza di bonus nel mese');
   }
-  const rimborsoVoce = result.competenze.voci.find(v => v.descrizione.toLowerCase().includes('rimborso spese'));
-  if (rimborsoVoce) {
-    result.note.push(`Rimborso spese anticipate: €${rimborsoVoce.importo.toFixed(2)} (escluso da RAL)`);
-  }
-  const rimborso730Voce = result.competenze.voci.find(v => v.descrizione.toLowerCase().includes('730'));
-  if (rimborso730Voce) {
-    result.note.push(`Rimborsi 730: €${rimborso730Voce.importo.toFixed(2)} (escluso da RAL)`);
+  const vociEscluse = result.competenze.voci.filter(v => v.escludi_da_ral);
+  for (const voce of vociEscluse) {
+    result.note.push(`${voce.descrizione}: €${voce.importo.toFixed(2)} (escluso da RAL)`);
   }
 
   return result;

@@ -86,7 +86,7 @@ NOTE IMPORTANTI:
 - "trattenute.contributi_inps" è un ARRAY (possono esserci più contributi: IVS, CIG, etc.)
 - "addizionale_regionale/comunale" sono OGGETTI con importo_mese, non numeri semplici
 - Se trovi indennità trasferta, rimborsi spese o buoni pasto, aggiungili alle voci competenze
-- IMPORTANTE: "Rimborsi 730" (sostituto d'imposta) e "Rimborso spese anticipate" NON fanno parte della RAL.
+- IMPORTANTE: Qualsiasi voce di RIMBORSO (Rimborsi 730, Rimborso spese, Rimborso spese anticipate, etc.) NON fa parte della RAL.
   Aggiungili alle voci competenze ma con il flag "escludi_da_ral": true.
   Calcola anche "lordo_ral" (totale_competenze meno queste voci) e "netto_ral" (netto meno queste voci).
 - Se non trovi un sottooggetto (es. addizionale_regionale), metti null per l'intero campo
