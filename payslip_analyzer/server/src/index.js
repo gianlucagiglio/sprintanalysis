@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import env from './config/env.js';
 import logger from './utils/logger.js';
 import analyzeRoutes from './routes/analyze.js';
+import samplesRoutes from './routes/samples.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/analyze', analyzeRoutes);
+app.use('/api/samples', samplesRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

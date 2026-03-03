@@ -20,3 +20,24 @@ export async function analyzePdf(file) {
 
   return data;
 }
+
+/**
+ * Recupera la lista dei sample PDF disponibili.
+ * @returns {Promise<string[]>} Array di nomi file
+ */
+export async function getSampleList() {
+  const { data } = await api.get('/api/samples');
+  return data.files;
+}
+
+/**
+ * Scarica un sample PDF come File object.
+ * @param {string} filename - Nome del file sample
+ * @returns {Promise<File>}
+ */
+export async function downloadSample(filename) {
+  const { data } = await api.get(`/api/samples/${filename}`, {
+    responseType: 'blob',
+  });
+  return new File([data], filename, { type: 'application/pdf' });
+}

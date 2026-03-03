@@ -1,8 +1,20 @@
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, FileText, AlertCircle } from 'lucide-react';
+import { Upload, FileText, AlertCircle, FolderOpen, Check } from 'lucide-react';
+import { getSampleList, downloadSample } from '../../lib/api';
 
 export default function PdfUpload({ onFilesSelected, isLoading, error }) {
+  const [samples, setSamples] = useState([]);
+  const [showSamples, setShowSamples] = useState(false);
+  const [selectedSamples, setSelectedSamples] = useState(new Set());
+  const [loadingSamples, setLoadingSamples] = useState(false);
+
+  useEffect(() => {
+    getSampleList()
+      .then(setSamples)
+      .catch(() => setSamples([]));
+  }, []);
+
   const onDrop = useCallback(
     (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
@@ -18,6 +30,47 @@ export default function PdfUpload({ onFilesSelected, isLoading, error }) {
     disabled: isLoading,
     multiple: true,
   });
+
+  const toggleSample = (filename) => {
+    setSelectedSamples(prev => {
+      const next = new Set(prev);
+      if (next.has(filename)) next.delete(filename);
+      else next.add(filename);
+      return next;
+    });
+  };
+
+  const selectAll = () => {
+    if (selectedSamples.size === samples.length) {
+      setSelectedSamples(new Set());
+    } else {
+      setSelectedSamples(new Set(samples));
+    }
+  };
+
+  const loadSelectedSamples = async () => {
+    if (selectedSamples.size === 0) return;
+    setLoadingSamples(true);
+    try {
+      const files = await Promise.all(
+        [...selectedSamples].map(f => downloadSample(f))
+      );
+      onFilesSelected(files);
+      setShowSamples(false);
+      setSelectedSamples(new Set());
+    } catch {
+      // handled by parent
+    } finally {
+      setLoadingSamples(false);
+    }
+  };
+
+  // Formato mese dal nome file: "busta_gennaio_2024.pdf" → "Gennaio 2024"
+  const formatLabel = (filename) => {
+    const m = filename.match(/busta_(\w+)_(\d{4})\.pdf/);
+    if (!m) return filename;
+    return m[1].charAt(0).toUpperCase() + m[1].slice(1) + ' ' + m[2];
+  };
 
   return (
     <div className="space-y-4">
@@ -52,6 +105,70 @@ export default function PdfUpload({ onFilesSelected, isLoading, error }) {
           )}
         </div>
       </div>
+
+      {/* Bottone sample */}
+      {samples.length > 0 && (
+        <div>
+          <button
+            onClick={() => setShowSamples(!showSamples)}
+            disabled={isLoading}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-border text-text-muted hover:text-text hover:border-accent/50 hover:bg-surface-hover transition-colors text-sm cursor-pointer disabled:opacity-50"
+          >
+            <FolderOpen className="w-4 h-4" />
+            Carica buste paga di esempio ({samples.length} disponibili)
+          </button>
+
+          {showSamples && (
+            <div className="mt-3 border border-border rounded-xl bg-surface p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-text-muted">Seleziona le buste da caricare:</p>
+                <button
+                  onClick={selectAll}
+                  className="text-xs text-accent hover:text-accent-hover transition-colors cursor-pointer"
+                >
+                  {selectedSamples.size === samples.length ? 'Deseleziona tutto' : 'Seleziona tutto'}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                {samples.map((filename) => {
+                  const selected = selectedSamples.has(filename);
+                  return (
+                    <button
+                      key={filename}
+                      onClick={() => toggleSample(filename)}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors text-left cursor-pointer
+                        ${selected
+                          ? 'bg-accent/15 border border-accent/40 text-accent'
+                          : 'bg-bg border border-border/50 text-text-muted hover:border-accent/30'
+                        }
+                      `}
+                    >
+                      <div className={`w-4 h-4 rounded border shrink-0 flex items-center justify-center
+                        ${selected ? 'bg-accent border-accent' : 'border-border'}
+                      `}>
+                        {selected && <Check className="w-3 h-3 text-white" />}
+                      </div>
+                      {formatLabel(filename)}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={loadSelectedSamples}
+                disabled={selectedSamples.size === 0 || loadingSamples}
+                className="w-full px-4 py-2.5 rounded-lg font-medium transition-colors bg-accent hover:bg-accent-hover text-white text-sm cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {loadingSamples
+                  ? 'Caricamento...'
+                  : `Analizza ${selectedSamples.size} ${selectedSamples.size === 1 ? 'busta' : 'buste'} paga`
+                }
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {error && (
         <div className="flex items-center gap-2 text-danger text-sm bg-danger/10 rounded-lg px-4 py-3">
