@@ -13,11 +13,20 @@ import { CLASSIFICATION_COLORS, PROFESSIONAL_FAMILIES, formatNumber, formatSP } 
 import { Gauge, TrendingUp, Users, Target, Euro } from 'lucide-react'
 
 export default function VelocityDashboard() {
-  const { processedData, hasData } = useData()
+  const { processedData, allData, hasData, hasActiveFilters } = useData()
   const { getTeamForSprint, getTotalTeamSize, getSprintCost, periods, costConfig } = useTeam()
   const hasTeamData = periods.some(p =>
     Object.values(p.members).some(v => v > 0)
   )
+
+  // Build unfiltered SP per sprint (for proportional cost allocation when filters are active)
+  const unfilteredSprintSP = useMemo(() => {
+    const map = new Map()
+    if (allData?.sprintTimeline) {
+      allData.sprintTimeline.forEach(s => map.set(s.sprint, s.total))
+    }
+    return map
+  }, [allData])
 
   // Velocity data per sprint
   const velocityData = useMemo(() => {
@@ -25,7 +34,12 @@ export default function VelocityDashboard() {
     return processedData.sprintTimeline.map(s => {
       const team = getTeamForSprint(s.sprint)
       const teamSize = team ? getTotalTeamSize(team) : 0
-      const sprintCost = team ? getSprintCost(team) : 0
+      const fullSprintCost = team ? getSprintCost(team) : 0
+      // When filters are active, scale cost proportionally to filtered SP
+      const unfilteredTotal = unfilteredSprintSP.get(s.sprint) || s.total
+      const sprintCost = hasActiveFilters && unfilteredTotal > 0
+        ? fullSprintCost * (s.total / unfilteredTotal)
+        : fullSprintCost
       return {
         ...s,
         velocity: s.total,
@@ -35,7 +49,7 @@ export default function VelocityDashboard() {
         costPerSP: s.total > 0 && sprintCost > 0 ? sprintCost / s.total : null,
       }
     })
-  }, [processedData, getTeamForSprint, getTotalTeamSize, getSprintCost])
+  }, [processedData, getTeamForSprint, getTotalTeamSize, getSprintCost, hasActiveFilters, unfilteredSprintSP])
 
   // Average velocity
   const avgVelocity = useMemo(() => {
@@ -51,7 +65,7 @@ export default function VelocityDashboard() {
     return withData.reduce((s, v) => s + v.spPerPerson, 0) / withData.length
   }, [velocityData])
 
-  // Cost metrics
+  // Cost metrics (velocityData already has proportional cost when filters are active)
   const costMetrics = useMemo(() => {
     if (!hasTeamData) return null
     const activeSprints = velocityData.filter(s => s.total > 0)
@@ -84,7 +98,14 @@ export default function VelocityDashboard() {
         ? periods.reduce((s, p) => s + (p.members[f] || 0), 0) / periods.length
         : 0
       // Cost for this family: members × days × costPerDay × active sprints
-      const familyCost = avgMembers * costConfig.sprintDays * costConfig.costPerDay * sprints.length
+      // When filters are active, scale proportionally to filtered SP vs unfiltered SP
+      let familyCost = avgMembers * costConfig.sprintDays * costConfig.costPerDay * sprints.length
+      if (hasActiveFilters && allData?.sprintTimeline) {
+        const unfilteredFamilySP = allData.sprintTimeline.reduce((s, sp) => s + (sp[key] || 0), 0)
+        if (unfilteredFamilySP > 0) {
+          familyCost = familyCost * (totalSP / unfilteredFamilySP)
+        }
+      }
       return {
         family: f,
         totalSP: Math.round(totalSP),
@@ -96,7 +117,7 @@ export default function VelocityDashboard() {
         costPerSP: totalSP > 0 && familyCost > 0 ? Math.round(familyCost / totalSP) : null,
       }
     }).filter(f => f.totalSP > 0)
-  }, [processedData, periods, costConfig])
+  }, [processedData, periods, costConfig, hasActiveFilters, allData])
 
   // Burndown data
   const burndownData = useMemo(() => {
