@@ -25,6 +25,8 @@ export const PROFESSIONAL_FAMILIES = [
   'BE', 'FE', 'Design', 'Analysis', 'QA', 'Automation', 'Native', 'Platform Eng'
 ]
 
+export const OVERHEAD_FAMILIES = ['DM', 'PM']
+
 export const EFFORT_FIELDS = [
   'Effort Analysis',
   'Effort Automation',

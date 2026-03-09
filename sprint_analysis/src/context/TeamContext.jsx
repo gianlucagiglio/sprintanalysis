@@ -1,12 +1,12 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react'
-import { PROFESSIONAL_FAMILIES } from '@/lib/utils'
+import { PROFESSIONAL_FAMILIES, OVERHEAD_FAMILIES } from '@/lib/utils'
 
 const TeamContext = createContext(null)
 const STORAGE_KEY = 'sprint-analysis-team'
 
 function createDefaultPeriod(id) {
   const members = {}
-  PROFESSIONAL_FAMILIES.forEach(f => { members[f] = 0 })
+  ;[...PROFESSIONAL_FAMILIES, ...OVERHEAD_FAMILIES].forEach(f => { members[f] = 0 })
   return {
     id,
     label: `Period ${id}`,
@@ -23,8 +23,18 @@ export function TeamProvider({ children }) {
       if (stored) {
         const parsed = JSON.parse(stored)
         // Migration: handle old format without costConfig
-        if (Array.isArray(parsed)) return parsed
-        return parsed.periods || [createDefaultPeriod(1)]
+        let loaded = Array.isArray(parsed) ? parsed : (parsed.periods || [createDefaultPeriod(1)])
+        // Migration: add missing overhead families (DM, PM) to existing periods
+        loaded = loaded.map(p => {
+          if (!p.members) return p
+          const allFamilies = [...PROFESSIONAL_FAMILIES, ...OVERHEAD_FAMILIES]
+          const needsMigration = allFamilies.some(f => !(f in p.members))
+          if (!needsMigration) return p
+          const members = { ...p.members }
+          allFamilies.forEach(f => { if (!(f in members)) members[f] = 0 })
+          return { ...p, members }
+        })
+        return loaded
       }
     } catch (e) { /* ignore */ }
     return [createDefaultPeriod(1)]

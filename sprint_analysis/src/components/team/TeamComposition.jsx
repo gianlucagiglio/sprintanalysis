@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Select } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
-import { PROFESSIONAL_FAMILIES, formatNumber } from '@/lib/utils'
+import { PROFESSIONAL_FAMILIES, OVERHEAD_FAMILIES, formatNumber } from '@/lib/utils'
 import { Plus, Trash2, Users, Euro, Calendar } from 'lucide-react'
 
 export default function TeamComposition() {
@@ -191,6 +191,24 @@ export default function TeamComposition() {
                   />
                 </div>
               ))}
+            </div>
+            <Separator className="my-4" />
+            <div>
+              <p className="text-xs font-medium text-muted-foreground mb-3">Management / Overhead</p>
+              <div className="grid grid-cols-7 gap-4">
+                {OVERHEAD_FAMILIES.map(family => (
+                  <div key={family} className="text-center">
+                    <label className="text-xs font-medium text-muted-foreground block mb-2">{family}</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={period.members[family] || 0}
+                      onChange={(e) => updateMember(period.id, family, e.target.value)}
+                      className="w-full text-center rounded-md border border-input bg-background px-2 py-2 text-lg font-mono font-bold focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </CardContent>
         </Card>
