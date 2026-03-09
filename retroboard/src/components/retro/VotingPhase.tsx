@@ -19,8 +19,7 @@ export function VotingPhase({ sessionId }: VotingPhaseProps) {
   const sections = useSessionStore((s) => s.sections)
   const session = useSessionStore((s) => s.session)
   const revealed = session?.retro_revealed ?? true
-  const sectionIds = useMemo(() => sections.map((s) => s.id), [sections])
-  const { comments } = useComments(sessionId, sectionIds)
+  const { comments } = useComments(sessionId, sections)
   const commentIds = useMemo(() => comments.map((c) => c.id), [comments])
   const { toggleVote, getVoteCount, hasUserVoted, remainingVotes } = useVotes(commentIds, sessionId)
 

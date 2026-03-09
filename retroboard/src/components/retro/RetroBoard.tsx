@@ -23,8 +23,7 @@ export function RetroBoard({ sessionId }: RetroBoardProps) {
   const session = useSessionStore((s) => s.session)
   const user = useAuthStore((s) => s.user)
   const revealed = session?.retro_revealed ?? true
-  const sectionIds = useMemo(() => sections.map((s) => s.id), [sections])
-  const { comments, addComment } = useComments(sessionId, sectionIds)
+  const { comments, addComment } = useComments(sessionId, sections)
   const commentIds = useMemo(() => comments.map((c) => c.id), [comments])
   const { getVoteCount } = useVotes(commentIds, sessionId)
 

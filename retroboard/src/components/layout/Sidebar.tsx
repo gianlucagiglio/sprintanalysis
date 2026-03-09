@@ -1,6 +1,6 @@
 import { useParticipants } from '@/hooks/useParticipants'
 import { Badge } from '@/components/ui/Badge'
-import { Check, Clock, Users } from 'lucide-react'
+import { Clock, Users } from 'lucide-react'
 import { useMemo } from 'react'
 
 function nameToColor(name: string): string {

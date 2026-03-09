@@ -28,8 +28,7 @@ const sectionPills = [
 
 export function GroupingPhase({ sessionId }: GroupingPhaseProps) {
   const sections = useSessionStore((s) => s.sections)
-  const sectionIds = useMemo(() => sections.map((s) => s.id), [sections])
-  const { comments, updateGroup } = useComments(sessionId, sectionIds)
+  const { comments, updateGroup } = useComments(sessionId, sections)
   const commentIds = useMemo(() => comments.map((c) => c.id), [comments])
   const { getVoteCount } = useVotes(commentIds, sessionId)
 

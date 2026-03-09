@@ -36,8 +36,7 @@ interface ClosedSessionViewProps {
 export function ClosedSessionView({ sessionId, sessionTitle }: ClosedSessionViewProps) {
   const sections = useSessionStore((s) => s.sections)
   const participants = useSessionStore((s) => s.participants)
-  const sectionIds = useMemo(() => sections.map((s) => s.id), [sections])
-  const { comments } = useComments(sessionId, sectionIds)
+  const { comments } = useComments(sessionId, sections)
   const commentIds = useMemo(() => comments.map((c) => c.id), [comments])
   const { getVoteCount } = useVotes(commentIds, sessionId)
   const { actions } = useActions(sessionId)

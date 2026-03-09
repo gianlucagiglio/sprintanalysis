@@ -1,11 +1,19 @@
 import { AppLayout } from '@/components/layout/AppLayout'
 import { SentimentChart } from '@/components/metrics/SentimentChart'
 import { SentimentOverview } from '@/components/metrics/SentimentOverview'
+import { TrendKPIs } from '@/components/metrics/TrendKPIs'
+import { HappinessTrendLine } from '@/components/metrics/HappinessTrendLine'
+import { CommentSentimentChart } from '@/components/metrics/CommentSentimentChart'
+import { SentimentDelta } from '@/components/metrics/SentimentDelta'
 import { useGlobalMoods } from '@/hooks/useGlobalMoods'
+import { useMetrics } from '@/hooks/useMetrics'
 import { BarChart3 } from 'lucide-react'
 
 export function MetricsPage() {
-  const { sessionMoods, globalCounts, loading } = useGlobalMoods()
+  const { sessionMoods, globalCounts, loading: moodsLoading } = useGlobalMoods()
+  const { commentSentiments, happinessData, trendKPIs, sentimentDeltas, loading: metricsLoading } = useMetrics()
+
+  const loading = moodsLoading || metricsLoading
 
   return (
     <AppLayout>
@@ -28,7 +36,13 @@ export function MetricsPage() {
           </div>
         ) : (
           <>
-            <SentimentChart sessionMoods={sessionMoods} />
+            <TrendKPIs kpis={trendKPIs} />
+            <HappinessTrendLine data={happinessData} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <CommentSentimentChart data={commentSentiments} />
+              <SentimentChart sessionMoods={sessionMoods} />
+            </div>
+            <SentimentDelta data={sentimentDeltas} />
             <SentimentOverview sessionMoods={sessionMoods} globalCounts={globalCounts} />
           </>
         )}

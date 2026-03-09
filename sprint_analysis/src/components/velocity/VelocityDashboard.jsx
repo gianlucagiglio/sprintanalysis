@@ -14,7 +14,7 @@ import { Gauge, TrendingUp, Users, Target, Euro } from 'lucide-react'
 
 export default function VelocityDashboard() {
   const { processedData, allData, hasData, hasActiveFilters } = useData()
-  const { getTeamForSprint, getTotalTeamSize, getSprintCost, periods, costConfig } = useTeam()
+  const { getTeamForSprint, getTotalTeamSize, getSprintCost, periods } = useTeam()
   const hasTeamData = periods.some(p =>
     Object.values(p.members).some(v => v > 0)
   )
@@ -87,8 +87,10 @@ export default function VelocityDashboard() {
   }, [velocityData, hasTeamData])
 
   // Per-family velocity
+  // Cost allocation uses the general avg cost/SP so filtered data stays consistent
   const familyVelocity = useMemo(() => {
     if (!processedData) return []
+    const avgCostPerSP = costMetrics?.avgCostPerSP || 0
     return PROFESSIONAL_FAMILIES.map(f => {
       const key = `effort_${f}`
       const sprints = processedData.sprintTimeline.filter(s => (s[key] || 0) > 0)
@@ -97,15 +99,8 @@ export default function VelocityDashboard() {
       const avgMembers = periods.length > 0
         ? periods.reduce((s, p) => s + (p.members[f] || 0), 0) / periods.length
         : 0
-      // Cost for this family: members × days × costPerDay × active sprints
-      // When filters are active, scale proportionally to filtered SP vs unfiltered SP
-      let familyCost = avgMembers * costConfig.sprintDays * costConfig.costPerDay * sprints.length
-      if (hasActiveFilters && allData?.sprintTimeline) {
-        const unfilteredFamilySP = allData.sprintTimeline.reduce((s, sp) => s + (sp[key] || 0), 0)
-        if (unfilteredFamilySP > 0) {
-          familyCost = familyCost * (totalSP / unfilteredFamilySP)
-        }
-      }
+      // Cost allocated proportionally: family SP × general avg cost/SP
+      const familyCost = totalSP * avgCostPerSP
       return {
         family: f,
         totalSP: Math.round(totalSP),
@@ -117,7 +112,7 @@ export default function VelocityDashboard() {
         costPerSP: totalSP > 0 && familyCost > 0 ? Math.round(familyCost / totalSP) : null,
       }
     }).filter(f => f.totalSP > 0)
-  }, [processedData, periods, costConfig, hasActiveFilters, allData])
+  }, [processedData, periods, costMetrics])
 
   // Burndown data
   const burndownData = useMemo(() => {

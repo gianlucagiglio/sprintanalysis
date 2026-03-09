@@ -80,7 +80,7 @@ export function GanttView({ actions }: { actions: ActionWithSession[] }) {
     [actions]
   )
 
-  const { timelineStart, timelineEnd, totalDays, dateMarkers, minWidth } = useMemo(() => {
+  const { timelineStart, totalDays, dateMarkers, minWidth } = useMemo(() => {
     if (actionsWithDeadline.length === 0) {
       return { timelineStart: new Date(), timelineEnd: new Date(), totalDays: 1, dateMarkers: [], minWidth: '500px' }
     }

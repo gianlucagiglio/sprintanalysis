@@ -1,11 +1,19 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
-import type { Comment } from '@/types/database'
+import type { Comment, Section } from '@/types/database'
 
-export function useComments(sessionId: string | undefined, sectionIds: string[]) {
+function sentimentFromSortOrder(sortOrder: number): Comment['sentiment'] {
+  if (sortOrder === 0) return 'positive'
+  if (sortOrder === 1) return 'negative'
+  return 'neutral'
+}
+
+export function useComments(sessionId: string | undefined, sections: Section[]) {
   const [comments, setComments] = useState<Comment[]>([])
   const user = useAuthStore((s) => s.user)
+
+  const sectionIds = useMemo(() => sections.map((s) => s.id), [sections])
 
   const fetchComments = useCallback(async () => {
     if (!sectionIds.length) return
@@ -47,11 +55,14 @@ export function useComments(sessionId: string | undefined, sectionIds: string[])
 
   const addComment = async (sectionId: string, text: string) => {
     if (!user) return
+    const section = sections.find((s) => s.id === sectionId)
+    const sentiment = section ? sentimentFromSortOrder(section.sort_order) : null
     const { error } = await supabase.from('comments').insert({
       section_id: sectionId,
       user_id: user.id,
       text,
       group_id: null,
+      sentiment,
     })
     if (error) console.error('addComment failed:', error)
     else await fetchComments()
@@ -59,11 +70,14 @@ export function useComments(sessionId: string | undefined, sectionIds: string[])
 
   const addReply = async (parentComment: Comment, text: string) => {
     if (!user) return
+    const section = sections.find((s) => s.id === parentComment.section_id)
+    const sentiment = section ? sentimentFromSortOrder(section.sort_order) : null
     const { error } = await supabase.from('comments').insert({
       section_id: parentComment.section_id,
       user_id: user.id,
       text,
       group_id: parentComment.id,
+      sentiment,
     })
     if (error) console.error('addReply failed:', error)
     else await fetchComments()
