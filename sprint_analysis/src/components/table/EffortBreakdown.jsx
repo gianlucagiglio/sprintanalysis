@@ -9,13 +9,50 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Badge, classificationToVariant } from '@/components/ui/badge'
 import { exportSprintData } from '@/lib/export-utils'
 import { PROFESSIONAL_FAMILIES } from '@/lib/utils'
-import { Download, ArrowUpDown } from 'lucide-react'
+import { Download, ArrowUpDown, ChevronRight, ChevronDown, FolderOpen, FileText, Layers } from 'lucide-react'
+
+function EffortCells({ item }) {
+  const parts = [
+    item.effortBE > 0 && `BE ${item.effortBE}`,
+    item.effortFE > 0 && `FE ${item.effortFE}`,
+    item.effortDesign > 0 && `Des ${item.effortDesign}`,
+    item.effortAnalysis > 0 && `Ana ${item.effortAnalysis}`,
+    item.effortQA > 0 && `QA ${item.effortQA}`,
+    item.effortNative > 0 && `Nat ${item.effortNative}`,
+    item.effortAutomation > 0 && `Aut ${item.effortAutomation}`,
+    item.effortPlatformEng > 0 && `PE ${item.effortPlatformEng}`,
+  ].filter(Boolean)
+  return (
+    <span className="ml-auto flex items-center gap-2 shrink-0">
+      {parts.length > 0 && (
+        <span className="text-xs text-muted-foreground font-mono">{parts.join(' · ')}</span>
+      )}
+      <span className="font-mono text-xs font-semibold w-10 text-right">
+        {item.totalEffort > 0 ? item.totalEffort.toFixed(1) : ''}
+      </span>
+    </span>
+  )
+}
+
+function LeafRow({ item }) {
+  return (
+    <div className="flex items-center gap-2 py-1 px-2 rounded hover:bg-muted/10 transition-colors">
+      <span className="w-3" />
+      <FileText className="h-3 w-3 text-muted-foreground shrink-0" />
+      <span className="font-mono text-xs text-muted-foreground">{item.id}</span>
+      <Badge variant="outline" className="text-[10px] px-1 py-0 shrink-0">{item.type}</Badge>
+      <span className="text-sm truncate">{item.title}</span>
+      <EffortCells item={item} />
+    </div>
+  )
+}
 
 export default function EffortBreakdown() {
   const { processedData, hasData } = useData()
   const [sortField, setSortField] = useState('sprint')
   const [sortDir, setSortDir] = useState('asc')
   const [dialogData, setDialogData] = useState(null)
+  const [expandedNodes, setExpandedNodes] = useState(new Set())
   const [view, setView] = useState('classification') // 'classification' | 'family'
 
   const tableData = useMemo(() => {
@@ -48,7 +85,113 @@ export default function EffortBreakdown() {
   const handleRowClick = (sprint) => {
     const items = processedData.items.filter(i => i.sprintInfo?.sprint === sprint.sprint)
     setDialogData({ sprint, items })
+    // Expand all nodes by default
+    const allKeys = new Set()
+    const classifications = ['Strategic', 'KTLO', 'Small Change', 'Other', 'Unclassified']
+    classifications.forEach(cls => allKeys.add(`cls-${cls}`))
+    const byId = new Map()
+    items.forEach(i => byId.set(i.id, i))
+    items.forEach(i => {
+      if (i.type === 'Epic' || i.type === 'Feature') allKeys.add(`item-${i.id}`)
+    })
+    setExpandedNodes(allKeys)
   }
+
+  const toggleNode = (key) => {
+    setExpandedNodes(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
+
+  // Build tree structure: Classification → Epic → Feature → Leaf items
+  const dialogTree = useMemo(() => {
+    if (!dialogData?.items) return []
+
+    const items = dialogData.items
+    const byId = new Map()
+    items.forEach(i => byId.set(i.id, i))
+
+    // Group by classification
+    const classMap = new Map()
+    const classifications = ['Strategic', 'KTLO', 'Small Change', 'Other', 'Unclassified']
+    classifications.forEach(cls => classMap.set(cls, []))
+
+    items.forEach(item => {
+      const cls = item.classification || 'Unclassified'
+      if (!classMap.has(cls)) classMap.set(cls, [])
+      classMap.get(cls).push(item)
+    })
+
+    // For each classification, build Epic → Feature → children hierarchy
+    const tree = []
+    for (const [cls, clsItems] of classMap) {
+      if (clsItems.length === 0) continue
+
+      const totalEffort = clsItems.reduce((s, i) => s + (i.totalEffort || 0), 0)
+
+      // Separate by type
+      const epics = clsItems.filter(i => i.type === 'Epic')
+      const features = clsItems.filter(i => i.type === 'Feature')
+      const leaves = clsItems.filter(i => i.type !== 'Epic' && i.type !== 'Feature')
+
+      // Build Feature → children map
+      const featureChildren = new Map()
+      features.forEach(f => featureChildren.set(f.id, []))
+      leaves.forEach(leaf => {
+        if (leaf.parent && featureChildren.has(leaf.parent)) {
+          featureChildren.get(leaf.parent).push(leaf)
+        }
+      })
+
+      // Leaves not under any feature in this sprint
+      const orphanLeaves = leaves.filter(leaf => !leaf.parent || !featureChildren.has(leaf.parent))
+
+      // Build Epic → features map
+      const epicFeatures = new Map()
+      epics.forEach(e => epicFeatures.set(e.id, []))
+      features.forEach(f => {
+        if (f.parent && epicFeatures.has(f.parent)) {
+          epicFeatures.get(f.parent).push(f)
+        }
+      })
+
+      // Features not under any epic in this sprint
+      const orphanFeatures = features.filter(f => !f.parent || !epicFeatures.has(f.parent))
+
+      const epicNodes = epics.map(epic => ({
+        type: 'epic',
+        item: epic,
+        effort: epic.totalEffort || 0,
+        features: (epicFeatures.get(epic.id) || []).map(feat => ({
+          type: 'feature',
+          item: feat,
+          effort: feat.totalEffort || 0,
+          children: featureChildren.get(feat.id) || [],
+        })),
+      }))
+
+      const orphanFeatureNodes = orphanFeatures.map(feat => ({
+        type: 'feature',
+        item: feat,
+        effort: feat.totalEffort || 0,
+        children: featureChildren.get(feat.id) || [],
+      }))
+
+      tree.push({
+        classification: cls,
+        count: clsItems.length,
+        totalEffort,
+        epics: epicNodes,
+        orphanFeatures: orphanFeatureNodes,
+        orphanLeaves,
+      })
+    }
+
+    return tree
+  }, [dialogData])
 
   if (!hasData) return <Navigate to="/" replace />
 
@@ -179,47 +322,126 @@ export default function EffortBreakdown() {
 
       {/* Drill-down dialog */}
       <Dialog open={!!dialogData} onOpenChange={() => setDialogData(null)}>
-        <DialogContent className="max-w-3xl" onClose={() => setDialogData(null)}>
+        <DialogContent className="max-w-6xl max-h-[90vh]" onClose={() => setDialogData(null)}>
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-xl">
               Sprint {dialogData?.sprint?.label} — {dialogData?.sprint?.quarter}
+              <span className="text-muted-foreground text-sm font-normal ml-3">
+                {dialogData?.items?.length} items — {dialogData?.sprint?.total?.toFixed(1)} effort
+              </span>
             </DialogTitle>
           </DialogHeader>
-          <div className="max-h-96 overflow-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Classification</TableHead>
-                  <TableHead>BE</TableHead>
-                  <TableHead>FE</TableHead>
-                  <TableHead>Design</TableHead>
-                  <TableHead>Analysis</TableHead>
-                  <TableHead>Total</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {dialogData?.items?.map(item => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-mono">{item.id}</TableCell>
-                    <TableCell>{item.type}</TableCell>
-                    <TableCell className="max-w-xs truncate">{item.title}</TableCell>
-                    <TableCell>
-                      <Badge variant={classificationToVariant(item.classification)}>
-                        {item.classification || 'Unclassified'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="font-mono">{(item.effortBE || 0) > 0 ? item.effortBE : ''}</TableCell>
-                    <TableCell className="font-mono">{(item.effortFE || 0) > 0 ? item.effortFE : ''}</TableCell>
-                    <TableCell className="font-mono">{(item.effortDesign || 0) > 0 ? item.effortDesign : ''}</TableCell>
-                    <TableCell className="font-mono">{(item.effortAnalysis || 0) > 0 ? item.effortAnalysis : ''}</TableCell>
-                    <TableCell className="font-mono font-bold">{item.totalEffort > 0 ? item.totalEffort.toFixed(1) : ''}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+          <div className="max-h-[calc(90vh-100px)] overflow-auto pr-1">
+            {dialogTree.map(cls => (
+              <div key={cls.classification} className="mb-3">
+                {/* Classification level */}
+                <button
+                  className="flex items-center gap-2 w-full text-left py-2 px-3 rounded-md hover:bg-muted/50 transition-colors"
+                  onClick={() => toggleNode(`cls-${cls.classification}`)}
+                >
+                  {expandedNodes.has(`cls-${cls.classification}`)
+                    ? <ChevronDown className="h-4 w-4 shrink-0" />
+                    : <ChevronRight className="h-4 w-4 shrink-0" />}
+                  <Badge variant={classificationToVariant(cls.classification)} className="text-xs">
+                    {cls.classification}
+                  </Badge>
+                  <span className="text-sm text-muted-foreground">
+                    {cls.count} items
+                  </span>
+                  <span className="ml-auto font-mono text-sm font-semibold">
+                    {cls.totalEffort.toFixed(1)}
+                  </span>
+                </button>
+
+                {expandedNodes.has(`cls-${cls.classification}`) && (
+                  <div className="ml-4 border-l border-border pl-2">
+                    {/* Epics */}
+                    {cls.epics.map(epicNode => (
+                      <div key={epicNode.item.id} className="mb-1">
+                        <button
+                          className="flex items-center gap-2 w-full text-left py-1.5 px-2 rounded hover:bg-muted/30 transition-colors"
+                          onClick={() => toggleNode(`item-${epicNode.item.id}`)}
+                        >
+                          {epicNode.features.length > 0
+                            ? (expandedNodes.has(`item-${epicNode.item.id}`)
+                              ? <ChevronDown className="h-3.5 w-3.5 shrink-0" />
+                              : <ChevronRight className="h-3.5 w-3.5 shrink-0" />)
+                            : <span className="w-3.5" />}
+                          <Layers className="h-3.5 w-3.5 text-purple-400 shrink-0" />
+                          <span className="font-mono text-xs text-muted-foreground">{epicNode.item.id}</span>
+                          <span className="text-sm truncate">{epicNode.item.title}</span>
+                          <span className="ml-auto font-mono text-xs">{epicNode.effort > 0 ? epicNode.effort.toFixed(1) : ''}</span>
+                        </button>
+
+                        {expandedNodes.has(`item-${epicNode.item.id}`) && epicNode.features.length > 0 && (
+                          <div className="ml-5 border-l border-border/50 pl-2">
+                            {epicNode.features.map(featNode => (
+                              <div key={featNode.item.id} className="mb-0.5">
+                                <button
+                                  className="flex items-center gap-2 w-full text-left py-1 px-2 rounded hover:bg-muted/20 transition-colors"
+                                  onClick={() => toggleNode(`item-${featNode.item.id}`)}
+                                >
+                                  {featNode.children.length > 0
+                                    ? (expandedNodes.has(`item-${featNode.item.id}`)
+                                      ? <ChevronDown className="h-3 w-3 shrink-0" />
+                                      : <ChevronRight className="h-3 w-3 shrink-0" />)
+                                    : <span className="w-3" />}
+                                  <FolderOpen className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+                                  <span className="font-mono text-xs text-muted-foreground">{featNode.item.id}</span>
+                                  <span className="text-sm truncate">{featNode.item.title}</span>
+                                  <EffortCells item={featNode.item} />
+                                </button>
+
+                                {expandedNodes.has(`item-${featNode.item.id}`) && featNode.children.length > 0 && (
+                                  <div className="ml-5 border-l border-border/30 pl-2">
+                                    {featNode.children.map(child => (
+                                      <LeafRow key={child.id} item={child} />
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+
+                    {/* Orphan Features (no epic parent in this sprint) */}
+                    {cls.orphanFeatures.map(featNode => (
+                      <div key={featNode.item.id} className="mb-0.5">
+                        <button
+                          className="flex items-center gap-2 w-full text-left py-1 px-2 rounded hover:bg-muted/20 transition-colors"
+                          onClick={() => toggleNode(`item-${featNode.item.id}`)}
+                        >
+                          {featNode.children.length > 0
+                            ? (expandedNodes.has(`item-${featNode.item.id}`)
+                              ? <ChevronDown className="h-3 w-3 shrink-0" />
+                              : <ChevronRight className="h-3 w-3 shrink-0" />)
+                            : <span className="w-3" />}
+                          <FolderOpen className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+                          <span className="font-mono text-xs text-muted-foreground">{featNode.item.id}</span>
+                          <span className="text-sm truncate">{featNode.item.title}</span>
+                          <EffortCells item={featNode.item} />
+                        </button>
+
+                        {expandedNodes.has(`item-${featNode.item.id}`) && featNode.children.length > 0 && (
+                          <div className="ml-5 border-l border-border/30 pl-2">
+                            {featNode.children.map(child => (
+                              <LeafRow key={child.id} item={child} />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+
+                    {/* Orphan leaves (no feature/epic parent in this sprint) */}
+                    {cls.orphanLeaves.map(item => (
+                      <LeafRow key={item.id} item={item} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </DialogContent>
       </Dialog>
