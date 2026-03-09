@@ -2,6 +2,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { LayoutDashboard, LogOut, BarChart3, ListTodo, UsersRound, Trophy } from 'lucide-react'
+import packageJson from '../../../package.json'
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: BarChart3 },
@@ -31,6 +32,9 @@ export function Navbar() {
           <span className="text-xl">🔄</span>
           <span className="bg-gradient-to-r from-retro-primary to-violet-500 bg-clip-text text-transparent">
             RetroBoard
+          </span>
+          <span className="text-[10px] font-medium text-retro-text-secondary bg-slate-100 rounded-full px-1.5 py-0.5">
+            v{packageJson.version}
           </span>
         </button>
         {user && (
