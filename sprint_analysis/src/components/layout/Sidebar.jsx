@@ -111,7 +111,7 @@ export default function Sidebar() {
         ))}
       </nav>
       <div className="px-5 py-4 border-t border-white/10">
-        <p className="text-[11px] text-slate-500">FlowMetrics v2.0</p>
+        <p className="text-[11px] text-slate-500">FlowMetrics v{__APP_VERSION__}</p>
       </div>
     </aside>
   )
