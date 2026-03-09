@@ -8,7 +8,12 @@
       "Bash(node scripts/generate-samples.js:*)",
       "Bash(test:*)",
       "Bash(node -e:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(node --watch:*)",
+      "Bash(npx vite --open)",
+      "Bash(npx tsc:*)",
+      "Bash(grep:*)",
+      "Bash(wc:*)"
     ]
   }
 }
