@@ -1,0 +1,3 @@
+ho simulto due utenti host ed invitato, ho riscontrato diversi problemi:
+- Quando host crea sessione, ed invita un altra persone, la persona invitata accede, si parte con ice break, quando uno vota l'altro non può votare il mood. se aggiorna pagina pu tornare a votare
+- Quando supero l'ice break, se host va avanti, nel'invitato va avanti ma non vede l quiz, se aggiorna pagina allora appare

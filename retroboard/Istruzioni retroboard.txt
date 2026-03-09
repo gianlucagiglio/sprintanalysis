@@ -1,0 +1,207 @@
+Retrospettiva Agile Web App – Free Edition (Documento per Claude)
+1. Introduzione
+
+Creare un’applicazione web per retrospettive Agile, ispirata a Neatro, con massimo 20 utenti per sessione free. L’app deve includere:
+
+Icebreaker a quiz iniziale
+
+Voto segreto Mood con GIF/emoji
+
+Sezioni retrospettiva: commenti, votazione, raggruppamento, piano d’azione
+
+Kanban delle azioni emerse, con owner e deadline
+
+Salvataggio realtime su Supabase
+
+Layout responsive, cards, barra utenti laterale, step wizard
+
+2. Requisiti principali
+
+Utenti per sessione: massimo 20
+
+Ruoli:
+
+Organizzatore: crea retrospettiva, gestisce sezioni, raggruppa commenti, delega utenti, avanza sezioni
+
+Partecipante: inserisce commenti, vota, raggruppa se delegato, clicca “Ho finito”
+
+Backend: Supabase (Postgres + Auth + Realtime)
+
+Frontend: React + TypeScript + TailwindCSS
+
+Layout: ispirato a Neatro, minimal, responsive, cards per commenti e azioni
+
+3. Architettura generale
+
+Componenti principali:
+
+Login / Registrazione
+
+Dashboard retrospettive
+
+Mood Voting iniziale
+
+Icebreaker quiz
+
+Sezioni retrospettiva (commenti, votazione, raggruppamento, piano d’azione)
+
+Kanban per azioni emerse
+
+Realtime updates: commenti, voti, stato “Ho finito”, raggruppamenti, Kanban, Mood
+
+4. Flusso completo
+4.1 Login / accesso
+
+Login via email/password (Supabase Auth)
+
+Dashboard con elenco retrospettive
+
+Selezione o creazione nuova retrospettiva
+
+4.2 Mood Voting iniziale
+
+Mostrato prima di icebreaker e commenti
+
+Tre GIF/emoji predefinite: Glad, Sad, Mad
+
+Opzione custom aggiuntiva
+
+Voto anonimo, salvato in Supabase
+
+Trend visualizzabile nel tempo nella dashboard
+
+4.3 Icebreaker Quiz
+
+Domande a scelta multipla (3–5 domande)
+
+Punteggio: risposta corretta + bonus tempo inverso (max 10 sec)
+
+Feedback animato per risposta corretta/sbagliata
+
+Salvataggio in tempo reale su Supabase
+
+4.4 Sezioni Retrospettiva
+
+Inserimento Commenti: input box, cards, pulsante “Ho finito” se requiresInteraction=true
+
+Votazione: voti da 1 a 5, completamento obbligatorio per avanzare
+
+Raggruppamento Commenti: drag & drop, fatto da organizzatore o delegati
+
+Piano d’Azione: creazione task, assegnazione owner e deadline
+
+4.5 Kanban delle Azioni
+
+Tre colonne: To Do, In Progress, Done
+
+Card task con titolo, owner, deadline, stato
+
+Drag & drop tra colonne
+
+Aggiornamento live via Supabase Realtime
+
+5. Struttura dati Supabase
+
+Users: id, name, email, role
+Sessions: id, title, organizer_id, created_at
+Sections: id, session_id, name, requiresInteraction
+Comments: id, section_id, user_id, text, created_at
+Votes: id, comment_id, user_id, value
+Actions: id, session_id, text, assignedTo, deadline, status (To Do/In Progress/Done)
+Quiz_Questions: id, question, choices, correct_choice
+Quiz_Answers: id, user_id, question_id, choice, time_taken, points
+Mood_Votes: id, session_id, user_id, mood (Glad/Sad/Mad/custom), timestamp
+
+6. Layout e UX
+
+Step Wizard / Sezioni:
+
+Fasi in orizzontale (cards per commenti, voti, azioni)
+
+Step indicator top left: “Step X/4”
+
+Side panel: elenco utenti, ruoli, completamento
+
+Pulsante “Ho finito” in basso a destra, visibile solo se necessario
+
+Mood Voting:
+
+Tre pulsanti grandi con GIF/emoji + opzione custom
+
+Voto anonimo, trend grafico storico
+
+Kanban Board:
+
+Tre colonne verticali (To Do, In Progress, Done)
+
+Card task con titolo, owner, deadline, stato colore
+
+Drag & drop tra colonne
+
+Palette colori: soft, minimal, spazio bianco ampio
+Animazioni: leggere su drag & drop, transizioni sezioni, feedback quiz
+
+7. UI/UX Guidelines e Referenze
+
+Neatro:
+
+Step progressivo, quattro colonne principali, cards interne
+
+Soft colors, icons minime, ampio spazio bianco
+
+Timer e progress indicator opzionale
+
+neatro.io
+
+Kanban:
+
+Pattern verticale tre colonne, drag & drop, stato visivo chiaro
+
+Asana Kanban
+
+Mood / Retro template:
+
+Tre stati (Glad, Sad, Mad) + custom
+
+Miro Retro template
+
+Indicazioni da includere:
+
+- Horizontal board layout with cards per phase
+- Step wizard with top-left step indicator
+- Side panel showing users, roles, completion
+- Mood vote at start with 3 GIFs + custom option, anonymous
+- Kanban board with 3 columns, draggable cards, owner and deadline tags
+- Soft colors, minimal borders, responsive design
+- Animate drag & drop, quiz feedback, section transitions
+8. Realtime e Persistenza
+
+Tutti i dati aggiornati live via Supabase Realtime: commenti, voti, stato “Ho finito”, raggruppamento, Kanban, Mood
+
+Esportazione sessione completa: PDF / CSV
+
+9. Istruzioni per Claude Code
+
+Generare frontend completo in React + TypeScript + TailwindCSS
+
+Collegare Supabase per gestione utenti, sessioni, sezioni, commenti, voti, azioni, quiz, Mood votes
+
+Implementare tutte le funzionalità:
+
+Icebreaker quiz
+
+Voto Mood segreto
+
+Sezioni retrospettiva con pulsante “Ho finito” se richiesto
+
+Raggruppamento commenti (drag & drop)
+
+Piano d’Azione + Kanban delle azioni con owner e deadline
+
+Layout e UX stile Neatro, Miro, Kanban moderno
+
+Aggiornamenti realtime via Supabase Realtime
+
+Massimo 20 utenti per sessione free
+
+Tutto pronto per avvio locale o deploy su Vercel/Netlify

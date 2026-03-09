@@ -1,0 +1,212 @@
+import { useEffect, useCallback, useRef } from 'react'
+import { supabase } from '@/lib/supabase'
+import { useSessionStore } from '@/stores/sessionStore'
+import { useAuthStore } from '@/stores/authStore'
+import type { Session } from '@/types/database'
+
+let realtimeSetUp = false
+
+export function useSession(sessionId: string | undefined) {
+  const { session, setSession, setParticipants, setSections, updateSession } = useSessionStore()
+  const user = useAuthStore((s) => s.user)
+  const isFirstMount = useRef(false)
+
+  const fetchSession = useCallback(async () => {
+    if (!sessionId) return
+    const { data } = await supabase
+      .from('sessions')
+      .select('*')
+      .eq('id', sessionId)
+      .single()
+    if (data) setSession(data)
+  }, [sessionId, setSession])
+
+  const fetchParticipants = useCallback(async () => {
+    if (!sessionId) return
+    const { data } = await supabase
+      .from('session_participants')
+      .select('*, profiles(*)')
+      .eq('session_id', sessionId)
+    if (data) setParticipants(data as never)
+  }, [sessionId, setParticipants])
+
+  const fetchSections = useCallback(async () => {
+    if (!sessionId) return
+    const { data } = await supabase
+      .from('sections')
+      .select('*')
+      .eq('session_id', sessionId)
+      .order('sort_order')
+    if (data) setSections(data)
+  }, [sessionId, setSections])
+
+  useEffect(() => {
+    fetchSession()
+    fetchParticipants()
+    fetchSections()
+  }, [fetchSession, fetchParticipants, fetchSections])
+
+  // Realtime subscription — only one per session (singleton guard)
+  useEffect(() => {
+    if (!sessionId || realtimeSetUp) return
+    realtimeSetUp = true
+    isFirstMount.current = true
+
+    const channel = supabase
+      .channel(`session-${sessionId}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'sessions', filter: `id=eq.${sessionId}` },
+        (payload) => updateSession(payload.new as Partial<Session>)
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'session_participants', filter: `session_id=eq.${sessionId}` },
+        () => fetchParticipants()
+      )
+      .subscribe()
+
+    return () => {
+      if (isFirstMount.current) {
+        supabase.removeChannel(channel)
+        realtimeSetUp = false
+      }
+    }
+  }, [sessionId, updateSession, fetchParticipants])
+
+  // Polling fallback: re-fetch session & participants every 3s
+  useEffect(() => {
+    if (!sessionId) return
+    const interval = setInterval(() => {
+      fetchSession()
+      fetchParticipants()
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [sessionId, fetchSession, fetchParticipants])
+
+  const advanceStep = async () => {
+    if (!session || session.organizer_id !== user?.id) return
+    const nextStep = Math.min(session.current_step + 1, 4)
+    const prevStep = session.current_step
+    const prevPhase = session.retro_phase
+    updateSession({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, quiz_current_index: 0 })
+    const { error } = await supabase
+      .from('sessions')
+      .update({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, quiz_current_index: 0 })
+      .eq('id', session.id)
+    if (error) {
+      console.error('advanceStep failed:', error)
+      updateSession({ current_step: prevStep, retro_phase: prevPhase })
+    }
+  }
+
+  const setRetroPhase = async (phase: Session['retro_phase']) => {
+    if (!session || session.organizer_id !== user?.id) return
+    const prevPhase = session.retro_phase
+    const prevRevealed = session.retro_revealed
+    const needsAnonymity = phase === 'comments' || phase === 'voting'
+    const revealed = needsAnonymity ? false : session.retro_revealed
+    updateSession({ retro_phase: phase, retro_revealed: revealed })
+    const { error } = await supabase
+      .from('sessions')
+      .update({ retro_phase: phase, retro_revealed: revealed })
+      .eq('id', session.id)
+    if (error) {
+      console.error('setRetroPhase failed:', error)
+      updateSession({ retro_phase: prevPhase, retro_revealed: prevRevealed })
+    }
+  }
+
+  const revealRetro = async () => {
+    if (!session || session.organizer_id !== user?.id) return
+    updateSession({ retro_revealed: true })
+    const { error } = await supabase
+      .from('sessions')
+      .update({ retro_revealed: true })
+      .eq('id', session.id)
+    if (error) {
+      console.error('revealRetro failed:', error)
+      updateSession({ retro_revealed: false })
+    }
+  }
+
+  const markDone = async () => {
+    if (!session || !user) return
+    const { error } = await supabase
+      .from('session_participants')
+      .update({ is_done: true })
+      .eq('session_id', session.id)
+      .eq('user_id', user.id)
+    if (error) {
+      console.error('markDone failed:', error)
+    } else {
+      await fetchParticipants()
+    }
+  }
+
+  const resetDone = async () => {
+    if (!session || session.organizer_id !== user?.id) return
+    const { error } = await supabase
+      .from('session_participants')
+      .update({ is_done: false })
+      .eq('session_id', session.id)
+    if (error) {
+      console.error('resetDone failed:', error)
+    } else {
+      await fetchParticipants()
+    }
+  }
+
+  const advanceQuiz = async () => {
+    if (!session || session.organizer_id !== user?.id) return
+    const nextIndex = session.quiz_current_index + 1
+    updateSession({ quiz_current_index: nextIndex })
+    const { error } = await supabase
+      .from('sessions')
+      .update({ quiz_current_index: nextIndex })
+      .eq('id', session.id)
+    if (error) {
+      console.error('advanceQuiz failed:', error)
+      updateSession({ quiz_current_index: session.quiz_current_index })
+    }
+  }
+
+  const resetQuizIndex = async () => {
+    if (!session || session.organizer_id !== user?.id) return
+    updateSession({ quiz_current_index: 0 })
+    await supabase
+      .from('sessions')
+      .update({ quiz_current_index: 0 })
+      .eq('id', session.id)
+  }
+
+  const closeSession = async () => {
+    if (!session || session.organizer_id !== user?.id) return
+    updateSession({ current_step: 5 })
+    const { error } = await supabase
+      .from('sessions')
+      .update({ current_step: 5 })
+      .eq('id', session.id)
+    if (error) {
+      console.error('closeSession failed:', error)
+      updateSession({ current_step: session.current_step })
+    }
+  }
+
+  const isOrganizer = session?.organizer_id === user?.id
+
+  return {
+    session,
+    isOrganizer,
+    advanceStep,
+    advanceQuiz,
+    resetQuizIndex,
+    setRetroPhase,
+    revealRetro,
+    markDone,
+    resetDone,
+    closeSession,
+    fetchSession,
+    fetchParticipants,
+  }
+}
