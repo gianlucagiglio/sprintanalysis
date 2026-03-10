@@ -475,4 +475,130 @@ export const quizThemes: QuizTheme[] = [
       },
     ],
   },
+  {
+    id: 'difficolta-media',
+    label: 'Difficolta\u0300 media',
+    questions: [
+      {
+        question: 'Quale pianeta ha gli anelli piu\u0300 evidenti?',
+        choices: ['Giove', 'Saturno', 'Nettuno', 'Urano'],
+        correct_choice: 1,
+      },
+      {
+        question: "Qual e\u0300 il fiume piu\u0300 lungo d'Europa?",
+        choices: ['Danubio', 'Volga', 'Reno', 'Tamigi'],
+        correct_choice: 1,
+      },
+      {
+        question: 'In quale anno inizio\u0300 la Rivoluzione francese?',
+        choices: ['1789', '1815', '1776', '1804'],
+        correct_choice: 0,
+      },
+    ],
+  },
+  {
+    id: 'cultura-difficile',
+    label: 'Cultura generale difficile',
+    questions: [
+      {
+        question: 'Quale elemento chimico ha simbolo Fe?',
+        choices: ['Ferro', 'Fluoro', 'Fosforo', 'Francio'],
+        correct_choice: 0,
+      },
+      {
+        question: "Qual e\u0300 la capitale della Nuova Zelanda?",
+        choices: ['Auckland', 'Wellington', 'Christchurch', 'Queenstown'],
+        correct_choice: 1,
+      },
+      {
+        question: "Qual e\u0300 la capitale del Canada?",
+        choices: ['Toronto', 'Ottawa', 'Vancouver', 'Montreal'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'geni',
+    label: 'Solo i geni lo risolvono',
+    questions: [
+      {
+        question: 'Quale numero completa la sequenza: 1, 3, 6, 10, 15, ?',
+        choices: ['18', '20', '21', '25'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Se 5 macchine producono 5 oggetti in 5 minuti, quanto tempo servono a 100 macchine per produrre 100 oggetti?',
+        choices: ['5 minuti', '100 minuti', '20 minuti', '50 minuti'],
+        correct_choice: 0,
+      },
+      {
+        question: 'Quale numero viene dopo: 2, 6, 7, 21, 22, ?',
+        choices: ['44', '66', '23', '88'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'impossibili',
+    label: 'Quiz impossibili',
+    questions: [
+      {
+        question: 'Se un aereo cade tra Italia e Francia, dove vengono seppelliti i sopravvissuti?',
+        choices: ['Italia', 'Francia', 'Non si seppelliscono i sopravvissuti', 'Nel paese piu\u0300 vicino'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Quanti mesi hanno 28 giorni?',
+        choices: ['1', '6', 'Tutti', '2'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Un treno elettrico va verso nord. In che direzione va il fumo?',
+        choices: ['Nord', 'Sud', "Non c'e\u0300 fumo", 'Dipende dal vento'],
+        correct_choice: 2,
+      },
+    ],
+  },
+  {
+    id: 'logica',
+    label: 'Logica e indovinelli',
+    questions: [
+      {
+        question: "Piu\u0300 ne togli, piu\u0300 diventa grande. Cos'e\u0300?",
+        choices: ['Un buco', 'Un numero', 'Un sacco', 'Il tempo'],
+        correct_choice: 0,
+      },
+      {
+        question: 'Cosa pesa di piu\u0300: 1 kg di piume o 1 kg di ferro?',
+        choices: ['Piume', 'Ferro', 'Pesano uguale', 'Dipende dalla gravita\u0300'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Se superi il secondo in una gara, in che posizione sei?',
+        choices: ['Primo', 'Secondo', 'Terzo', 'Dipende'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'cinema-musica-mix',
+    label: 'Cinema, serie TV e musica mix',
+    questions: [
+      {
+        question: 'Chi ha diretto il film Titanic?',
+        choices: ['Steven Spielberg', 'James Cameron', 'Christopher Nolan', 'Ridley Scott'],
+        correct_choice: 1,
+      },
+      {
+        question: "Chi e\u0300 il cantante della canzone Billie Jean?",
+        choices: ['Prince', 'Michael Jackson', 'Stevie Wonder', 'James Brown'],
+        correct_choice: 1,
+      },
+      {
+        question: 'In quale citta\u0300 si trova il museo Louvre?',
+        choices: ['Roma', 'Parigi', 'Madrid', 'Londra'],
+        correct_choice: 1,
+      },
+    ],
+  },
 ]
