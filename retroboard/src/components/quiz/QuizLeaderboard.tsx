@@ -27,7 +27,7 @@ export function QuizLeaderboard({ leaderboard }: QuizLeaderboardProps) {
   const podiumColors = ['text-yellow-500', 'text-gray-400', 'text-amber-600']
 
   return (
-    <Card className="max-w-md mx-auto">
+    <Card className="max-w-md mx-auto !p-4 md:!p-6">
       <div className="flex items-center gap-2 mb-4">
         <Trophy size={18} className="text-yellow-500" />
         <h3 className="font-semibold text-retro-text">Classifica</h3>

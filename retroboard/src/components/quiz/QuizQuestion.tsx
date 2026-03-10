@@ -95,14 +95,14 @@ export function QuizQuestion({ question, onAnswer, hasAnswered }: QuizQuestionPr
               whileTap={!showResult ? { scale: 0.99 } : undefined}
               onClick={() => handleSelect(idx)}
               disabled={showResult || hasAnswered}
-              className={`p-5 rounded-2xl border-2 text-left transition-all duration-200 ${bgClass}
+              className={`p-3 md:p-5 rounded-2xl border-2 text-left transition-all duration-200 ${bgClass}
                 disabled:cursor-default`}
             >
-              <div className="flex items-center gap-3">
-                <span className={`w-8 h-8 rounded-full ${letterColors[idx % letterColors.length]} flex items-center justify-center text-sm font-bold`}>
+              <div className="flex items-center gap-2 md:gap-3">
+                <span className={`w-7 h-7 md:w-8 md:h-8 rounded-full ${letterColors[idx % letterColors.length]} flex items-center justify-center text-xs md:text-sm font-bold shrink-0`}>
                   {String.fromCharCode(65 + idx)}
                 </span>
-                <span className="text-sm text-retro-text flex-1">{choice}</span>
+                <span className="text-xs md:text-sm text-retro-text flex-1">{choice}</span>
                 {showResult && isCorrect(idx) && <CheckCircle2 size={20} className="text-retro-glad" />}
                 {showResult && selected === idx && !isCorrect(idx) && <XCircle size={20} className="text-retro-mad" />}
               </div>

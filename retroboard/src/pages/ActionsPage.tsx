@@ -97,7 +97,7 @@ function GlobalKanbanColumn({
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col bg-slate-50 rounded-2xl border border-slate-200 p-3 min-h-[300px] transition-all duration-200
+      className={`flex flex-col bg-slate-50 rounded-2xl border border-slate-200 p-3 min-h-[120px] md:min-h-[300px] transition-all duration-200
         ${isOver ? 'ring-2 ring-retro-primary/20 bg-retro-primary/5' : ''}`}
     >
       <div className="flex items-center gap-2 mb-3 px-1">
@@ -147,17 +147,17 @@ export function ActionsPage() {
   return (
     <AppLayout>
       <div className="max-w-5xl mx-auto space-y-6">
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-retro-text flex items-center gap-2">
-              <ListTodo size={24} />
+            <h1 className="text-xl md:text-2xl font-bold text-retro-text flex items-center gap-2">
+              <ListTodo size={22} />
               Azioni Globali
             </h1>
-            <p className="text-sm text-retro-text-secondary mt-1">
+            <p className="text-xs md:text-sm text-retro-text-secondary mt-1">
               Tutte le azioni da tutte le retrospettive
             </p>
           </div>
-          <div className="bg-slate-100 rounded-xl p-1 flex gap-0.5">
+          <div className="bg-slate-100 rounded-xl p-1 flex gap-0.5 self-start">
             <button
               onClick={() => setViewMode('kanban')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
@@ -189,7 +189,7 @@ export function ActionsPage() {
           </div>
         ) : viewMode === 'kanban' ? (
           <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {columns.map((col) => (
                 <GlobalKanbanColumn
                   key={col.id}

@@ -171,7 +171,7 @@ export function GanttView({ actions }: { actions: ActionWithSession[] }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-soft overflow-hidden">
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 bg-slate-50/50">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 px-3 md:px-4 py-3 border-b border-slate-200 bg-slate-50/50">
         {/* Zoom temporale */}
         <div className="bg-slate-100 rounded-xl p-1 flex">
           {timeScaleOptions.map((opt) => (
@@ -219,7 +219,7 @@ export function GanttView({ actions }: { actions: ActionWithSession[] }) {
       ) : <>
       {/* Header */}
       <div className="flex border-b border-slate-200">
-        <div className="w-[200px] shrink-0 px-4 py-3 bg-slate-50 border-r border-slate-200">
+        <div className="w-[120px] md:w-[200px] shrink-0 px-4 py-3 bg-slate-50 border-r border-slate-200">
           <span className="text-xs font-semibold text-retro-text-secondary uppercase tracking-wider">
             Azione
           </span>
@@ -269,7 +269,7 @@ export function GanttView({ actions }: { actions: ActionWithSession[] }) {
               className="flex border-b border-slate-100 hover:bg-slate-50/50 transition-colors"
             >
               {/* Label column */}
-              <div className="w-[200px] shrink-0 px-4 py-3 border-r border-slate-200 flex flex-col justify-center gap-1">
+              <div className="w-[120px] md:w-[200px] shrink-0 px-4 py-3 border-r border-slate-200 flex flex-col justify-center gap-1">
                 <p className="text-sm text-retro-text truncate" title={action.text}>
                   {action.text}
                 </p>
@@ -343,7 +343,7 @@ export function GanttView({ actions }: { actions: ActionWithSession[] }) {
         {todayPosition !== null && (
           <div
             className="absolute top-0 z-30 -translate-x-1/2 pointer-events-none"
-            style={{ left: `calc(200px + (100% - 200px) * ${todayPosition / 100})` }}
+            style={{ left: `calc(120px + (100% - 120px) * ${todayPosition / 100})` }}
           >
             <span className="bg-retro-primary text-white text-[9px] font-bold px-1.5 py-0.5 rounded-b-md">
               OGGI

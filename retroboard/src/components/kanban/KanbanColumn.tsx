@@ -17,7 +17,8 @@ export function KanbanColumn({ id, title, actions, color }: KanbanColumnProps) {
     <div
       ref={setNodeRef}
       className={`flex flex-col bg-slate-50 rounded-2xl border border-slate-200 p-3 min-h-[300px] transition-all duration-200
-        ${isOver ? 'ring-2 ring-retro-primary/20 bg-retro-primary/5' : ''}`}
+        ${isOver ? 'ring-2 ring-retro-primary/20 bg-retro-primary/5' : ''}
+        min-h-[120px] md:min-h-[300px]`}
     >
       <div className="flex items-center gap-2 mb-3 px-1">
         <div className={`w-2.5 h-2.5 rounded-full ${color}`} />
