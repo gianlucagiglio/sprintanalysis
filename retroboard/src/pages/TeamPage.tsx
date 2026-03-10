@@ -8,9 +8,15 @@ import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Badge } from '@/components/ui/Badge'
-import type { Team, TeamMember, Profile, Session } from '@/types/database'
+import type { Team, TeamMember, Profile, Session, Action } from '@/types/database'
+import { TrendKPIs } from '@/components/metrics/TrendKPIs'
+import { HappinessTrendLine } from '@/components/metrics/HappinessTrendLine'
+import { CommentSentimentChart } from '@/components/metrics/CommentSentimentChart'
+import { SentimentDelta } from '@/components/metrics/SentimentDelta'
+import { useGlobalMoods } from '@/hooks/useGlobalMoods'
+import { useMetrics } from '@/hooks/useMetrics'
 import {
-  Crown, Shield, User, Copy, Check, Search, UserPlus, Trash2, ArrowLeft, X,
+  Crown, Shield, User, Copy, Check, Search, UserPlus, Trash2, ArrowLeft, X, Calendar, CheckCircle2,
 } from 'lucide-react'
 
 type MemberWithProfile = TeamMember & { profiles: Profile }
@@ -27,8 +33,13 @@ export function TeamPage() {
   const [team, setTeam] = useState<Team | null>(null)
   const [members, setMembers] = useState<MemberWithProfile[]>([])
   const [sessions, setSessions] = useState<Session[]>([])
+  const [actions, setActions] = useState<(Action & { sessionTitle?: string })[]>([])
   const [myRole, setMyRole] = useState<TeamMember['role'] | null>(null)
   const [loading, setLoading] = useState(true)
+
+  // Team-scoped metrics
+  const { sessionMoods, loading: moodsLoading } = useGlobalMoods(id)
+  const { commentSentiments, happinessData, trendKPIs, sentimentDeltas, loading: metricsLoading } = useMetrics(id)
 
   // Invite link copy state
   const [copied, setCopied] = useState(false)
@@ -67,12 +78,31 @@ export function TeamPage() {
     if (data) setSessions(data)
   }, [id])
 
+  const fetchActions = useCallback(async () => {
+    if (!id) return
+    const { data: teamSessions } = await supabase
+      .from('sessions')
+      .select('id, title')
+      .eq('team_id', id)
+    if (!teamSessions?.length) return
+    const sIds = teamSessions.map((s) => s.id)
+    const { data } = await supabase
+      .from('actions')
+      .select('*')
+      .in('session_id', sIds)
+      .order('created_at', { ascending: false })
+    if (data) {
+      const titleMap = new Map(teamSessions.map((s) => [s.id, s.title]))
+      setActions(data.map((a) => ({ ...a, sessionTitle: titleMap.get(a.session_id) })))
+    }
+  }, [id])
+
   useEffect(() => {
     setLoading(true)
-    Promise.all([fetchTeam(), fetchMembers(), fetchSessions()]).finally(() =>
+    Promise.all([fetchTeam(), fetchMembers(), fetchSessions(), fetchActions()]).finally(() =>
       setLoading(false)
     )
-  }, [fetchTeam, fetchMembers, fetchSessions])
+  }, [fetchTeam, fetchMembers, fetchSessions, fetchActions])
 
   const canManage = myRole === 'owner' || myRole === 'admin'
 
@@ -281,6 +311,63 @@ export function TeamPage() {
             </div>
           )}
         </Card>
+
+        {/* Team Sentiment Dashboard */}
+        {!moodsLoading && !metricsLoading && sessionMoods.length > 0 && (
+          <>
+            <h2 className="text-lg font-semibold text-retro-text">Sentiment storico del team</h2>
+            <TrendKPIs kpis={trendKPIs} />
+            <HappinessTrendLine data={happinessData} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <CommentSentimentChart data={commentSentiments} />
+              <SentimentDelta data={sentimentDeltas} />
+            </div>
+          </>
+        )}
+
+        {/* Team Actions */}
+        {actions.length > 0 && (
+          <Card>
+            <h2 className="font-semibold text-retro-text mb-3">
+              Azioni del team ({actions.length})
+            </h2>
+            <div className="space-y-2">
+              {actions.map((a) => (
+                <div key={a.id} className="flex items-start gap-3 p-3 rounded-xl bg-retro-sidebar/50">
+                  <CheckCircle2
+                    size={16}
+                    className={`mt-0.5 shrink-0 ${
+                      a.status === 'done' ? 'text-emerald-500' :
+                      a.status === 'in_progress' ? 'text-retro-primary' :
+                      'text-retro-text-secondary'
+                    }`}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm text-retro-text ${a.status === 'done' ? 'line-through opacity-60' : ''}`}>
+                      {a.text}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2 mt-1">
+                      {a.sessionTitle && (
+                        <span className="text-[10px] text-retro-text-secondary bg-slate-100 rounded-full px-2 py-0.5">
+                          {a.sessionTitle}
+                        </span>
+                      )}
+                      {a.deadline && (
+                        <span className="flex items-center gap-1 text-[10px] text-retro-text-secondary">
+                          <Calendar size={10} />
+                          {new Date(a.deadline).toLocaleDateString('it-IT')}
+                        </span>
+                      )}
+                      <Badge variant={a.status === 'done' ? 'primary' : 'default'} className="text-[10px]">
+                        {a.status === 'done' ? 'Completato' : a.status === 'in_progress' ? 'In corso' : 'Da fare'}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
       </div>
     </AppLayout>
   )

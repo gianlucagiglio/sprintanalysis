@@ -39,7 +39,7 @@ const MOOD_SCORES: Record<string, number> = {
   mad: 0,
 }
 
-export function useMetrics() {
+export function useMetrics(teamId?: string) {
   const [commentSentiments, setCommentSentiments] = useState<CommentSentimentData[]>([])
   const [happinessData, setHappinessData] = useState<HappinessDataPoint[]>([])
   const [trendKPIs, setTrendKPIs] = useState<TrendKPIs>({
@@ -58,18 +58,24 @@ export function useMetrics() {
   const fetchMetrics = useCallback(async () => {
     if (!user) return
 
-    // 1. Get all sessions user participated in
-    const { data: participations, error: partError } = await supabase
-      .from('session_participants')
-      .select('session_id, user_id')
-      .eq('user_id', user.id)
+    // 1. Get session IDs
+    let sessionIds: string[]
 
-    if (partError || !participations?.length) {
-      setLoading(false)
-      return
+    if (teamId) {
+      const { data: teamSessions } = await supabase
+        .from('sessions')
+        .select('id')
+        .eq('team_id', teamId)
+      if (!teamSessions?.length) { setLoading(false); return }
+      sessionIds = teamSessions.map((s) => s.id)
+    } else {
+      const { data: participations, error: partError } = await supabase
+        .from('session_participants')
+        .select('session_id, user_id')
+        .eq('user_id', user.id)
+      if (partError || !participations?.length) { setLoading(false); return }
+      sessionIds = participations.map((p) => p.session_id)
     }
-
-    const sessionIds = participations.map((p) => p.session_id)
 
     // 2. Parallel fetch: sessions, mood_votes, sections, all participants
     const [sessionsRes, moodsRes, sectionsRes, allParticipantsRes] = await Promise.all([
@@ -192,7 +198,7 @@ export function useMetrics() {
     })
 
     setLoading(false)
-  }, [user])
+  }, [user, teamId])
 
   useEffect(() => {
     fetchMetrics()

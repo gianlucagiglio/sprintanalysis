@@ -15,7 +15,7 @@ export type SessionMoodData = {
   dominant: 'glad' | 'sad' | 'mad' | 'custom'
 }
 
-export function useGlobalMoods() {
+export function useGlobalMoods(teamId?: string) {
   const [sessionMoods, setSessionMoods] = useState<SessionMoodData[]>([])
   const [allMoodVotes, setAllMoodVotes] = useState<MoodVote[]>([])
   const [loading, setLoading] = useState(true)
@@ -24,20 +24,26 @@ export function useGlobalMoods() {
   const fetchGlobalMoods = useCallback(async () => {
     if (!user) return
 
-    // 1. Get all sessions the user participated in
-    const { data: participations, error: partError } = await supabase
-      .from('session_participants')
-      .select('session_id')
-      .eq('user_id', user.id)
+    let sessionIds: string[]
 
-    if (partError || !participations?.length) {
-      setLoading(false)
-      return
+    if (teamId) {
+      // Team mode: get all sessions of this team
+      const { data: teamSessions } = await supabase
+        .from('sessions')
+        .select('id')
+        .eq('team_id', teamId)
+      if (!teamSessions?.length) { setLoading(false); return }
+      sessionIds = teamSessions.map((s) => s.id)
+    } else {
+      // Personal mode: get sessions user participated in
+      const { data: participations, error: partError } = await supabase
+        .from('session_participants')
+        .select('session_id')
+        .eq('user_id', user.id)
+      if (partError || !participations?.length) { setLoading(false); return }
+      sessionIds = participations.map((p) => p.session_id)
     }
 
-    const sessionIds = participations.map((p) => p.session_id)
-
-    // 2. Fetch sessions and mood_votes in parallel
     const [sessionsRes, moodsRes] = await Promise.all([
       supabase
         .from('sessions')
@@ -52,10 +58,8 @@ export function useGlobalMoods() {
 
     const sessions = sessionsRes.data || []
     const moods = moodsRes.data || []
-
     setAllMoodVotes(moods)
 
-    // 3. Group moods by session
     const grouped = sessions.map((session) => {
       const sessionMoods = moods.filter((m) => m.session_id === session.id)
       const counts = {
@@ -67,24 +71,14 @@ export function useGlobalMoods() {
       const total = sessionMoods.length
       const dominant = (Object.entries(counts) as [SessionMoodData['dominant'], number][])
         .sort((a, b) => b[1] - a[1])[0]?.[0] || 'glad'
-
-      return {
-        sessionId: session.id,
-        sessionTitle: session.title,
-        sessionDate: session.created_at,
-        ...counts,
-        total,
-        dominant,
-      }
+      return { sessionId: session.id, sessionTitle: session.title, sessionDate: session.created_at, ...counts, total, dominant }
     })
 
     setSessionMoods(grouped)
     setLoading(false)
-  }, [user])
+  }, [user, teamId])
 
-  useEffect(() => {
-    fetchGlobalMoods()
-  }, [fetchGlobalMoods])
+  useEffect(() => { fetchGlobalMoods() }, [fetchGlobalMoods])
 
   const globalCounts = {
     glad: allMoodVotes.filter((m) => m.mood === 'glad').length,
