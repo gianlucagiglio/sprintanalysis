@@ -77,7 +77,7 @@ export function QuizQuestion({ question, onAnswer, hasAnswered }: QuizQuestionPr
         </div>
       </div>
 
-      <h2 className="text-lg font-semibold text-retro-text text-center">{question.question}</h2>
+      <h2 className="text-base md:text-lg font-semibold text-retro-text text-center">{question.question}</h2>
 
       <div className="grid grid-cols-1 gap-3">
         {choices.map((choice, idx) => {

@@ -97,38 +97,38 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-retro-text">{session.title}</h1>
-          <button
-            onClick={copyShareLink}
-            className="inline-flex items-center gap-1.5 text-xs text-retro-text-secondary hover:text-retro-primary mt-1.5 px-3 py-1.5 rounded-full hover:bg-retro-primary-light transition-all duration-200"
-          >
-            <Share2 size={12} />
-            {copied ? 'Link copiato!' : 'Condividi sessione'}
-          </button>
-        </div>
-        <div className="flex items-center gap-2">
-          <StepIndicator currentStep={currentStep} />
+      <div className="flex flex-col gap-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <h1 className="text-lg md:text-2xl font-bold text-retro-text truncate">{session.title}</h1>
+            <button
+              onClick={copyShareLink}
+              className="inline-flex items-center gap-1.5 text-xs text-retro-text-secondary hover:text-retro-primary mt-1 px-2 py-1 rounded-full hover:bg-retro-primary-light transition-all duration-200"
+            >
+              <Share2 size={12} />
+              {copied ? 'Copiato!' : 'Condividi'}
+            </button>
+          </div>
           {isOrganizer && (
-            <Button size="sm" variant="danger" onClick={closeSession}>
+            <Button size="sm" variant="danger" onClick={closeSession} className="shrink-0">
               <LogOut size={14} />
-              Chiudi retro
+              <span className="hidden sm:inline">Chiudi retro</span>
             </Button>
           )}
         </div>
+        <StepIndicator currentStep={currentStep} />
       </div>
 
       {/* Retro sub-phase indicator */}
       {currentStep === 3 && (
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-1.5 md:gap-2 overflow-x-auto pb-1 scrollbar-thin">
           {retroPhaseOrder.map((phase, i) => (
-            <div key={phase} className="flex items-center">
-              <Badge variant={session.retro_phase === phase ? 'primary' : 'default'}>
+            <div key={phase} className="flex items-center shrink-0">
+              <Badge variant={session.retro_phase === phase ? 'primary' : 'default'} className="text-[10px] md:text-xs whitespace-nowrap">
                 {retroPhaseLabels[phase]}
               </Badge>
               {i < retroPhaseOrder.length - 1 && (
-                <ArrowRight size={12} className="mx-1 text-retro-border" />
+                <ArrowRight size={10} className="mx-0.5 md:mx-1 text-retro-border shrink-0" />
               )}
             </div>
           ))}
@@ -136,23 +136,23 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
       )}
 
       {/* Controls - floating action bar */}
-      <div className="flex items-center gap-3 bg-white rounded-2xl shadow-soft p-4">
+      <div className="flex flex-wrap items-center gap-2 md:gap-3 bg-white rounded-2xl shadow-soft p-3 md:p-4">
         {!isDone && currentStep < 4 && (
-          <Button variant="secondary" onClick={markDone}>
-            <CheckCircle2 size={16} />
+          <Button variant="secondary" size="sm" onClick={markDone}>
+            <CheckCircle2 size={14} />
             Ho finito
           </Button>
         )}
         {isDone && (
           <Badge variant="glad">
-            <CheckCircle2 size={12} className="mr-1" /> Hai finito
+            <CheckCircle2 size={12} className="mr-1" /> Finito
           </Badge>
         )}
         <span className="text-xs text-retro-text-secondary">
-          {doneCount}/{totalParticipants} completati
+          {doneCount}/{totalParticipants}
         </span>
         {isOrganizer && (
-          <div className="ml-auto flex gap-2">
+          <div className="ml-auto flex gap-2 flex-wrap justify-end">
             {currentStep === 3 && session.retro_phase !== 'action_plan' && (() => {
               const needsReveal = (session.retro_phase === 'comments' || session.retro_phase === 'voting') && !session.retro_revealed
               return needsReveal ? (

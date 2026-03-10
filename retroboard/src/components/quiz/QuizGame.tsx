@@ -50,9 +50,9 @@ export function QuizGame({ sessionId }: QuizGameProps) {
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
           >
-            <PartyPopper size={64} className="text-retro-sad mx-auto mb-4" />
+            <PartyPopper size={48} className="text-retro-sad mx-auto mb-3 md:mb-4" />
           </motion.div>
-          <h2 className="text-2xl font-bold text-retro-text mb-1">Quiz completato!</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-retro-text mb-1">Quiz completato!</h2>
           <p className="text-sm text-retro-text-secondary">Ecco i risultati finali</p>
         </div>
         <QuizLeaderboard leaderboard={leaderboard} />

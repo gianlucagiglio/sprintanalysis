@@ -1,7 +1,7 @@
 import { useParticipants } from '@/hooks/useParticipants'
 import { Badge } from '@/components/ui/Badge'
-import { Clock, Users } from 'lucide-react'
-import { useMemo } from 'react'
+import { Clock, Users, X } from 'lucide-react'
+import { useMemo, useState } from 'react'
 
 function nameToColor(name: string): string {
   let hash = 0
@@ -23,14 +23,15 @@ function nameToColor(name: string): string {
 
 export function Sidebar() {
   const { participants, doneCount, totalParticipants } = useParticipants()
+  const [open, setOpen] = useState(false)
 
   const progressPercent = useMemo(() => {
     if (totalParticipants === 0) return 0
     return Math.round((doneCount / totalParticipants) * 100)
   }, [doneCount, totalParticipants])
 
-  return (
-    <aside className="w-60 bg-retro-sidebar border-r border-retro-border p-4 overflow-y-auto scrollbar-thin">
+  const sidebarContent = (
+    <>
       {/* Progress bar */}
       <div className="mb-4">
         <div className="h-1.5 rounded-full bg-retro-border overflow-hidden">
@@ -80,6 +81,40 @@ export function Sidebar() {
           )
         })}
       </div>
-    </aside>
+    </>
+  )
+
+  return (
+    <>
+      {/* Mobile: floating pill button */}
+      <button
+        onClick={() => setOpen(true)}
+        className="md:hidden fixed bottom-16 right-3 z-30 bg-white shadow-card border border-retro-border rounded-full px-3 py-2 flex items-center gap-1.5"
+      >
+        <Users size={14} className="text-retro-primary" />
+        <span className="text-xs font-semibold text-retro-text">{doneCount}/{totalParticipants}</span>
+      </button>
+
+      {/* Mobile: slide-over drawer */}
+      {open && (
+        <div className="md:hidden fixed inset-0 z-50">
+          <div className="absolute inset-0 bg-black/30" onClick={() => setOpen(false)} />
+          <aside className="absolute right-0 top-0 h-full w-64 bg-retro-sidebar border-l border-retro-border p-4 overflow-y-auto shadow-xl">
+            <button
+              onClick={() => setOpen(false)}
+              className="absolute top-3 right-3 p-1 rounded-lg hover:bg-retro-border/30 text-retro-text-secondary"
+            >
+              <X size={18} />
+            </button>
+            {sidebarContent}
+          </aside>
+        </div>
+      )}
+
+      {/* Desktop: fixed sidebar */}
+      <aside className="hidden md:block w-60 bg-retro-sidebar border-r border-retro-border p-4 overflow-y-auto scrollbar-thin">
+        {sidebarContent}
+      </aside>
+    </>
   )
 }
