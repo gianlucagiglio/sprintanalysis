@@ -173,8 +173,8 @@ export function DataProvider({ children }) {
     const needle = searchText.trim().toLowerCase()
 
     temporalFiltered.forEach(item => {
-      // Dropdown/select filters
-      if (filters.states.length > 0 && !filters.states.includes(item.state)) return
+      // State filter: apply only at leaf level (not Epic/Feature) so tree structure is preserved
+      if (filters.states.length > 0 && item.type !== 'Epic' && item.type !== 'Feature' && !filters.states.includes(item.state)) return
       if (filters.types.length > 0 && !filters.types.includes(item.type)) return
       if (filters.valueArea.length > 0 && !filters.valueArea.includes(item.valueArea)) return
       if (filters.tags.length > 0) {

@@ -309,7 +309,7 @@ export function aggregateData(items) {
     })
   })
 
-  // Sprint timeline data (with per-family effort)
+  // Sprint timeline data (with per-family effort + done/todo split)
   const sprintMap = new Map()
   processedItems.forEach(item => {
     if (!item.sprintInfo) return
@@ -327,19 +327,35 @@ export function aggregateData(items) {
         Other: 0,
         Unclassified: 0,
         total: 0,
+        // Done (Closed) vs Todo (non-Closed) split
+        totalDone: 0,
+        totalTodo: 0,
+        Strategic_done: 0, KTLO_done: 0, 'Small Change_done': 0, Other_done: 0, Unclassified_done: 0,
+        Strategic_todo: 0, KTLO_todo: 0, 'Small Change_todo': 0, Other_todo: 0, Unclassified_todo: 0,
       }
-      // Per-family effort columns
-      PROFESSIONAL_FAMILIES.forEach(f => { entry[`effort_${f}`] = 0 })
+      // Per-family effort columns (total + done/todo)
+      PROFESSIONAL_FAMILIES.forEach(f => {
+        entry[`effort_${f}`] = 0
+        entry[`effort_${f}_done`] = 0
+        entry[`effort_${f}_todo`] = 0
+      })
       sprintMap.set(key, entry)
     }
     const entry = sprintMap.get(key)
     const cls = item.classification || 'Unclassified'
+    const isDone = item.state === 'Closed'
+    const suffix = isDone ? '_done' : '_todo'
     entry[cls] = (entry[cls] || 0) + item.totalEffort
+    entry[cls + suffix] = (entry[cls + suffix] || 0) + item.totalEffort
     entry.total += item.totalEffort
+    if (isDone) entry.totalDone += item.totalEffort
+    else entry.totalTodo += item.totalEffort
     // Accumulate per-family effort
     if (item.effortByFamily) {
       PROFESSIONAL_FAMILIES.forEach(f => {
-        entry[`effort_${f}`] += (item.effortByFamily[f] || 0)
+        const eff = item.effortByFamily[f] || 0
+        entry[`effort_${f}`] += eff
+        entry[`effort_${f}${suffix}`] += eff
       })
     }
   })

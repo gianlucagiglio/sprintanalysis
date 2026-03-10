@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Badge, classificationToVariant } from '@/components/ui/badge'
 import { exportSprintData } from '@/lib/export-utils'
 import { PROFESSIONAL_FAMILIES } from '@/lib/utils'
-import { Download, ArrowUpDown, ChevronRight, ChevronDown, FolderOpen, FileText, Layers } from 'lucide-react'
+import { Download, ArrowUpDown, ChevronRight, ChevronDown, FolderOpen, FileText, Layers, CheckCircle2, Clock } from 'lucide-react'
 
 function EffortCells({ item }) {
   const parts = [
@@ -34,10 +34,16 @@ function EffortCells({ item }) {
   )
 }
 
+function StateIcon({ state }) {
+  if (state === 'Closed') return <CheckCircle2 className="h-3 w-3 text-emerald-400 shrink-0" />
+  return <Clock className="h-3 w-3 text-amber-400 shrink-0" />
+}
+
 function LeafRow({ item }) {
   return (
     <div className="flex items-center gap-2 py-1 px-2 rounded hover:bg-muted/10 transition-colors">
       <span className="w-3" />
+      <StateIcon state={item.state} />
       <FileText className="h-3 w-3 text-muted-foreground shrink-0" />
       <span className="font-mono text-xs text-muted-foreground">{item.id}</span>
       <Badge variant="outline" className="text-[10px] px-1 py-0 shrink-0">{item.type}</Badge>
@@ -71,8 +77,15 @@ export default function EffortBreakdown() {
   const totals = useMemo(() => {
     if (!tableData.length) return null
     const t = { sprint: 'TOTAL', label: '', fullLabel: '', quarter: '' }
-    const fields = ['Strategic', 'KTLO', 'Small Change', 'Other', 'Unclassified', 'total',
-      ...PROFESSIONAL_FAMILIES.map(f => `effort_${f}`)]
+    const classifications = ['Strategic', 'KTLO', 'Small Change', 'Other', 'Unclassified']
+    const fields = [
+      ...classifications, 'total', 'totalDone', 'totalTodo',
+      ...classifications.map(c => `${c}_done`),
+      ...classifications.map(c => `${c}_todo`),
+      ...PROFESSIONAL_FAMILIES.map(f => `effort_${f}`),
+      ...PROFESSIONAL_FAMILIES.map(f => `effort_${f}_done`),
+      ...PROFESSIONAL_FAMILIES.map(f => `effort_${f}_todo`),
+    ]
     fields.forEach(f => { t[f] = tableData.reduce((s, r) => s + (r[f] || 0), 0) })
     return t
   }, [tableData])
@@ -131,6 +144,8 @@ export default function EffortBreakdown() {
       if (clsItems.length === 0) continue
 
       const totalEffort = clsItems.reduce((s, i) => s + (i.totalEffort || 0), 0)
+      const effortDone = clsItems.filter(i => i.state === 'Closed').reduce((s, i) => s + (i.totalEffort || 0), 0)
+      const effortTodo = totalEffort - effortDone
 
       // Separate by type
       const epics = clsItems.filter(i => i.type === 'Epic')
@@ -184,6 +199,8 @@ export default function EffortBreakdown() {
         classification: cls,
         count: clsItems.length,
         totalEffort,
+        effortDone,
+        effortTodo,
         epics: epicNodes,
         orphanFeatures: orphanFeatureNodes,
         orphanLeaves,
@@ -233,13 +250,15 @@ export default function EffortBreakdown() {
                 <TableHeader>
                   <TableRow>
                     <SortHeader field="sprint">Sprint</SortHeader>
-                    <SortHeader field="quarter">Quarter</SortHeader>
+                    <SortHeader field="quarter">Q</SortHeader>
                     <SortHeader field="Strategic">Strategic</SortHeader>
                     <SortHeader field="KTLO">KTLO</SortHeader>
                     <SortHeader field="Small Change">Small Ch.</SortHeader>
                     <SortHeader field="Other">Other</SortHeader>
                     <SortHeader field="Unclassified">Unclass.</SortHeader>
-                    <SortHeader field="total">Total</SortHeader>
+                    <SortHeader field="totalDone" className="text-emerald-400">Fatto</SortHeader>
+                    <SortHeader field="totalTodo" className="text-amber-400">Da Fare</SortHeader>
+                    <SortHeader field="total">Totale</SortHeader>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -252,6 +271,8 @@ export default function EffortBreakdown() {
                       <TableCell className="font-mono">{row['Small Change'].toFixed(1)}</TableCell>
                       <TableCell className="font-mono">{row.Other.toFixed(1)}</TableCell>
                       <TableCell className="font-mono">{row.Unclassified.toFixed(1)}</TableCell>
+                      <TableCell className="font-mono text-emerald-400">{(row.totalDone || 0).toFixed(1)}</TableCell>
+                      <TableCell className="font-mono text-amber-400">{(row.totalTodo || 0).toFixed(1)}</TableCell>
                       <TableCell className="font-mono font-bold">{row.total.toFixed(1)}</TableCell>
                     </TableRow>
                   ))}
@@ -264,6 +285,8 @@ export default function EffortBreakdown() {
                       <TableCell className="font-mono">{totals['Small Change'].toFixed(1)}</TableCell>
                       <TableCell className="font-mono">{totals.Other.toFixed(1)}</TableCell>
                       <TableCell className="font-mono">{totals.Unclassified.toFixed(1)}</TableCell>
+                      <TableCell className="font-mono text-emerald-400">{(totals.totalDone || 0).toFixed(1)}</TableCell>
+                      <TableCell className="font-mono text-amber-400">{(totals.totalTodo || 0).toFixed(1)}</TableCell>
                       <TableCell className="font-mono">{totals.total.toFixed(1)}</TableCell>
                     </TableRow>
                   )}
@@ -281,11 +304,13 @@ export default function EffortBreakdown() {
                 <TableHeader>
                   <TableRow>
                     <SortHeader field="sprint">Sprint</SortHeader>
-                    <SortHeader field="quarter">Quarter</SortHeader>
+                    <SortHeader field="quarter">Q</SortHeader>
                     {PROFESSIONAL_FAMILIES.map(f => (
                       <SortHeader key={f} field={`effort_${f}`}>{f}</SortHeader>
                     ))}
-                    <SortHeader field="total">Total</SortHeader>
+                    <SortHeader field="totalDone" className="text-emerald-400">Fatto</SortHeader>
+                    <SortHeader field="totalTodo" className="text-amber-400">Da Fare</SortHeader>
+                    <SortHeader field="total">Totale</SortHeader>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -298,6 +323,8 @@ export default function EffortBreakdown() {
                           {(row[`effort_${f}`] || 0).toFixed(1)}
                         </TableCell>
                       ))}
+                      <TableCell className="font-mono text-emerald-400">{(row.totalDone || 0).toFixed(1)}</TableCell>
+                      <TableCell className="font-mono text-amber-400">{(row.totalTodo || 0).toFixed(1)}</TableCell>
                       <TableCell className="font-mono font-bold">{row.total.toFixed(1)}</TableCell>
                     </TableRow>
                   ))}
@@ -310,6 +337,8 @@ export default function EffortBreakdown() {
                           {(totals[`effort_${f}`] || 0).toFixed(1)}
                         </TableCell>
                       ))}
+                      <TableCell className="font-mono text-emerald-400">{(totals.totalDone || 0).toFixed(1)}</TableCell>
+                      <TableCell className="font-mono text-amber-400">{(totals.totalTodo || 0).toFixed(1)}</TableCell>
                       <TableCell className="font-mono">{totals.total.toFixed(1)}</TableCell>
                     </TableRow>
                   )}
@@ -326,10 +355,19 @@ export default function EffortBreakdown() {
           <DialogHeader>
             <DialogTitle className="text-xl">
               Sprint {dialogData?.sprint?.label} — {dialogData?.sprint?.quarter}
-              <span className="text-muted-foreground text-sm font-normal ml-3">
-                {dialogData?.items?.length} items — {dialogData?.sprint?.total?.toFixed(1)} effort
-              </span>
             </DialogTitle>
+            <div className="flex items-center gap-4 text-sm">
+              <span className="text-muted-foreground">{dialogData?.items?.length} items</span>
+              <span className="font-mono font-semibold">{dialogData?.sprint?.total?.toFixed(1)} totale</span>
+              <span className="flex items-center gap-1 text-emerald-400">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                <span className="font-mono">{(dialogData?.sprint?.totalDone || 0).toFixed(1)} fatto</span>
+              </span>
+              <span className="flex items-center gap-1 text-amber-400">
+                <Clock className="h-3.5 w-3.5" />
+                <span className="font-mono">{(dialogData?.sprint?.totalTodo || 0).toFixed(1)} da fare</span>
+              </span>
+            </div>
           </DialogHeader>
           <div className="max-h-[calc(90vh-100px)] overflow-auto pr-1">
             {dialogTree.map(cls => (
@@ -348,8 +386,12 @@ export default function EffortBreakdown() {
                   <span className="text-sm text-muted-foreground">
                     {cls.count} items
                   </span>
-                  <span className="ml-auto font-mono text-sm font-semibold">
-                    {cls.totalEffort.toFixed(1)}
+                  <span className="ml-auto flex items-center gap-3">
+                    <span className="font-mono text-xs text-emerald-400">{cls.effortDone.toFixed(1)} fatto</span>
+                    <span className="font-mono text-xs text-amber-400">{cls.effortTodo.toFixed(1)} da fare</span>
+                    <span className="font-mono text-sm font-semibold w-12 text-right">
+                      {cls.totalEffort.toFixed(1)}
+                    </span>
                   </span>
                 </button>
 
