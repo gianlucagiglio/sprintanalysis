@@ -66,7 +66,7 @@ export function MoodVoting({ sessionId }: MoodVotingProps) {
         ))}
       </div>
 
-      {showCustom && !userMood && (
+      {showCustom && (
         <Card>
           <div className="flex gap-2">
             <Input
