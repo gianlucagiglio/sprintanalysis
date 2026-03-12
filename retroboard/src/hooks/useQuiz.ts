@@ -6,6 +6,7 @@ import type { QuizQuestion, QuizAnswer } from '@/types/database'
 export function useQuiz(sessionId: string | undefined) {
   const [questions, setQuestions] = useState<QuizQuestion[]>([])
   const [answers, setAnswers] = useState<QuizAnswer[]>([])
+  const [loading, setLoading] = useState(true)
   const user = useAuthStore((s) => s.user)
 
   const fetchQuestions = useCallback(async () => {
@@ -17,9 +18,11 @@ export function useQuiz(sessionId: string | undefined) {
       .order('sort_order')
     if (error) {
       console.error('fetchQuestions failed:', error)
+      setLoading(false)
       return
     }
     if (data) setQuestions(data)
+    setLoading(false)
   }, [sessionId])
 
   const fetchAnswers = useCallback(async () => {
@@ -106,6 +109,7 @@ export function useQuiz(sessionId: string | undefined) {
   return {
     questions,
     answers,
+    loading,
     submitAnswer,
     getLeaderboard,
     hasAnswered,

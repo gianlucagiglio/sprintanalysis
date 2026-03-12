@@ -4,12 +4,11 @@ import { useSessionStore } from '@/stores/sessionStore'
 import { useAuthStore } from '@/stores/authStore'
 import type { Session } from '@/types/database'
 
-let realtimeSetUp = false
-
 export function useSession(sessionId: string | undefined) {
   const { session, setSession, setParticipants, setSections, updateSession } = useSessionStore()
   const user = useAuthStore((s) => s.user)
-  const isFirstMount = useRef(false)
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null)
+  const joinedRef = useRef(false)
 
   const fetchSession = useCallback(async () => {
     if (!sessionId) return
@@ -40,17 +39,40 @@ export function useSession(sessionId: string | undefined) {
     if (data) setSections(data)
   }, [sessionId, setSections])
 
+  // Auto-join + initial fetch: ensure user is a participant BEFORE fetching data
   useEffect(() => {
-    fetchSession()
-    fetchParticipants()
-    fetchSections()
-  }, [fetchSession, fetchParticipants, fetchSections])
+    if (!sessionId || !user) return
+    joinedRef.current = false
 
-  // Realtime subscription — only one per session (singleton guard)
+    const init = async () => {
+      // Check if already a participant
+      const { data: existing } = await supabase
+        .from('session_participants')
+        .select('id')
+        .eq('session_id', sessionId)
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+      if (!existing) {
+        await supabase.from('session_participants').insert({
+          session_id: sessionId,
+          user_id: user.id,
+          role: 'participant',
+        })
+      }
+
+      joinedRef.current = true
+
+      // Now fetch everything (RLS will pass since we're a participant)
+      await Promise.all([fetchSession(), fetchParticipants(), fetchSections()])
+    }
+
+    init()
+  }, [sessionId, user, fetchSession, fetchParticipants, fetchSections])
+
+  // Realtime subscription
   useEffect(() => {
-    if (!sessionId || realtimeSetUp) return
-    realtimeSetUp = true
-    isFirstMount.current = true
+    if (!sessionId) return
 
     const channel = supabase
       .channel(`session-${sessionId}`)
@@ -66,11 +88,11 @@ export function useSession(sessionId: string | undefined) {
       )
       .subscribe()
 
+    channelRef.current = channel
+
     return () => {
-      if (isFirstMount.current) {
-        supabase.removeChannel(channel)
-        realtimeSetUp = false
-      }
+      supabase.removeChannel(channel)
+      channelRef.current = null
     }
   }, [sessionId, updateSession, fetchParticipants])
 

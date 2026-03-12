@@ -3,7 +3,7 @@ import { useSession } from '@/hooks/useSession'
 import { QuizQuestion } from './QuizQuestion'
 import { QuizLeaderboard } from './QuizLeaderboard'
 import { Button } from '@/components/ui/Button'
-import { ChevronRight, PartyPopper } from 'lucide-react'
+import { ChevronRight, PartyPopper, Loader2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 interface QuizGameProps {
@@ -14,6 +14,7 @@ export function QuizGame({ sessionId }: QuizGameProps) {
   const { session, isOrganizer, advanceQuiz } = useSession(sessionId)
   const {
     questions,
+    loading,
     submitAnswer,
     getLeaderboard,
     hasAnswered,
@@ -27,6 +28,14 @@ export function QuizGame({ sessionId }: QuizGameProps) {
   const handleAnswer = async (choice: number, timeTaken: number) => {
     if (!currentQuestion) return
     await submitAnswer(currentQuestion.id, choice, timeTaken)
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Loader2 className="animate-spin text-retro-primary" size={32} />
+      </div>
+    )
   }
 
   if (questions.length === 0) {
