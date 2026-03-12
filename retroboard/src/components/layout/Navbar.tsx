@@ -18,7 +18,11 @@ export function Navbar() {
   const location = useLocation()
 
   const handleSignOut = async () => {
-    await signOut()
+    try {
+      await signOut()
+    } catch (e) {
+      console.error('signOut error:', e)
+    }
     navigate('/login')
   }
 
@@ -97,6 +101,13 @@ export function Navbar() {
               </button>
             )
           })}
+          <button
+            onClick={handleSignOut}
+            className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg transition-colors min-w-0 text-retro-text-secondary"
+          >
+            <LogOut size={20} />
+            <span className="text-[10px] font-medium truncate">Esci</span>
+          </button>
         </div>
       )}
     </>
