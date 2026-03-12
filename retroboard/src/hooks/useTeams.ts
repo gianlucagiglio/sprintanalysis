@@ -185,6 +185,21 @@ export function useTeams() {
     return true
   }
 
+  const leaveTeam = async (teamId: string): Promise<boolean> => {
+    if (!user) return false
+    const { error } = await supabase
+      .from('team_members')
+      .delete()
+      .eq('team_id', teamId)
+      .eq('user_id', user.id)
+    if (error) {
+      console.error('leaveTeam error:', error)
+      return false
+    }
+    await fetchTeams()
+    return true
+  }
+
   const deleteTeam = async (teamId: string): Promise<boolean> => {
     const { error } = await supabase.from('teams').delete().eq('id', teamId)
     if (error) {
@@ -204,6 +219,7 @@ export function useTeams() {
     searchUsers,
     addMember,
     removeMember,
+    leaveTeam,
     deleteTeam,
   }
 }

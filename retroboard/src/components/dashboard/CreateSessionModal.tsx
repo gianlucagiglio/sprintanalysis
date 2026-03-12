@@ -49,31 +49,12 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
       if (error) throw error
       if (!session) return
 
-      // Add organizer as participant
+      // Add only the organizer as participant — team members join on their own
       await supabase.from('session_participants').insert({
         session_id: session.id,
         user_id: user.id,
         role: 'organizer',
       })
-
-      // Add team members as participants
-      if (teamId) {
-        const { data: members } = await supabase
-          .from('team_members')
-          .select('user_id')
-          .eq('team_id', teamId)
-          .neq('user_id', user.id)
-
-        if (members && members.length > 0) {
-          await supabase.from('session_participants').insert(
-            members.map((m) => ({
-              session_id: session.id,
-              user_id: m.user_id,
-              role: 'participant' as const,
-            }))
-          )
-        }
-      }
 
       // Create default sections
       await supabase.from('sections').insert(

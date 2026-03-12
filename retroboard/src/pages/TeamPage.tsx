@@ -16,7 +16,7 @@ import { SentimentDelta } from '@/components/metrics/SentimentDelta'
 import { useGlobalMoods } from '@/hooks/useGlobalMoods'
 import { useMetrics } from '@/hooks/useMetrics'
 import {
-  Crown, Shield, User, Copy, Check, Search, UserPlus, Trash2, ArrowLeft, X, Calendar, CheckCircle2,
+  Crown, Shield, User, Copy, Check, Search, UserPlus, Trash2, ArrowLeft, X, Calendar, CheckCircle2, LogOut,
 } from 'lucide-react'
 
 type MemberWithProfile = TeamMember & { profiles: Profile }
@@ -28,7 +28,7 @@ export function TeamPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
-  const { searchUsers, addMember, removeMember, deleteTeam } = useTeams()
+  const { searchUsers, addMember, removeMember, leaveTeam, deleteTeam } = useTeams()
 
   const [team, setTeam] = useState<Team | null>(null)
   const [members, setMembers] = useState<MemberWithProfile[]>([])
@@ -137,6 +137,12 @@ export function TeamPage() {
     if (ok) await fetchMembers()
   }
 
+  const handleLeaveTeam = async () => {
+    if (!id || !confirm('Sei sicuro di voler abbandonare questo team?')) return
+    const ok = await leaveTeam(id)
+    if (ok) navigate('/teams')
+  }
+
   const handleDeleteTeam = async () => {
     if (!id || !confirm('Sei sicuro di voler eliminare questo team?')) return
     const ok = await deleteTeam(id)
@@ -182,12 +188,20 @@ export function TeamPage() {
               <Badge variant="primary">{roleLabels[myRole]}</Badge>
             )}
           </div>
-          {myRole === 'owner' && (
-            <Button variant="ghost" onClick={handleDeleteTeam} className="text-red-500 hover:text-red-600">
-              <Trash2 size={16} />
-              Elimina team
-            </Button>
-          )}
+          <div className="flex items-center gap-2">
+            {myRole && myRole !== 'owner' && (
+              <Button variant="ghost" onClick={handleLeaveTeam} className="text-orange-500 hover:text-orange-600">
+                <LogOut size={16} />
+                Abbandona
+              </Button>
+            )}
+            {myRole === 'owner' && (
+              <Button variant="ghost" onClick={handleDeleteTeam} className="text-red-500 hover:text-red-600">
+                <Trash2 size={16} />
+                Elimina team
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Invite section */}
