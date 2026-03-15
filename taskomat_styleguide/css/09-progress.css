@@ -1,0 +1,28 @@
+/* ============================================================
+   PROGRESS BARS v2
+   ============================================================ */
+
+.progress {
+  height: 8px;
+  background: var(--color-purple-light);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  flex: 1;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--color-purple), #8B6FFF);
+  transition: width var(--transition-slow);
+  position: relative;
+}
+.progress-fill--green  { background: linear-gradient(90deg, var(--color-green), #4ADE80); }
+.progress-fill--orange { background: linear-gradient(90deg, var(--color-orange), #FBBF24); }
+.progress-fill--red    { background: linear-gradient(90deg, var(--color-red), #F87171); }
+
+.task-progress {
+  height: 4px;
+  background: var(--color-green);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  margin-top: var(--space-2);
+}

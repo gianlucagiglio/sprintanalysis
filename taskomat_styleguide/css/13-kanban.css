@@ -1,0 +1,78 @@
+/* ============================================================
+   KANBAN BOARD v3 — Asana-style, no hover lift
+   ============================================================ */
+
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+.kanban-column {
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  /* removed border */
+}
+.kanban-col-header {
+  padding: var(--space-3) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0;
+  /* removed uppercase */
+  color: var(--color-text-secondary);
+  border-top: 3px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.kanban-col-header .col-count {
+  font-size: var(--text-2xs);
+  background: var(--color-border);
+  padding: var(--space-0-5) var(--space-1-5);
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  font-weight: var(--fw-medium);
+}
+.kanban-col-header--backlog { border-top-color: var(--color-status-backlog); }
+.kanban-col-header--todo    { border-top-color: var(--color-primary); }
+.kanban-col-header--doing   { border-top-color: var(--color-status-inprogress); }
+.kanban-col-header--done    { border-top-color: var(--color-status-done); }
+
+.kanban-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  margin: var(--space-1-5) var(--space-2);
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow var(--transition-fast);
+}
+/* No translateY, just shadow */
+.kanban-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.kanban-card-body { padding: var(--space-2-5) var(--space-3); }
+.kanban-card-title {
+  font-size: var(--text-sm);
+  font-weight: var(--fw-regular);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+.kanban-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.kanban-card-time {
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+}
+.kanban-card-bar {
+  height: 2px;
+  background: var(--color-green);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+.kanban-card-bar--none { background: transparent; }

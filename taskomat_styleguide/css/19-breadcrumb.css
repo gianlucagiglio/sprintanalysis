@@ -1,0 +1,37 @@
+/* ============================================================
+   BREADCRUMBS
+   ============================================================ */
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+}
+
+.breadcrumb-sep {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  user-select: none;
+}
+
+.breadcrumb-item {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  padding: var(--space-0-5) var(--space-1-5);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+.breadcrumb-item:hover {
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+}
+.breadcrumb-item:last-child {
+  color: var(--color-text-primary);
+  font-weight: var(--fw-medium);
+  cursor: default;
+}
+.breadcrumb-item:last-child:hover {
+  background: transparent;
+}

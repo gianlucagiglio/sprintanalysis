@@ -1,0 +1,75 @@
+/* ============================================================
+   TABS v3 — Linear/Notion style
+   ============================================================ */
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  gap: 0;
+}
+
+.tab-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color var(--transition-fast);
+  white-space: nowrap;
+  user-select: none;
+}
+/* No background change on hover (Linear-style) */
+.tab-item:hover {
+  color: var(--color-text-primary);
+}
+.tab-item.is-active {
+  color: var(--color-text-primary);
+  border-bottom-color: var(--color-primary);
+  font-weight: var(--fw-medium);
+}
+
+.tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px; height: 18px;
+  padding: 0 var(--space-1-5);
+  border-radius: var(--radius-full);
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-semi);
+  line-height: 1;
+}
+.tab-badge--primary { background: var(--color-primary); color: white; }
+.tab-badge--warning { background: var(--color-orange); color: white; }
+.tab-badge--danger  { background: var(--color-red); color: white; }
+
+/* ---- Pill tabs variant (Notion-style view switcher) ---- */
+.tabs--pills {
+  border-bottom: none;
+  gap: var(--space-1);
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  padding: var(--space-0-75);
+  display: inline-flex;
+}
+.tabs--pills .tab-item {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding: var(--space-1-5) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.tabs--pills .tab-item:hover {
+  color: var(--color-text-secondary);
+}
+.tabs--pills .tab-item.is-active {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-xs);
+}

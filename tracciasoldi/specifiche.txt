@@ -1,0 +1,330 @@
+Project Overview
+
+We are building a personal finance analysis web application.
+
+The application must allow the user to:
+
+Upload financial transaction files exported from:
+
+Bank account
+
+Credit card
+
+Process the files immediately after upload
+
+Display transactions in separate sections
+
+Generate a combined financial overview
+
+Enable future financial clustering and spending analytics
+
+This first version must NOT include authentication or a database.
+
+All processing must happen in-memory on the frontend.
+
+Future versions will introduce:
+
+Supabase database
+
+User authentication
+
+Persistent financial history
+
+Machine learning based expense classification
+
+Technical Stack
+
+Use the following stack.
+
+Frontend
+
+React
+
+TypeScript
+
+Vite
+
+TailwindCSS
+
+shadcn/ui (for UI components)
+
+File Processing
+
+SheetJS (xlsx) for parsing Excel files
+
+PapaParse (optional fallback for CSV)
+
+State Management
+
+Zustand
+
+Data Visualization
+
+Recharts
+
+Development Tools
+
+ESLint
+
+Prettier
+
+Project Setup
+
+Claude must generate the project using:
+
+npm create vite@latest finance-tracker -- --template react-ts
+
+Then install dependencies:
+
+npm install
+
+npm install xlsx
+npm install zustand
+npm install recharts
+npm install papaparse
+
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+
+Install UI library:
+
+npx shadcn-ui@latest init
+Folder Structure
+
+The project must follow this structure.
+
+src
+ |
+ |-- components
+ |     |-- FileUploader.tsx
+ |     |-- TransactionTable.tsx
+ |     |-- Dashboard.tsx
+ |
+ |-- pages
+ |     |-- BankAccountPage.tsx
+ |     |-- CreditCardPage.tsx
+ |     |-- OverviewPage.tsx
+ |
+ |-- services
+ |     |-- fileParser.ts
+ |
+ |-- store
+ |     |-- financeStore.ts
+ |
+ |-- types
+ |     |-- Transaction.ts
+ |
+ |-- utils
+ |     |-- categorizer.ts
+ |
+ |-- App.tsx
+Core Data Model
+
+Define a Transaction type.
+
+type Transaction = {
+  id: string
+  date: string
+  description: string
+  amount: number
+  category?: string
+  source: "bank" | "credit_card"
+}
+File Upload Requirements
+
+Users must be able to upload:
+
+Bank File
+
+Example:
+
+bank movements
+
+salary
+
+utilities
+
+transfers
+
+bills
+
+Credit Card File
+
+Example:
+
+card payments
+
+online purchases
+
+restaurants
+
+subscriptions
+
+File Processing
+
+When a file is uploaded:
+
+Parse the Excel file
+
+Normalize the data
+
+Convert each row into a Transaction
+
+Store the transactions in Zustand state
+
+Processing must happen immediately in the browser.
+
+Application Pages
+1 Bank Account Page
+
+Purpose:
+
+Show only bank transactions.
+
+Features:
+
+Upload bank file
+
+Table of transactions
+
+Total balance
+
+Filters
+
+2 Credit Card Page
+
+Purpose:
+
+Show only credit card transactions.
+
+Features:
+
+Upload card file
+
+Table
+
+Monthly spending summary
+
+3 Financial Overview Page
+
+Purpose:
+
+Combine both sources.
+
+Features:
+
+Total income
+
+Total expenses
+
+Net balance
+
+Expense breakdown by category
+
+Spending charts
+
+Use Recharts for visualizations.
+
+Expense Categorization
+
+Implement a simple rule-based categorizer.
+
+Example:
+
+restaurant -> "Food & Restaurants"
+uber -> "Transport"
+amazon -> "Shopping"
+enel -> "Utilities"
+rent -> "Housing"
+
+Create this logic in:
+
+utils/categorizer.ts
+
+Future versions will use ML classification.
+
+UI Requirements
+
+Design must be:
+
+clean
+
+minimal
+
+dashboard oriented
+
+responsive
+
+Pages should include:
+
+upload area
+
+transaction table
+
+summary cards
+
+charts
+
+Realtime Processing
+
+The application must:
+
+process files immediately
+
+update UI instantly
+
+not require page reloads
+
+Use React hooks and Zustand.
+
+Future Extensions (Do NOT implement now)
+
+Prepare the architecture for:
+
+Supabase integration
+
+persistent storage
+
+authentication
+
+automatic categorization
+
+AI financial insights
+
+budgeting system
+
+recurring payments detection
+
+Expected Outcome
+
+Claude should generate:
+
+Fully working React project
+
+File upload component
+
+Excel parsing logic
+
+Transaction normalization
+
+State management
+
+Three main pages
+
+Financial overview dashboard
+
+The project must run with:
+
+npm install
+npm run dev
+Goal of the Application
+
+The final goal of the project is to allow the user to:
+
+Track personal finances
+
+Understand spending habits
+
+Analyze expense clusters
+
+Improve financial awareness

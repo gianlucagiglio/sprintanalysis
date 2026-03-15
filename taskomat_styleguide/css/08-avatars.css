@@ -1,0 +1,83 @@
+/* ============================================================
+   AVATARS, BADGES & STATUS v3 — Solid colors, no gradients
+   ============================================================ */
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  font-weight: var(--fw-semi);
+  font-size: var(--text-sm);
+  color: white;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  user-select: none;
+  box-shadow: 0 0 0 2px var(--color-surface);
+}
+.avatar-xs { width: 24px; height: 24px; font-size: var(--text-2xs); }
+.avatar-sm { width: 30px; height: 30px; font-size: var(--text-xs); }
+.avatar-md { width: 38px; height: 38px; font-size: var(--text-sm); }
+.avatar-lg { width: 48px; height: 48px; font-size: var(--text-md); }
+.avatar-xl { width: 64px; height: 64px; font-size: var(--text-xl); }
+
+/* Solid colors — no gradients */
+.avatar--teal   { background: #13BEB8; }
+.avatar--yellow { background: #EAB308; color: var(--color-text-primary); }
+.avatar--red    { background: #EF4444; }
+.avatar--green  { background: #34C759; }
+.avatar--purple { background: #7C5CFC; }
+.avatar--orange { background: #F5A623; color: var(--color-text-primary); }
+.avatar--blue   { background: #3B82F6; }
+.avatar--pink   { background: #E91E8C; }
+
+/* User chip */
+.user-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--color-border);
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-semi);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+/* Status badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-0-5) var(--space-2-5);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+  /* removed uppercase + letter-spacing */
+}
+.badge--success { background: var(--color-green-light); color: #166534; }
+.badge--warning { background: var(--color-orange-light); color: #92400E; }
+.badge--danger  { background: var(--color-red-light); color: #991B1B; }
+.badge--info    { background: var(--color-primary-light); color: #0E7A78; }
+.badge--neutral { background: var(--color-bg); color: var(--color-text-secondary); border: 1px solid var(--color-border); }
+
+/* Status dot */
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  display: inline-block;
+}
+.status-dot--active   { background: var(--color-green); }
+.status-dot--pending  { background: var(--color-yellow); }
+.status-dot--inactive { background: var(--color-text-muted); }
+.status-dot--done     { background: var(--color-primary); }
+
+/* Linear-style status icons */
+.status-dot--backlog    { background: var(--color-status-backlog); }
+.status-dot--todo       { background: var(--color-status-todo); border: 1.5px solid var(--color-text-muted); width: 6px; height: 6px; }
+.status-dot--inprogress { background: var(--color-status-inprogress); }
+.status-dot--cancelled  { background: var(--color-status-cancelled); }

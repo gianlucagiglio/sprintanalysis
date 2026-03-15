@@ -1,0 +1,209 @@
+/* ============================================================
+   BUTTONS v3 — Flat, subtle (Linear/Notion style)
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  /* removed uppercase + letter-spacing */
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  user-select: none;
+  text-decoration: none;
+  line-height: 1;
+  position: relative;
+  overflow: hidden;
+}
+.btn:active { transform: translateY(0); }
+.btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Sizes */
+.btn-sm { padding: var(--space-1-5) var(--space-3); font-size: var(--text-2xs); border-radius: var(--radius-sm); }
+.btn-md { padding: var(--space-2) var(--space-4); font-size: var(--text-sm); }
+.btn-lg { padding: var(--space-3) var(--space-6); font-size: var(--text-base); border-radius: var(--radius-md); }
+
+/* Primary — solid background, no gradient */
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  /* no translateY, no colored shadow */
+}
+
+/* Outline */
+.btn-outline {
+  background: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.btn-outline:hover {
+  background: var(--color-primary-light);
+}
+
+/* Ghost */
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+}
+.btn-ghost:hover {
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+}
+
+/* Secondary */
+.btn-secondary {
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+}
+.btn-secondary:hover {
+  background: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+/* Danger — solid, no gradient */
+.btn-danger {
+  background: var(--color-red);
+  color: white;
+  border-color: var(--color-red);
+}
+.btn-danger:hover {
+  background: #DC2626;
+  border-color: #DC2626;
+}
+
+/* Success — solid, no gradient */
+.btn-success {
+  background: var(--color-green);
+  color: white;
+  border-color: var(--color-green);
+}
+.btn-success:hover {
+  background: #22A845;
+  border-color: #22A845;
+}
+
+/* Icon button */
+.btn-icon {
+  width: 32px; height: 32px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+  background: var(--color-surface);
+}
+.btn-icon:hover {
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+}
+.btn-icon svg { width: 14px; height: 14px; }
+
+/* Icon inside text button */
+.btn svg.btn-leading-icon {
+  width: 14px; height: 14px;
+  flex-shrink: 0;
+}
+
+/* Loading state */
+.btn-loading {
+  pointer-events: none;
+  color: transparent !important;
+}
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: var(--radius-full);
+  animation: btn-spin 0.6s linear infinite;
+}
+.btn-outline.btn-loading::after,
+.btn-ghost.btn-loading::after,
+.btn-secondary.btn-loading::after {
+  border-color: rgba(19,190,184,0.2);
+  border-top-color: var(--color-primary);
+}
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Disabled */
+.btn:disabled,
+.btn.is-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Toggle Button Group — Notion-style pill toggle */
+.btn-group {
+  display: inline-flex;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-bg);
+}
+.btn-group .btn {
+  border-radius: 0;
+  border: none;
+  border-right: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--color-text-secondary);
+  padding: var(--space-1-5) var(--space-4);
+  background: transparent;
+}
+.btn-group .btn:last-child { border-right: none; }
+.btn-group .btn.is-active {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-weight: var(--fw-medium);
+  box-shadow: var(--shadow-xs);
+}
+.btn-group .btn:not(.is-active):hover {
+  background: rgba(0,0,0,0.02);
+  color: var(--color-text-primary);
+}
+
+/* ---- Button showcase helpers ---- */
+.btn-showcase-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.btn-showcase-row:last-child { border-bottom: none; }
+.btn-showcase-label {
+  flex-shrink: 0;
+  width: 100px;
+  font-size: var(--text-xs);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+}
+.btn-showcase-items {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}

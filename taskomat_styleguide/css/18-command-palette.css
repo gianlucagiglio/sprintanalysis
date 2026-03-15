@@ -1,0 +1,112 @@
+/* ============================================================
+   COMMAND PALETTE — Ctrl+K (Linear-style)
+   ============================================================ */
+
+.command-palette-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-command);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 20vh;
+}
+
+.command-palette {
+  width: 560px;
+  max-width: 90vw;
+  max-height: 420px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-float);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: cmd-enter 200ms cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes cmd-enter {
+  from { opacity: 0; transform: scale(0.97) translateY(-8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.command-palette-input-wrap {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+.command-palette-input-wrap svg {
+  width: 16px; height: 16px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+.command-palette-input {
+  flex: 1;
+  height: 48px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  padding: 0 var(--space-3);
+  outline: none;
+}
+.command-palette-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.command-palette-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-2) 0;
+}
+
+.command-palette-group-label {
+  padding: var(--space-2) var(--space-4) var(--space-1);
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-label);
+  color: var(--color-text-muted);
+}
+
+.command-palette-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  transition: background var(--transition-micro);
+}
+.command-palette-item:hover,
+.command-palette-item.is-focused {
+  background: var(--color-bg);
+}
+.command-palette-item svg {
+  width: 16px; height: 16px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+.command-palette-item-label {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+}
+.command-palette-item-hint {
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  display: flex;
+  gap: var(--space-1);
+}
+
+.command-palette-footer {
+  padding: var(--space-2) var(--space-4);
+  border-top: 1px solid var(--color-border-light);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+}
