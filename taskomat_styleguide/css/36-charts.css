@@ -1,0 +1,130 @@
+/* ============================================================
+   CHARTS & ANALYTICS v3 — Containers, legends, axis
+   ============================================================ */
+
+.chart-container {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+.chart-title {
+  font-size: var(--text-sm);
+  font-weight: var(--fw-semi);
+  color: var(--color-text-primary);
+}
+.chart-subtitle {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-0-5);
+}
+
+/* Chart body placeholder (for Recharts / SVG) */
+.chart-body {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+}
+
+/* Legend */
+.chart-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+.chart-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* Bar chart (CSS-only demo) */
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  height: 160px;
+  padding-top: var(--space-2);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.chart-bar {
+  flex: 1;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  transition: filter var(--transition-fast);
+  cursor: pointer;
+  position: relative;
+  min-width: 0;
+}
+.chart-bar:hover { filter: brightness(1.1); }
+.chart-bar--teal   { background: var(--color-primary); }
+.chart-bar--purple { background: var(--color-purple); }
+.chart-bar--blue   { background: var(--color-blue); }
+.chart-bar--orange { background: var(--color-orange); }
+.chart-bar--green  { background: var(--color-green); }
+.chart-bar-label {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* Donut chart (CSS-only) */
+.chart-donut {
+  width: 140px;
+  height: 140px;
+  border-radius: var(--radius-full);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chart-donut-center {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.chart-donut-value {
+  font-size: var(--text-lg);
+  font-weight: var(--fw-bold);
+  font-family: var(--font-mono);
+  color: var(--color-text-primary);
+}
+.chart-donut-label {
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+}
+
+/* Axis labels */
+.chart-axis-y {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: var(--space-2);
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}

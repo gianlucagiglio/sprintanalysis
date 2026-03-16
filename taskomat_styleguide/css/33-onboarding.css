@@ -1,0 +1,91 @@
+/* ============================================================
+   ONBOARDING / STEPPER v3 — Step indicator, wizard panels
+   ============================================================ */
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) 0;
+}
+
+/* Step circle */
+.step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  font-weight: var(--fw-semi);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+.step--pending .step-circle {
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+}
+.step--active .step-circle {
+  background: var(--color-primary);
+  color: white;
+  box-shadow: 0 0 0 4px var(--color-primary-glow);
+}
+.step--done .step-circle {
+  background: var(--color-green);
+  color: white;
+}
+.step-label {
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+.step--pending .step-label { color: var(--color-text-muted); }
+.step--active .step-label  { color: var(--color-text-primary); }
+.step--done .step-label    { color: var(--color-text-secondary); }
+
+/* Connector line between steps */
+.step-connector {
+  flex: 1;
+  height: 2px;
+  background: var(--color-border);
+  min-width: 24px;
+}
+.step-connector--done {
+  background: var(--color-green);
+}
+
+/* Wizard panel */
+.wizard-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8) var(--space-6);
+  max-width: 560px;
+}
+.wizard-panel-title {
+  font-size: var(--text-lg);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+}
+.wizard-panel-desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--lh-relaxed);
+  margin-bottom: var(--space-6);
+}
+.wizard-panel-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-subtle);
+}

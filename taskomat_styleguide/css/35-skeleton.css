@@ -1,0 +1,67 @@
+/* ============================================================
+   SKELETON / LOADING STATES v3 — Shimmer placeholders
+   ============================================================ */
+
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-border-subtle) 25%, var(--color-bg) 50%, var(--color-border-subtle) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+  border-radius: var(--radius-sm);
+}
+
+/* Preset shapes */
+.skeleton-text {
+  height: 14px;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+.skeleton-text--sm   { height: 10px; width: 60%; }
+.skeleton-text--lg   { height: 20px; width: 40%; }
+.skeleton-text--full { width: 100%; }
+.skeleton-text--3-4  { width: 75%; }
+.skeleton-text--half { width: 50%; }
+
+.skeleton-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+.skeleton-avatar--sm { width: 30px; height: 30px; }
+.skeleton-avatar--lg { width: 48px; height: 48px; }
+
+.skeleton-btn {
+  height: 36px;
+  width: 100px;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-thumb {
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+}
+
+/* Composite: skeleton card */
+.skeleton-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Composite: skeleton table row */
+.skeleton-table-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-border-subtle);
+}

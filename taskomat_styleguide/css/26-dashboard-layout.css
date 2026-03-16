@@ -1,0 +1,80 @@
+/* ============================================================
+   DASHBOARD / HOME LAYOUT v3 — Grid widgets, header bar
+   ============================================================ */
+
+/* Top bar */
+.dash-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+.dash-header-title {
+  font-size: var(--text-lg);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-primary);
+}
+.dash-header-subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.dash-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+/* Widget grid */
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+  padding: var(--space-5);
+}
+.dash-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.dash-grid--4 { grid-template-columns: repeat(4, 1fr); }
+
+/* Widget card */
+.dash-widget {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.dash-widget--span-2 { grid-column: span 2; }
+.dash-widget--span-3 { grid-column: span 3; }
+.dash-widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dash-widget-title {
+  font-size: var(--text-sm);
+  font-weight: var(--fw-semi);
+  color: var(--color-text-primary);
+}
+.dash-widget-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+}
+.dash-widget-change {
+  font-size: var(--text-xs);
+  font-weight: var(--fw-medium);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.dash-widget-change--up { color: var(--color-green); }
+.dash-widget-change--down { color: var(--color-red); }
+.dash-widget-body {
+  flex: 1;
+  min-height: 0;
+}
