@@ -20,7 +20,7 @@
   padding: var(--space-3) var(--space-4);
   background: var(--color-sidebar);
   color: var(--color-text-white);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-float);
   font-size: var(--text-sm);
   min-width: 280px;
@@ -39,7 +39,7 @@
 }
 .toast-message {
   flex: 1;
-  line-height: 1.4;
+  line-height: var(--lh-snug);
 }
 .toast-close {
   width: 20px; height: 20px;

@@ -30,12 +30,14 @@
   vertical-align: middle;
 }
 .data-table tr:last-child td { border-bottom: none; }
-.data-table tr:hover td { background: var(--color-bg); }
+.data-table tr:hover td { background: var(--color-surface-raised); }
 .data-table tr.is-selected td {
   background: var(--color-primary-light);
-  border-left: 3px solid var(--color-primary);
 }
-.data-table tr.is-selected td:first-child { padding-left: calc(var(--space-3) - 3px); }
+.data-table tr.is-selected td:first-child {
+  box-shadow: inset 3px 0 0 var(--color-primary);
+  padding-left: calc(var(--space-3) - 3px);
+}
 
 .table-cell-project { display: flex; align-items: center; gap: var(--space-3); }
 .table-cell-name { font-weight: var(--fw-medium); }

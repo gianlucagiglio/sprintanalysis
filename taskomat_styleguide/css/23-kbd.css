@@ -10,15 +10,17 @@
   height: 20px;
   padding: 0 var(--space-1-5);
   font-family: var(--font-sans);
-  font-size: var(--text-2xs);
+  font-size: 10px;
   font-weight: var(--fw-medium);
   line-height: 1;
   color: var(--color-text-muted);
-  background: var(--color-bg);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-bottom-width: 2px;
+  border-radius: 4px;
   white-space: nowrap;
   user-select: none;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
 }
 
 /* Dark variant for sidebar */

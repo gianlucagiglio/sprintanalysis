@@ -5,11 +5,15 @@
 .card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  transition: box-shadow var(--transition-fast);
+  transition: all 180ms ease;
+  box-shadow: var(--shadow-xs);
 }
-.card:hover { box-shadow: var(--shadow-sm); }
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
 
 .card-header {
   padding: var(--space-4) var(--space-5);
@@ -25,13 +29,14 @@
 .stat-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   padding: var(--space-4);
-  transition: box-shadow var(--transition-fast);
+  transition: all 180ms ease;
+  box-shadow: var(--shadow-xs);
 }
 .stat-card:hover {
-  box-shadow: var(--shadow-sm);
-  /* no translateY */
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 .stat-card-label {
   font-size: var(--text-xs);
@@ -55,6 +60,7 @@
   color: var(--color-text-primary);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
+  line-height: var(--lh-snug);
 }
 .stat-card-value--positive { color: var(--color-green); }
 .stat-card-value--negative { color: var(--color-red); }
@@ -91,6 +97,7 @@
   color: var(--color-text-primary);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
+  line-height: var(--lh-snug);
 }
 .metric-value-sublabel {
   font-size: var(--text-2xs);
@@ -131,6 +138,7 @@
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   transition: box-shadow var(--transition-fast);
+  box-shadow: var(--shadow-xs);
 }
 .ref-card:hover { box-shadow: var(--shadow-sm); }
 .ref-card-label {
@@ -146,4 +154,5 @@
   color: var(--color-text-primary);
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
+  line-height: var(--lh-tight);
 }

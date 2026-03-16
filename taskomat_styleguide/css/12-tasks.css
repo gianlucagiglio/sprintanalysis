@@ -9,9 +9,9 @@
   padding: var(--space-2-5) var(--space-4);
   border-bottom: 1px solid var(--color-border-subtle);
   background: var(--color-surface);
-  transition: background var(--transition-micro);
+  transition: background 100ms ease;
 }
-.task-item:hover { background: var(--color-bg); }
+.task-item:hover { background: var(--color-surface-raised); }
 .task-item:last-child { border-bottom: none; }
 .task-item.is-selected {
   outline: 2px solid var(--color-primary);
@@ -66,35 +66,77 @@
   font-family: var(--font-mono);
 }
 
-/* Hover-to-reveal actions */
+/* Task actions row */
 .task-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-1-5);
   opacity: 0;
-  transition: opacity var(--transition-micro);
+  transition: opacity 150ms ease;
 }
 .task-item:hover .task-actions,
 .task-item.is-selected .task-actions {
   opacity: 1;
 }
 
+/* Base action button */
 .task-btn {
-  width: 28px; height: 28px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
-  background: transparent;
+  width: 26px; height: 26px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--color-bg);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   color: var(--color-text-muted);
-  transition: all var(--transition-fast);
+  transition: all 150ms ease;
 }
-.task-btn:hover {
-  background: var(--color-bg);
+.task-btn svg { width: 12px; height: 12px; }
+.task-btn:hover { transform: scale(1.1); }
+.task-btn:active { transform: scale(0.95); }
+
+/* Play — blue */
+.task-btn--play {
+  color: var(--color-blue);
+  background: var(--color-blue-light);
+}
+.task-btn--play:hover {
+  background: var(--color-blue);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.3);
+}
+
+/* Pause — orange/warning */
+.task-btn--pause {
+  color: var(--color-orange);
+  background: var(--color-orange-light);
+}
+.task-btn--pause:hover {
+  background: var(--color-orange);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(245,166,35,0.3);
+}
+
+/* Stop — red */
+.task-btn--stop {
+  color: var(--color-red);
+  background: var(--color-red-light);
+}
+.task-btn--stop:hover {
+  background: var(--color-red);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(239,68,68,0.3);
+}
+
+/* Complete — primary teal */
+.task-btn--complete {
   color: var(--color-primary);
-  border-color: var(--color-primary);
+  background: var(--color-primary-light);
 }
-.task-btn svg { width: 13px; height: 13px; }
+.task-btn--complete:hover {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(19,190,184,0.3);
+}
 
 /* Priority dot */
 .task-priority-dot {

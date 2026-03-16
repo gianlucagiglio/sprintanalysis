@@ -8,10 +8,10 @@
   gap: var(--space-3);
 }
 .kanban-column {
-  background: var(--color-bg);
-  border-radius: var(--radius-lg);
+  background: #F0F0F4;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  /* removed border */
 }
 .kanban-col-header {
   padding: var(--space-3) var(--space-3);
@@ -27,10 +27,10 @@
 }
 .kanban-col-header .col-count {
   font-size: var(--text-2xs);
-  background: var(--color-border);
+  background: rgba(0,0,0,0.06);
   padding: var(--space-0-5) var(--space-1-5);
   border-radius: var(--radius-full);
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   font-weight: var(--fw-medium);
 }
 .kanban-col-header--backlog { border-top-color: var(--color-status-backlog); }
@@ -40,16 +40,17 @@
 
 .kanban-card {
   background: var(--color-surface);
-  border: 1px solid var(--color-border-subtle);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   margin: var(--space-1-5) var(--space-2);
   overflow: hidden;
   cursor: pointer;
-  transition: box-shadow var(--transition-fast);
-}
-/* No translateY, just shadow */
-.kanban-card:hover {
+  transition: all 180ms ease;
   box-shadow: var(--shadow-sm);
+}
+.kanban-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .kanban-card-body { padding: var(--space-2-5) var(--space-3); }

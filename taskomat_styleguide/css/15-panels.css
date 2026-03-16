@@ -37,9 +37,7 @@
 }
 .notification-panel-title {
   font-size: var(--text-sm);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
+  font-weight: var(--fw-semi);
   color: var(--color-text-primary);
 }
 
@@ -111,9 +109,7 @@
 }
 .quickcreate-title {
   font-size: var(--text-sm);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
+  font-weight: var(--fw-semi);
   color: var(--color-text-primary);
 }
 

@@ -10,9 +10,11 @@ body {
   font-size: var(--text-base);
   color: var(--color-text-primary);
   background: var(--color-bg);
-  line-height: 1.6;
+  line-height: var(--lh-relaxed);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
 ::selection {
