@@ -1,0 +1,95 @@
+/* ============================================================
+   ROADMAP VIEW v3 — Swimlanes, phases, quarters
+   ============================================================ */
+
+.roadmap {
+  overflow-x: auto;
+}
+
+/* Quarter headers */
+.roadmap-quarters {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  background: var(--color-surface);
+  z-index: 1;
+}
+.roadmap-quarter {
+  flex: 1;
+  min-width: 200px;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-semi);
+  color: var(--color-text-primary);
+  border-right: 1px solid var(--color-border-subtle);
+  text-align: center;
+}
+.roadmap-quarter:last-child { border-right: none; }
+.roadmap-quarter.is-current {
+  color: var(--color-primary);
+  background: var(--color-surface-tint);
+}
+
+/* Swimlane row */
+.roadmap-lane {
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.roadmap-lane-header {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-xs);
+  font-weight: var(--fw-semi);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-label);
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.roadmap-lane-track {
+  display: flex;
+  min-height: 60px;
+  padding: var(--space-2) 0;
+  position: relative;
+}
+
+/* Phase card */
+.roadmap-phase {
+  margin: var(--space-1) var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  transition: filter var(--transition-fast), transform var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  white-space: nowrap;
+}
+.roadmap-phase:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+.roadmap-phase--teal   { background: var(--color-primary-light); color: var(--color-primary-dark); }
+.roadmap-phase--purple { background: var(--color-purple-light); color: var(--color-purple); }
+.roadmap-phase--blue   { background: var(--color-blue-light); color: var(--color-blue); }
+.roadmap-phase--orange { background: var(--color-orange-light); color: #92400E; }
+.roadmap-phase--green  { background: var(--color-green-light); color: #166534; }
+
+/* Milestone */
+.roadmap-milestone {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  padding: var(--space-1) var(--space-2);
+}
+.roadmap-milestone-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  transform: rotate(45deg);
+  background: var(--color-primary);
+  flex-shrink: 0;
+}

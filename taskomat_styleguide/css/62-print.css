@@ -1,0 +1,72 @@
+/* ============================================================
+   PRINT STYLES v3 — Report print, invoice, clean layout
+   ============================================================ */
+
+/* Print preview container (for style guide demo) */
+.print-preview {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  color: #1C1C1E;
+  font-size: 12pt;
+  line-height: 1.5;
+  max-width: 600px;
+  box-shadow: var(--shadow-md);
+}
+.print-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom: 2px solid #1C1C1E;
+}
+.print-preview-logo {
+  font-size: 18pt;
+  font-weight: 700;
+}
+.print-preview-meta {
+  text-align: right;
+  font-size: 10pt;
+  color: #6B6B76;
+}
+
+/* Invoice specific */
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-5) 0;
+}
+.invoice-table th {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid #E8E8EC;
+  text-align: left;
+  font-size: 10pt;
+  font-weight: 600;
+  color: #6B6B76;
+}
+.invoice-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid #F0F0F3;
+  font-size: 11pt;
+}
+.invoice-table .invoice-total td {
+  border-top: 2px solid #1C1C1E;
+  border-bottom: none;
+  font-weight: 700;
+  font-size: 12pt;
+}
+.invoice-table td:last-child,
+.invoice-table th:last-child {
+  text-align: right;
+  font-family: var(--font-mono);
+}
+
+/* Actual print media query */
+@media print {
+  .sg-nav, .sg-hero, .css-ref { display: none !important; }
+  .sg-main { padding: 0 !important; }
+  body { background: white !important; }
+  .sg-layout { display: block !important; }
+}

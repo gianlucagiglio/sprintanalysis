@@ -45,6 +45,31 @@
 <link rel="stylesheet" href="css/38-tooltip.css">
 <link rel="stylesheet" href="css/39-tag-manager.css">
 <link rel="stylesheet" href="css/40-auth.css">
+<link rel="stylesheet" href="css/41-project-overview.css">
+<link rel="stylesheet" href="css/42-profile.css">
+<link rel="stylesheet" href="css/43-pricing.css">
+<link rel="stylesheet" href="css/44-billing.css">
+<link rel="stylesheet" href="css/45-error-pages.css">
+<link rel="stylesheet" href="css/46-time-tracking.css">
+<link rel="stylesheet" href="css/47-sprint.css">
+<link rel="stylesheet" href="css/48-roadmap.css">
+<link rel="stylesheet" href="css/49-workload.css">
+<link rel="stylesheet" href="css/50-report.css">
+<link rel="stylesheet" href="css/51-rich-editor.css">
+<link rel="stylesheet" href="css/52-filter-panel.css">
+<link rel="stylesheet" href="css/53-sidebar-variants.css">
+<link rel="stylesheet" href="css/54-accordion.css">
+<link rel="stylesheet" href="css/55-pagination.css">
+<link rel="stylesheet" href="css/56-integrations.css">
+<link rel="stylesheet" href="css/57-changelog.css">
+<link rel="stylesheet" href="css/58-help.css">
+<link rel="stylesheet" href="css/59-import-export.css">
+<link rel="stylesheet" href="css/60-notif-prefs.css">
+<link rel="stylesheet" href="css/61-responsive.css">
+<link rel="stylesheet" href="css/62-print.css">
+<link rel="stylesheet" href="css/63-dark-mode.css">
+<link rel="stylesheet" href="css/64-animations.css">
+<link rel="stylesheet" href="css/65-accessibility.css">
 </head>
 <body>
 
@@ -134,6 +159,41 @@
 
     <div class="sg-nav-section-label">Auth</div>
     <a href="#authpages">Login & Register</a>
+
+    <div class="sg-nav-section-label">Page Layouts</div>
+    <a href="#projectoverview">Project Overview</a>
+    <a href="#profilepage">Profile & Account</a>
+    <a href="#pricing">Pricing & Plans</a>
+    <a href="#billing">Billing & Invoices</a>
+    <a href="#errorpages">Error Pages</a>
+
+    <div class="sg-nav-section-label">PM Features</div>
+    <a href="#timetracking">Time Tracking</a>
+    <a href="#sprintboard">Sprint Board</a>
+    <a href="#roadmap">Roadmap View</a>
+    <a href="#workload">Workload View</a>
+    <a href="#reportpage">Report Page</a>
+
+    <div class="sg-nav-section-label">Editor & Panels</div>
+    <a href="#richeditor">Rich Text Editor</a>
+    <a href="#filterpanel">Filter & Sort</a>
+    <a href="#sidebarvariants">Sidebar Variants</a>
+    <a href="#accordion">Accordion</a>
+    <a href="#pagination">Pagination</a>
+
+    <div class="sg-nav-section-label">Platform</div>
+    <a href="#integrations">Integrations</a>
+    <a href="#changelog">Changelog</a>
+    <a href="#helpsupport">Help & Support</a>
+    <a href="#importexport">Import / Export</a>
+    <a href="#notifprefs">Notification Prefs</a>
+
+    <div class="sg-nav-section-label">Polish</div>
+    <a href="#responsive">Mobile & Responsive</a>
+    <a href="#printstyles">Print Styles</a>
+    <a href="#darkmode">Dark Mode</a>
+    <a href="#animations">Micro-Animations</a>
+    <a href="#a11y">Accessibility</a>
   </nav>
 
   <!-- ====== MAIN ====== -->
@@ -3686,6 +3746,828 @@ Taskomat</textarea>
           <div class="css-ref-item"><code class="type-meta-class">.social-btn</code><div class="type-meta-detail">flex center · height: 42px · border<br>radius-md · hover: bg + shadow-xs<br>icon + label layout</div></div>
           <div class="css-ref-item"><code class="type-meta-class">.auth-divider</code><div class="type-meta-detail">flex · line — text — line<br>text-xs muted · bg: surface (transparent in dark)</div></div>
           <div class="css-ref-item"><code class="type-meta-class">.auth-logo</code><div class="type-meta-detail">flex center · logo-mark: 36px primary box<br>logo-text: text-lg bold</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 51 · PROJECT OVERVIEW ====== -->
+    <section class="sg-section" id="projectoverview">
+      <div class="sg-section-header">
+        <span class="sg-section-num">51</span>
+        <h2>Project Overview Page</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Project Header + Sidebar</h3>
+        <div class="sg-canvas" style="padding:0;">
+          <div style="display:flex; gap:var(--space-5); padding:var(--space-5);">
+            <div style="flex:1;">
+              <div class="project-header">
+                <div class="project-icon" style="background:var(--color-primary-light); color:var(--color-primary);">&#128640;</div>
+                <div class="project-header-info">
+                  <div class="project-header-title">Project Alpha <span class="badge badge--info">Active</span></div>
+                  <div class="project-header-desc">Redesign completo dell'applicazione Taskomat con nuovo design system.</div>
+                  <div class="project-header-meta">
+                    <span>Created Mar 1, 2026</span>
+                    <span>&middot;</span>
+                    <span>12 members</span>
+                    <span>&middot;</span>
+                    <span>284 tasks</span>
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-ghost">Settings</button>
+              </div>
+              <div style="display:flex; gap:var(--space-2); margin-bottom:var(--space-4);">
+                <button class="btn btn-sm btn-ghost" style="border-bottom:2px solid var(--color-primary); border-radius:0; color:var(--color-primary);">Tasks</button>
+                <button class="btn btn-sm btn-ghost" style="border-radius:0;">Files</button>
+                <button class="btn btn-sm btn-ghost" style="border-radius:0;">Timeline</button>
+                <button class="btn btn-sm btn-ghost" style="border-radius:0;">Settings</button>
+              </div>
+              <div style="background:var(--color-bg); border-radius:var(--radius-md); padding:var(--space-6); text-align:center; color:var(--color-text-muted); font-size:var(--text-sm);">Task list area</div>
+            </div>
+            <div class="project-sidebar-panel" style="width:240px; flex-shrink:0;">
+              <div class="project-sidebar-title">Details</div>
+              <div class="project-stat"><div class="project-stat-label">Status</div><div class="project-stat-value"><span class="status-dot status-dot--inprogress"></span> In Progress</div></div>
+              <div class="project-stat"><div class="project-stat-label">Deadline</div><div class="project-stat-value">Apr 15, 2026</div></div>
+              <div class="project-stat"><div class="project-stat-label">Completion</div><div class="project-stat-value" style="font-family:var(--font-mono);">67%</div></div>
+              <div class="project-stat"><div class="project-stat-label">Team</div><div class="project-stat-value"><div class="avatar-stack"><div class="avatar avatar-xs avatar--teal">MR</div><div class="avatar avatar-xs avatar--purple">LB</div><div class="avatar avatar-xs avatar--blue">GV</div><span class="avatar-stack-more" style="width:24px;height:24px;font-size:9px;">+9</span></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 52 · PROFILE & ACCOUNT ====== -->
+    <section class="sg-section" id="profilepage">
+      <div class="sg-section-header">
+        <span class="sg-section-num">52</span>
+        <h2>Profile & Account</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Profile Header</h3>
+        <div class="profile-header" style="max-width:560px;">
+          <div class="profile-avatar-wrap">
+            <div class="avatar avatar-xl avatar--teal">MR</div>
+            <div class="profile-avatar-edit">&#9998;</div>
+          </div>
+          <div class="profile-info">
+            <div class="profile-name">Marco Rossi</div>
+            <div class="profile-email">marco@taskomat.com</div>
+            <div class="profile-role"><span class="badge badge--info">Admin</span></div>
+          </div>
+          <button class="btn btn-sm btn-ghost">Edit Profile</button>
+        </div>
+      </div>
+      <div class="sg-subsection mt-6">
+        <h3>Stats & Sessions</h3>
+        <div class="sg-canvas" style="max-width:560px;">
+          <div class="profile-stats">
+            <div class="profile-stat"><div class="profile-stat-num">284</div><div class="profile-stat-label">Tasks</div></div>
+            <div class="profile-stat"><div class="profile-stat-num">12</div><div class="profile-stat-label">Projects</div></div>
+            <div class="profile-stat"><div class="profile-stat-num">1,240h</div><div class="profile-stat-label">Tracked</div></div>
+          </div>
+          <div style="margin-top:var(--space-5); padding-top:var(--space-4); border-top:1px solid var(--color-border-subtle);">
+            <div style="font-size:var(--text-sm); font-weight:600; margin-bottom:var(--space-3);">Active Sessions</div>
+            <div class="session-item">
+              <div class="session-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="9" rx="1"/><path d="M4 14h8"/></svg></div>
+              <div class="session-info"><div class="session-device">Chrome on macOS</div><div class="session-detail">Milan, IT &middot; Current session</div></div>
+              <span class="session-current">Active</span>
+            </div>
+            <div class="session-item">
+              <div class="session-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="1" width="8" height="14" rx="1.5"/><path d="M7 12h2"/></svg></div>
+              <div class="session-info"><div class="session-device">Safari on iPhone</div><div class="session-detail">Milan, IT &middot; 2 hours ago</div></div>
+              <button class="btn btn-sm btn-ghost" style="color:var(--color-red);">Revoke</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 53 · PRICING & PLANS ====== -->
+    <section class="sg-section" id="pricing">
+      <div class="sg-section-header">
+        <span class="sg-section-num">53</span>
+        <h2>Pricing & Plans</h2>
+      </div>
+      <div class="sg-subsection">
+        <div class="pricing-toggle">
+          <span class="pricing-toggle-label is-active">Monthly</span>
+          <label class="toggle"><input type="checkbox"><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+          <span class="pricing-toggle-label">Annual</span>
+          <span class="pricing-save">Save 20%</span>
+        </div>
+        <div class="grid-3" style="gap:var(--space-5);">
+          <div class="pricing-card">
+            <div class="pricing-card-name">Free</div>
+            <div class="pricing-card-desc">For individuals getting started</div>
+            <div class="pricing-card-price"><span class="pricing-card-amount">&euro;0</span> <span class="pricing-card-period">/ month</span></div>
+            <ul class="pricing-card-features">
+              <li>Up to 5 projects</li>
+              <li>Basic task management</li>
+              <li>1 GB storage</li>
+              <li class="is-disabled">Team collaboration</li>
+              <li class="is-disabled">Advanced analytics</li>
+            </ul>
+            <button class="btn btn-ghost" style="width:100%;">Get Started</button>
+          </div>
+          <div class="pricing-card pricing-card--popular">
+            <div class="pricing-card-badge">Most Popular</div>
+            <div class="pricing-card-name">Pro</div>
+            <div class="pricing-card-desc">For growing teams</div>
+            <div class="pricing-card-price"><span class="pricing-card-amount">&euro;12</span> <span class="pricing-card-period">/ user / month</span></div>
+            <ul class="pricing-card-features">
+              <li>Unlimited projects</li>
+              <li>Advanced task views</li>
+              <li>10 GB storage</li>
+              <li>Team collaboration</li>
+              <li class="is-disabled">Custom integrations</li>
+            </ul>
+            <button class="btn btn-primary" style="width:100%;">Upgrade to Pro</button>
+          </div>
+          <div class="pricing-card">
+            <div class="pricing-card-name">Team</div>
+            <div class="pricing-card-desc">For organizations at scale</div>
+            <div class="pricing-card-price"><span class="pricing-card-amount">&euro;29</span> <span class="pricing-card-period">/ user / month</span></div>
+            <ul class="pricing-card-features">
+              <li>Everything in Pro</li>
+              <li>Unlimited storage</li>
+              <li>Advanced analytics</li>
+              <li>Custom integrations</li>
+              <li>Priority support</li>
+            </ul>
+            <button class="btn btn-ghost" style="width:100%;">Contact Sales</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 54 · BILLING ====== -->
+    <section class="sg-section" id="billing">
+      <div class="sg-section-header">
+        <span class="sg-section-num">54</span>
+        <h2>Billing & Invoices</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Payment Card & Usage</h3>
+        <div class="sg-canvas" style="max-width:480px; display:flex; flex-direction:column; gap:var(--space-4);">
+          <div class="payment-card">
+            <div class="payment-card-brand">VISA</div>
+            <div class="payment-card-info"><div class="payment-card-number">&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 4242</div><div class="payment-card-expiry">Expires 09/28</div></div>
+            <span class="payment-card-default">Default</span>
+            <button class="btn btn-sm btn-ghost">Edit</button>
+          </div>
+          <div class="usage-meter">
+            <div class="usage-meter-header"><div class="usage-meter-title">Storage</div><div class="usage-meter-value">7.2 / 10 GB</div></div>
+            <div class="usage-meter-bar"><div class="usage-meter-fill usage-meter-fill--warning" style="width:72%;"></div></div>
+          </div>
+          <div class="upgrade-banner">
+            <div class="upgrade-banner-icon"><svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.5"><path d="M8 2l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4z"/></svg></div>
+            <div class="upgrade-banner-text"><div class="upgrade-banner-title">Running low on storage</div><div class="upgrade-banner-desc">Upgrade to Team for unlimited storage and more.</div></div>
+            <button class="btn btn-sm btn-primary">Upgrade</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 55 · ERROR PAGES ====== -->
+    <section class="sg-section" id="errorpages">
+      <div class="sg-section-header">
+        <span class="sg-section-num">55</span>
+        <h2>Error Pages</h2>
+      </div>
+      <div class="sg-subsection">
+        <div class="grid-3">
+          <div class="sg-canvas" style="padding:0;">
+            <div class="error-page" style="min-height:280px;">
+              <div class="error-code">404</div>
+              <div class="error-title">Page not found</div>
+              <div class="error-desc">The page you're looking for doesn't exist or has been moved.</div>
+              <div class="error-actions"><button class="btn btn-sm btn-primary">Go Home</button></div>
+            </div>
+          </div>
+          <div class="sg-canvas" style="padding:0;">
+            <div class="error-page" style="min-height:280px;">
+              <div class="error-code">500</div>
+              <div class="error-title">Server error</div>
+              <div class="error-desc">Something went wrong on our end. Please try again later.</div>
+              <div class="error-actions"><button class="btn btn-sm btn-ghost">Retry</button></div>
+            </div>
+          </div>
+          <div class="sg-canvas" style="padding:0;">
+            <div class="error-page" style="min-height:280px;">
+              <div class="maintenance-status"><div class="maintenance-status-dot"></div> Maintenance</div>
+              <div class="error-title">We'll be right back</div>
+              <div class="error-desc">Scheduled maintenance in progress. Expected downtime: ~30 min.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 56 · TIME TRACKING ====== -->
+    <section class="sg-section" id="timetracking">
+      <div class="sg-section-header">
+        <span class="sg-section-num">56</span>
+        <h2>Time Tracking</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Timer Widget</h3>
+        <div class="sg-canvas" style="max-width:520px; padding:0;">
+          <div class="timer-widget">
+            <div class="timer-display is-running">01:23:45</div>
+            <div class="timer-task"><div class="timer-task-name">Design system tokens</div>Project Alpha</div>
+            <div class="timer-controls">
+              <button class="timer-btn timer-btn--pause"><svg width="14" height="14" viewBox="0 0 16 16" fill="white"><rect x="3" y="2" width="4" height="12" rx="1"/><rect x="9" y="2" width="4" height="12" rx="1"/></svg></button>
+              <button class="timer-btn timer-btn--stop"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="3" width="10" height="10" rx="1"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sg-subsection mt-6">
+        <h3>Timesheet</h3>
+        <div class="sg-canvas" style="padding:0; max-width:560px;">
+          <table class="timesheet">
+            <thead><tr><th>Task</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Total</th></tr></thead>
+            <tbody>
+              <tr><td>Design system</td><td><span class="timesheet-hours timesheet-hours--filled">2h</span></td><td><span class="timesheet-hours timesheet-hours--filled">3h</span></td><td><span class="timesheet-hours timesheet-hours--filled">1h</span></td><td><span class="timesheet-hours">—</span></td><td><span class="timesheet-hours timesheet-hours--filled">2h</span></td><td class="timesheet-total">8h</td></tr>
+              <tr><td>API Integration</td><td><span class="timesheet-hours">—</span></td><td><span class="timesheet-hours timesheet-hours--filled">4h</span></td><td><span class="timesheet-hours timesheet-hours--filled">4h</span></td><td><span class="timesheet-hours timesheet-hours--filled">2h</span></td><td><span class="timesheet-hours">—</span></td><td class="timesheet-total">10h</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="sg-subsection mt-6">
+        <h3>Time Log</h3>
+        <div class="sg-canvas" style="padding:0; max-width:480px;">
+          <div class="time-log"><div class="time-log-color" style="background:var(--color-primary);"></div><div class="time-log-info"><div class="time-log-task">Design system tokens</div><div class="time-log-project">Project Alpha &middot; 14:00 – 16:30</div></div><div class="time-log-duration">2:30</div></div>
+          <div class="time-log"><div class="time-log-color" style="background:var(--color-purple);"></div><div class="time-log-info"><div class="time-log-task">API Integration</div><div class="time-log-project">Project Alpha &middot; 10:00 – 12:00</div></div><div class="time-log-duration">2:00</div></div>
+          <div class="time-log"><div class="time-log-color" style="background:var(--color-orange);"></div><div class="time-log-info"><div class="time-log-task">Bug fix login</div><div class="time-log-project">Project Beta &middot; 09:00 – 09:45</div></div><div class="time-log-duration">0:45</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 57 · SPRINT BOARD ====== -->
+    <section class="sg-section" id="sprintboard">
+      <div class="sg-section-header">
+        <span class="sg-section-num">57</span>
+        <h2>Sprint Board</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Sprint Header</h3>
+        <div class="sprint-header">
+          <div class="sprint-header-info">
+            <div class="sprint-name">Sprint 7 <span class="badge badge--info">Active</span></div>
+            <div class="sprint-dates">Mar 10 – Mar 24, 2026</div>
+            <div class="sprint-goal">"Complete redesign and deploy to staging"</div>
+          </div>
+          <div class="sprint-stats">
+            <div><div class="sprint-stat-value">21</div><div class="sprint-stat-label">Points</div></div>
+            <div><div class="sprint-stat-value">14</div><div class="sprint-stat-label">Done</div></div>
+            <div><div class="sprint-stat-value">67%</div><div class="sprint-stat-label">Progress</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="sg-subsection mt-6">
+        <h3>Backlog</h3>
+        <div class="backlog-section" style="max-width:480px;">
+          <div class="backlog-header">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5l3 3 3-3"/></svg>
+            <div class="backlog-header-title">Sprint Backlog</div>
+            <div class="backlog-header-count">5 items · 21 pts</div>
+          </div>
+          <div class="backlog-item"><span class="status-dot status-dot--done"></span><div class="backlog-item-title">Setup design tokens</div><span class="sp-badge">3</span><div class="avatar avatar-xs avatar--teal">MR</div></div>
+          <div class="backlog-item"><span class="status-dot status-dot--inprogress"></span><div class="backlog-item-title">Implement auth flow</div><span class="sp-badge">5</span><div class="avatar avatar-xs avatar--purple">LB</div></div>
+          <div class="backlog-item"><span class="status-dot status-dot--todo"></span><div class="backlog-item-title">Write unit tests</div><span class="sp-badge">8</span><div class="avatar avatar-xs avatar--blue">GV</div></div>
+          <div class="backlog-item"><span class="status-dot status-dot--todo"></span><div class="backlog-item-title">Deploy to staging</div><span class="sp-badge">3</span><div class="avatar avatar-xs avatar--teal">MR</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 58 · ROADMAP ====== -->
+    <section class="sg-section" id="roadmap">
+      <div class="sg-section-header">
+        <span class="sg-section-num">58</span>
+        <h2>Roadmap View</h2>
+      </div>
+      <div class="sg-subsection">
+        <div class="sg-canvas" style="padding:0; overflow-x:auto;">
+          <div class="roadmap-quarters">
+            <div class="roadmap-quarter is-current">Q1 2026</div>
+            <div class="roadmap-quarter">Q2 2026</div>
+            <div class="roadmap-quarter">Q3 2026</div>
+          </div>
+          <div class="roadmap-lane">
+            <div class="roadmap-lane-header">Design</div>
+            <div class="roadmap-lane-track">
+              <div class="roadmap-phase roadmap-phase--teal" style="flex:2;">&#127912; Design System v3</div>
+              <div class="roadmap-phase roadmap-phase--purple" style="flex:1;">&#128396; Brand Refresh</div>
+              <div style="flex:1;"></div>
+            </div>
+          </div>
+          <div class="roadmap-lane">
+            <div class="roadmap-lane-header">Engineering</div>
+            <div class="roadmap-lane-track">
+              <div style="flex:1;"></div>
+              <div class="roadmap-phase roadmap-phase--blue" style="flex:2;">&#9881; Core Refactor</div>
+              <div class="roadmap-phase roadmap-phase--green" style="flex:1;">&#128640; Launch</div>
+            </div>
+          </div>
+          <div class="roadmap-lane">
+            <div class="roadmap-lane-header">Growth</div>
+            <div class="roadmap-lane-track">
+              <div class="roadmap-phase roadmap-phase--orange" style="flex:1;">&#128200; Analytics</div>
+              <div style="flex:0.5;"></div>
+              <div class="roadmap-milestone"><div class="roadmap-milestone-dot"></div> Beta Launch</div>
+              <div style="flex:1;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 59 · WORKLOAD ====== -->
+    <section class="sg-section" id="workload">
+      <div class="sg-section-header">
+        <span class="sg-section-num">59</span>
+        <h2>Workload / Resource View</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Capacity Bars</h3>
+        <div class="sg-canvas" style="padding:0; max-width:560px;">
+          <div class="workload-row"><div class="workload-member"><div class="avatar avatar-xs avatar--teal">MR</div><div class="workload-member-name">Marco</div></div><div class="workload-bar"><div class="workload-bar-track"><div class="workload-bar-fill workload-bar-fill--ok" style="width:65%;">26h</div></div></div><div class="workload-hours">26 / 40h</div></div>
+          <div class="workload-row"><div class="workload-member"><div class="avatar avatar-xs avatar--purple">LB</div><div class="workload-member-name">Laura</div></div><div class="workload-bar"><div class="workload-bar-track"><div class="workload-bar-fill workload-bar-fill--warning" style="width:85%;">34h</div></div></div><div class="workload-hours">34 / 40h</div></div>
+          <div class="workload-row"><div class="workload-member"><div class="avatar avatar-xs avatar--blue">GV</div><div class="workload-member-name">Giulia</div></div><div class="workload-bar"><div class="workload-bar-track"><div class="workload-bar-fill workload-bar-fill--overload" style="width:110%;">44h</div></div></div><div class="workload-hours"><span class="workload-warning">&#9888; 44 / 40h</span></div></div>
+          <div class="workload-row"><div class="workload-member"><div class="avatar avatar-xs avatar--orange">AN</div><div class="workload-member-name">Andrea</div></div><div class="workload-bar"><div class="workload-bar-track"><div class="workload-bar-fill workload-bar-fill--ok" style="width:40%;">16h</div></div></div><div class="workload-hours">16 / 40h</div></div>
+        </div>
+      </div>
+      <div class="sg-subsection mt-6">
+        <h3>Heatmap</h3>
+        <div class="sg-canvas" style="max-width:300px;">
+          <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-2);">Activity heatmap (last 4 weeks)</div>
+          <div class="heatmap" style="grid-template-columns:repeat(7,1fr);">
+            <div class="heatmap-cell heatmap-cell--2"></div><div class="heatmap-cell heatmap-cell--3"></div><div class="heatmap-cell heatmap-cell--1"></div><div class="heatmap-cell heatmap-cell--4"></div><div class="heatmap-cell heatmap-cell--2"></div><div class="heatmap-cell heatmap-cell--0"></div><div class="heatmap-cell heatmap-cell--0"></div>
+            <div class="heatmap-cell heatmap-cell--3"></div><div class="heatmap-cell heatmap-cell--4"></div><div class="heatmap-cell heatmap-cell--2"></div><div class="heatmap-cell heatmap-cell--3"></div><div class="heatmap-cell heatmap-cell--1"></div><div class="heatmap-cell heatmap-cell--0"></div><div class="heatmap-cell heatmap-cell--0"></div>
+            <div class="heatmap-cell heatmap-cell--1"></div><div class="heatmap-cell heatmap-cell--2"></div><div class="heatmap-cell heatmap-cell--over"></div><div class="heatmap-cell heatmap-cell--4"></div><div class="heatmap-cell heatmap-cell--3"></div><div class="heatmap-cell heatmap-cell--1"></div><div class="heatmap-cell heatmap-cell--0"></div>
+            <div class="heatmap-cell heatmap-cell--4"></div><div class="heatmap-cell heatmap-cell--3"></div><div class="heatmap-cell heatmap-cell--3"></div><div class="heatmap-cell heatmap-cell--2"></div><div class="heatmap-cell heatmap-cell--4"></div><div class="heatmap-cell heatmap-cell--0"></div><div class="heatmap-cell heatmap-cell--0"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 60 · REPORT PAGE ====== -->
+    <section class="sg-section" id="reportpage">
+      <div class="sg-section-header">
+        <span class="sg-section-num">60</span>
+        <h2>Report Page</h2>
+      </div>
+      <div class="sg-subsection">
+        <div class="report-header">
+          <div class="report-title">Weekly Report</div>
+          <div class="report-export"><button class="btn btn-sm btn-ghost">PDF</button><button class="btn btn-sm btn-ghost">CSV</button></div>
+        </div>
+        <div class="report-filters">
+          <div class="report-filter-group"><span>Period:</span><select class="form-input form-select" style="height:30px; font-size:var(--text-xs); max-width:130px;"><option>This week</option><option>Last week</option></select></div>
+          <div class="report-filter-sep"></div>
+          <div class="report-filter-group"><span>Project:</span><select class="form-input form-select" style="height:30px; font-size:var(--text-xs); max-width:140px;"><option>All projects</option></select></div>
+        </div>
+        <div class="report-kpi-row">
+          <div class="report-kpi"><div class="report-kpi-label">Tasks Completed</div><div class="report-kpi-value">47</div><div class="report-kpi-change" style="color:var(--color-green);">&#9650; 12%</div></div>
+          <div class="report-kpi"><div class="report-kpi-label">Hours Tracked</div><div class="report-kpi-value">156h</div><div class="report-kpi-change" style="color:var(--color-green);">&#9650; 8%</div></div>
+          <div class="report-kpi"><div class="report-kpi-label">Team Velocity</div><div class="report-kpi-value">21 pts</div><div class="report-kpi-change" style="color:var(--color-red);">&#9660; 3%</div></div>
+          <div class="report-kpi"><div class="report-kpi-label">Overdue</div><div class="report-kpi-value" style="color:var(--color-red);">4</div><div class="report-kpi-change" style="color:var(--color-red);">&#9650; 2</div></div>
+        </div>
+        <div class="report-chart-section"><div class="report-chart-title">Completion Trend</div><div style="height:100px; background:var(--color-bg); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; color:var(--color-text-muted); font-size:var(--text-xs);">Chart area (Recharts)</div></div>
+      </div>
+    </section>
+
+    <!-- ====== 61 · RICH TEXT EDITOR ====== -->
+    <section class="sg-section" id="richeditor">
+      <div class="sg-section-header">
+        <span class="sg-section-num">61</span>
+        <h2>Rich Text Editor</h2>
+      </div>
+      <div class="sg-subsection">
+        <div class="editor" style="max-width:560px;">
+          <div class="editor-toolbar">
+            <button class="editor-toolbar-btn is-active" style="font-weight:700;">B</button>
+            <button class="editor-toolbar-btn" style="font-style:italic;">I</button>
+            <button class="editor-toolbar-btn" style="text-decoration:underline;">U</button>
+            <button class="editor-toolbar-btn" style="text-decoration:line-through;">S</button>
+            <div class="editor-toolbar-sep"></div>
+            <button class="editor-toolbar-btn">H1</button>
+            <button class="editor-toolbar-btn">H2</button>
+            <div class="editor-toolbar-sep"></div>
+            <button class="editor-toolbar-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h6M2 8h8M2 12h5"/></svg></button>
+            <button class="editor-toolbar-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 4h6M3 8h10M4 12h8"/></svg></button>
+            <div class="editor-toolbar-sep"></div>
+            <button class="editor-toolbar-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2v12M2 6h8M2 10h8M10 14l4-4M14 14h-4v-4"/></svg></button>
+            <button class="editor-toolbar-btn" style="font-family:var(--font-mono); font-size:11px;">&lt;/&gt;</button>
+          </div>
+          <div class="editor-body" contenteditable="false">
+            <h3>Sprint 7 Notes</h3>
+            <p>The design system migration is almost complete. <span class="mention">@Laura</span> finished the component audit and we're ready for the next phase.</p>
+            <blockquote>Focus on shipping the MVP before adding more features.</blockquote>
+            <ul>
+              <li>Finalize <code>tokens.css</code> variables</li>
+              <li>Test all components in dark mode</li>
+              <li>Deploy to staging by Friday</li>
+            </ul>
+          </div>
+          <div class="editor-footer"><span>Markdown supported</span><span>/ for commands</span></div>
+        </div>
+      </div>
+      <div class="sg-subsection mt-6">
+        <h3>Slash Command Menu</h3>
+        <div style="position:relative; display:inline-block;">
+          <div class="slash-menu" style="position:relative;">
+            <div class="slash-menu-item is-active"><div class="slash-menu-icon">&#182;</div><div><div class="slash-menu-text">Text</div><div class="slash-menu-hint">Plain text block</div></div></div>
+            <div class="slash-menu-item"><div class="slash-menu-icon">H</div><div><div class="slash-menu-text">Heading</div><div class="slash-menu-hint">Section heading</div></div></div>
+            <div class="slash-menu-item"><div class="slash-menu-icon">&#9776;</div><div><div class="slash-menu-text">Bullet List</div><div class="slash-menu-hint">Unordered list</div></div></div>
+            <div class="slash-menu-item"><div class="slash-menu-icon">&#10003;</div><div><div class="slash-menu-text">Checklist</div><div class="slash-menu-hint">To-do checklist</div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 62 · FILTER & SORT ====== -->
+    <section class="sg-section" id="filterpanel">
+      <div class="sg-section-header">
+        <span class="sg-section-num">62</span>
+        <h2>Filter & Sort Panel</h2>
+      </div>
+      <div class="sg-subsection">
+        <div style="display:flex; gap:var(--space-5);">
+          <div class="filter-panel">
+            <div class="filter-panel-header"><div class="filter-panel-title">Filters</div><button class="filter-panel-clear">Clear all</button></div>
+            <div class="filter-panel-body">
+              <div><div class="filter-group-label">Status</div>
+                <div class="filter-option is-checked"><div class="filter-checkbox">&#10003;</div><span class="filter-option-label">In Progress</span><span class="filter-option-count">47</span></div>
+                <div class="filter-option is-checked"><div class="filter-checkbox">&#10003;</div><span class="filter-option-label">To Do</span><span class="filter-option-count">23</span></div>
+                <div class="filter-option"><div class="filter-checkbox"></div><span class="filter-option-label">Done</span><span class="filter-option-count">192</span></div>
+              </div>
+              <div><div class="filter-group-label">Priority</div>
+                <div class="filter-option is-checked"><div class="filter-checkbox">&#10003;</div><span class="filter-option-label">High</span><span class="filter-option-count">12</span></div>
+                <div class="filter-option"><div class="filter-checkbox"></div><span class="filter-option-label">Medium</span><span class="filter-option-count">34</span></div>
+                <div class="filter-option"><div class="filter-checkbox"></div><span class="filter-option-label">Low</span><span class="filter-option-count">56</span></div>
+              </div>
+            </div>
+            <div class="filter-panel-footer"><button class="btn btn-sm btn-ghost">Save View</button><button class="btn btn-sm btn-primary">Apply</button></div>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-3);">Saved Views</div>
+            <div style="display:flex; flex-direction:column; gap:var(--space-1);">
+              <div class="saved-view is-active"><svg class="saved-view-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/></svg> My Tasks</div>
+              <div class="saved-view"><svg class="saved-view-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/></svg> Sprint Backlog</div>
+              <div class="saved-view"><svg class="saved-view-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h12M2 12h12"/></svg> All Overdue</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 63 · SIDEBAR VARIANTS ====== -->
+    <section class="sg-section" id="sidebarvariants">
+      <div class="sg-section-header">
+        <span class="sg-section-num">63</span>
+        <h2>Sidebar Variants</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Collapsed + Expanded + Workspace Switcher</h3>
+        <div class="sg-canvas" style="display:flex; gap:var(--space-4); padding:0; overflow:hidden; border-radius:var(--radius-lg);">
+          <!-- Collapsed -->
+          <div class="sidebar-collapsed" style="min-height:300px;">
+            <div style="width:28px; height:28px; background:var(--color-primary); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; margin-bottom:var(--space-3);"><svg width="14" height="14" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" stroke="white" stroke-width="2.5"/><circle cx="10" cy="10" r="3" fill="white"/></svg></div>
+            <button class="sidebar-collapsed-item is-active"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/></svg></button>
+            <button class="sidebar-collapsed-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h12M2 12h12"/></svg></button>
+            <button class="sidebar-collapsed-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/></svg></button>
+            <div class="sidebar-collapsed-sep"></div>
+            <button class="sidebar-collapsed-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg></button>
+          </div>
+          <!-- Expanded with tree -->
+          <div style="width:200px; background:var(--color-sidebar); padding:var(--space-2) 0; min-height:300px;">
+            <div class="workspace-switcher">
+              <div class="workspace-icon">T</div>
+              <div class="workspace-name">Taskomat</div>
+              <span class="workspace-chevron">&#9662;</span>
+            </div>
+            <div class="project-tree" style="margin-top:var(--space-2);">
+              <div class="tree-item is-active"><div class="tree-item-toggle is-open">&#9656;</div><svg class="tree-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/></svg> Project Alpha</div>
+              <div class="tree-children">
+                <div class="tree-item" style="font-size:var(--text-xs);">&#9900; Tasks</div>
+                <div class="tree-item" style="font-size:var(--text-xs);">&#128196; Files</div>
+                <div class="tree-item" style="font-size:var(--text-xs);">&#9202; Timeline</div>
+              </div>
+              <div class="tree-item"><div class="tree-item-toggle">&#9656;</div><svg class="tree-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/></svg> Project Beta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 64 · ACCORDION ====== -->
+    <section class="sg-section" id="accordion">
+      <div class="sg-section-header">
+        <span class="sg-section-num">64</span>
+        <h2>Accordion / Collapsible</h2>
+      </div>
+      <div class="sg-subsection">
+        <div class="accordion" style="max-width:520px;">
+          <div class="accordion-item is-open">
+            <button class="accordion-trigger"><span class="accordion-trigger-text">What is Taskomat?</span><svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg></button>
+            <div class="accordion-content">Taskomat is a modern project management platform designed for teams that want to stay productive. It combines task tracking, time management, and team collaboration in one beautiful interface.</div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-trigger"><span class="accordion-trigger-text">How does billing work?</span><svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg></button>
+            <div class="accordion-content">We bill monthly per active user. You can upgrade or downgrade your plan at any time.</div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-trigger"><span class="accordion-trigger-text">Can I import from other tools?</span><svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg></button>
+            <div class="accordion-content">Yes! We support CSV import and direct migration from Asana, Trello, Jira, and Notion.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 65 · PAGINATION ====== -->
+    <section class="sg-section" id="pagination">
+      <div class="sg-section-header">
+        <span class="sg-section-num">65</span>
+        <h2>Pagination</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Page Numbers</h3>
+        <div class="sg-canvas" style="display:flex; align-items:center; justify-content:space-between;">
+          <div class="pagination">
+            <button class="pagination-btn" disabled>&#8249;</button>
+            <button class="pagination-btn is-active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <span class="pagination-ellipsis">&hellip;</span>
+            <button class="pagination-btn">12</button>
+            <button class="pagination-btn">&#8250;</button>
+          </div>
+          <div class="pagination-meta">Showing 1–20 of 284</div>
+        </div>
+      </div>
+      <div class="sg-subsection mt-6">
+        <h3>Load More & Spinner</h3>
+        <div class="sg-canvas" style="max-width:400px; display:flex; flex-direction:column; gap:var(--space-4);">
+          <button class="load-more">Load more tasks&hellip;</button>
+          <div class="scroll-spinner"><div class="scroll-spinner-dot"></div><div class="scroll-spinner-dot"></div><div class="scroll-spinner-dot"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 66 · INTEGRATIONS ====== -->
+    <section class="sg-section" id="integrations">
+      <div class="sg-section-header">
+        <span class="sg-section-num">66</span>
+        <h2>Integrations</h2>
+      </div>
+      <div class="sg-subsection">
+        <div class="integration-grid">
+          <div class="integration-card is-connected">
+            <div class="integration-card-header"><div class="integration-card-icon" style="background:var(--color-purple-light); color:var(--color-purple);">S</div><div><div class="integration-card-name">Slack</div><div class="integration-card-category">Communication</div></div></div>
+            <div class="integration-card-desc">Get task notifications and updates directly in your Slack channels.</div>
+            <div class="integration-card-footer"><span class="integration-status integration-status--connected"><span class="status-dot status-dot--active"></span> Connected</span><button class="btn btn-sm btn-ghost">Configure</button></div>
+          </div>
+          <div class="integration-card is-connected">
+            <div class="integration-card-header"><div class="integration-card-icon" style="background:#1C1C1E; color:white;">GH</div><div><div class="integration-card-name">GitHub</div><div class="integration-card-category">Development</div></div></div>
+            <div class="integration-card-desc">Link pull requests to tasks and auto-update status on merge.</div>
+            <div class="integration-card-footer"><span class="integration-status integration-status--connected"><span class="status-dot status-dot--active"></span> Connected</span><button class="btn btn-sm btn-ghost">Configure</button></div>
+          </div>
+          <div class="integration-card">
+            <div class="integration-card-header"><div class="integration-card-icon" style="background:var(--color-red-light); color:var(--color-red);">F</div><div><div class="integration-card-name">Figma</div><div class="integration-card-category">Design</div></div></div>
+            <div class="integration-card-desc">Embed Figma frames in tasks and preview designs inline.</div>
+            <div class="integration-card-footer"><span class="integration-status integration-status--disconnected"><span class="status-dot status-dot--inactive"></span> Not connected</span><button class="btn btn-sm btn-primary">Connect</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 67 · CHANGELOG ====== -->
+    <section class="sg-section" id="changelog">
+      <div class="sg-section-header">
+        <span class="sg-section-num">67</span>
+        <h2>Changelog / What's New</h2>
+      </div>
+      <div class="sg-subsection">
+        <div class="changelog">
+          <div class="changelog-entry">
+            <div class="changelog-entry-dot"></div>
+            <div class="changelog-entry-date">March 16, 2026</div>
+            <div class="changelog-entry-version">v3.2.0</div>
+            <div class="changelog-item"><span class="changelog-badge changelog-badge--new">New</span><span class="changelog-item-text">Team Management & Network section with permission matrix</span></div>
+            <div class="changelog-item"><span class="changelog-badge changelog-badge--new">New</span><span class="changelog-item-text">Dark mode with full token override support</span></div>
+            <div class="changelog-item"><span class="changelog-badge changelog-badge--improve">Improve</span><span class="changelog-item-text">Calendar view now shows multi-day events</span></div>
+          </div>
+          <div class="changelog-entry">
+            <div class="changelog-entry-dot" style="background:var(--color-text-muted);"></div>
+            <div class="changelog-entry-date">March 8, 2026</div>
+            <div class="changelog-entry-version">v3.1.0</div>
+            <div class="changelog-item"><span class="changelog-badge changelog-badge--new">New</span><span class="changelog-item-text">Command Palette (Ctrl+K) for quick navigation</span></div>
+            <div class="changelog-item"><span class="changelog-badge changelog-badge--fix">Fix</span><span class="changelog-item-text">Fixed inline editing losing focus on blur</span></div>
+            <div class="changelog-item"><span class="changelog-badge changelog-badge--change">Change</span><span class="changelog-item-text">Updated button hover states for better feedback</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 68 · HELP & SUPPORT ====== -->
+    <section class="sg-section" id="helpsupport">
+      <div class="sg-section-header">
+        <span class="sg-section-num">68</span>
+        <h2>Help & Support</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Help Categories</h3>
+        <div class="help-categories">
+          <div class="help-category"><div class="help-category-icon"><svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4z"/></svg></div><div class="help-category-title">Getting Started</div><div class="help-category-count">8 articles</div></div>
+          <div class="help-category"><div class="help-category-icon"><svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg></div><div class="help-category-title">Account & Billing</div><div class="help-category-count">12 articles</div></div>
+          <div class="help-category"><div class="help-category-icon"><svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="10" height="10" rx="1"/><path d="M6 1v4M10 1v4"/></svg></div><div class="help-category-title">Integrations</div><div class="help-category-count">6 articles</div></div>
+        </div>
+      </div>
+      <div class="sg-subsection mt-6">
+        <h3>Chat Widget</h3>
+        <div class="sg-canvas" style="position:relative; min-height:100px;">
+          <div style="font-size:var(--text-sm); color:var(--color-text-muted);">The chat bubble appears in the bottom-right corner.</div>
+          <button class="chat-bubble" style="position:absolute; bottom:var(--space-4); right:var(--space-4);"><svg width="24" height="24" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.5"><path d="M2 3h12v8H5l-3 3V3z"/></svg><span class="chat-bubble-badge">2</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 69 · IMPORT / EXPORT ====== -->
+    <section class="sg-section" id="importexport">
+      <div class="sg-section-header">
+        <span class="sg-section-num">69</span>
+        <h2>Data Import / Export</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Export Options</h3>
+        <div class="export-options" style="max-width:480px;">
+          <div class="export-option is-selected"><div class="export-option-icon">&#128196;</div><div class="export-option-name">CSV</div><div class="export-option-desc">Spreadsheet format</div></div>
+          <div class="export-option"><div class="export-option-icon">&#128206;</div><div class="export-option-name">PDF</div><div class="export-option-desc">Print-ready report</div></div>
+          <div class="export-option"><div class="export-option-icon">&#128190;</div><div class="export-option-name">JSON</div><div class="export-option-desc">Raw data backup</div></div>
+        </div>
+      </div>
+      <div class="sg-subsection mt-6">
+        <h3>Import Progress</h3>
+        <div class="sg-canvas" style="max-width:400px;">
+          <div class="import-progress">
+            <div class="import-progress-text">Importing tasks...</div>
+            <div class="import-progress-bar"><div class="import-progress-fill" style="width:68%;"></div></div>
+            <div class="import-progress-text"><span class="import-progress-count">192</span> of <span class="import-progress-count">284</span> tasks imported</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 70 · NOTIFICATION PREFERENCES ====== -->
+    <section class="sg-section" id="notifprefs">
+      <div class="sg-section-header">
+        <span class="sg-section-num">70</span>
+        <h2>Notification Preferences</h2>
+      </div>
+      <div class="sg-subsection">
+        <div class="notif-mute-bar" style="max-width:560px;">
+          <div><div class="notif-mute-label">Mute All Notifications</div><div class="notif-mute-hint">Temporarily silence all alerts</div></div>
+          <label class="toggle"><input type="checkbox"><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+        </div>
+        <div style="max-width:560px; overflow:hidden; border-radius:var(--radius-lg);">
+          <table class="notif-prefs">
+            <thead><tr><th>Event</th><th>Email</th><th>Push</th><th>In-app</th></tr></thead>
+            <tbody>
+              <tr><td><div class="notif-event-name">Task assigned to me</div><div class="notif-event-desc">When someone assigns a task to you</div></td><td><label class="toggle" style="width:34px;height:18px;"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb" style="width:14px;height:14px;"></div></div></label></td><td><label class="toggle" style="width:34px;height:18px;"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb" style="width:14px;height:14px;"></div></div></label></td><td><label class="toggle" style="width:34px;height:18px;"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb" style="width:14px;height:14px;"></div></div></label></td></tr>
+              <tr><td><div class="notif-event-name">Comment mention</div><div class="notif-event-desc">When someone @mentions you</div></td><td><label class="toggle" style="width:34px;height:18px;"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb" style="width:14px;height:14px;"></div></div></label></td><td><label class="toggle" style="width:34px;height:18px;"><input type="checkbox"><div class="toggle-track"><div class="toggle-thumb" style="width:14px;height:14px;"></div></div></label></td><td><label class="toggle" style="width:34px;height:18px;"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb" style="width:14px;height:14px;"></div></div></label></td></tr>
+              <tr><td><div class="notif-event-name">Due date approaching</div><div class="notif-event-desc">24h before task deadline</div></td><td><label class="toggle" style="width:34px;height:18px;"><input type="checkbox"><div class="toggle-track"><div class="toggle-thumb" style="width:14px;height:14px;"></div></div></label></td><td><label class="toggle" style="width:34px;height:18px;"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb" style="width:14px;height:14px;"></div></div></label></td><td><label class="toggle" style="width:34px;height:18px;"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb" style="width:14px;height:14px;"></div></div></label></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 71 · MOBILE & RESPONSIVE ====== -->
+    <section class="sg-section" id="responsive">
+      <div class="sg-section-header">
+        <span class="sg-section-num">71</span>
+        <h2>Mobile & Responsive</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Mobile Components</h3>
+        <div class="sg-canvas" style="max-width:375px; padding:0; border-radius:var(--radius-xl); overflow:hidden;">
+          <div class="mobile-header">
+            <div class="hamburger"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></div>
+            <div class="mobile-header-title">Dashboard</div>
+            <div class="avatar avatar-xs avatar--teal">MR</div>
+          </div>
+          <div style="padding:var(--space-3);">
+            <div class="mobile-card" style="border:1px solid var(--color-border); border-radius:var(--radius-md); margin-bottom:var(--space-2);"><div class="mobile-card-row"><span class="status-dot status-dot--inprogress"></span><span style="flex:1; font-size:var(--text-sm); font-weight:500;">Design system tokens</span><span class="sp-badge sp-badge--sm">3</span></div></div>
+            <div class="mobile-card" style="border:1px solid var(--color-border); border-radius:var(--radius-md); margin-bottom:var(--space-2);"><div class="mobile-card-row"><span class="status-dot status-dot--todo"></span><span style="flex:1; font-size:var(--text-sm); font-weight:500;">API Integration</span><span class="sp-badge sp-badge--sm">5</span></div></div>
+          </div>
+          <div class="mobile-tab-bar">
+            <button class="mobile-tab-item is-active"><svg class="mobile-tab-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/></svg>Home</button>
+            <button class="mobile-tab-item"><svg class="mobile-tab-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h12M2 12h12"/></svg>Tasks</button>
+            <button class="mobile-tab-item"><svg class="mobile-tab-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>Time</button>
+            <button class="mobile-tab-item"><svg class="mobile-tab-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>Profile</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 72 · PRINT STYLES ====== -->
+    <section class="sg-section" id="printstyles">
+      <div class="sg-section-header">
+        <span class="sg-section-num">72</span>
+        <h2>Print Styles</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Invoice Preview</h3>
+        <div class="print-preview">
+          <div class="print-preview-header"><div class="print-preview-logo">Taskomat</div><div class="print-preview-meta">Invoice #2026-0042<br>March 16, 2026</div></div>
+          <div style="margin-bottom:var(--space-4);"><div style="font-size:11pt; color:#6B6B76;">Bill to:</div><div style="font-size:12pt; font-weight:600;">Acme Corp</div><div style="font-size:10pt; color:#6B6B76;">Via Roma 42, Milan, IT</div></div>
+          <table class="invoice-table">
+            <thead><tr><th>Description</th><th>Qty</th><th>Amount</th></tr></thead>
+            <tbody>
+              <tr><td>Pro Plan (12 users)</td><td>1</td><td>&euro;144.00</td></tr>
+              <tr><td>Extra storage (5 GB)</td><td>1</td><td>&euro;9.00</td></tr>
+              <tr class="invoice-total"><td>Total</td><td></td><td>&euro;153.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 73 · DARK MODE ====== -->
+    <section class="sg-section" id="darkmode">
+      <div class="sg-section-header">
+        <span class="sg-section-num">73</span>
+        <h2>Dark Mode</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Light vs Dark Comparison</h3>
+        <div class="theme-split">
+          <div class="theme-split-light">
+            <div class="theme-split-label">Light</div>
+            <div style="padding:var(--space-3); background:#F8F8F8; border:1px solid #E8E8EC; border-radius:8px; margin-bottom:8px;">
+              <div style="font-size:13px; font-weight:600; color:#1C1C1E; margin-bottom:4px;">Task card</div>
+              <div style="font-size:11px; color:#6B6B76;">Description text</div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <span style="padding:2px 8px; border-radius:99px; font-size:11px; background:#E6FAF9; color:#0E9E99;">Active</span>
+              <span style="padding:2px 8px; border-radius:99px; font-size:11px; background:#F8F8F8; border:1px solid #E8E8EC; color:#6B6B76;">Draft</span>
+            </div>
+          </div>
+          <div class="theme-split-dark">
+            <div class="theme-split-label">Dark</div>
+            <div style="padding:var(--space-3); background:#222228; border:1px solid #2E2E35; border-radius:8px; margin-bottom:8px;">
+              <div style="font-size:13px; font-weight:600; color:#F0F0F3; margin-bottom:4px;">Task card</div>
+              <div style="font-size:11px; color:#6B6B76;">Description text</div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <span style="padding:2px 8px; border-radius:99px; font-size:11px; background:rgba(19,190,184,0.12); color:#13BEB8;">Active</span>
+              <span style="padding:2px 8px; border-radius:99px; font-size:11px; background:#222228; border:1px solid #2E2E35; color:#8E8E93;">Draft</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 74 · MICRO-ANIMATIONS ====== -->
+    <section class="sg-section" id="animations">
+      <div class="sg-section-header">
+        <span class="sg-section-num">74</span>
+        <h2>Micro-Animations</h2>
+      </div>
+      <div class="sg-subsection">
+        <div style="display:flex; flex-wrap:wrap; gap:var(--space-4);">
+          <div><div class="anim-demo"><div class="anim-spinner"></div></div><div class="anim-demo-label">Spinner</div></div>
+          <div><div class="anim-demo"><div class="anim-check"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><polyline points="5 10 9 14 15 6" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div class="anim-demo-label">Success</div></div>
+          <div><div class="anim-demo"><div class="scroll-spinner"><div class="scroll-spinner-dot"></div><div class="scroll-spinner-dot"></div><div class="scroll-spinner-dot"></div></div></div><div class="anim-demo-label">Loading dots</div></div>
+          <div><div class="anim-demo"><div class="anim-pulse" style="width:40px; height:40px; border-radius:var(--radius-full); background:var(--color-primary);"></div></div><div class="anim-demo-label">Pulse</div></div>
+          <div><div class="anim-demo"><div class="maintenance-status-dot" style="width:12px; height:12px;"></div></div><div class="anim-demo-label">Pulse dot</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 75 · ACCESSIBILITY ====== -->
+    <section class="sg-section" id="a11y">
+      <div class="sg-section-header">
+        <span class="sg-section-num">75</span>
+        <h2>Accessibility</h2>
+      </div>
+      <div class="sg-subsection">
+        <h3>Contrast Checker</h3>
+        <div class="sg-canvas" style="max-width:480px; padding:0;">
+          <div class="contrast-pair"><div class="contrast-swatch" style="background:var(--color-surface); color:var(--color-text-primary); border:1px solid var(--color-border);">Ag</div><div class="contrast-info"><div class="contrast-label">Primary text on surface</div><div class="contrast-ratio">#1C1C1E on #FFFFFF — 17.4:1</div></div><span class="contrast-pass contrast-pass--aaa">AAA</span></div>
+          <div class="contrast-pair"><div class="contrast-swatch" style="background:var(--color-surface); color:var(--color-text-secondary); border:1px solid var(--color-border);">Ag</div><div class="contrast-info"><div class="contrast-label">Secondary text on surface</div><div class="contrast-ratio">#6B6B76 on #FFFFFF — 5.2:1</div></div><span class="contrast-pass contrast-pass--aa">AA</span></div>
+          <div class="contrast-pair"><div class="contrast-swatch" style="background:var(--color-surface); color:var(--color-text-muted); border:1px solid var(--color-border);">Ag</div><div class="contrast-info"><div class="contrast-label">Muted text on surface</div><div class="contrast-ratio">#8E8E93 on #FFFFFF — 3.5:1</div></div><span class="contrast-pass contrast-pass--aa">AA (lg)</span></div>
+          <div class="contrast-pair"><div class="contrast-swatch" style="background:var(--color-primary); color:white;">Ag</div><div class="contrast-info"><div class="contrast-label">White on primary</div><div class="contrast-ratio">#FFFFFF on #13BEB8 — 2.7:1</div></div><span class="contrast-pass contrast-pass--fail">Fail</span></div>
+        </div>
+      </div>
+      <div class="sg-subsection mt-6">
+        <h3>Focus States</h3>
+        <div class="sg-canvas" style="display:flex; gap:var(--space-4); flex-wrap:wrap;">
+          <button class="btn btn-primary focus-ring" style="outline:2px solid var(--color-primary); outline-offset:2px;">Focused Button</button>
+          <input class="form-input focus-ring" style="max-width:200px; outline:2px solid var(--color-primary); outline-offset:2px;" value="Focused Input">
+          <a href="#" class="auth-link focus-ring" style="outline:2px solid var(--color-primary); outline-offset:2px; padding:var(--space-1);">Focused Link</a>
         </div>
       </div>
     </section>

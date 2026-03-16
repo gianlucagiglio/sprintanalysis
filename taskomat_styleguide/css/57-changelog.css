@@ -1,0 +1,70 @@
+/* ============================================================
+   CHANGELOG / WHAT'S NEW v3
+   ============================================================ */
+
+.changelog {
+  max-width: 640px;
+}
+.changelog-entry {
+  position: relative;
+  padding-left: var(--space-6);
+  padding-bottom: var(--space-8);
+}
+.changelog-entry::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 8px;
+  bottom: 0;
+  width: 1.5px;
+  background: var(--color-border-light);
+}
+.changelog-entry:last-child::before { display: none; }
+.changelog-entry-dot {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  border: 2px solid var(--color-surface);
+  z-index: 1;
+}
+.changelog-entry-date {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-1);
+}
+.changelog-entry-version {
+  font-size: var(--text-md);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-3);
+}
+.changelog-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.changelog-badge {
+  display: inline-flex;
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-semi);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-label);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.changelog-badge--new     { background: var(--color-primary-light); color: var(--color-primary-dark); }
+.changelog-badge--fix     { background: var(--color-red-light); color: var(--color-red); }
+.changelog-badge--improve { background: var(--color-blue-light); color: var(--color-blue); }
+.changelog-badge--change  { background: var(--color-orange-light); color: #92400E; }
+.changelog-item-text {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--lh-normal);
+}

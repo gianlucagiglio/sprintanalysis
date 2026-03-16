@@ -1,0 +1,70 @@
+/* ============================================================
+   ERROR PAGES v3 — 404, 500, Maintenance, Offline
+   ============================================================ */
+
+.error-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+  min-height: 400px;
+}
+.error-code {
+  font-size: 80px;
+  font-weight: var(--fw-bold);
+  font-family: var(--font-mono);
+  color: var(--color-border);
+  line-height: 1;
+  margin-bottom: var(--space-4);
+}
+.error-illustration {
+  width: 120px;
+  height: 120px;
+  margin-bottom: var(--space-6);
+  color: var(--color-text-muted);
+  opacity: 0.3;
+}
+.error-title {
+  font-size: var(--text-xl);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+}
+.error-desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  max-width: 400px;
+  line-height: var(--lh-relaxed);
+  margin-bottom: var(--space-6);
+}
+.error-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* Status indicator for maintenance */
+.maintenance-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  background: var(--color-orange-light);
+  color: #92400E;
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  margin-bottom: var(--space-6);
+}
+.maintenance-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-orange);
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}

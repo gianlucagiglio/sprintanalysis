@@ -1,0 +1,100 @@
+/* ============================================================
+   MOBILE / RESPONSIVE v3 — Breakpoints, mobile nav, touch
+   ============================================================ */
+
+/* Mobile bottom tab bar */
+.mobile-tab-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 56px;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: 0 var(--space-2);
+}
+.mobile-tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-1) var(--space-3);
+  color: var(--color-text-muted);
+  font-size: 10px;
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  border: none;
+  background: none;
+  font-family: var(--font-sans);
+}
+.mobile-tab-item.is-active {
+  color: var(--color-primary);
+}
+.mobile-tab-icon {
+  width: 22px;
+  height: 22px;
+}
+
+/* Hamburger button */
+.hamburger {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+}
+.hamburger-line {
+  width: 20px;
+  height: 2px;
+  background: var(--color-text-primary);
+  border-radius: 1px;
+  transition: all var(--transition-fast);
+}
+.hamburger.is-open .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger.is-open .hamburger-line:nth-child(2) { opacity: 0; }
+.hamburger.is-open .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Mobile header */
+.mobile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+.mobile-header-title {
+  flex: 1;
+  font-size: var(--text-md);
+  font-weight: var(--fw-semi);
+  color: var(--color-text-primary);
+  text-align: center;
+}
+
+/* Touch-friendly sizes */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Mobile card (full width) */
+.mobile-card {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding: var(--space-4);
+}
+.mobile-card-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}

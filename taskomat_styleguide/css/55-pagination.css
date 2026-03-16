@@ -1,0 +1,101 @@
+/* ============================================================
+   PAGINATION & INFINITE SCROLL v3
+   ============================================================ */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.pagination-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.pagination-btn:hover {
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+}
+.pagination-btn.is-active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+.pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.pagination-ellipsis {
+  width: 32px;
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* Page size select */
+.pagination-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* Load more button */
+.load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  width: 100%;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.load-more:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-surface-tint);
+}
+
+/* Spinner for infinite scroll */
+.scroll-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.scroll-spinner-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  animation: scroll-bounce 1.2s infinite ease-in-out;
+}
+.scroll-spinner-dot:nth-child(2) { animation-delay: 0.2s; }
+.scroll-spinner-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes scroll-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}

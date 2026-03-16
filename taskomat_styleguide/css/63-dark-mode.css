@@ -1,0 +1,80 @@
+/* ============================================================
+   DARK MODE v3 — Full token override
+   ============================================================ */
+
+[data-theme="dark"] {
+  --color-bg:             #0F0F12;
+  --color-surface:        #1B1B1F;
+  --color-surface-raised: #222228;
+  --color-border:         #2E2E35;
+  --color-border-light:   #262630;
+  --color-border-subtle:  #222228;
+  --color-overlay:        rgba(0,0,0,0.6);
+  --color-surface-tint:   rgba(19,190,184,0.06);
+
+  --color-text-primary:   #F0F0F3;
+  --color-text-secondary: #8E8E93;
+  --color-text-muted:     #6B6B76;
+  --color-text-label:     #555560;
+
+  --color-primary-light:  rgba(19,190,184,0.12);
+  --color-green-light:    rgba(52,199,89,0.12);
+  --color-red-light:      rgba(239,68,68,0.12);
+  --color-orange-light:   rgba(245,166,35,0.12);
+  --color-blue-light:     rgba(59,130,246,0.12);
+  --color-purple-light:   rgba(124,92,252,0.12);
+  --color-yellow-light:   rgba(250,204,21,0.12);
+  --color-pink-light:     rgba(233,30,140,0.12);
+
+  --shadow-xs:    0 1px 2px rgba(0,0,0,0.3);
+  --shadow-sm:    0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:    0 4px 6px rgba(0,0,0,0.4);
+  --shadow-lg:    0 10px 15px rgba(0,0,0,0.4);
+  --shadow-xl:    0 20px 25px rgba(0,0,0,0.5);
+  --shadow-modal: 0 25px 50px rgba(0,0,0,0.6);
+  --shadow-float: 0 4px 12px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+/* Dark mode toggle demo */
+.dark-mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+.dark-mode-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-text-secondary);
+}
+
+/* Demo split panel */
+.theme-split {
+  display: flex;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+.theme-split-light {
+  flex: 1;
+  padding: var(--space-5);
+  background: #FFFFFF;
+  color: #1C1C1E;
+}
+.theme-split-dark {
+  flex: 1;
+  padding: var(--space-5);
+  background: #1B1B1F;
+  color: #F0F0F3;
+}
+.theme-split-label {
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-semi);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-label);
+  opacity: 0.5;
+  margin-bottom: var(--space-3);
+}

@@ -1,0 +1,118 @@
+/* ============================================================
+   BILLING & INVOICES v3
+   ============================================================ */
+
+/* Payment card */
+.payment-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+.payment-card-brand {
+  width: 48px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+.payment-card-info { flex: 1; }
+.payment-card-number {
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+}
+.payment-card-expiry {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.payment-card-default {
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-semi);
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+}
+
+/* Usage meter */
+.usage-meter {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+.usage-meter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-3);
+}
+.usage-meter-title {
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-primary);
+}
+.usage-meter-value {
+  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  color: var(--color-text-secondary);
+}
+.usage-meter-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--color-bg);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.usage-meter-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  transition: width var(--transition-base);
+}
+.usage-meter-fill--warning { background: var(--color-orange); }
+.usage-meter-fill--danger  { background: var(--color-red); }
+
+/* Upgrade banner */
+.upgrade-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--color-surface-tint);
+  border: 1px solid var(--color-primary-200);
+  border-radius: var(--radius-lg);
+}
+.upgrade-banner-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.upgrade-banner-text { flex: 1; }
+.upgrade-banner-title {
+  font-size: var(--text-sm);
+  font-weight: var(--fw-semi);
+  color: var(--color-text-primary);
+}
+.upgrade-banner-desc {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-0-5);
+}

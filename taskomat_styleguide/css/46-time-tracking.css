@@ -1,0 +1,139 @@
+/* ============================================================
+   TIME TRACKING v3 — Timer, timesheet, log entries
+   ============================================================ */
+
+/* Timer widget */
+.timer-widget {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+.timer-display {
+  font-size: var(--text-2xl);
+  font-weight: var(--fw-bold);
+  font-family: var(--font-mono);
+  color: var(--color-text-primary);
+  min-width: 140px;
+}
+.timer-display.is-running {
+  color: var(--color-primary);
+}
+.timer-task {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+.timer-task-name {
+  font-weight: var(--fw-medium);
+  color: var(--color-text-primary);
+}
+.timer-controls {
+  display: flex;
+  gap: var(--space-2);
+}
+.timer-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.timer-btn--play {
+  background: var(--color-primary);
+  color: white;
+}
+.timer-btn--play:hover { background: var(--color-primary-dark); }
+.timer-btn--pause {
+  background: var(--color-orange);
+  color: white;
+}
+.timer-btn--stop {
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+.timer-btn--stop:hover { background: var(--color-surface); }
+
+/* Timesheet grid */
+.timesheet {
+  width: 100%;
+  border-collapse: collapse;
+}
+.timesheet th {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-semi);
+  color: var(--color-text-muted);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: var(--ls-label);
+  border-bottom: 1px solid var(--color-border);
+}
+.timesheet th:first-child { text-align: left; }
+.timesheet td {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  text-align: center;
+  border-bottom: 1px solid var(--color-border-subtle);
+  vertical-align: middle;
+}
+.timesheet td:first-child {
+  text-align: left;
+  font-weight: var(--fw-medium);
+  color: var(--color-text-primary);
+}
+.timesheet-hours {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+}
+.timesheet-hours--filled {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+.timesheet-total {
+  font-weight: var(--fw-semi);
+  color: var(--color-text-primary);
+}
+
+/* Time log entry */
+.time-log {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.time-log-color {
+  width: 4px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+.time-log-info { flex: 1; }
+.time-log-task {
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-primary);
+}
+.time-log-project {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.time-log-duration {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-primary);
+}
