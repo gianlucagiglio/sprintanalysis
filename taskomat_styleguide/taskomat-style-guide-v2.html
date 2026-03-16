@@ -29,6 +29,7 @@
 <link rel="stylesheet" href="css/22-view-switcher.css">
 <link rel="stylesheet" href="css/23-kbd.css">
 <link rel="stylesheet" href="css/24-inline-edit.css">
+<link rel="stylesheet" href="css/25-team-management.css">
 </head>
 <body>
 
@@ -96,6 +97,7 @@
     <a href="#shortcuts">Keyboard Shortcuts</a>
     <a href="#inlineedit">Inline Editing</a>
     <a href="#taskdrawer">Task Detail Drawer</a>
+    <a href="#team-network">Team & Network</a>
   </nav>
 
   <!-- ====== MAIN ====== -->
@@ -2341,6 +2343,253 @@ Taskomat</textarea>
           <div class="css-ref-item">
             <code class="type-meta-class">.drawer-close</code>
             <div class="type-meta-detail">28×28px · bg: transparent · radius-sm<br>hover: bg var(--color-bg)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 35 · TEAM MANAGEMENT & NETWORK ====== -->
+    <section class="sg-section" id="team-network">
+      <div class="sg-section-header">
+        <span class="sg-section-num">35</span>
+        <h2>Team Management & Network</h2>
+      </div>
+
+      <!-- 35.1 Team Member Cards -->
+      <div class="sg-subsection">
+        <h3>Team Member Cards</h3>
+        <div class="grid-3">
+          <!-- Admin -->
+          <div class="team-card">
+            <div class="avatar avatar-lg avatar--teal">MR</div>
+            <div class="team-card-name">Marco Rossi</div>
+            <div class="team-card-email">marco@taskomat.com</div>
+            <div class="team-card-role"><span class="badge badge--info">Admin</span></div>
+            <div class="team-card-status"><span class="status-dot status-dot--active"></span> Online</div>
+            <div class="team-card-actions">
+              <button class="btn btn-sm btn-ghost">Edit Role</button>
+              <button class="btn btn-sm btn-ghost" style="color:var(--color-red);">Remove</button>
+            </div>
+          </div>
+          <!-- Editor -->
+          <div class="team-card">
+            <div class="avatar avatar-lg avatar--purple">LB</div>
+            <div class="team-card-name">Laura Bianchi</div>
+            <div class="team-card-email">laura@taskomat.com</div>
+            <div class="team-card-role"><span class="badge badge--neutral">Editor</span></div>
+            <div class="team-card-status"><span class="status-dot status-dot--active"></span> Online</div>
+            <div class="team-card-actions">
+              <button class="btn btn-sm btn-ghost">Edit Role</button>
+              <button class="btn btn-sm btn-ghost" style="color:var(--color-red);">Remove</button>
+            </div>
+          </div>
+          <!-- Viewer -->
+          <div class="team-card">
+            <div class="avatar avatar-lg avatar--blue">GV</div>
+            <div class="team-card-name">Giulia Verdi</div>
+            <div class="team-card-email">giulia@taskomat.com</div>
+            <div class="team-card-role"><span class="badge badge--neutral">Viewer</span></div>
+            <div class="team-card-status"><span class="status-dot status-dot--inactive"></span> Offline</div>
+            <div class="team-card-actions">
+              <button class="btn btn-sm btn-ghost">Edit Role</button>
+              <button class="btn btn-sm btn-ghost" style="color:var(--color-red);">Remove</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 35.2 Member List Table -->
+      <div class="sg-subsection mt-6">
+        <h3>Member List Table</h3>
+        <div class="sg-canvas" style="padding:0;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Last Access</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="table-cell-project"><div class="avatar avatar-sm avatar--teal">MR</div><span class="table-cell-name">Marco Rossi</span></div></td>
+                <td><span class="badge badge--info">Admin</span></td>
+                <td style="color:var(--color-text-secondary);">marco@taskomat.com</td>
+                <td style="color:var(--color-text-muted); font-size:var(--text-xs);">Today, 14:32</td>
+                <td><button class="table-action"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13" r="1.5"/></svg></button></td>
+              </tr>
+              <tr>
+                <td><div class="table-cell-project"><div class="avatar avatar-sm avatar--purple">LB</div><span class="table-cell-name">Laura Bianchi</span></div></td>
+                <td><span class="badge badge--neutral">Editor</span></td>
+                <td style="color:var(--color-text-secondary);">laura@taskomat.com</td>
+                <td style="color:var(--color-text-muted); font-size:var(--text-xs);">Today, 11:05</td>
+                <td><button class="table-action"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13" r="1.5"/></svg></button></td>
+              </tr>
+              <tr>
+                <td><div class="table-cell-project"><div class="avatar avatar-sm avatar--blue">GV</div><span class="table-cell-name">Giulia Verdi</span></div></td>
+                <td><span class="badge badge--neutral">Viewer</span></td>
+                <td style="color:var(--color-text-secondary);">giulia@taskomat.com</td>
+                <td style="color:var(--color-text-muted); font-size:var(--text-xs);">Yesterday, 18:20</td>
+                <td><button class="table-action"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13" r="1.5"/></svg></button></td>
+              </tr>
+              <tr>
+                <td><div class="table-cell-project"><div class="avatar avatar-sm avatar--orange">AN</div><span class="table-cell-name">Andrea Neri</span></div></td>
+                <td><span class="badge badge--neutral">Editor</span></td>
+                <td style="color:var(--color-text-secondary);">andrea@taskomat.com</td>
+                <td style="color:var(--color-text-muted); font-size:var(--text-xs);">Mar 12, 09:44</td>
+                <td><button class="table-action"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13" r="1.5"/></svg></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 35.3 Avatar Stack -->
+      <div class="sg-subsection mt-6">
+        <h3>Avatar Stack</h3>
+        <div class="sg-canvas" style="display:flex; flex-direction:column; gap:var(--space-6);">
+          <!-- Default (sm) -->
+          <div>
+            <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-2);">Default (sm)</div>
+            <div class="avatar-stack">
+              <div class="avatar avatar-sm avatar--teal">MR</div>
+              <div class="avatar avatar-sm avatar--purple">LB</div>
+              <div class="avatar avatar-sm avatar--blue">GV</div>
+              <div class="avatar avatar-sm avatar--orange">AN</div>
+            </div>
+          </div>
+          <!-- Large (md) -->
+          <div>
+            <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-2);">Large (md)</div>
+            <div class="avatar-stack avatar-stack--lg">
+              <div class="avatar avatar-md avatar--teal">MR</div>
+              <div class="avatar avatar-md avatar--purple">LB</div>
+              <div class="avatar avatar-md avatar--blue">GV</div>
+            </div>
+          </div>
+          <!-- With overflow counter -->
+          <div>
+            <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-2);">With overflow counter</div>
+            <div class="avatar-stack">
+              <div class="avatar avatar-sm avatar--teal">MR</div>
+              <div class="avatar avatar-sm avatar--purple">LB</div>
+              <div class="avatar avatar-sm avatar--blue">GV</div>
+              <span class="avatar-stack-more">+3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 35.4 Invite & Permissions -->
+      <div class="sg-subsection mt-6">
+        <h3>Invite & Permissions</h3>
+
+        <!-- Invite form -->
+        <div class="sg-canvas" style="margin-bottom:var(--space-5);">
+          <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-3);">Invite new member</div>
+          <div class="invite-form">
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input class="form-input" type="email" placeholder="name@company.com">
+            </div>
+            <div class="form-group" style="max-width:160px;">
+              <label class="form-label">Role</label>
+              <select class="form-input form-select">
+                <option>Viewer</option>
+                <option>Editor</option>
+                <option>Admin</option>
+              </select>
+            </div>
+            <button class="btn btn-primary btn-sm" style="margin-bottom:1px;">Send Invite</button>
+          </div>
+        </div>
+
+        <!-- Permission Matrix -->
+        <div class="sg-canvas" style="padding:0;">
+          <table class="permission-matrix">
+            <thead>
+              <tr>
+                <th>Permission</th>
+                <th><span class="badge badge--info">Admin</span></th>
+                <th><span class="badge badge--neutral">Editor</span></th>
+                <th><span class="badge badge--neutral">Viewer</span></th>
+                <th><span class="badge badge--neutral">Guest</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Create tasks</td>
+                <td><span class="perm-toggle is-on"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle is-on"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+              </tr>
+              <tr>
+                <td>Edit tasks</td>
+                <td><span class="perm-toggle is-on"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle is-on"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+              </tr>
+              <tr>
+                <td>Delete tasks</td>
+                <td><span class="perm-toggle is-on"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+              </tr>
+              <tr>
+                <td>Invite members</td>
+                <td><span class="perm-toggle is-on"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle is-on"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+              </tr>
+              <tr>
+                <td>Manage settings</td>
+                <td><span class="perm-toggle is-on"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+                <td><span class="perm-toggle"><span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CSS Reference -->
+      <div class="css-ref">
+        <div class="css-ref-title">CSS Classes Reference</div>
+        <div class="css-ref-grid">
+          <div class="css-ref-item">
+            <code class="type-meta-class">.team-card</code>
+            <div class="type-meta-detail">flex column · centered · padding: 24px 20px<br>radius-lg · shadow-xs · hover: lift -2px + shadow-md</div>
+          </div>
+          <div class="css-ref-item">
+            <code class="type-meta-class">.team-card-actions</code>
+            <div class="type-meta-detail">flex · gap: 8px · opacity: 0<br>hover-to-reveal on .team-card:hover</div>
+          </div>
+          <div class="css-ref-item">
+            <code class="type-meta-class">.avatar-stack</code>
+            <div class="type-meta-detail">flex · children margin-left: -8px<br>hover: translateY(-2px) · z-index: 1</div>
+          </div>
+          <div class="css-ref-item">
+            <code class="type-meta-class">.avatar-stack-more</code>
+            <div class="type-meta-detail">30×30px · bg: var(--color-bg)<br>border: 2px solid surface · radius-full<br>font-weight: 600 · text-xs</div>
+          </div>
+          <div class="css-ref-item">
+            <code class="type-meta-class">.permission-matrix</code>
+            <div class="type-meta-detail">table · border-collapse · th centered<br>td first-child: left-aligned + fw-medium</div>
+          </div>
+          <div class="css-ref-item">
+            <code class="type-meta-class">.perm-toggle</code>
+            <div class="type-meta-detail">34×18px mini toggle · .is-on: teal track<br>.perm-toggle-track: bg border → primary<br>.perm-toggle-thumb: 14px white circle</div>
+          </div>
+          <div class="css-ref-item">
+            <code class="type-meta-class">.invite-form</code>
+            <div class="type-meta-detail">flex · align-items: flex-end · gap: 12px<br>form-group flex: 1</div>
           </div>
         </div>
       </div>
