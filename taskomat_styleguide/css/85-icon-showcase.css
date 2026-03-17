@@ -1,0 +1,156 @@
+/* ============================================================
+   ICON SHOWCASE v3 — Sizes, colors, icon buttons, labels
+   ============================================================ */
+
+/* Icon display grid */
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: var(--space-2);
+}
+.icon-grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.icon-grid-item:hover {
+  background: var(--color-surface-tint);
+  border-color: var(--color-primary);
+}
+.icon-grid-item svg { color: var(--color-text-secondary); }
+.icon-grid-item-name {
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+/* Icon sizes */
+.icon-xs { width: 12px; height: 12px; }
+.icon-sm { width: 16px; height: 16px; }
+.icon-md { width: 20px; height: 20px; }
+.icon-lg { width: 24px; height: 24px; }
+.icon-xl { width: 32px; height: 32px; }
+.icon-2xl { width: 48px; height: 48px; }
+
+/* Icon colors */
+.icon-primary { color: var(--color-primary); }
+.icon-muted { color: var(--color-text-muted); }
+.icon-secondary { color: var(--color-text-secondary); }
+.icon-danger { color: var(--color-red); }
+.icon-success { color: var(--color-green); }
+.icon-warning { color: var(--color-orange); }
+.icon-info { color: var(--color-blue); }
+
+/* Icon button */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: transparent;
+  border: none;
+}
+.icon-btn:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-text-primary);
+}
+.icon-btn:active { transform: scale(0.92); }
+.icon-btn svg { width: 18px; height: 18px; }
+
+/* Icon button sizes */
+.icon-btn--sm { width: 26px; height: 26px; }
+.icon-btn--sm svg { width: 14px; height: 14px; }
+.icon-btn--lg { width: 40px; height: 40px; }
+.icon-btn--lg svg { width: 22px; height: 22px; }
+
+/* Icon button variants */
+.icon-btn--filled {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+.icon-btn--filled:hover { background: var(--color-surface-tint); }
+.icon-btn--primary {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+.icon-btn--primary:hover { background: var(--color-primary); color: white; }
+.icon-btn--danger:hover {
+  background: var(--color-red-light);
+  color: var(--color-red);
+}
+
+/* Icon with label */
+.icon-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+.icon-label svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+/* Icon badge (notification dot) */
+.icon-badge {
+  position: relative;
+  display: inline-flex;
+}
+.icon-badge-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-red);
+  border: 2px solid var(--color-surface-raised);
+}
+.icon-badge-count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-red);
+  color: white;
+  font-size: 10px;
+  font-weight: var(--fw-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-surface-raised);
+}
+
+/* Size demo row */
+.icon-size-demo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.icon-size-demo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+.icon-size-demo-label {
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}

@@ -1,0 +1,110 @@
+/* ============================================================
+   DENSITY MODES v3 — Compact, normal, comfortable spacing
+   ============================================================ */
+
+/* Density tokens */
+[data-density="compact"] {
+  --density-padding-cell: var(--space-1) var(--space-2);
+  --density-padding-item: var(--space-1-5) var(--space-2-5);
+  --density-padding-card: var(--space-3);
+  --density-gap: var(--space-1-5);
+  --density-row-height: 32px;
+  --density-font-size: var(--text-xs);
+  --density-avatar-size: 24px;
+}
+[data-density="normal"],
+:root {
+  --density-padding-cell: var(--space-2) var(--space-3);
+  --density-padding-item: var(--space-2-5) var(--space-3);
+  --density-padding-card: var(--space-4);
+  --density-gap: var(--space-2);
+  --density-row-height: 40px;
+  --density-font-size: var(--text-sm);
+  --density-avatar-size: 32px;
+}
+[data-density="comfortable"] {
+  --density-padding-cell: var(--space-3) var(--space-4);
+  --density-padding-item: var(--space-3) var(--space-4);
+  --density-padding-card: var(--space-5);
+  --density-gap: var(--space-3);
+  --density-row-height: 48px;
+  --density-font-size: var(--text-base);
+  --density-avatar-size: 40px;
+}
+
+/* Density-aware list */
+.density-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--density-gap);
+  padding: var(--density-padding-item);
+  font-size: var(--density-font-size);
+  min-height: var(--density-row-height);
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
+}
+
+/* Density-aware table */
+.density-table td,
+.density-table th {
+  padding: var(--density-padding-cell);
+  font-size: var(--density-font-size);
+}
+
+/* Density-aware card */
+.density-card {
+  padding: var(--density-padding-card);
+}
+
+/* Density-aware avatar */
+.density-avatar {
+  width: var(--density-avatar-size);
+  height: var(--density-avatar-size);
+  border-radius: var(--radius-full);
+  font-size: calc(var(--density-avatar-size) * 0.4);
+}
+
+/* Density switcher (demo) */
+.density-switcher {
+  display: inline-flex;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.density-switcher-btn {
+  padding: var(--space-1-5) var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--color-border);
+  transition: all var(--transition-fast);
+}
+.density-switcher-btn:last-child { border-right: none; }
+.density-switcher-btn:hover { color: var(--color-text-primary); }
+.density-switcher-btn.is-active {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* Visual density demo */
+.density-demo-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 24px;
+}
+.density-demo-icon span {
+  display: block;
+  width: 16px;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+}
+.density-demo-icon--compact span { margin: 0; }
+.density-demo-icon--normal span { margin: 1px 0; }
+.density-demo-icon--comfortable span { margin: 2px 0; }

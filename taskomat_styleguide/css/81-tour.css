@@ -1,0 +1,165 @@
+/* ============================================================
+   TOUR / SPOTLIGHT v3 — Step-by-step onboarding overlays
+   ============================================================ */
+
+/* Spotlight overlay */
+.tour-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: var(--z-overlay);
+}
+
+/* Spotlight cutout (positioned via JS) */
+.tour-spotlight {
+  position: absolute;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+  z-index: var(--z-overlay);
+  transition: all 300ms ease;
+}
+
+/* Tour popover */
+.tour-popover {
+  position: absolute;
+  z-index: var(--z-modal);
+  width: 320px;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-5);
+}
+/* Static demo */
+.tour-popover--static {
+  position: relative;
+}
+
+/* Step indicator */
+.tour-steps {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: var(--space-3);
+}
+.tour-step-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-border);
+  transition: all var(--transition-fast);
+}
+.tour-step-dot.is-active {
+  width: 18px;
+  background: var(--color-primary);
+}
+.tour-step-dot.is-done {
+  background: var(--color-primary);
+  opacity: 0.4;
+}
+
+/* Content */
+.tour-title {
+  font-size: var(--text-base);
+  font-weight: var(--fw-semi);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+}
+.tour-desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--space-4);
+}
+.tour-image {
+  width: 100%;
+  height: 120px;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+}
+
+/* Actions */
+.tour-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tour-skip {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast);
+}
+.tour-skip:hover { color: var(--color-text-primary); }
+.tour-nav {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Progress bar variant */
+.tour-progress {
+  height: 3px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-4);
+  overflow: hidden;
+}
+.tour-progress-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+  transition: width 300ms ease;
+}
+
+/* Arrow */
+.tour-popover-arrow {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  transform: rotate(45deg);
+}
+.tour-popover-arrow--top {
+  top: -7px;
+  left: 24px;
+  border-bottom: none;
+  border-right: none;
+}
+.tour-popover-arrow--bottom {
+  bottom: -7px;
+  left: 24px;
+  border-top: none;
+  border-left: none;
+}
+
+/* Hotspot beacon */
+.tour-beacon {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  position: relative;
+  cursor: pointer;
+}
+.tour-beacon::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-primary);
+  animation: beacon-pulse 2s ease-in-out infinite;
+}
+@keyframes beacon-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0; transform: scale(1.8); }
+}

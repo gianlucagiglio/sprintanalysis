@@ -70,6 +70,28 @@
 <link rel="stylesheet" href="css/63-dark-mode.css">
 <link rel="stylesheet" href="css/64-animations.css">
 <link rel="stylesheet" href="css/65-accessibility.css">
+<link rel="stylesheet" href="css/66-checkbox.css">
+<link rel="stylesheet" href="css/67-multi-select.css">
+<link rel="stylesheet" href="css/68-form-validation.css">
+<link rel="stylesheet" href="css/69-advanced-table.css">
+<link rel="stylesheet" href="css/70-input-variants.css">
+<link rel="stylesheet" href="css/71-notif-inbox.css">
+<link rel="stylesheet" href="css/72-bulk-actions.css">
+<link rel="stylesheet" href="css/73-split-pane.css">
+<link rel="stylesheet" href="css/74-hover-card.css">
+<link rel="stylesheet" href="css/75-chips.css">
+<link rel="stylesheet" href="css/76-circular-progress.css">
+<link rel="stylesheet" href="css/77-code-block.css">
+<link rel="stylesheet" href="css/78-dividers.css">
+<link rel="stylesheet" href="css/79-list-variants.css">
+<link rel="stylesheet" href="css/80-color-picker.css">
+<link rel="stylesheet" href="css/81-tour.css">
+<link rel="stylesheet" href="css/82-inline-confirm.css">
+<link rel="stylesheet" href="css/83-density.css">
+<link rel="stylesheet" href="css/84-fab.css">
+<link rel="stylesheet" href="css/85-icon-showcase.css">
+<link rel="stylesheet" href="css/86-clipboard.css">
+<link rel="stylesheet" href="css/87-component-states.css">
 </head>
 <body>
 
@@ -194,6 +216,38 @@
     <a href="#darkmode">Dark Mode</a>
     <a href="#animations">Micro-Animations</a>
     <a href="#a11y">Accessibility</a>
+
+    <div class="sg-nav-section-label">Form Patterns</div>
+    <a href="#checkbox">Checkbox & Radio</a>
+    <a href="#multiselect">Multi-Select</a>
+    <a href="#formvalidation">Form Validation</a>
+    <a href="#inputvariants">Input Variants</a>
+
+    <div class="sg-nav-section-label">Data & Tables</div>
+    <a href="#advancedtable">Advanced Table</a>
+    <a href="#bulkactions">Bulk Actions</a>
+
+    <div class="sg-nav-section-label">Overlays & Cards</div>
+    <a href="#notifcenter">Notification Inbox</a>
+    <a href="#hovercard">Hover Cards</a>
+    <a href="#tour">Tour & Spotlight</a>
+    <a href="#inlineconfirm">Inline Confirm</a>
+
+    <div class="sg-nav-section-label">UI Primitives</div>
+    <a href="#chips">Chips & Tags</a>
+    <a href="#circprogress">Circular Progress</a>
+    <a href="#codeblock">Code Block</a>
+    <a href="#dividers">Dividers</a>
+    <a href="#listvariants">List Variants</a>
+    <a href="#colorpicker">Color Picker</a>
+    <a href="#splitpane">Split Pane</a>
+
+    <div class="sg-nav-section-label">System</div>
+    <a href="#density">Density Modes</a>
+    <a href="#fab">FAB</a>
+    <a href="#iconshowcase">Icon Showcase</a>
+    <a href="#clipboard">Clipboard</a>
+    <a href="#compstates">Component States</a>
   </nav>
 
   <!-- ====== MAIN ====== -->
@@ -4572,6 +4626,1352 @@ Taskomat</textarea>
       </div>
     </section>
 
+    <!-- ====== 76 · CHECKBOX & RADIO ====== -->
+    <section class="sg-section" id="checkbox">
+      <div class="sg-section-header">
+        <span class="sg-section-num">76</span>
+        <h2>Checkbox & Radio Custom</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Checkbox States</h3>
+        <div class="sg-canvas" style="display:flex; flex-wrap:wrap; gap:var(--space-6);">
+          <label class="checkbox">
+            <input type="checkbox">
+            <span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Unchecked
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" checked>
+            <span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Checked
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" id="cb-indet">
+            <span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Indeterminate
+          </label>
+          <label class="checkbox is-disabled">
+            <input type="checkbox" disabled>
+            <span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Disabled
+          </label>
+          <label class="checkbox is-disabled">
+            <input type="checkbox" checked disabled>
+            <span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Disabled checked
+          </label>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Sizes</h3>
+        <div class="sg-canvas" style="display:flex; align-items:center; gap:var(--space-6);">
+          <label class="checkbox checkbox--sm">
+            <input type="checkbox" checked>
+            <span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Small
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" checked>
+            <span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Default
+          </label>
+          <label class="checkbox checkbox--lg">
+            <input type="checkbox" checked>
+            <span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Large
+          </label>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Checkbox with Description</h3>
+        <div class="sg-canvas">
+          <div class="checkbox-group">
+            <label class="checkbox">
+              <input type="checkbox" checked>
+              <span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <div class="checkbox-content">
+                <span class="checkbox-label">Email notifications</span>
+                <span class="checkbox-desc">Get notified when tasks are assigned to you</span>
+              </div>
+            </label>
+            <label class="checkbox">
+              <input type="checkbox">
+              <span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <div class="checkbox-content">
+                <span class="checkbox-label">Push notifications</span>
+                <span class="checkbox-desc">Receive mobile push for urgent items</span>
+              </div>
+            </label>
+            <label class="checkbox">
+              <input type="checkbox" checked>
+              <span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <div class="checkbox-content">
+                <span class="checkbox-label">Weekly digest</span>
+                <span class="checkbox-desc">Summary of your week every Friday</span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Select All Bar</h3>
+        <div class="sg-canvas">
+          <div class="select-all-bar">
+            <label class="checkbox">
+              <input type="checkbox" checked>
+              <span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </label>
+            <span>12 items selected</span>
+            <a href="#" style="margin-left:auto; font-size:var(--text-xs); color:var(--color-primary);">Select all 48</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 77 · MULTI-SELECT ====== -->
+    <section class="sg-section" id="multiselect">
+      <div class="sg-section-header">
+        <span class="sg-section-num">77</span>
+        <h2>Multi-Select & Searchable Dropdown</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Single Select (Searchable)</h3>
+        <div class="sg-canvas" style="max-width:320px;">
+          <div class="select-custom">
+            <div class="select-trigger is-open">
+              <span class="select-trigger-text">Design Team</span>
+              <svg class="select-trigger-clear" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+              <svg class="select-trigger-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="select-dropdown" style="position:relative; top:4px;">
+              <div class="select-search">
+                <input class="select-search-input" placeholder="Search teams...">
+              </div>
+              <div class="select-options">
+                <div class="select-option is-selected">
+                  <div class="select-option-icon" style="background:var(--color-primary-light); color:var(--color-primary); font-size:10px; font-weight:600;">DT</div>
+                  Design Team
+                  <svg class="select-option-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 8 6.5 11.5 13 5"/></svg>
+                </div>
+                <div class="select-option">
+                  <div class="select-option-icon" style="background:var(--color-purple-light); color:var(--color-purple); font-size:10px; font-weight:600;">EN</div>
+                  Engineering
+                </div>
+                <div class="select-option">
+                  <div class="select-option-icon" style="background:var(--color-blue-light); color:var(--color-blue); font-size:10px; font-weight:600;">MK</div>
+                  Marketing
+                </div>
+                <div class="select-option is-disabled">
+                  <div class="select-option-icon" style="background:var(--color-surface); color:var(--color-text-muted); font-size:10px; font-weight:600;">HR</div>
+                  HR (Archived)
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Multi-Select with Chips</h3>
+        <div class="sg-canvas" style="max-width:360px;">
+          <div class="select-custom">
+            <div class="select-trigger">
+              <div class="select-chips">
+                <span class="select-chip">Anna R. <span class="select-chip-remove">&times;</span></span>
+                <span class="select-chip">Marco T. <span class="select-chip-remove">&times;</span></span>
+                <span class="select-chip">Sara L. <span class="select-chip-remove">&times;</span></span>
+              </div>
+              <svg class="select-trigger-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Grouped Options</h3>
+        <div class="sg-canvas" style="max-width:280px;">
+          <div class="select-dropdown" style="position:relative;">
+            <div class="select-search">
+              <input class="select-search-input" placeholder="Search...">
+            </div>
+            <div class="select-options">
+              <div class="select-group-label">Priority</div>
+              <div class="select-option">🔴 Urgent</div>
+              <div class="select-option is-selected">🟡 High <svg class="select-option-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 8 6.5 11.5 13 5"/></svg></div>
+              <div class="select-option">🔵 Normal</div>
+              <div class="select-option">⚪ Low</div>
+              <div class="select-group-label">Status</div>
+              <div class="select-option">To Do</div>
+              <div class="select-option">In Progress</div>
+              <div class="select-option">Done</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 78 · FORM VALIDATION ====== -->
+    <section class="sg-section" id="formvalidation">
+      <div class="sg-section-header">
+        <span class="sg-section-num">78</span>
+        <h2>Form Validation States</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Field States</h3>
+        <div class="sg-canvas" style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4); max-width:500px;">
+          <div class="form-field">
+            <label class="form-label">Default</label>
+            <input class="form-input" placeholder="Enter value">
+          </div>
+          <div class="form-field">
+            <label class="form-label form-label-required">Error</label>
+            <input class="form-input is-error" value="abc">
+            <div class="form-message form-message--error">
+              <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7"/><path d="M8 4v4M8 10h.01" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Must be a valid email
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Success</label>
+            <input class="form-input is-success" value="user@email.com">
+            <div class="form-message form-message--success">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 8 7 11 12 5"/></svg>
+              Email verified
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Warning</label>
+            <input class="form-input is-warning" value="admin">
+            <div class="form-message form-message--warning">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L1 14h14L8 1z"/><path d="M8 6v3M8 11h.01" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Username already taken
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Password Strength</h3>
+        <div class="sg-canvas" style="max-width:300px;">
+          <div class="form-field">
+            <label class="form-label form-label-required">Password</label>
+            <input class="form-input" type="password" value="pass1234">
+          </div>
+          <div class="password-strength password-strength--weak" style="margin-top:var(--space-2);">
+            <div class="password-strength-bar"></div><div class="password-strength-bar"></div><div class="password-strength-bar"></div><div class="password-strength-bar"></div>
+          </div>
+          <div class="password-strength-text password-strength-text--weak">Weak</div>
+
+          <div class="password-strength password-strength--good" style="margin-top:var(--space-4);">
+            <div class="password-strength-bar"></div><div class="password-strength-bar"></div><div class="password-strength-bar"></div><div class="password-strength-bar"></div>
+          </div>
+          <div class="password-strength-text password-strength-text--good">Good</div>
+
+          <div class="password-strength password-strength--strong" style="margin-top:var(--space-4);">
+            <div class="password-strength-bar"></div><div class="password-strength-bar"></div><div class="password-strength-bar"></div><div class="password-strength-bar"></div>
+          </div>
+          <div class="password-strength-text password-strength-text--strong">Strong</div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Error Banner</h3>
+        <div class="sg-canvas" style="max-width:480px;">
+          <div class="form-error-banner">
+            <svg viewBox="0 0 20 20" fill="currentColor"><circle cx="10" cy="10" r="9"/><path d="M10 6v4M10 12.5h.01" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <div class="form-error-banner-text">
+              Please fix the following errors:
+              <ul class="form-error-banner-list">
+                <li>Email is required</li>
+                <li>Password must be at least 8 characters</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 79 · INPUT VARIANTS ====== -->
+    <section class="sg-section" id="inputvariants">
+      <div class="sg-section-header">
+        <span class="sg-section-num">79</span>
+        <h2>Input Variants</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Search Input</h3>
+        <div class="sg-canvas" style="max-width:320px;">
+          <div class="input-search">
+            <svg class="input-search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+            <input class="form-input" placeholder="Search tasks..." value="Homepage redesign">
+            <div class="input-search-clear">&times;</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Password Input</h3>
+        <div class="sg-canvas" style="max-width:320px;">
+          <div class="input-password">
+            <input class="form-input" type="password" value="mypassword123">
+            <div class="input-password-toggle">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 10s4-6 9-6 9 6 9 6-4 6-9 6-9-6-9-6z"/><circle cx="10" cy="10" r="3"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Number Input</h3>
+        <div class="sg-canvas" style="max-width:160px;">
+          <div class="input-number">
+            <button class="input-number-btn input-number-btn--dec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10"/></svg></button>
+            <input class="form-input" type="text" value="5">
+            <button class="input-number-btn input-number-btn--inc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M8 3v10"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Prefix & Suffix</h3>
+        <div class="sg-canvas" style="display:flex; flex-direction:column; gap:var(--space-3); max-width:360px;">
+          <div class="input-wrap">
+            <span class="input-prefix">https://</span>
+            <input class="form-input" placeholder="example.com">
+          </div>
+          <div class="input-wrap">
+            <span class="input-prefix">&euro;</span>
+            <input class="form-input" placeholder="0.00" style="text-align:right;">
+            <span class="input-suffix">EUR</span>
+          </div>
+          <div class="input-wrap">
+            <span class="input-prefix">@</span>
+            <input class="form-input" placeholder="username">
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Sizes</h3>
+        <div class="sg-canvas" style="display:flex; flex-direction:column; gap:var(--space-3); max-width:300px;">
+          <input class="form-input form-input--sm" placeholder="Small input">
+          <input class="form-input" placeholder="Default input">
+          <input class="form-input form-input--lg" placeholder="Large input">
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 80 · ADVANCED TABLE ====== -->
+    <section class="sg-section" id="advancedtable">
+      <div class="sg-section-header">
+        <span class="sg-section-num">80</span>
+        <h2>Advanced Table</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Sortable, Selectable Rows</h3>
+        <div class="sg-canvas">
+          <div class="table-wrapper">
+            <table class="table-adv table-adv--selectable">
+              <thead>
+                <tr>
+                  <th class="col-check"><label class="checkbox checkbox--sm"><input type="checkbox"><span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></label></th>
+                  <th><span class="th-sortable is-sorted">Task <svg class="th-sort-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 3v8M3 7l4-4 4 4"/></svg></span></th>
+                  <th><span class="th-sortable">Assignee <svg class="th-sort-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 3v8M3 7l4-4 4 4"/></svg></span></th>
+                  <th><span class="th-sortable">Due Date <svg class="th-sort-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 3v8M3 7l4-4 4 4"/></svg></span></th>
+                  <th>Priority</th>
+                  <th class="cell-right">Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="is-selected">
+                  <td class="col-check"><label class="checkbox checkbox--sm"><input type="checkbox" checked><span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></label></td>
+                  <td><strong>Homepage redesign</strong></td>
+                  <td>Anna R.</td>
+                  <td>Mar 15</td>
+                  <td><span class="badge badge--red">Urgent</span></td>
+                  <td class="cell-right cell-mono">8</td>
+                </tr>
+                <tr>
+                  <td class="col-check"><label class="checkbox checkbox--sm"><input type="checkbox"><span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></label></td>
+                  <td><strong>API integration</strong></td>
+                  <td>Marco T.</td>
+                  <td>Mar 18</td>
+                  <td><span class="badge badge--orange">High</span></td>
+                  <td class="cell-right cell-mono">5</td>
+                </tr>
+                <tr>
+                  <td class="col-check"><label class="checkbox checkbox--sm"><input type="checkbox"><span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></label></td>
+                  <td class="cell-truncate"><strong>Update documentation for all endpoints with new parameters</strong></td>
+                  <td>Sara L.</td>
+                  <td>Mar 22</td>
+                  <td><span class="badge badge--blue">Normal</span></td>
+                  <td class="cell-right cell-mono">3</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="5">3 tasks</td>
+                  <td class="cell-right cell-mono">16 pts</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 81 · NOTIFICATION INBOX ====== -->
+    <section class="sg-section" id="notifcenter">
+      <div class="sg-section-header">
+        <span class="sg-section-num">81</span>
+        <h2>Notification Inbox</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <div class="sg-canvas" style="display:flex; justify-content:center;">
+          <div class="notif-inbox">
+            <div class="notif-inbox-header">
+              <div class="notif-inbox-title">Notifications <span class="notif-inbox-count">5</span></div>
+              <button class="btn btn-ghost btn-sm">Mark all read</button>
+            </div>
+            <div class="notif-inbox-tabs">
+              <div class="notif-inbox-tab is-active">All</div>
+              <div class="notif-inbox-tab">Unread</div>
+              <div class="notif-inbox-tab">Mentions</div>
+            </div>
+            <div class="notif-group-header">Today</div>
+            <div class="notif-item is-unread">
+              <div class="notif-item-icon notif-item-icon--mention"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M11 8a3 3 0 0 1-6 0 6 6 0 1 1 6 0v1a2 2 0 0 0 4 0V8"/></svg></div>
+              <div class="notif-item-content">
+                <div class="notif-item-text"><strong>Anna R.</strong> mentioned you in <strong>Homepage redesign</strong></div>
+                <div class="notif-item-time">2 min ago</div>
+              </div>
+            </div>
+            <div class="notif-item is-unread">
+              <div class="notif-item-icon notif-item-icon--assign"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg></div>
+              <div class="notif-item-content">
+                <div class="notif-item-text"><strong>Marco T.</strong> assigned you to <strong>API integration</strong></div>
+                <div class="notif-item-time">15 min ago</div>
+              </div>
+            </div>
+            <div class="notif-group-header">Yesterday</div>
+            <div class="notif-item">
+              <div class="notif-item-icon notif-item-icon--task"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 8 7 11 12 5"/></svg></div>
+              <div class="notif-item-content">
+                <div class="notif-item-text"><strong>Sara L.</strong> completed <strong>Design review</strong></div>
+                <div class="notif-item-time">Yesterday at 16:30</div>
+              </div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-icon notif-item-icon--comment"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v8H5l-3 3V3z"/></svg></div>
+              <div class="notif-item-content">
+                <div class="notif-item-text"><strong>Luca B.</strong> commented on <strong>Sprint planning</strong></div>
+                <div class="notif-item-time">Yesterday at 10:15</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 82 · BULK ACTIONS ====== -->
+    <section class="sg-section" id="bulkactions">
+      <div class="sg-section-header">
+        <span class="sg-section-num">82</span>
+        <h2>Bulk Actions Toolbar</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <div class="sg-canvas" style="display:flex; flex-direction:column; gap:var(--space-5); align-items:center;">
+          <div class="bulk-bar bulk-bar--static">
+            <div class="bulk-bar-count">
+              <span class="bulk-bar-count-num">5</span> selected
+            </div>
+            <div class="bulk-bar-actions">
+              <button class="bulk-bar-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg> Assign</button>
+              <button class="bulk-bar-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M5 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1M6 7v5M10 7v5"/><path d="M3 4l1 10h8l1-10"/></svg> Archive</button>
+              <button class="bulk-bar-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12M2 7h8M2 11h10"/></svg> Move to</button>
+              <button class="bulk-bar-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2h5l2 2h5v9H2V2z"/></svg> Label</button>
+              <button class="bulk-bar-btn bulk-bar-btn--danger"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M5 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M3 4l1 10h8l1-10"/></svg> Delete</button>
+            </div>
+            <button class="bulk-bar-deselect"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 83 · HOVER CARDS ====== -->
+    <section class="sg-section" id="hovercard">
+      <div class="sg-section-header">
+        <span class="sg-section-num">83</span>
+        <h2>Hover Cards & Previews</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>User Preview</h3>
+        <div class="sg-canvas" style="display:flex; gap:var(--space-6); flex-wrap:wrap;">
+          <div class="hover-card hover-card--static" style="width:260px;">
+            <div class="hover-user">
+              <div class="avatar avatar-lg avatar--teal">AR</div>
+              <div class="hover-user-name">Anna Rossi</div>
+              <div class="hover-user-role">Lead Designer</div>
+              <div class="hover-user-stats">
+                <div class="hover-user-stat">
+                  <div class="hover-user-stat-value">24</div>
+                  <div class="hover-user-stat-label">Tasks</div>
+                </div>
+                <div class="hover-user-stat">
+                  <div class="hover-user-stat-value">87%</div>
+                  <div class="hover-user-stat-label">Done</div>
+                </div>
+                <div class="hover-user-stat">
+                  <div class="hover-user-stat-value">3</div>
+                  <div class="hover-user-stat-label">Projects</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hover-card hover-card--static" style="width:280px;">
+            <div class="hover-task-title">Homepage redesign</div>
+            <div class="hover-task-meta">
+              <span class="badge badge--red">Urgent</span>
+              <span class="badge badge--teal">In Progress</span>
+            </div>
+            <div class="hover-task-desc">Redesign the main landing page with new branding guidelines and updated component library.</div>
+            <div class="hover-task-footer">
+              <span>Due Mar 15</span>
+              <div class="avatar-stack"><div class="avatar avatar-xs avatar--teal">AR</div><div class="avatar avatar-xs avatar--purple">MT</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 84 · TOUR & SPOTLIGHT ====== -->
+    <section class="sg-section" id="tour">
+      <div class="sg-section-header">
+        <span class="sg-section-num">84</span>
+        <h2>Tour & Spotlight</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Tour Popover</h3>
+        <div class="sg-canvas" style="display:flex; gap:var(--space-6); flex-wrap:wrap;">
+          <div class="tour-popover tour-popover--static" style="width:300px;">
+            <div class="tour-steps">
+              <div class="tour-step-dot is-done"></div>
+              <div class="tour-step-dot is-active"></div>
+              <div class="tour-step-dot"></div>
+              <div class="tour-step-dot"></div>
+            </div>
+            <div class="tour-title">Create your first project</div>
+            <div class="tour-desc">Projects help you organize tasks and track progress. Click the "+" button to get started.</div>
+            <div class="tour-actions">
+              <button class="tour-skip">Skip tour</button>
+              <div class="tour-nav">
+                <button class="btn btn-ghost btn-sm">Back</button>
+                <button class="btn btn-primary btn-sm">Next (2/4)</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tour-popover tour-popover--static" style="width:300px;">
+            <div class="tour-progress"><div class="tour-progress-fill" style="width:75%;"></div></div>
+            <div class="tour-image">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="8" width="30" height="24" rx="3"/><path d="M5 16h30"/><circle cx="11" cy="12" r="1.5" fill="currentColor"/><circle cx="16" cy="12" r="1.5" fill="currentColor"/><circle cx="21" cy="12" r="1.5" fill="currentColor"/></svg>
+            </div>
+            <div class="tour-title">Invite your team</div>
+            <div class="tour-desc">Collaborate in real-time. Add team members to assign tasks and share updates.</div>
+            <div class="tour-actions">
+              <button class="tour-skip">Skip</button>
+              <button class="btn btn-primary btn-sm">Got it!</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Beacon</h3>
+        <div class="sg-canvas" style="display:flex; align-items:center; gap:var(--space-6);">
+          <div style="display:flex; align-items:center; gap:var(--space-2);">
+            <div class="tour-beacon"></div>
+            <span style="font-size:var(--text-sm); color:var(--color-text-muted);">Pulsing beacon on new features</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 85 · INLINE CONFIRMATION ====== -->
+    <section class="sg-section" id="inlineconfirm">
+      <div class="sg-section-header">
+        <span class="sg-section-num">85</span>
+        <h2>Inline Confirmation</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Confirm Popover</h3>
+        <div class="sg-canvas" style="display:flex; gap:var(--space-6); flex-wrap:wrap;">
+          <div class="confirm-popover">
+            <div class="confirm-popover-icon confirm-popover-icon--danger">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h14M6 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M8 9v6M12 9v6"/><path d="M4 6l1 11a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-11"/></svg>
+            </div>
+            <div class="confirm-popover-title">Delete project?</div>
+            <div class="confirm-popover-desc">This action cannot be undone. All tasks and files will be permanently deleted.</div>
+            <div class="confirm-popover-actions">
+              <button class="btn btn-ghost btn-sm">Cancel</button>
+              <button class="btn btn-sm" style="background:var(--color-red); color:white;">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Inline Confirm</h3>
+        <div class="sg-canvas" style="display:flex; flex-direction:column; gap:var(--space-4);">
+          <div class="confirm-inline">
+            <span class="confirm-inline-text">Delete this task?</span>
+            <button class="confirm-inline-yes">Yes, delete</button>
+            <button class="confirm-inline-no">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Undo Toast</h3>
+        <div class="sg-canvas" style="display:flex; justify-content:center;">
+          <div class="undo-toast" style="position:relative;">
+            <span class="undo-toast-text">Task deleted</span>
+            <button class="undo-toast-btn">Undo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 86 · CHIPS & TAGS ====== -->
+    <section class="sg-section" id="chips">
+      <div class="sg-section-header">
+        <span class="sg-section-num">86</span>
+        <h2>Chips & Tags Input</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Chip Variants</h3>
+        <div class="sg-canvas">
+          <div class="chip-group">
+            <span class="chip">Default</span>
+            <span class="chip chip--teal">Teal</span>
+            <span class="chip chip--purple">Purple</span>
+            <span class="chip chip--blue">Blue</span>
+            <span class="chip chip--orange">Orange</span>
+            <span class="chip chip--red">Red</span>
+            <span class="chip chip--green">Green</span>
+            <span class="chip chip--pink">Pink</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Removable & Selectable</h3>
+        <div class="sg-canvas">
+          <div class="chip-group">
+            <span class="chip chip--teal">Design <span class="chip-remove">&times;</span></span>
+            <span class="chip chip--purple">Frontend <span class="chip-remove">&times;</span></span>
+            <span class="chip chip--selectable is-selected">Selected</span>
+            <span class="chip chip--selectable">Selectable</span>
+            <span class="chip chip--sm chip--blue">Small</span>
+            <span class="chip chip--lg chip--green">Large</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Tag Input</h3>
+        <div class="sg-canvas" style="max-width:400px;">
+          <div class="chip-input">
+            <span class="chip">React <span class="chip-remove">&times;</span></span>
+            <span class="chip">TypeScript <span class="chip-remove">&times;</span></span>
+            <span class="chip">Vite <span class="chip-remove">&times;</span></span>
+            <input class="chip-input-field" placeholder="Add tag...">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 87 · CIRCULAR PROGRESS ====== -->
+    <section class="sg-section" id="circprogress">
+      <div class="sg-section-header">
+        <span class="sg-section-num">87</span>
+        <h2>Circular Progress</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <div class="sg-canvas">
+          <div class="progress-ring-demo">
+            <div class="progress-ring-demo-item">
+              <div class="progress-ring progress-ring--sm">
+                <svg width="48" height="48"><circle class="progress-ring-track" cx="24" cy="24" r="20"/><circle class="progress-ring-fill" cx="24" cy="24" r="20" stroke-dasharray="125.7" stroke-dashoffset="31.4"/></svg>
+                <div class="progress-ring-label"><span class="progress-ring-value" style="font-size:var(--text-xs);">75%</span></div>
+              </div>
+              <div class="progress-ring-demo-label">Small</div>
+            </div>
+
+            <div class="progress-ring-demo-item">
+              <div class="progress-ring progress-ring--md">
+                <svg width="80" height="80"><circle class="progress-ring-track" cx="40" cy="40" r="36"/><circle class="progress-ring-fill" cx="40" cy="40" r="36" stroke-dasharray="226.2" stroke-dashoffset="56.5"/></svg>
+                <div class="progress-ring-label"><span class="progress-ring-value">75%</span><span class="progress-ring-text">tasks</span></div>
+              </div>
+              <div class="progress-ring-demo-label">Medium</div>
+            </div>
+
+            <div class="progress-ring-demo-item">
+              <div class="progress-ring progress-ring--lg progress-ring--green">
+                <svg width="120" height="120"><circle class="progress-ring-track" cx="60" cy="60" r="54"/><circle class="progress-ring-fill" cx="60" cy="60" r="54" stroke-dasharray="339.3" stroke-dashoffset="33.9"/></svg>
+                <div class="progress-ring-label"><span class="progress-ring-value">90%</span><span class="progress-ring-text">complete</span></div>
+              </div>
+              <div class="progress-ring-demo-label">Large Green</div>
+            </div>
+
+            <div class="progress-ring-demo-item">
+              <div class="progress-ring progress-ring--md progress-ring--red">
+                <svg width="80" height="80"><circle class="progress-ring-track" cx="40" cy="40" r="36"/><circle class="progress-ring-fill" cx="40" cy="40" r="36" stroke-dasharray="226.2" stroke-dashoffset="169.6"/></svg>
+                <div class="progress-ring-label"><span class="progress-ring-value">25%</span></div>
+              </div>
+              <div class="progress-ring-demo-label">Red Low</div>
+            </div>
+
+            <div class="progress-ring-demo-item">
+              <div class="progress-ring progress-ring--md progress-ring--indeterminate">
+                <svg width="80" height="80"><circle class="progress-ring-track" cx="40" cy="40" r="36"/><circle class="progress-ring-fill" cx="40" cy="40" r="36" stroke-dasharray="226.2" stroke-dashoffset="170"/></svg>
+              </div>
+              <div class="progress-ring-demo-label">Loading</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 88 · CODE BLOCK ====== -->
+    <section class="sg-section" id="codeblock">
+      <div class="sg-section-header">
+        <span class="sg-section-num">88</span>
+        <h2>Code Block</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Inline Code</h3>
+        <div class="sg-canvas">
+          <p style="font-size:var(--text-sm); color:var(--color-text-primary);">
+            Use <code class="code-inline">npm install</code> to add dependencies, then run <code class="code-inline">npm start</code> to launch.
+          </p>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Code Block with Syntax</h3>
+        <div class="sg-canvas" style="max-width:520px;">
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-filename">api/tasks.ts</span>
+              <button class="code-block-copy"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="8" height="8" rx="1.5"/><path d="M4 10H3a1.5 1.5 0 0 1-1.5-1.5v-6A1.5 1.5 0 0 1 3 1h6A1.5 1.5 0 0 1 10.5 2.5V4"/></svg> Copy</button>
+            </div>
+            <div class="code-block-body">
+<pre><span class="code-keyword">async function</span> <span class="code-function">getTasks</span>(<span class="code-property">projectId</span>: <span class="code-type">string</span>) {
+  <span class="code-keyword">const</span> res <span class="code-operator">=</span> <span class="code-keyword">await</span> <span class="code-function">fetch</span>(<span class="code-string">`/api/projects/${projectId}/tasks`</span>);
+  <span class="code-keyword">if</span> (<span class="code-operator">!</span>res.<span class="code-property">ok</span>) <span class="code-keyword">throw new</span> <span class="code-type">Error</span>(<span class="code-string">'Failed'</span>);
+  <span class="code-keyword">return</span> res.<span class="code-function">json</span>();
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Diff View</h3>
+        <div class="sg-canvas" style="max-width:520px;">
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">diff</span>
+            </div>
+            <div class="code-block-body">
+<pre><span class="code-diff-remove">  color: var(--color-text-secondary);</span>
+<span class="code-diff-add">  color: var(--color-primary);</span>
+<span class="code-diff-remove">  font-size: 14px;</span>
+<span class="code-diff-add">  font-size: var(--text-sm);</span>
+  border-radius: var(--radius-md);</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 89 · DIVIDERS ====== -->
+    <section class="sg-section" id="dividers">
+      <div class="sg-section-header">
+        <span class="sg-section-num">89</span>
+        <h2>Dividers & Separators</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <div class="sg-canvas" style="max-width:480px;">
+          <p style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-1);">Default</p>
+          <hr class="divider">
+
+          <p style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-1);">Subtle</p>
+          <hr class="divider divider--subtle">
+
+          <p style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-1);">Strong</p>
+          <hr class="divider divider--strong">
+
+          <p style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-1);">Dashed</p>
+          <hr class="divider divider--dashed">
+
+          <p style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-1);">With label</p>
+          <div class="divider-label"><span class="divider-label-text">OR</span></div>
+
+          <p style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-1);">Section divider</p>
+          <div class="divider-section">
+            <div class="divider-section-icon"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h8M2 12h10"/></svg></div>
+            <span class="divider-section-text">Additional settings</span>
+          </div>
+
+          <p style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-1);">Vertical (inline)</p>
+          <div style="display:flex; align-items:center; gap:0; height:32px;">
+            <span style="font-size:var(--text-sm); color:var(--color-text-primary);">Tasks</span>
+            <div class="divider-v"></div>
+            <span style="font-size:var(--text-sm); color:var(--color-text-primary);">Projects</span>
+            <div class="divider-v"></div>
+            <span style="font-size:var(--text-sm); color:var(--color-text-primary);">Members</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 90 · LIST VARIANTS ====== -->
+    <section class="sg-section" id="listvariants">
+      <div class="sg-section-header">
+        <span class="sg-section-num">90</span>
+        <h2>List Variants</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Icon List</h3>
+        <div class="sg-canvas" style="max-width:360px;">
+          <ul class="list list--icon">
+            <li class="list-item">
+              <span class="list-item-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 8 7 11 12 5"/></svg></span>
+              <div class="list-item-content">
+                <div class="list-item-title">Unlimited projects</div>
+                <div class="list-item-desc">Create as many projects as you need</div>
+              </div>
+            </li>
+            <li class="list-item">
+              <span class="list-item-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 8 7 11 12 5"/></svg></span>
+              <div class="list-item-content">
+                <div class="list-item-title">Advanced analytics</div>
+                <div class="list-item-desc">Track team performance and velocity</div>
+              </div>
+            </li>
+            <li class="list-item">
+              <span class="list-item-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 8 7 11 12 5"/></svg></span>
+              <div class="list-item-content">
+                <div class="list-item-title">Priority support</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Avatar List</h3>
+        <div class="sg-canvas" style="max-width:360px;">
+          <ul class="list list--avatar">
+            <li class="list-item">
+              <div class="list-item-avatar" style="background:var(--color-primary-light); color:var(--color-primary);">AR</div>
+              <div class="list-item-content">
+                <div class="list-item-title">Anna Rossi</div>
+                <div class="list-item-desc">Lead Designer</div>
+              </div>
+              <span class="badge badge--teal" style="margin-left:auto;">Online</span>
+            </li>
+            <li class="list-item">
+              <div class="list-item-avatar" style="background:var(--color-purple-light); color:var(--color-purple);">MT</div>
+              <div class="list-item-content">
+                <div class="list-item-title">Marco Torino</div>
+                <div class="list-item-desc">Full Stack Dev</div>
+              </div>
+              <span class="badge" style="margin-left:auto;">Away</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Checklist</h3>
+        <div class="sg-canvas" style="max-width:320px;">
+          <div class="checklist-item is-checked">
+            <label class="checkbox checkbox--sm"><input type="checkbox" checked><span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></label>
+            <span class="checklist-text">Create wireframes</span>
+          </div>
+          <div class="checklist-item is-checked">
+            <label class="checkbox checkbox--sm"><input type="checkbox" checked><span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></label>
+            <span class="checklist-text">Review with team</span>
+          </div>
+          <div class="checklist-item">
+            <label class="checkbox checkbox--sm"><input type="checkbox"><span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></label>
+            <span class="checklist-text">Implement components</span>
+          </div>
+          <div class="checklist-item">
+            <label class="checkbox checkbox--sm"><input type="checkbox"><span class="checkbox-box"><svg viewBox="0 0 12 12" fill="none"><polyline points="2.5 6 5 8.5 9.5 3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></label>
+            <span class="checklist-text">QA testing</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Description List</h3>
+        <div class="sg-canvas" style="max-width:400px;">
+          <dl class="desc-list">
+            <div class="desc-list-item">
+              <dt class="desc-list-term">Project</dt>
+              <dd class="desc-list-def">Taskomat Redesign</dd>
+            </div>
+            <div class="desc-list-item">
+              <dt class="desc-list-term">Status</dt>
+              <dd class="desc-list-def"><span class="badge badge--teal">Active</span></dd>
+            </div>
+            <div class="desc-list-item">
+              <dt class="desc-list-term">Created</dt>
+              <dd class="desc-list-def">Jan 15, 2025</dd>
+            </div>
+            <div class="desc-list-item">
+              <dt class="desc-list-term">Members</dt>
+              <dd class="desc-list-def">8 people</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 91 · COLOR PICKER ====== -->
+    <section class="sg-section" id="colorpicker">
+      <div class="sg-section-header">
+        <span class="sg-section-num">91</span>
+        <h2>Color Picker</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <div class="sg-canvas" style="display:flex; gap:var(--space-6); flex-wrap:wrap;">
+          <div class="color-picker">
+            <div class="color-category">Theme Colors</div>
+            <div class="color-swatches">
+              <button class="color-swatch-btn is-selected" style="background:#13BEB8;"></button>
+              <button class="color-swatch-btn" style="background:#7C5CFC;"></button>
+              <button class="color-swatch-btn" style="background:#3B82F6;"></button>
+              <button class="color-swatch-btn" style="background:#F5A623;"></button>
+              <button class="color-swatch-btn" style="background:#EF4444;"></button>
+              <button class="color-swatch-btn" style="background:#34C759;"></button>
+              <button class="color-swatch-btn" style="background:#E91E8C;"></button>
+              <button class="color-swatch-btn" style="background:#FACA15;"></button>
+            </div>
+            <div class="color-category">Neutrals</div>
+            <div class="color-swatches">
+              <button class="color-swatch-btn" style="background:#1C1C1E;"></button>
+              <button class="color-swatch-btn" style="background:#3A3A3C;"></button>
+              <button class="color-swatch-btn" style="background:#636366;"></button>
+              <button class="color-swatch-btn" style="background:#8E8E93;"></button>
+              <button class="color-swatch-btn" style="background:#AEAEB2;"></button>
+              <button class="color-swatch-btn" style="background:#D1D1D6;"></button>
+              <button class="color-swatch-btn" style="background:#E5E5EA;"></button>
+              <button class="color-swatch-btn" style="background:#F2F2F7;"></button>
+            </div>
+            <div class="color-input-row">
+              <div class="color-preview-dot" style="background:#13BEB8;"></div>
+              <input class="color-hex-input" value="#13BEB8">
+              <span class="color-hex-label">HEX</span>
+            </div>
+          </div>
+
+          <div>
+            <p style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-2);">Inline trigger</p>
+            <div class="color-trigger">
+              <div class="color-trigger-dot" style="background:#13BEB8;"></div>
+              <span class="color-trigger-value">#13BEB8</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 92 · SPLIT PANE ====== -->
+    <section class="sg-section" id="splitpane">
+      <div class="sg-section-header">
+        <span class="sg-section-num">92</span>
+        <h2>Split Pane</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Horizontal Split</h3>
+        <div class="sg-canvas">
+          <div class="split-pane" style="height:220px;">
+            <div class="split-panel split-panel--primary">
+              <div class="split-panel-header">
+                <span class="split-panel-title">Task List</span>
+              </div>
+              <div style="font-size:var(--text-sm); color:var(--color-text-secondary);">
+                <div style="padding:var(--space-2) 0; border-bottom:1px solid var(--color-border-subtle);">Homepage redesign</div>
+                <div style="padding:var(--space-2) 0; border-bottom:1px solid var(--color-border-subtle);">API integration</div>
+                <div style="padding:var(--space-2) 0;">Documentation update</div>
+              </div>
+            </div>
+            <div class="split-divider">
+              <div class="split-divider-handle">
+                <div class="split-divider-handle-dot"></div>
+                <div class="split-divider-handle-dot"></div>
+                <div class="split-divider-handle-dot"></div>
+              </div>
+            </div>
+            <div class="split-panel split-panel--secondary">
+              <div class="split-panel-header">
+                <span class="split-panel-title">Details</span>
+                <button class="split-collapse-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3l5 5-5 5"/></svg></button>
+              </div>
+              <div style="font-size:var(--text-xs); color:var(--color-text-muted);">Select a task to view details</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 93 · DENSITY MODES ====== -->
+    <section class="sg-section" id="density">
+      <div class="sg-section-header">
+        <span class="sg-section-num">93</span>
+        <h2>Density Modes</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Switcher</h3>
+        <div class="sg-canvas">
+          <div class="density-switcher">
+            <button class="density-switcher-btn">Compact</button>
+            <button class="density-switcher-btn is-active">Normal</button>
+            <button class="density-switcher-btn">Comfortable</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Compact vs Normal vs Comfortable</h3>
+        <div class="sg-canvas" style="display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-4);">
+          <div data-density="compact">
+            <p style="font-size:var(--text-2xs); font-weight:600; color:var(--color-text-muted); margin-bottom:var(--space-2); text-transform:uppercase; letter-spacing:0.05em;">Compact</p>
+            <div style="border:1px solid var(--color-border); border-radius:var(--radius-md); overflow:hidden;">
+              <div class="density-list-item">Task Alpha</div>
+              <div class="density-list-item">Task Beta</div>
+              <div class="density-list-item">Task Gamma</div>
+              <div class="density-list-item">Task Delta</div>
+            </div>
+          </div>
+          <div data-density="normal">
+            <p style="font-size:var(--text-2xs); font-weight:600; color:var(--color-text-muted); margin-bottom:var(--space-2); text-transform:uppercase; letter-spacing:0.05em;">Normal</p>
+            <div style="border:1px solid var(--color-border); border-radius:var(--radius-md); overflow:hidden;">
+              <div class="density-list-item">Task Alpha</div>
+              <div class="density-list-item">Task Beta</div>
+              <div class="density-list-item">Task Gamma</div>
+            </div>
+          </div>
+          <div data-density="comfortable">
+            <p style="font-size:var(--text-2xs); font-weight:600; color:var(--color-text-muted); margin-bottom:var(--space-2); text-transform:uppercase; letter-spacing:0.05em;">Comfortable</p>
+            <div style="border:1px solid var(--color-border); border-radius:var(--radius-md); overflow:hidden;">
+              <div class="density-list-item">Task Alpha</div>
+              <div class="density-list-item">Task Beta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 94 · FAB ====== -->
+    <section class="sg-section" id="fab">
+      <div class="sg-section-header">
+        <span class="sg-section-num">94</span>
+        <h2>Floating Action Button</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <div class="sg-canvas">
+          <div class="fab-demo">
+            <div style="text-align:center;">
+              <button class="fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+              <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-top:var(--space-2);">Default</div>
+            </div>
+            <div style="text-align:center;">
+              <button class="fab fab--mini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+              <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-top:var(--space-2);">Mini</div>
+            </div>
+            <div style="text-align:center;">
+              <button class="fab fab--extended"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><span class="fab-label">New Task</span></button>
+              <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-top:var(--space-2);">Extended</div>
+            </div>
+            <div style="text-align:center;">
+              <button class="fab fab--surface"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+              <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-top:var(--space-2);">Surface</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>FAB with Menu</h3>
+        <div class="sg-canvas" style="min-height:240px; display:flex; justify-content:center; align-items:flex-end; padding-bottom:var(--space-4);">
+          <div class="fab-menu is-open">
+            <div class="fab-menu-items">
+              <div class="fab-menu-item">
+                <span class="fab-menu-item-label">New task</span>
+                <button class="fab-menu-item-btn"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 10 9 14 16 6"/></svg></button>
+              </div>
+              <div class="fab-menu-item">
+                <span class="fab-menu-item-label">New project</span>
+                <button class="fab-menu-item-btn"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h5l2 2h7v10H3V4z"/></svg></button>
+              </div>
+              <div class="fab-menu-item">
+                <span class="fab-menu-item-label">Quick note</span>
+                <button class="fab-menu-item-btn"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h12v12H4z"/><path d="M7 8h6M7 11h4"/></svg></button>
+              </div>
+            </div>
+            <button class="fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 95 · ICON SHOWCASE ====== -->
+    <section class="sg-section" id="iconshowcase">
+      <div class="sg-section-header">
+        <span class="sg-section-num">95</span>
+        <h2>Icon Showcase</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Icon Sizes</h3>
+        <div class="sg-canvas">
+          <div class="icon-size-demo">
+            <div class="icon-size-demo-item">
+              <svg class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              <span class="icon-size-demo-label">12px</span>
+            </div>
+            <div class="icon-size-demo-item">
+              <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              <span class="icon-size-demo-label">16px</span>
+            </div>
+            <div class="icon-size-demo-item">
+              <svg class="icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              <span class="icon-size-demo-label">20px</span>
+            </div>
+            <div class="icon-size-demo-item">
+              <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              <span class="icon-size-demo-label">24px</span>
+            </div>
+            <div class="icon-size-demo-item">
+              <svg class="icon-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              <span class="icon-size-demo-label">32px</span>
+            </div>
+            <div class="icon-size-demo-item">
+              <svg class="icon-2xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              <span class="icon-size-demo-label">48px</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Icon Colors</h3>
+        <div class="sg-canvas" style="display:flex; gap:var(--space-4); flex-wrap:wrap;">
+          <span class="icon-label icon-primary"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 8 7 11 12 5"/></svg> Primary</span>
+          <span class="icon-label icon-success"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 8 7 11 12 5"/></svg> Success</span>
+          <span class="icon-label icon-danger"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg> Danger</span>
+          <span class="icon-label icon-warning"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v5M8 10h.01"/></svg> Warning</span>
+          <span class="icon-label icon-info"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 7v4M8 5h.01"/></svg> Info</span>
+          <span class="icon-label icon-muted"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/></svg> Muted</span>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Icon Buttons</h3>
+        <div class="sg-canvas" style="display:flex; gap:var(--space-3); align-items:center;">
+          <button class="icon-btn"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4v12M4 10h12"/></svg></button>
+          <button class="icon-btn icon-btn--filled"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h12v12H4z"/><path d="M7 8h6M7 11h4"/></svg></button>
+          <button class="icon-btn icon-btn--primary"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="5 10 9 14 15 6"/></svg></button>
+          <button class="icon-btn icon-btn--danger"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h14M6 6V4.5A1.5 1.5 0 0 1 7.5 3h5A1.5 1.5 0 0 1 14 4.5V6"/><path d="M4 6l1 10.5A1.5 1.5 0 0 0 6.5 18h7a1.5 1.5 0 0 0 1.5-1.5L16 6"/></svg></button>
+          <button class="icon-btn icon-btn--sm"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4v12M4 10h12"/></svg></button>
+          <button class="icon-btn icon-btn--lg"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4v12M4 10h12"/></svg></button>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Icon with Badge</h3>
+        <div class="sg-canvas" style="display:flex; gap:var(--space-6); align-items:center;">
+          <span class="icon-badge">
+            <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a2 2 0 0 0 3.4 0"/></svg>
+            <span class="icon-badge-dot"></span>
+          </span>
+          <span class="icon-badge">
+            <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v12H5.17L4 17.17V4z"/></svg>
+            <span class="icon-badge-count">3</span>
+          </span>
+          <span class="icon-badge">
+            <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            <span class="icon-badge-count">12</span>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 96 · CLIPBOARD ====== -->
+    <section class="sg-section" id="clipboard">
+      <div class="sg-section-header">
+        <span class="sg-section-num">96</span>
+        <h2>Clipboard & Copy</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Copy Button</h3>
+        <div class="sg-canvas" style="display:flex; gap:var(--space-4); align-items:center;">
+          <button class="copy-btn"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="8" height="8" rx="1.5"/><path d="M4 10H3a1.5 1.5 0 0 1-1.5-1.5v-6A1.5 1.5 0 0 1 3 1h6A1.5 1.5 0 0 1 10.5 2.5V4"/></svg> Copy</button>
+          <button class="copy-btn is-copied"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 7 6 10 11 4"/></svg> Copied!</button>
+          <div class="copy-feedback"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 7 6 10 11 4"/></svg> Copied to clipboard</div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Copy Field</h3>
+        <div class="sg-canvas" style="max-width:400px;">
+          <div class="copy-field">
+            <input class="copy-field-value" value="https://app.taskomat.io/invite/abc123" readonly>
+            <button class="copy-field-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="5" width="8" height="8" rx="1.5"/><path d="M5 11H3.5A1.5 1.5 0 0 1 2 9.5v-6A1.5 1.5 0 0 1 3.5 2h6A1.5 1.5 0 0 1 11 3.5V5"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Share Link</h3>
+        <div class="sg-canvas" style="max-width:440px;">
+          <div class="share-link">
+            <div class="share-link-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 10l4-4M7 5l1-1a3 3 0 0 1 4.24 4.24l-1 1M9 11l-1 1a3 3 0 0 1-4.24-4.24l1-1"/></svg></div>
+            <div class="share-link-content">
+              <div class="share-link-label">Invite Link</div>
+              <div class="share-link-url">https://app.taskomat.io/invite/team-abc123</div>
+            </div>
+            <button class="copy-btn"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="8" height="8" rx="1.5"/><path d="M4 10H3a1.5 1.5 0 0 1-1.5-1.5v-6A1.5 1.5 0 0 1 3 1h6A1.5 1.5 0 0 1 10.5 2.5V4"/></svg> Copy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 97 · COMPONENT STATES ====== -->
+    <section class="sg-section" id="compstates">
+      <div class="sg-section-header">
+        <span class="sg-section-num">97</span>
+        <h2>Component States</h2>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Button States</h3>
+        <div class="sg-canvas">
+          <div class="state-grid">
+            <div class="state-card">
+              <button class="btn btn-primary btn-sm">Default</button>
+              <span class="state-label">Default</span>
+            </div>
+            <div class="state-card">
+              <button class="btn btn-primary btn-sm btn-state-hover">Hover</button>
+              <span class="state-label">Hover</span>
+            </div>
+            <div class="state-card">
+              <button class="btn btn-primary btn-sm btn-state-focus">Focus</button>
+              <span class="state-label">Focus</span>
+            </div>
+            <div class="state-card">
+              <button class="btn btn-primary btn-sm btn-state-active">Active</button>
+              <span class="state-label">Active</span>
+            </div>
+            <div class="state-card">
+              <button class="btn btn-primary btn-sm btn-state-disabled" disabled>Disabled</button>
+              <span class="state-label">Disabled</span>
+            </div>
+            <div class="state-card">
+              <button class="btn btn-primary btn-sm btn-state-loading">Loading</button>
+              <span class="state-label">Loading</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Input States</h3>
+        <div class="sg-canvas">
+          <div class="state-grid">
+            <div class="state-card">
+              <input class="form-input" style="max-width:120px;" placeholder="Default">
+              <span class="state-label">Default</span>
+            </div>
+            <div class="state-card">
+              <input class="form-input input-state-hover" style="max-width:120px;" value="Hover">
+              <span class="state-label">Hover</span>
+            </div>
+            <div class="state-card">
+              <input class="form-input input-state-focus" style="max-width:120px;" value="Focus">
+              <span class="state-label">Focus</span>
+            </div>
+            <div class="state-card">
+              <input class="form-input input-state-error" style="max-width:120px;" value="Error">
+              <span class="state-label">Error</span>
+            </div>
+            <div class="state-card">
+              <input class="form-input input-state-disabled" style="max-width:120px;" value="Disabled" disabled>
+              <span class="state-label">Disabled</span>
+            </div>
+            <div class="state-card">
+              <input class="form-input input-state-readonly" style="max-width:120px;" value="Read only" readonly>
+              <span class="state-label">Readonly</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sg-subsection">
+        <h3>Transition Speeds</h3>
+        <div class="sg-canvas">
+          <div class="transition-demo">
+            <div style="text-align:center;">
+              <div class="transition-box transition-box--fast">100ms</div>
+              <div class="transition-box-label">Fast</div>
+            </div>
+            <div style="text-align:center;">
+              <div class="transition-box transition-box--base">200ms</div>
+              <div class="transition-box-label">Base</div>
+            </div>
+            <div style="text-align:center;">
+              <div class="transition-box transition-box--slow">400ms</div>
+              <div class="transition-box-label">Slow</div>
+            </div>
+            <div style="text-align:center;">
+              <div class="transition-box transition-box--spring">Spring</div>
+              <div class="transition-box-label">Spring</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 </div>
 
@@ -4622,6 +6022,10 @@ document.querySelectorAll('.toggle input').forEach(input => {
     }
   });
 });
+
+// Set indeterminate checkbox
+const cbIndet = document.getElementById('cb-indet');
+if (cbIndet) cbIndet.indeterminate = true;
 </script>
 </body>
 </html>

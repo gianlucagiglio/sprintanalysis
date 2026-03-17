@@ -1,0 +1,184 @@
+/* ============================================================
+   INPUT VARIANTS v3 — Search, password, number, prefix/suffix
+   ============================================================ */
+
+/* Input wrapper for addons */
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Prefix / Suffix text */
+.input-prefix,
+.input-suffix {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-3);
+  height: 38px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+.input-prefix {
+  border-right: none;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+.input-suffix {
+  border-left: none;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+.input-wrap .form-input {
+  border-radius: 0;
+}
+.input-wrap .input-prefix + .form-input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.input-wrap .form-input:has(+ .input-suffix) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Search input */
+.input-search {
+  position: relative;
+}
+.input-search .form-input {
+  padding-left: 36px;
+  padding-right: 36px;
+}
+.input-search-icon {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+.input-search-clear {
+  position: absolute;
+  right: var(--space-2);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+}
+.input-search-clear:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-text-primary);
+}
+
+/* Password input */
+.input-password {
+  position: relative;
+}
+.input-password .form-input {
+  padding-right: 40px;
+  font-family: var(--font-mono);
+  letter-spacing: 1px;
+}
+.input-password-toggle {
+  position: absolute;
+  right: var(--space-2);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+.input-password-toggle:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-text-primary);
+}
+
+/* Number input */
+.input-number {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.input-number .form-input {
+  text-align: center;
+  padding-left: 36px;
+  padding-right: 36px;
+  -moz-appearance: textfield;
+}
+.input-number .form-input::-webkit-inner-spin-button,
+.input-number .form-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+.input-number-btn {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+  background: transparent;
+}
+.input-number-btn:hover {
+  color: var(--color-primary);
+  background: var(--color-surface-tint);
+}
+.input-number-btn--dec { left: 1px; border-radius: var(--radius-md) 0 0 var(--radius-md); }
+.input-number-btn--inc { right: 1px; border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+.input-number-btn svg { width: 14px; height: 14px; }
+
+/* Textarea with auto-resize hint */
+.textarea-wrap {
+  position: relative;
+}
+.textarea-counter {
+  position: absolute;
+  bottom: var(--space-2);
+  right: var(--space-3);
+  font-size: var(--text-2xs);
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+}
+.textarea-counter.is-near { color: var(--color-orange); }
+.textarea-counter.is-over { color: var(--color-red); }
+
+/* Input with icon left */
+.input-icon-left {
+  position: relative;
+}
+.input-icon-left .form-input { padding-left: 36px; }
+.input-icon-left > svg,
+.input-icon-left > .input-icon {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+/* Input sizes */
+.form-input--sm { height: 32px; font-size: var(--text-xs); padding: var(--space-1) var(--space-2-5); }
+.form-input--lg { height: 44px; font-size: var(--text-base); padding: var(--space-2-5) var(--space-4); }

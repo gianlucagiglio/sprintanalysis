@@ -1,0 +1,130 @@
+/* ============================================================
+   SPLIT PANE v3 — Resizable panels, drag divider
+   ============================================================ */
+
+/* Container */
+.split-pane {
+  display: flex;
+  height: 300px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.split-pane--vertical { flex-direction: column; }
+
+/* Panels */
+.split-panel {
+  overflow: auto;
+  padding: var(--space-4);
+}
+.split-panel--primary {
+  flex: 1 1 60%;
+  min-width: 200px;
+}
+.split-panel--secondary {
+  flex: 1 1 40%;
+  min-width: 150px;
+  background: var(--color-surface);
+}
+
+/* Drag divider */
+.split-divider {
+  flex-shrink: 0;
+  width: 1px;
+  background: var(--color-border);
+  position: relative;
+  cursor: col-resize;
+  transition: background var(--transition-fast);
+}
+.split-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -3px;
+  right: -3px;
+}
+.split-divider:hover,
+.split-divider.is-dragging {
+  background: var(--color-primary);
+  width: 2px;
+}
+
+/* Divider handle dots */
+.split-divider-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: var(--space-1) 3px;
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+.split-divider:hover .split-divider-handle { opacity: 1; }
+.split-divider-handle-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: var(--radius-full);
+  background: var(--color-text-muted);
+}
+
+/* Vertical divider */
+.split-pane--vertical .split-divider {
+  width: auto;
+  height: 1px;
+  cursor: row-resize;
+}
+.split-pane--vertical .split-divider::before {
+  top: -3px;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+}
+.split-pane--vertical .split-divider:hover,
+.split-pane--vertical .split-divider.is-dragging {
+  height: 2px;
+  width: auto;
+}
+.split-pane--vertical .split-divider-handle {
+  flex-direction: row;
+}
+
+/* Panel header */
+.split-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.split-panel-title {
+  font-size: var(--text-xs);
+  font-weight: var(--fw-semi);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-label);
+  color: var(--color-text-muted);
+}
+
+/* Collapse toggle */
+.split-collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: transparent;
+  border: none;
+}
+.split-collapse-btn:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-text-primary);
+}

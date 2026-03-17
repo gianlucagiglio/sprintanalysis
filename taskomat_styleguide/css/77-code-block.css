@@ -1,0 +1,133 @@
+/* ============================================================
+   CODE BLOCK v3 — Inline code, blocks, diff, copy button
+   ============================================================ */
+
+/* Inline code */
+.code-inline {
+  padding: 1px 6px;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xs);
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+/* Code block */
+.code-block {
+  position: relative;
+  background: #1B1B1F;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.code-block-lang {
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-semi);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-label);
+  color: rgba(255,255,255,0.4);
+}
+.code-block-filename {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: rgba(255,255,255,0.5);
+}
+.code-block-copy {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px var(--space-2);
+  font-size: var(--text-2xs);
+  color: rgba(255,255,255,0.4);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.code-block-copy:hover {
+  color: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.06);
+}
+.code-block-copy.is-copied { color: var(--color-green); border-color: var(--color-green); }
+.code-block-copy svg { width: 12px; height: 12px; }
+
+/* Code body */
+.code-block-body {
+  padding: var(--space-3) var(--space-4);
+  overflow-x: auto;
+}
+.code-block pre {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.7;
+  color: #E0E0E6;
+  white-space: pre;
+}
+
+/* Line numbers */
+.code-block--numbered .code-block-body {
+  display: flex;
+}
+.code-line-numbers {
+  flex-shrink: 0;
+  padding-right: var(--space-3);
+  margin-right: var(--space-3);
+  border-right: 1px solid rgba(255,255,255,0.06);
+  text-align: right;
+  user-select: none;
+}
+.code-line-num {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.7;
+  color: rgba(255,255,255,0.2);
+}
+
+/* Syntax colors */
+.code-keyword  { color: #C792EA; }
+.code-string   { color: #C3E88D; }
+.code-number   { color: #F78C6C; }
+.code-comment  { color: #546E7A; font-style: italic; }
+.code-function { color: #82AAFF; }
+.code-property { color: #F07178; }
+.code-operator { color: #89DDFF; }
+.code-type     { color: #FFCB6B; }
+
+/* Diff view */
+.code-diff-add {
+  background: rgba(52,199,89,0.1);
+  display: block;
+}
+.code-diff-add::before {
+  content: '+ ';
+  color: var(--color-green);
+}
+.code-diff-remove {
+  background: rgba(239,68,68,0.1);
+  display: block;
+}
+.code-diff-remove::before {
+  content: '- ';
+  color: var(--color-red);
+}
+
+/* Highlight line */
+.code-line-highlight {
+  background: rgba(19,190,184,0.08);
+  display: block;
+  margin: 0 calc(-1 * var(--space-4));
+  padding: 0 var(--space-4);
+  border-left: 2px solid var(--color-primary);
+}
