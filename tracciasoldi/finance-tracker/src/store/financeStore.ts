@@ -1,5 +1,6 @@
 import { create } from "zustand"
 import type { Transaction } from "@/types/Transaction"
+import { mergeTransactions } from "@/utils/transactionMerger"
 
 interface FinanceState {
   bankTransactions: Transaction[]
@@ -28,8 +29,6 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
 
   clearAll: () => set({ bankTransactions: [], creditCardTransactions: [] }),
 
-  allTransactions: () => [
-    ...get().bankTransactions,
-    ...get().creditCardTransactions,
-  ],
+  allTransactions: () =>
+    mergeTransactions(get().bankTransactions, get().creditCardTransactions).transactions,
 }))

@@ -25,7 +25,6 @@ export function CreditCardPage() {
     }
     const months = Array.from(monthMap.entries())
       .sort(([a], [b]) => b.localeCompare(a))
-      .slice(0, 6)
 
     return { total, months, count: transactions.length }
   }, [transactions])

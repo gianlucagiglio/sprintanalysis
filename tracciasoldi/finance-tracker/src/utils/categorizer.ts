@@ -45,6 +45,11 @@ const categoryRules: Record<string, string[]> = {
     "esselunga", "conad", "coop", "lidl", "eurospin", "carrefour", "penny",
     "md ", "aldi", "pam", "supermercato", "despar", "iper",
   ],
+  "Carta di Credito": [
+    "addebito nexi", "nexi payments", "nexi spa", "carta di credito",
+    "pagamento carta", "addebito carta", "pag carta", "pag. carta",
+    "visa europe", "mastercard", "amex", "american express",
+  ],
 }
 
 export function categorize(description: string): string {
