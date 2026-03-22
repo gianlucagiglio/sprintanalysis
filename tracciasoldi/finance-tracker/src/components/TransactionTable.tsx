@@ -159,7 +159,9 @@ export function TransactionTable({ transactions }: TransactionTableProps) {
                 </TableCell>
                 <TableCell
                   className={`text-right font-mono font-medium whitespace-nowrap ${
-                    tx.amount >= 0 ? "text-green-500" : "text-red-500"
+                    tx.source === "credit_card"
+                      ? tx.amount < 0 ? "text-green-500" : "text-red-500"
+                      : tx.amount >= 0 ? "text-green-500" : "text-red-500"
                   }`}
                 >
                   {formatAmount(tx.amount)}

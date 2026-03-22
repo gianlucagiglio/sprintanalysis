@@ -166,7 +166,16 @@ function rowsToTransactions(
 
     if (amount === 0 && !description) continue
 
-    const status = statusCol !== -1 ? String(row[statusCol] || "").trim().toLowerCase() : undefined
+    let status: string | undefined
+    if (statusCol !== -1) {
+      const rawStatus = String(row[statusCol] || "").trim().toLowerCase()
+      if (rawStatus) {
+        status = rawStatus
+      } else if (source === "credit_card") {
+        // In Nexi exports, empty status means contabilizzato
+        status = "contabilizzato"
+      }
+    }
 
     transactions.push({
       id: generateId(),

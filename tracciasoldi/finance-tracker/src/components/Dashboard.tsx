@@ -63,16 +63,25 @@ export function Dashboard({ transactions }: DashboardProps) {
   const isExpense = (t: Transaction) =>
     t.source === "credit_card" ? t.amount > 0 : t.amount < 0
   const isIncome = (t: Transaction) =>
-    t.source === "credit_card" ? t.amount < 0 : t.amount > 0
+    t.source !== "credit_card" && t.amount > 0
+  const isRefund = (t: Transaction) =>
+    t.source === "credit_card" && t.amount < 0
 
   const stats = useMemo(() => {
     const income = transactions
       .filter(isIncome)
       .reduce((sum, t) => sum + Math.abs(t.amount), 0)
 
-    const expenses = transactions
+    const grossExpenses = transactions
       .filter(isExpense)
       .reduce((sum, t) => sum + Math.abs(t.amount), 0)
+
+    const refunds = transactions
+      .filter(isRefund)
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0)
+
+    // Net expenses = gross expenses - card refunds
+    const expenses = grossExpenses - refunds
 
     const net = income - expenses
 
@@ -96,7 +105,10 @@ export function Dashboard({ transactions }: DashboardProps) {
       const entry = monthMap.get(month) || { income: 0, expenses: 0 }
       if (isIncome(tx)) {
         entry.income += Math.abs(tx.amount)
-      } else {
+      } else if (isRefund(tx)) {
+        // Card refunds reduce expenses, not increase income
+        entry.expenses -= Math.abs(tx.amount)
+      } else if (isExpense(tx)) {
         entry.expenses += Math.abs(tx.amount)
       }
       monthMap.set(month, entry)

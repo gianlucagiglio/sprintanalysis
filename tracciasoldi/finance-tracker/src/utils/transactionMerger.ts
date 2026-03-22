@@ -26,10 +26,8 @@ function isCardCharge(tx: Transaction): boolean {
 }
 
 function getYearMonth(dateStr: string): string {
-  const d = new Date(dateStr)
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, "0")
-  return `${y}-${m}`
+  // Use string parsing to avoid timezone issues with new Date()
+  return dateStr.substring(0, 7)
 }
 
 function shiftMonth(yearMonth: string, offset: number): string {

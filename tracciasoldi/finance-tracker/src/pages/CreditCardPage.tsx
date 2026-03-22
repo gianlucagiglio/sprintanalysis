@@ -10,14 +10,19 @@ export function CreditCardPage() {
   const clearCard = useFinanceStore((s) => s.clearCreditCard)
 
   const stats = useMemo(() => {
-    const total = transactions.reduce(
-      (sum, t) => sum + t.amount,
-      0,
-    )
+    // Credit card: positive = expense, negative = refund
+    const expenses = transactions
+      .filter((t) => t.amount > 0)
+      .reduce((sum, t) => sum + t.amount, 0)
 
-    // Monthly breakdown
+    const refunds = transactions
+      .filter((t) => t.amount < 0)
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0)
+
+    // Monthly breakdown (only expenses, excluding refunds)
     const monthMap = new Map<string, number>()
     for (const tx of transactions) {
+      if (tx.amount <= 0) continue
       const month = tx.date.substring(0, 7)
       if (month) {
         monthMap.set(month, (monthMap.get(month) || 0) + tx.amount)
@@ -26,7 +31,7 @@ export function CreditCardPage() {
     const months = Array.from(monthMap.entries())
       .sort(([a], [b]) => b.localeCompare(a))
 
-    return { total, months, count: transactions.length }
+    return { expenses, refunds, months, count: transactions.length }
   }, [transactions])
 
   const formatEUR = (v: number) =>
@@ -66,7 +71,7 @@ export function CreditCardPage() {
 
       {transactions.length > 0 && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className={`grid grid-cols-1 gap-4 ${stats.refunds > 0 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm text-muted-foreground">
@@ -75,10 +80,24 @@ export function CreditCardPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-xl font-bold font-mono text-red-500">
-                  {formatEUR(stats.total)}
+                  {formatEUR(stats.expenses)}
                 </p>
               </CardContent>
             </Card>
+            {stats.refunds > 0 && (
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-muted-foreground">
+                    Rimborsi
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xl font-bold font-mono text-green-500">
+                    {formatEUR(stats.refunds)}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm text-muted-foreground">

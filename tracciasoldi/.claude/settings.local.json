@@ -13,7 +13,9 @@
       "Bash(npx vite build)",
       "Bash(git config:*)",
       "Bash(git rm:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(dir:*)",
+      "Bash(npx vite:*)"
     ]
   }
 }
