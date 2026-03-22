@@ -1,0 +1,4 @@
+Ho creato questa directory che contiene i due file da analizare, uno per la carta di credito e uno per le movimentazioni bancarie. I file sono nella directory file_sample.
+Il file document.xls contiene le movimentazioni bancarie, inteso come conto corrente. 
+Il file movimenti.xlsx contiene i movimenti della carta di credito. 
+dato che abbiamo trovato problemi nell'import dei file e non vengono mostrati valori, rivedi il codice e trova l'errore. 

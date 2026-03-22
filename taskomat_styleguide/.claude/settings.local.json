@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(dir:*)",
-      "Bash(wc -l:*)"
+      "Bash(wc -l:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd 22 new style guide components \\(sections 76-97\\)\n\nNew components: Checkbox, Multi-Select, Form Validation, Advanced Table,\nInput Variants, Notification Inbox, Bulk Actions, Split Pane, Hover Cards,\nChips, Circular Progress, Code Block, Dividers, List Variants, Color Picker,\nTour/Spotlight, Inline Confirm, Density Modes, FAB, Icon Showcase,\nClipboard, Component States. Total: 87 CSS files, 97 sections.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nImprove Icon Showcase section with full Lucide icon catalog\n\nReplaced generic circle demos with 50+ actual Lucide-style SVG icons\norganized in 6 categories: Navigation, Actions, Objects/PM, People/Teams,\nStatus/Feedback, Settings/System. Added labeled icon buttons, icon+text\npatterns, and proper badge demos.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
