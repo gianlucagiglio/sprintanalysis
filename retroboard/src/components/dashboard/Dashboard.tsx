@@ -95,6 +95,27 @@ export function Dashboard() {
     }
   }, [location.pathname, fetchSessions])
 
+  // Realtime: refetch when sessions are created or deleted
+  useEffect(() => {
+    if (!user) return
+    const channel = supabase
+      .channel('dashboard-sessions')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'sessions' },
+        () => fetchSessions()
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'sessions' },
+        () => fetchSessions()
+      )
+      .subscribe((status, err) => {
+        if (status === 'CHANNEL_ERROR') console.error('dashboard sessions channel error:', err)
+      })
+    return () => { supabase.removeChannel(channel) }
+  }, [user, fetchSessions])
+
   // Group sessions by team
   const teamMap = useMemo(() => {
     const map = new Map<string | null, typeof sessions>()
