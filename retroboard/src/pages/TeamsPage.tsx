@@ -8,6 +8,8 @@ import { Badge } from '@/components/ui/Badge'
 import { CreateTeamModal } from '@/components/team/CreateTeamModal'
 import { useTeams } from '@/hooks/useTeams'
 import { Plus, Users, LogIn, Crown, Shield, User } from 'lucide-react'
+import { useAuthStore } from '@/stores/authStore'
+import { canCreate } from '@/config/permissions'
 
 const roleIcons = {
   owner: Crown,
@@ -23,6 +25,7 @@ const roleLabels = {
 
 export function TeamsPage() {
   const { teams, loading, joinByCode } = useTeams()
+  const user = useAuthStore((s) => s.user)
   const [showCreate, setShowCreate] = useState(false)
   const [inviteCode, setInviteCode] = useState('')
   const [joinLoading, setJoinLoading] = useState(false)
@@ -53,10 +56,12 @@ export function TeamsPage() {
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-retro-text">I miei Team</h1>
-          <Button onClick={() => setShowCreate(true)}>
-            <Plus size={16} />
-            Crea team
-          </Button>
+          {canCreate(user?.email) && (
+            <Button onClick={() => setShowCreate(true)}>
+              <Plus size={16} />
+              Crea team
+            </Button>
+          )}
         </div>
 
         {/* Join by invite code */}

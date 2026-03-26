@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Plus, Link as LinkIcon, Loader2 } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { canCreate } from '@/config/permissions'
 import type { Session } from '@/types/database'
 
 export function Dashboard() {
@@ -146,10 +147,12 @@ export function Dashboard() {
         <h1 className="text-2xl font-bold text-retro-text">
           Le tue retrospettive 👋
         </h1>
-        <Button onClick={() => setShowCreate(true)}>
-          <Plus size={16} />
-          Nuova sessione
-        </Button>
+        {canCreate(user?.email) && (
+          <Button onClick={() => setShowCreate(true)}>
+            <Plus size={16} />
+            Nuova sessione
+          </Button>
+        )}
       </div>
 
       <div className="flex gap-2 mb-8">
@@ -174,10 +177,12 @@ export function Dashboard() {
           <div className="text-5xl mb-4">📋</div>
           <p className="text-lg font-medium mb-2">Nessuna retrospettiva</p>
           <p className="text-sm mb-6">Crea una nuova sessione o unisciti a una esistente</p>
-          <Button onClick={() => setShowCreate(true)}>
-            <Plus size={16} />
-            Crea la prima sessione
-          </Button>
+          {canCreate(user?.email) && (
+            <Button onClick={() => setShowCreate(true)}>
+              <Plus size={16} />
+              Crea la prima sessione
+            </Button>
+          )}
         </div>
       ) : (
         <div className="space-y-8">

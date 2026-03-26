@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(for f in 01-tokens.css 02-reset.css 03-layout.css 04-typography.css 05-buttons.css 06-forms.css 07-tabs.css 09-progress.css 10-cards.css 11-tables.css 20-toast.css 63-dark-mode.css 64-animations.css 68-form-validation.css)",
+      "Bash(do cp \"taskomat_styleguide/css/$f\" \"taskomat-widget/src/styles/$f\")",
+      "Bash(done)",
+      "Bash(npm install:*)",
+      "Bash(npx vite build)",
+      "Bash(npx vite:*)"
+    ]
+  }
+}

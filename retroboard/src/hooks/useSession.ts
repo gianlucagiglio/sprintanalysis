@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useSessionStore } from '@/stores/sessionStore'
 import { useAuthStore } from '@/stores/authStore'
@@ -9,6 +9,7 @@ export function useSession(sessionId: string | undefined) {
   const user = useAuthStore((s) => s.user)
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null)
   const joinedRef = useRef(false)
+  const [ready, setReady] = useState(false)
 
   const fetchSession = useCallback(async () => {
     if (!sessionId) return
@@ -43,6 +44,7 @@ export function useSession(sessionId: string | undefined) {
   useEffect(() => {
     if (!sessionId || !user) return
     joinedRef.current = false
+    setReady(false)
 
     const init = async () => {
       // Check if already a participant
@@ -54,25 +56,30 @@ export function useSession(sessionId: string | undefined) {
         .maybeSingle()
 
       if (!existing) {
-        await supabase.from('session_participants').insert({
+        const { error } = await supabase.from('session_participants').insert({
           session_id: sessionId,
           user_id: user.id,
           role: 'participant',
         })
+        if (error) {
+          console.error('Failed to join session:', error)
+          return
+        }
       }
 
       joinedRef.current = true
 
       // Now fetch everything (RLS will pass since we're a participant)
       await Promise.all([fetchSession(), fetchParticipants(), fetchSections()])
+      setReady(true)
     }
 
     init()
   }, [sessionId, user, fetchSession, fetchParticipants, fetchSections])
 
-  // Realtime subscription
+  // Realtime subscription — waits for init to complete
   useEffect(() => {
-    if (!sessionId) return
+    if (!sessionId || !ready) return
 
     const channel = supabase
       .channel(`session-${sessionId}`)
@@ -86,7 +93,9 @@ export function useSession(sessionId: string | undefined) {
         { event: '*', schema: 'public', table: 'session_participants', filter: `session_id=eq.${sessionId}` },
         () => fetchParticipants()
       )
-      .subscribe()
+      .subscribe((status, err) => {
+        if (status === 'CHANNEL_ERROR') console.error('session channel error:', err)
+      })
 
     channelRef.current = channel
 
@@ -94,17 +103,17 @@ export function useSession(sessionId: string | undefined) {
       supabase.removeChannel(channel)
       channelRef.current = null
     }
-  }, [sessionId, updateSession, fetchParticipants])
+  }, [sessionId, ready, updateSession, fetchParticipants])
 
-  // Polling fallback: re-fetch session & participants every 3s
+  // Polling fallback: re-fetch session & participants every 3s — waits for init
   useEffect(() => {
-    if (!sessionId) return
+    if (!sessionId || !ready) return
     const interval = setInterval(() => {
       fetchSession()
       fetchParticipants()
     }, 3000)
     return () => clearInterval(interval)
-  }, [sessionId, fetchSession, fetchParticipants])
+  }, [sessionId, ready, fetchSession, fetchParticipants])
 
   const advanceStep = async () => {
     if (!session || session.organizer_id !== user?.id) return

@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Plus } from 'lucide-react'
 import { quizThemes } from '@/data/quizThemes'
+import { canCreate } from '@/config/permissions'
 
 interface CreateSessionModalProps {
   open: boolean
@@ -31,7 +32,7 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
 
   const handleCreate = async (e: FormEvent) => {
     e.preventDefault()
-    if (!user || !title.trim()) return
+    if (!user || !title.trim() || !canCreate(user.email)) return
     setLoading(true)
 
     try {

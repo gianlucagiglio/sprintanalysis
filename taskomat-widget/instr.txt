@@ -1,0 +1,354 @@
+PROMPT START
+
+CONTEXT
+
+We are building a React-based feature inside an application called Taskomat.
+
+We need to implement a Project Creation Assistant Widget that allows users to create:
+
+Customer
+
+Project
+
+Budget
+
+Workunits
+
+Tasks
+
+Each Workunit can contain multiple Tasks.
+Each Task has:
+
+name (string)
+
+estimatedTime (number, e.g. hours)
+
+Backend APIs are NOT available yet.
+
+We must simulate:
+
+API layer
+
+Application state (as if data is persisted)
+
+A page where created data is displayed
+
+GOAL
+
+Build a complete frontend simulation including:
+
+Wizard-based creation widget
+
+Mock API layer
+
+In-memory data store
+
+A page that displays created projects
+
+The system must behave like a real application.
+
+TECH STACK
+
+React (functional components)
+
+Hooks only (useState, useReducer, useContext)
+
+No class components
+
+No heavy external dependencies
+
+Clean, modular, production-ready code
+
+APPLICATION STRUCTURE
+
+Generate a structured project with:
+
+/components
+/widget
+/wizard
+/forms
+/preview
+/shared
+
+/pages
+CreateProjectPage.jsx
+ProjectsListPage.jsx
+
+/services
+taskomatApi.js
+mockTaskomatApi.js
+
+/store
+TaskomatContext.jsx
+
+/utils
+validation.js
+
+INITIAL STATE STRUCTURE
+
+Use this initial state:
+
+{
+customer: "",
+project: "",
+budget: "",
+workunits: [
+{
+name: "",
+tasks: [
+{ name: "", estimatedTime: "" }
+]
+}
+]
+}
+
+FEATURE 1: WIDGET (WIZARD)
+
+Steps:
+
+Customer & Project
+
+Budget
+
+Workunits & Tasks
+
+Preview
+
+Confirm
+
+WIZARD STATE BEHAVIOR
+
+The wizard must preserve data between steps
+
+Users can navigate back without losing data
+
+State must be centralized (useReducer recommended)
+
+Each step validates only its own fields
+
+Final step validates the entire payload
+
+FEATURE 2: WORKUNITS & TASKS
+
+Users can dynamically add/remove workunits
+
+Each workunit can contain multiple tasks
+
+Users can:
+
+add/remove workunits
+
+add/remove tasks inside each workunit
+
+edit task name and estimated time
+
+FEATURE 3: VALIDATION
+
+Rules:
+
+customer required
+
+project required
+
+budget required and > 0
+
+workunit name required
+
+task name required
+
+estimatedTime required and > 0
+
+Validation must:
+
+run per step
+
+block navigation if invalid
+
+show inline errors under inputs
+
+FEATURE 4: PREVIEW
+
+Read-only structured view
+
+Show hierarchy clearly:
+Customer -> Project -> Budget -> Workunits -> Tasks
+
+FEATURE 5: MOCK API LAYER
+
+Create function:
+
+createTaskomatProject(payload)
+
+Behavior:
+
+returns a Promise
+
+simulate latency (~800ms)
+
+log payload to console
+
+return success response
+
+Example:
+
+{
+success: true,
+id: "mock_project_123",
+message: "Project created successfully"
+}
+
+Simulate error case:
+
+if budget > 100000 -> reject with error
+
+FEATURE 6: GLOBAL STATE (SIMULATED DATABASE)
+
+Create a React Context:
+
+TaskomatContext
+
+It must:
+
+store created projects in memory
+
+expose:
+
+projects array
+
+addProject function
+
+FEATURE 7: DATA FLOW
+
+On submit:
+
+Call mock API
+
+On success:
+
+enrich project with:
+
+id (auto generated)
+
+createdAt timestamp
+
+store project in global state
+
+Update UI
+
+FEATURE 8: PROJECTS LIST PAGE
+
+Create ProjectsListPage
+
+It must:
+
+read projects from context
+
+display list of projects
+
+show:
+
+customer
+
+project
+
+budget
+
+number of workunits
+
+number of tasks
+
+FEATURE 9: CREATE PAGE
+
+Create CreateProjectPage
+
+It must:
+
+render the widget
+
+handle success state
+
+optionally allow navigation to project list
+
+FEATURE 10: UX REQUIREMENTS
+
+Next / Back navigation
+
+Disable Next if current step is invalid
+
+Show current step clearly
+
+Add "Add Workunit" button
+
+Add "Add Task" button inside workunit
+
+Allow removing workunits and tasks
+
+Show inline validation errors
+
+Show loading spinner during API call
+
+Show success message after creation
+
+Show error message if API fails
+
+FEATURE 11: STATE MANAGEMENT
+
+Use useReducer for wizard state
+
+Use useContext for global project storage
+
+FEATURE 12: SEPARATION OF CONCERNS
+
+UI components must not contain business logic
+
+Validation logic must be in /utils/validation.js
+
+API logic must be in /services
+
+State logic must be centralized
+
+FEATURE 13: CODE QUALITY
+
+Avoid hardcoded values
+
+Avoid complex inline logic in JSX
+
+Prefer small reusable components
+
+Keep components readable and maintainable
+
+Use clear naming conventions
+
+FEATURE 14: DELIVERABLES
+
+Generate:
+
+Main widget component
+
+Wizard components
+
+Form components
+
+Preview component
+
+Context store
+
+Mock API service
+
+Validation utilities
+
+Pages
+
+Complete working flow
+
+EXTRA
+
+Add minimal clean styling (simple CSS or inline)
+
+Keep layout readable and well spaced
+
+Do not oversimplify
+
+Build as if it will be extended to production
+
+END PROMPT

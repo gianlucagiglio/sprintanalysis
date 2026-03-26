@@ -35,7 +35,9 @@ export function useVotes(commentIds: string[], sessionId: string | undefined) {
         { event: '*', schema: 'public', table: 'votes' },
         () => fetchVotes()
       )
-      .subscribe()
+      .subscribe((status, err) => {
+        if (status === 'CHANNEL_ERROR') console.error('votes channel error:', err)
+      })
     return () => { supabase.removeChannel(channel) }
   }, [sessionId, commentIds, fetchVotes])
 

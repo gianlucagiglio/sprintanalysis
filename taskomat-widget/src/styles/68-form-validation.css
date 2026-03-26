@@ -1,0 +1,138 @@
+/* ============================================================
+   FORM VALIDATION v3 — Error, success, warning states
+   ============================================================ */
+
+/* Field states */
+.form-field { position: relative; }
+.form-field .form-input.is-error,
+.form-field .form-input.is-invalid {
+  border-color: var(--color-red);
+  box-shadow: 0 0 0 3px var(--color-red-light);
+}
+.form-field .form-input.is-success,
+.form-field .form-input.is-valid {
+  border-color: var(--color-green);
+  box-shadow: 0 0 0 3px var(--color-green-light);
+}
+.form-field .form-input.is-warning {
+  border-color: var(--color-orange);
+  box-shadow: 0 0 0 3px var(--color-orange-light);
+}
+
+/* Messages */
+.form-message {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  margin-top: var(--space-1-5);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+}
+.form-message svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.form-message--error {
+  color: var(--color-red);
+}
+.form-message--success {
+  color: var(--color-green);
+}
+.form-message--warning {
+  color: var(--color-orange);
+}
+.form-message--info {
+  color: var(--color-blue);
+}
+
+/* Label with required asterisk */
+.form-label-required::after {
+  content: ' *';
+  color: var(--color-red);
+  font-weight: var(--fw-medium);
+}
+
+/* Inline validation icon */
+.form-field-icon {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+.form-field-icon--error { color: var(--color-red); }
+.form-field-icon--success { color: var(--color-green); }
+.form-field-icon--loading {
+  color: var(--color-text-muted);
+  animation: spin 600ms linear infinite;
+}
+
+/* Password strength meter */
+.password-strength {
+  display: flex;
+  gap: 4px;
+  margin-top: var(--space-2);
+}
+.password-strength-bar {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--color-border);
+  transition: background var(--transition-fast);
+}
+.password-strength--weak .password-strength-bar:nth-child(1) { background: var(--color-red); }
+.password-strength--fair .password-strength-bar:nth-child(-n+2) { background: var(--color-orange); }
+.password-strength--good .password-strength-bar:nth-child(-n+3) { background: var(--color-blue); }
+.password-strength--strong .password-strength-bar { background: var(--color-green); }
+.password-strength-text {
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-medium);
+  margin-top: var(--space-1);
+}
+.password-strength-text--weak { color: var(--color-red); }
+.password-strength-text--fair { color: var(--color-orange); }
+.password-strength-text--good { color: var(--color-blue); }
+.password-strength-text--strong { color: var(--color-green); }
+
+/* Form-level error banner */
+.form-error-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-red-light);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+}
+.form-error-banner svg {
+  width: 18px;
+  height: 18px;
+  color: var(--color-red);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.form-error-banner-text {
+  font-size: var(--text-sm);
+  color: var(--color-red);
+  line-height: 1.5;
+}
+.form-error-banner-list {
+  margin: var(--space-1) 0 0;
+  padding-left: var(--space-4);
+  font-size: var(--text-xs);
+}
+
+/* Character counter */
+.form-char-counter {
+  text-align: right;
+  font-size: var(--text-2xs);
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+.form-char-counter.is-near { color: var(--color-orange); }
+.form-char-counter.is-over { color: var(--color-red); font-weight: var(--fw-semi); }

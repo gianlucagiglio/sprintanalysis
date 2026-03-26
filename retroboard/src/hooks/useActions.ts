@@ -28,7 +28,9 @@ export function useActions(sessionId: string | undefined) {
         { event: '*', schema: 'public', table: 'actions', filter: `session_id=eq.${sessionId}` },
         () => fetchActions()
       )
-      .subscribe()
+      .subscribe((status, err) => {
+        if (status === 'CHANNEL_ERROR') console.error('actions channel error:', err)
+      })
     return () => { supabase.removeChannel(channel) }
   }, [sessionId, fetchActions])
 
@@ -41,24 +43,32 @@ export function useActions(sessionId: string | undefined) {
 
   const addAction = async (text: string, assignedTo?: string, deadline?: string) => {
     if (!sessionId) return
-    await supabase.from('actions').insert({
+    const { error } = await supabase.from('actions').insert({
       session_id: sessionId,
       text,
       assigned_to: assignedTo || null,
       deadline: deadline || null,
     })
+    if (error) console.error('addAction failed:', error)
+    else await fetchActions()
   }
 
   const updateActionStatus = async (actionId: string, status: Action['status']) => {
-    await supabase.from('actions').update({ status }).eq('id', actionId)
+    const { error } = await supabase.from('actions').update({ status }).eq('id', actionId)
+    if (error) console.error('updateActionStatus failed:', error)
+    else await fetchActions()
   }
 
   const updateAction = async (actionId: string, updates: Partial<Action>) => {
-    await supabase.from('actions').update(updates).eq('id', actionId)
+    const { error } = await supabase.from('actions').update(updates).eq('id', actionId)
+    if (error) console.error('updateAction failed:', error)
+    else await fetchActions()
   }
 
   const deleteAction = async (actionId: string) => {
-    await supabase.from('actions').delete().eq('id', actionId)
+    const { error } = await supabase.from('actions').delete().eq('id', actionId)
+    if (error) console.error('deleteAction failed:', error)
+    else await fetchActions()
   }
 
   return { actions, addAction, updateActionStatus, updateAction, deleteAction }

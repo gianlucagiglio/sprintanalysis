@@ -42,7 +42,9 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
         { event: '*', schema: 'public', table: 'comments' },
         () => fetchComments()
       )
-      .subscribe()
+      .subscribe((status, err) => {
+        if (status === 'CHANNEL_ERROR') console.error('comments channel error:', err)
+      })
     return () => { supabase.removeChannel(channel) }
   }, [sessionId, sectionIds, fetchComments])
 
@@ -93,7 +95,9 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
   }
 
   const updateGroup = async (commentId: string, groupId: string | null) => {
-    await supabase.from('comments').update({ group_id: groupId }).eq('id', commentId)
+    const { error } = await supabase.from('comments').update({ group_id: groupId }).eq('id', commentId)
+    if (error) console.error('updateGroup failed:', error)
+    else await fetchComments()
   }
 
   return { comments, addComment, addReply, toggleResolved, updateGroup, fetchComments }

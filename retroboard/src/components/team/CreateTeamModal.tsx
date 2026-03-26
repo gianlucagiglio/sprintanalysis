@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Plus } from 'lucide-react'
 import { useTeams } from '@/hooks/useTeams'
+import { useAuthStore } from '@/stores/authStore'
+import { canCreate } from '@/config/permissions'
 
 interface CreateTeamModalProps {
   open: boolean
@@ -17,9 +19,11 @@ export function CreateTeamModal({ open, onClose }: CreateTeamModalProps) {
   const { createTeam } = useTeams()
   const navigate = useNavigate()
 
+  const user = useAuthStore((s) => s.user)
+
   const handleCreate = async (e: FormEvent) => {
     e.preventDefault()
-    if (!name.trim()) return
+    if (!name.trim() || !canCreate(user?.email)) return
     setLoading(true)
 
     try {
