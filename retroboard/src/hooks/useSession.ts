@@ -7,6 +7,9 @@ import type { Session } from '@/types/database'
 export function useSession(sessionId: string | undefined) {
   const { session, setSession, setParticipants, setSections, updateSession } = useSessionStore()
   const user = useAuthStore((s) => s.user)
+  const userId = user?.id
+  const userRef = useRef(user)
+  userRef.current = user
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null)
   const joinedRef = useRef(false)
   const [ready, setReady] = useState(false)
@@ -41,24 +44,28 @@ export function useSession(sessionId: string | undefined) {
   }, [sessionId, setSections])
 
   // Auto-join + initial fetch: ensure user is a participant BEFORE fetching data
+  // Uses userId (stable string) instead of user object to avoid re-init on reference changes
   useEffect(() => {
-    if (!sessionId || !user) return
+    if (!sessionId || !userId) return
     joinedRef.current = false
     setReady(false)
 
     const init = async () => {
+      const currentUser = userRef.current
+      if (!currentUser) return
+
       // Check if already a participant
       const { data: existing } = await supabase
         .from('session_participants')
         .select('id')
         .eq('session_id', sessionId)
-        .eq('user_id', user.id)
+        .eq('user_id', currentUser.id)
         .maybeSingle()
 
       if (!existing) {
         const { error } = await supabase.from('session_participants').insert({
           session_id: sessionId,
-          user_id: user.id,
+          user_id: currentUser.id,
           role: 'participant',
         })
         if (error) {
@@ -75,7 +82,8 @@ export function useSession(sessionId: string | undefined) {
     }
 
     init()
-  }, [sessionId, user, fetchSession, fetchParticipants, fetchSections])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId, userId, fetchSession, fetchParticipants, fetchSections])
 
   // Realtime subscription — waits for init to complete
   useEffect(() => {
@@ -114,6 +122,20 @@ export function useSession(sessionId: string | undefined) {
     }, 3000)
     return () => clearInterval(interval)
   }, [sessionId, ready, fetchSession, fetchParticipants])
+
+  // Re-fetch everything when tab regains focus (e.g. after switching app)
+  useEffect(() => {
+    if (!sessionId || !ready) return
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchSession()
+        fetchParticipants()
+        fetchSections()
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibility)
+    return () => document.removeEventListener('visibilitychange', handleVisibility)
+  }, [sessionId, ready, fetchSession, fetchParticipants, fetchSections])
 
   const advanceStep = async () => {
     if (!session || session.organizer_id !== user?.id) return

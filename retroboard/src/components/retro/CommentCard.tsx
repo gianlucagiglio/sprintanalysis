@@ -1,7 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Card } from '@/components/ui/Card'
-import { GripVertical, Heart } from 'lucide-react'
+import { GripVertical, Heart, X } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { Comment } from '@/types/database'
 
@@ -14,6 +14,9 @@ interface CommentCardProps {
   canVote?: boolean
   onToggleVote?: () => void
   grouped?: Comment[]
+  onUngroup?: (commentId: string) => void
+  isOver?: boolean
+  groupCount?: number
 }
 
 export function CommentCard({
@@ -25,6 +28,9 @@ export function CommentCard({
   canVote,
   onToggleVote,
   grouped,
+  onUngroup,
+  isOver,
+  groupCount,
 }: CommentCardProps) {
   const {
     attributes,
@@ -41,6 +47,8 @@ export function CommentCard({
     opacity: isDragging ? 0.5 : 1,
   }
 
+  const hasChildren = (groupCount ?? 0) > 0
+
   return (
     <motion.div
       ref={setNodeRef}
@@ -49,7 +57,11 @@ export function CommentCard({
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
     >
-      <Card className={`!p-3 !rounded-2xl ${isDragging ? 'shadow-float rotate-1' : 'shadow-card'}`}>
+      <Card className={`!p-3 !rounded-2xl transition-all duration-200
+        ${isDragging ? 'shadow-float rotate-1' : 'shadow-card'}
+        ${isOver ? 'ring-2 ring-retro-primary/40 bg-retro-primary/5' : ''}
+        ${hasChildren ? 'border-l-[3px] border-l-retro-primary' : ''}
+      `}>
         <div className="flex items-start gap-2">
           {isDraggable && (
             <button
@@ -61,13 +73,29 @@ export function CommentCard({
             </button>
           )}
           <div className="flex-1 min-w-0">
-            <p className="text-sm text-retro-text">{comment.text}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-sm text-retro-text flex-1">{comment.text}</p>
+              {hasChildren && (
+                <span className="bg-retro-primary/10 text-retro-primary text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">
+                  +{groupCount}
+                </span>
+              )}
+            </div>
             {grouped && grouped.length > 0 && (
               <div className="mt-2 pl-3 border-l-2 border-retro-border space-y-1">
                 {grouped.map((g) => (
-                  <div key={g.id} className="flex items-start gap-1.5">
-                    <span className="w-1 h-1 rounded-full bg-retro-text-secondary mt-1.5 shrink-0" />
-                    <p className="text-xs text-retro-text-secondary">{g.text}</p>
+                  <div key={g.id} className="flex items-center gap-1.5 group/child">
+                    <span className="w-1 h-1 rounded-full bg-retro-text-secondary mt-0.5 shrink-0" />
+                    <p className="text-xs text-retro-text-secondary flex-1">{g.text}</p>
+                    {onUngroup && (
+                      <button
+                        onClick={() => onUngroup(g.id)}
+                        className="opacity-0 group-hover/child:opacity-100 p-0.5 rounded text-retro-text-secondary hover:text-rose-500 hover:bg-rose-50 transition-all shrink-0"
+                        title="Sgruppa commento"
+                      >
+                        <X size={12} />
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>

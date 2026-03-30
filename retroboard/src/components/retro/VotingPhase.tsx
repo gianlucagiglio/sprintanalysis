@@ -25,6 +25,7 @@ export function VotingPhase({ sessionId }: VotingPhaseProps) {
 
   // Only show parent comments (not grouped)
   const parentComments = comments.filter((c) => !c.group_id)
+  const getGrouped = (parentId: string) => comments.filter((c) => c.group_id === parentId)
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -69,6 +70,8 @@ export function VotingPhase({ sessionId }: VotingPhaseProps) {
                   voteCount={revealed ? getVoteCount(comment.id) : (hasUserVoted(comment.id) ? 1 : 0)}
                   canVote={remainingVotes > 0}
                   onToggleVote={() => toggleVote(comment.id)}
+                  grouped={getGrouped(comment.id)}
+                  groupCount={getGrouped(comment.id).length}
                 />
               ))}
             </div>

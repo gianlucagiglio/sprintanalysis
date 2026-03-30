@@ -11,11 +11,17 @@ type AuthState = {
   signOut: () => Promise<void>
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+let _initialized = false
+
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   loading: true,
 
   initialize: async () => {
+    // Guard: register listeners only once
+    if (_initialized) return
+    _initialized = true
+
     const { data: { session } } = await supabase.auth.getSession()
     if (session?.user) {
       const { data: profile } = await supabase
@@ -28,16 +34,41 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ loading: false })
     }
 
-    supabase.auth.onAuthStateChange(async (_event, session) => {
+    supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
+        // Only update store if user actually changed (avoid cascading re-renders)
+        const currentUser = get().user
+        if (currentUser?.id === session.user.id) return
         const { data: profile } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', session.user.id)
           .single()
-        set({ user: profile })
-      } else {
-        set({ user: null })
+        if (profile) set({ user: profile })
+      } else if (event === 'SIGNED_OUT') {
+        // Supabase fires SIGNED_OUT also on token refresh failure.
+        // Try to recover from storage before clearing user.
+        const { data: { session: recovered } } = await supabase.auth.getSession()
+        if (!recovered) {
+          set({ user: null })
+        }
+      }
+    })
+
+    // Proactively refresh token when tab regains focus
+    document.addEventListener('visibilitychange', async () => {
+      if (document.visibilityState !== 'visible') return
+      const { data: { session } } = await supabase.auth.refreshSession()
+      if (session?.user) {
+        // Only re-fetch profile if we somehow lost it
+        if (!get().user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single()
+          if (profile) set({ user: profile })
+        }
       }
     })
   },
