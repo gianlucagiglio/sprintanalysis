@@ -94,11 +94,21 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
     else await fetchComments()
   }
 
+  const updateDiscussionStatus = async (commentId: string, status: Comment['discussion_status']) => {
+    const is_resolved = status === 'discussed'
+    const { error } = await supabase
+      .from('comments')
+      .update({ discussion_status: status, is_resolved })
+      .eq('id', commentId)
+    if (error) console.error('updateDiscussionStatus failed:', error)
+    else await fetchComments()
+  }
+
   const updateGroup = async (commentId: string, groupId: string | null) => {
     const { error } = await supabase.from('comments').update({ group_id: groupId }).eq('id', commentId)
     if (error) console.error('updateGroup failed:', error)
     else await fetchComments()
   }
 
-  return { comments, addComment, addReply, toggleResolved, updateGroup, fetchComments }
+  return { comments, addComment, addReply, toggleResolved, updateDiscussionStatus, updateGroup, fetchComments }
 }

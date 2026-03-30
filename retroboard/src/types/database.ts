@@ -44,6 +44,7 @@ export type Comment = {
   text: string
   group_id: string | null
   is_resolved: boolean
+  discussion_status: 'pending' | 'discussing' | 'discussed'
   sentiment: 'positive' | 'negative' | 'neutral' | null
   created_at: string
 }
