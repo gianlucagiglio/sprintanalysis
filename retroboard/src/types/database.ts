@@ -59,6 +59,7 @@ export type Vote = {
 export type Action = {
   id: string
   session_id: string
+  comment_id: string | null
   text: string
   assigned_to: string | null
   deadline: string | null

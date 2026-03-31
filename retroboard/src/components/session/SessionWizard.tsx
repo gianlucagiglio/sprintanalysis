@@ -8,7 +8,7 @@ import { RetroBoard } from '@/components/retro/RetroBoard'
 import { VotingPhase } from '@/components/retro/VotingPhase'
 import { GroupingPhase } from '@/components/retro/GroupingPhase'
 import { BrainstormingPhase } from '@/components/retro/BrainstormingPhase'
-import { ActionPlan } from '@/components/retro/ActionPlan'
+
 import { KanbanBoard } from '@/components/kanban/KanbanBoard'
 import { Badge } from '@/components/ui/Badge'
 import {
@@ -31,10 +31,9 @@ const retroPhaseLabels: Record<string, string> = {
   grouping: 'Raggruppamento',
   voting: 'Votazione',
   brainstorming: 'Brainstorming',
-  action_plan: "Piano d'azione",
 }
 
-const retroPhaseOrder = ['comments', 'grouping', 'voting', 'brainstorming', 'action_plan'] as const
+const retroPhaseOrder = ['comments', 'grouping', 'voting', 'brainstorming'] as const
 
 export function SessionWizard({ sessionId }: SessionWizardProps) {
   const { session, isOrganizer, advanceStep, setRetroPhase, revealRetro, markDone, resetDone, closeSession } =
@@ -81,9 +80,8 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
           case 'grouping':
             return <GroupingPhase sessionId={sessionId} />
           case 'brainstorming':
-            return <BrainstormingPhase sessionId={sessionId} />
           case 'action_plan':
-            return <ActionPlan sessionId={sessionId} />
+            return <BrainstormingPhase sessionId={sessionId} />
           default:
             return <RetroBoard sessionId={sessionId} />
         }
@@ -153,7 +151,7 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
         </span>
         {isOrganizer && (
           <div className="ml-auto flex gap-2 flex-wrap justify-end">
-            {currentStep === 3 && session.retro_phase !== 'action_plan' && (() => {
+            {currentStep === 3 && session.retro_phase !== 'brainstorming' && session.retro_phase !== 'action_plan' && (() => {
               const needsReveal = (session.retro_phase === 'comments' || session.retro_phase === 'voting') && !session.retro_revealed
               return needsReveal ? (
                 <Button size="sm" variant="secondary" onClick={revealRetro}>
@@ -165,7 +163,7 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
                 </Button>
               )
             })()}
-            {(currentStep < 4 && (currentStep !== 3 || session.retro_phase === 'action_plan')) && (
+            {(currentStep < 4 && (currentStep !== 3 || session.retro_phase === 'brainstorming' || session.retro_phase === 'action_plan')) && (
               <Button size="sm" onClick={handleAdvanceStep}>
                 Passo successivo <ChevronRight size={14} />
               </Button>

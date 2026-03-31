@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react'
 import { useComments } from '@/hooks/useComments'
 import { useVotes } from '@/hooks/useVotes'
+import { useActions } from '@/hooks/useActions'
 import { useSessionStore } from '@/stores/sessionStore'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { Modal } from '@/components/ui/Modal'
 import {
   Heart,
   MessageSquare,
@@ -16,6 +18,9 @@ import {
   MessageCircle,
   CheckCircle2,
   ChevronDown,
+  Zap,
+  User,
+  Calendar,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Comment } from '@/types/database'
@@ -70,10 +75,17 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
   const { comments, addReply, updateDiscussionStatus } = useComments(sessionId, sections)
   const commentIds = useMemo(() => comments.map((c) => c.id), [comments])
   const { getVoteCount } = useVotes(commentIds, sessionId)
+  const { actions, addAction } = useActions(sessionId)
 
   const [replyingTo, setReplyingTo] = useState<string | null>(null)
   const [replyText, setReplyText] = useState('')
   const [collapsedColumns, setCollapsedColumns] = useState<Set<DiscussionStatus>>(new Set())
+
+  // Modal state
+  const [modalComment, setModalComment] = useState<Comment | null>(null)
+  const [actionText, setActionText] = useState('')
+  const [actionAssignee, setActionAssignee] = useState('')
+  const [actionDeadline, setActionDeadline] = useState('')
 
   const parentComments = comments.filter((c) => !c.group_id)
   const getChildren = (parentId: string) => comments.filter((c) => c.group_id === parentId)
@@ -84,6 +96,10 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
   const getSectionName = (sectionId: string) =>
     sections.find((s) => s.id === sectionId)?.name || ''
 
+  // Count actions linked to a comment
+  const getActionCount = (commentId: string) =>
+    actions.filter((a) => a.comment_id === commentId).length
+
   const handleReply = async (parentId: string) => {
     if (!replyText.trim()) return
     const parent = comments.find((c) => c.id === parentId)
@@ -91,6 +107,26 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
     await addReply(parent, replyText.trim())
     setReplyText('')
     setReplyingTo(null)
+  }
+
+  const openActionModal = (comment: Comment) => {
+    setModalComment(comment)
+    setActionText('')
+    setActionAssignee('')
+    setActionDeadline('')
+  }
+
+  const closeActionModal = () => {
+    setModalComment(null)
+    setActionText('')
+    setActionAssignee('')
+    setActionDeadline('')
+  }
+
+  const handleCreateAction = async () => {
+    if (!actionText.trim() || !modalComment) return
+    await addAction(actionText.trim(), actionAssignee || undefined, actionDeadline || undefined, modalComment.id)
+    closeActionModal()
   }
 
   const toggleColumn = (status: DiscussionStatus) => {
@@ -115,6 +151,7 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
     const children = getChildren(comment.id)
     const votes = getVoteCount(comment.id)
     const col = COLUMNS[colIndex]
+    const actionCount = getActionCount(comment.id)
 
     return (
       <motion.div
@@ -191,13 +228,27 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
                 </Button>
               </div>
             ) : (
-              <button
-                onClick={() => setReplyingTo(comment.id)}
-                className="flex items-center gap-1.5 text-xs text-retro-text-secondary hover:text-retro-primary transition-colors"
-              >
-                <MessageSquare size={12} />
-                Nota
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setReplyingTo(comment.id)}
+                  className="flex items-center gap-1.5 text-xs text-retro-text-secondary hover:text-retro-primary transition-colors"
+                >
+                  <MessageSquare size={12} />
+                  Nota
+                </button>
+                <button
+                  onClick={() => openActionModal(comment)}
+                  className="flex items-center gap-1.5 text-xs font-medium text-amber-600 hover:text-amber-700 transition-colors"
+                >
+                  <Zap size={12} />
+                  Crea azione
+                  {actionCount > 0 && (
+                    <span className="bg-amber-100 text-amber-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                      {actionCount}
+                    </span>
+                  )}
+                </button>
+              </div>
             )}
 
             {/* Move buttons */}
@@ -239,68 +290,132 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-bold text-retro-text mb-2">Discutiamo i risultati</h2>
-        <p className="text-sm text-retro-text-secondary">
-          Spostate i commenti tra le colonne per tracciare la discussione.
-        </p>
-      </div>
+    <>
+      <div className="w-full max-w-6xl mx-auto space-y-6">
+        <div className="text-center">
+          <h2 className="text-xl font-bold text-retro-text mb-2">Discutiamo i risultati</h2>
+          <p className="text-sm text-retro-text-secondary">
+            Spostate i commenti tra le colonne e create le azioni necessarie.
+          </p>
+        </div>
 
-      {/* Kanban grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {COLUMNS.map((col, colIndex) => {
-          const colComments = getColumnComments(col.status)
-          const isCollapsed = collapsedColumns.has(col.status)
-          const Icon = col.icon
+        {/* Kanban grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {COLUMNS.map((col, colIndex) => {
+            const colComments = getColumnComments(col.status)
+            const isCollapsed = collapsedColumns.has(col.status)
+            const Icon = col.icon
 
-          return (
-            <div key={col.status} className="flex flex-col min-h-0">
-              {/* Column header */}
-              <button
-                onClick={() => toggleColumn(col.status)}
-                className={`flex items-center justify-between p-3 rounded-xl border-2 ${col.border} bg-white mb-3 transition-colors hover:bg-slate-50 md:cursor-default`}
-              >
-                <div className="flex items-center gap-2">
-                  <Icon size={16} className={col.accent} />
-                  <span className="text-sm font-semibold text-retro-text">{col.title}</span>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${col.badge}`}>
-                    {colComments.length}
-                  </span>
-                </div>
-                <ChevronDown
-                  size={16}
-                  className={`text-retro-text-secondary transition-transform md:hidden ${
-                    isCollapsed ? '' : 'rotate-180'
+            return (
+              <div key={col.status} className="flex flex-col min-h-0">
+                {/* Column header */}
+                <button
+                  onClick={() => toggleColumn(col.status)}
+                  className={`flex items-center justify-between p-3 rounded-xl border-2 ${col.border} bg-white mb-3 transition-colors hover:bg-slate-50 md:cursor-default`}
+                >
+                  <div className="flex items-center gap-2">
+                    <Icon size={16} className={col.accent} />
+                    <span className="text-sm font-semibold text-retro-text">{col.title}</span>
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${col.badge}`}>
+                      {colComments.length}
+                    </span>
+                  </div>
+                  <ChevronDown
+                    size={16}
+                    className={`text-retro-text-secondary transition-transform md:hidden ${
+                      isCollapsed ? '' : 'rotate-180'
+                    }`}
+                  />
+                </button>
+
+                {/* Column body */}
+                <div
+                  className={`space-y-3 flex-1 overflow-y-auto transition-all ${
+                    isCollapsed ? 'hidden md:block' : ''
                   }`}
-                />
-              </button>
-
-              {/* Column body */}
-              <div
-                className={`space-y-3 flex-1 overflow-y-auto transition-all ${
-                  isCollapsed ? 'hidden md:block' : ''
-                }`}
-              >
-                <AnimatePresence mode="popLayout">
-                  {colComments.length === 0 ? (
-                    <motion.div
-                      key="empty"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-center py-8 text-sm text-retro-text-secondary"
-                    >
-                      Nessun commento
-                    </motion.div>
-                  ) : (
-                    colComments.map((comment) => renderCard(comment, colIndex))
-                  )}
-                </AnimatePresence>
+                >
+                  <AnimatePresence mode="popLayout">
+                    {colComments.length === 0 ? (
+                      <motion.div
+                        key="empty"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-center py-8 text-sm text-retro-text-secondary"
+                      >
+                        Nessun commento
+                      </motion.div>
+                    ) : (
+                      colComments.map((comment) => renderCard(comment, colIndex))
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
-    </div>
+
+      {/* Action creation modal */}
+      <Modal open={!!modalComment} onClose={closeActionModal} title="Crea azione">
+        {modalComment && (
+          <div className="space-y-4">
+            {/* Source comment preview */}
+            <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
+              <div className="text-xs text-retro-text-secondary mb-1">Dal commento:</div>
+              <p className="text-sm text-retro-text">{modalComment.text}</p>
+            </div>
+
+            <div className="space-y-3">
+              <Input
+                value={actionText}
+                onChange={(e) => setActionText(e.target.value)}
+                placeholder="Descrivi l'azione da intraprendere..."
+                autoFocus
+                className="!rounded-xl"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault()
+                    handleCreateAction()
+                  }
+                }}
+              />
+              <div className="flex gap-3">
+                <div className="flex-1 space-y-1">
+                  <div className="flex items-center gap-1 text-xs font-medium text-retro-text-secondary">
+                    <User size={11} /> Assegnato a
+                  </div>
+                  <select
+                    value={actionAssignee}
+                    onChange={(e) => setActionAssignee(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-retro-text transition-all focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10"
+                  >
+                    <option value="">Nessuno</option>
+                    {participants.map((p) => (
+                      <option key={p.user_id} value={p.user_id}>
+                        {p.profiles?.name || 'Utente'}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex-1 space-y-1">
+                  <div className="flex items-center gap-1 text-xs font-medium text-retro-text-secondary">
+                    <Calendar size={11} /> Scadenza
+                  </div>
+                  <input
+                    type="date"
+                    value={actionDeadline}
+                    onChange={(e) => setActionDeadline(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-retro-text transition-all focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10"
+                  />
+                </div>
+              </div>
+              <Button onClick={handleCreateAction} disabled={!actionText.trim()} className="w-full">
+                <Zap size={16} /> Crea azione
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+    </>
   )
 }
