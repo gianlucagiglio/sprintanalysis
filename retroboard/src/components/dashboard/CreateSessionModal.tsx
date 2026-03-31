@@ -24,6 +24,7 @@ const DEFAULT_SECTIONS = [
 export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
   const [title, setTitle] = useState('')
   const [teamId, setTeamId] = useState<string>('')
+  const [maxVotes, setMaxVotes] = useState(3)
   const [quizTheme, setQuizTheme] = useState('tech')
   const [loading, setLoading] = useState(false)
   const user = useAuthStore((s) => s.user)
@@ -42,6 +43,7 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
           title: title.trim(),
           organizer_id: user.id,
           max_participants: 20,
+          max_votes: maxVotes,
           ...(teamId ? { team_id: teamId } : {}),
         })
         .select()
@@ -127,6 +129,23 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
               <option key={t.id} value={t.id}>{t.label}</option>
             ))}
           </select>
+        </div>
+        <div className="space-y-1.5">
+          <label className="block text-sm font-medium text-retro-text">
+            Voti per partecipante
+          </label>
+          <input
+            type="number"
+            min={0}
+            max={20}
+            step={1}
+            value={maxVotes}
+            onChange={(e) => setMaxVotes(Math.min(20, Math.max(0, parseInt(e.target.value) || 0)))}
+            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-retro-text text-sm transition-all duration-200 focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10"
+          />
+          <p className="text-xs text-retro-text-secondary">
+            {maxVotes === 0 ? 'Votazione disabilitata' : `Ogni partecipante potrà esprimere ${maxVotes} voti`}
+          </p>
         </div>
         <div className="text-xs text-retro-text-secondary bg-retro-surface rounded-xl px-4 py-3">
           Sezioni predefinite: {DEFAULT_SECTIONS.map((s) => s.name).join(', ')}

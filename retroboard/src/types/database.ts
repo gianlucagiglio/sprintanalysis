@@ -16,6 +16,7 @@ export type Session = {
   retro_revealed: boolean
   quiz_current_index: number
   max_participants: number
+  max_votes: number
   created_at: string
 }
 
@@ -114,7 +115,7 @@ export type Database = {
   public: {
     Tables: {
       profiles: { Row: Profile; Insert: Omit<Profile, 'created_at'>; Update: Partial<Profile> }
-      sessions: { Row: Session; Insert: Omit<Session, 'id' | 'created_at' | 'current_step' | 'retro_phase' | 'retro_revealed'>; Update: Partial<Session> }
+      sessions: { Row: Session; Insert: Omit<Session, 'id' | 'created_at' | 'current_step' | 'retro_phase' | 'retro_revealed' | 'max_votes'>  & { max_votes?: number }; Update: Partial<Session> }
       session_participants: { Row: SessionParticipant; Insert: Omit<SessionParticipant, 'id' | 'joined_at' | 'is_done' | 'can_group'>; Update: Partial<SessionParticipant> }
       sections: { Row: Section; Insert: Omit<Section, 'id'>; Update: Partial<Section> }
       comments: { Row: Comment; Insert: Omit<Comment, 'id' | 'created_at'>; Update: Partial<Comment> }

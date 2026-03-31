@@ -3,7 +3,7 @@ import { useSession } from '@/hooks/useSession'
 import { QuizQuestion } from './QuizQuestion'
 import { QuizLeaderboard } from './QuizLeaderboard'
 import { Button } from '@/components/ui/Button'
-import { ChevronRight, PartyPopper, Loader2 } from 'lucide-react'
+import { ChevronRight, PartyPopper, Loader2, Zap, HelpCircle, Play } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 interface QuizGameProps {
@@ -43,6 +43,52 @@ export function QuizGame({ sessionId }: QuizGameProps) {
       <div className="text-center py-16 text-retro-text-secondary">
         <p>Nessuna domanda quiz configurata</p>
       </div>
+    )
+  }
+
+  // Start screen — quiz not yet started
+  if (currentIndex < 0) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-md mx-auto text-center space-y-6 py-8"
+      >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+        >
+          <Zap size={48} className="text-retro-primary mx-auto" />
+        </motion.div>
+        <div>
+          <h2 className="text-2xl font-bold text-retro-text mb-2">Quiz time!</h2>
+          <p className="text-sm text-retro-text-secondary">Preparatevi a rispondere alle domande</p>
+        </div>
+        <div className="flex items-center justify-center gap-6 text-sm text-retro-text-secondary">
+          <div className="flex items-center gap-1.5">
+            <HelpCircle size={14} />
+            <span>{questions.length} domande</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Zap size={14} />
+            <span>10s per risposta</span>
+          </div>
+        </div>
+        <div className="bg-retro-surface rounded-2xl p-4 text-xs text-retro-text-secondary space-y-1.5">
+          <p>Rispondi correttamente e velocemente per ottenere il punteggio massimo.</p>
+          <p>Punti: <strong>1000</strong> base + bonus velocita fino a <strong>1000</strong>.</p>
+        </div>
+        {isOrganizer ? (
+          <Button onClick={advanceQuiz} className="mx-auto">
+            <Play size={16} /> Inizia quiz
+          </Button>
+        ) : (
+          <p className="text-sm text-retro-text-secondary italic">
+            In attesa che l'host avvii il quiz...
+          </p>
+        )}
+      </motion.div>
     )
   }
 

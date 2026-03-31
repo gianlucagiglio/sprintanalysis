@@ -20,8 +20,9 @@ export function VotingPhase({ sessionId }: VotingPhaseProps) {
   const session = useSessionStore((s) => s.session)
   const revealed = session?.retro_revealed ?? true
   const { comments } = useComments(sessionId, sections)
+  const maxVotes = session?.max_votes ?? 3
   const commentIds = useMemo(() => comments.map((c) => c.id), [comments])
-  const { toggleVote, getVoteCount, hasUserVoted, getVoterNames, remainingVotes } = useVotes(commentIds, sessionId)
+  const { toggleVote, getVoteCount, hasUserVoted, getVoterNames, remainingVotes } = useVotes(commentIds, sessionId, maxVotes)
 
   // Only show parent comments (not grouped)
   const parentComments = comments.filter((c) => !c.group_id)
@@ -31,19 +32,29 @@ export function VotingPhase({ sessionId }: VotingPhaseProps) {
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="text-center">
         <h2 className="text-xl font-bold text-retro-text mb-2">Vota i commenti</h2>
-        <p className="text-sm text-retro-text-secondary">Hai 3 voti a disposizione. Clicca per votare o togliere il voto.</p>
-        <div className="flex items-center justify-center gap-1.5 mt-3">
-          {[0, 1, 2].map((i) => (
-            <Heart
-              key={i}
-              size={18}
-              className={i < remainingVotes ? 'text-rose-500 fill-rose-500' : 'text-retro-border'}
-            />
-          ))}
-          <span className="text-sm text-retro-text-secondary ml-2">
-            {remainingVotes} voti rimanenti
-          </span>
-        </div>
+        {maxVotes === 0 ? (
+          <p className="text-sm text-retro-text-secondary">Votazione disabilitata per questa sessione.</p>
+        ) : (
+          <>
+            <p className="text-sm text-retro-text-secondary">Hai {maxVotes} voti a disposizione. Clicca per votare o togliere il voto.</p>
+            <div className="flex items-center justify-center gap-1.5 mt-3">
+              {maxVotes <= 6 ? (
+                Array.from({ length: maxVotes }).map((_, i) => (
+                  <Heart
+                    key={i}
+                    size={18}
+                    className={i < remainingVotes ? 'text-rose-500 fill-rose-500' : 'text-retro-border'}
+                  />
+                ))
+              ) : (
+                <Heart size={18} className={remainingVotes > 0 ? 'text-rose-500 fill-rose-500' : 'text-retro-border'} />
+              )}
+              <span className="text-sm text-retro-text-secondary ml-2">
+                {remainingVotes} voti rimanenti
+              </span>
+            </div>
+          </>
+        )}
         {!revealed && (
           <p className="flex items-center justify-center gap-1.5 text-xs text-retro-text-secondary mt-2">
             <EyeOff size={12} />

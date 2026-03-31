@@ -142,10 +142,10 @@ export function useSession(sessionId: string | undefined) {
     const nextStep = Math.min(session.current_step + 1, 4)
     const prevStep = session.current_step
     const prevPhase = session.retro_phase
-    updateSession({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, quiz_current_index: 0 })
+    updateSession({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, quiz_current_index: -1 })
     const { error } = await supabase
       .from('sessions')
-      .update({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, quiz_current_index: 0 })
+      .update({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, quiz_current_index: -1 })
       .eq('id', session.id)
     if (error) {
       console.error('advanceStep failed:', error)
@@ -226,11 +226,26 @@ export function useSession(sessionId: string | undefined) {
 
   const resetQuizIndex = async () => {
     if (!session || session.organizer_id !== user?.id) return
-    updateSession({ quiz_current_index: 0 })
+    updateSession({ quiz_current_index: -1 })
     await supabase
       .from('sessions')
-      .update({ quiz_current_index: 0 })
+      .update({ quiz_current_index: -1 })
       .eq('id', session.id)
+  }
+
+  const goToStep = async (step: number) => {
+    if (!session || session.organizer_id !== user?.id) return
+    if (step < 1 || step > 4 || step >= session.current_step) return
+    const prevStep = session.current_step
+    updateSession({ current_step: step })
+    const { error } = await supabase
+      .from('sessions')
+      .update({ current_step: step })
+      .eq('id', session.id)
+    if (error) {
+      console.error('goToStep failed:', error)
+      updateSession({ current_step: prevStep })
+    }
   }
 
   const closeSession = async () => {
@@ -252,6 +267,7 @@ export function useSession(sessionId: string | undefined) {
     session,
     isOrganizer,
     advanceStep,
+    goToStep,
     advanceQuiz,
     resetQuizIndex,
     setRetroPhase,

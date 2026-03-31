@@ -9,26 +9,32 @@ const steps = [
 
 interface StepIndicatorProps {
   currentStep: number
+  onStepClick?: (step: number) => void
 }
 
-export function StepIndicator({ currentStep }: StepIndicatorProps) {
+export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) {
   return (
     <div className="flex items-center gap-1 md:gap-2">
       {steps.map(({ label, step }, i) => {
         const isCompleted = currentStep > step
         const isCurrent = currentStep === step
+        const isClickable = isCompleted && !!onStepClick
         return (
           <div key={step} className="flex items-center">
-            <div className="flex items-center gap-1 md:gap-2">
+            <div
+              className={`flex items-center gap-1 md:gap-2 ${isClickable ? 'cursor-pointer group' : ''}`}
+              onClick={isClickable ? () => onStepClick(step) : undefined}
+            >
               <div
                 className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-[10px] md:text-xs font-semibold transition-all duration-300
                   ${isCompleted ? 'bg-retro-glad text-white shadow-soft' : ''}
                   ${isCurrent ? 'bg-gradient-to-br from-retro-primary to-indigo-500 text-white shadow-soft' : ''}
-                  ${!isCompleted && !isCurrent ? 'bg-retro-sidebar text-retro-text-secondary border border-retro-border' : ''}`}
+                  ${!isCompleted && !isCurrent ? 'bg-retro-sidebar text-retro-text-secondary border border-retro-border' : ''}
+                  ${isClickable ? 'group-hover:ring-2 group-hover:ring-retro-glad/50 group-hover:scale-110' : ''}`}
               >
                 {isCompleted ? <Check size={12} strokeWidth={2.5} /> : step}
               </div>
-              <span className={`text-[10px] md:text-xs hidden sm:inline transition-all duration-200 ${isCurrent ? 'font-semibold text-retro-text' : 'text-retro-text-secondary'}`}>
+              <span className={`text-[10px] md:text-xs hidden sm:inline transition-all duration-200 ${isCurrent ? 'font-semibold text-retro-text' : 'text-retro-text-secondary'} ${isClickable ? 'group-hover:text-retro-text' : ''}`}>
                 {label}
               </span>
             </div>

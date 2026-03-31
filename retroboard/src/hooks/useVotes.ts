@@ -3,9 +3,7 @@ import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
 import type { Vote } from '@/types/database'
 
-const MAX_VOTES = 3
-
-export function useVotes(commentIds: string[], sessionId: string | undefined) {
+export function useVotes(commentIds: string[], sessionId: string | undefined, maxVotes: number = 3) {
   const [votes, setVotes] = useState<Vote[]>([])
   const [voterProfiles, setVoterProfiles] = useState<Map<string, string>>(new Map())
   const user = useAuthStore((s) => s.user)
@@ -65,10 +63,10 @@ export function useVotes(commentIds: string[], sessionId: string | undefined) {
 
   const userVotes = votes.filter((v) => v.user_id === user?.id)
   const userVoteCount = userVotes.length
-  const remainingVotes = MAX_VOTES - userVoteCount
+  const remainingVotes = maxVotes - userVoteCount
 
   const toggleVote = async (commentId: string) => {
-    if (!user) return
+    if (!user || maxVotes === 0) return
     const existing = votes.find((v) => v.comment_id === commentId && v.user_id === user.id)
     if (existing) {
       // Remove vote
@@ -80,7 +78,7 @@ export function useVotes(commentIds: string[], sessionId: string | undefined) {
       }
     } else {
       // Add vote (if under limit)
-      if (userVoteCount >= MAX_VOTES) return
+      if (userVoteCount >= maxVotes) return
       const { error } = await supabase.from('votes').insert({
         comment_id: commentId,
         user_id: user.id,

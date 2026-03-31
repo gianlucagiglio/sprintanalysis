@@ -6,12 +6,12 @@ import { MoodVoting } from '@/components/mood/MoodVoting'
 import { QuizGame } from '@/components/quiz/QuizGame'
 import { RetroBoard } from '@/components/retro/RetroBoard'
 import { VotingPhase } from '@/components/retro/VotingPhase'
-import { GroupingPhase } from '@/components/retro/GroupingPhase'
 import { BrainstormingPhase } from '@/components/retro/BrainstormingPhase'
 
 import { KanbanBoard } from '@/components/kanban/KanbanBoard'
 import { Badge } from '@/components/ui/Badge'
 import {
+  ChevronLeft,
   ChevronRight,
   CheckCircle2,
   Share2,
@@ -32,15 +32,14 @@ interface SessionWizardProps {
 
 const retroPhaseLabels: Record<string, string> = {
   comments: 'Commenti',
-  grouping: 'Raggruppamento',
   voting: 'Votazione',
   brainstorming: 'Brainstorming',
 }
 
-const retroPhaseOrder = ['comments', 'grouping', 'voting', 'brainstorming'] as const
+const retroPhaseOrder = ['comments', 'voting', 'brainstorming'] as const
 
 export function SessionWizard({ sessionId }: SessionWizardProps) {
-  const { session, isOrganizer, advanceStep, setRetroPhase, revealRetro, markDone, resetDone, closeSession } =
+  const { session, isOrganizer, advanceStep, goToStep, setRetroPhase, revealRetro, markDone, resetDone, closeSession } =
     useSession(sessionId)
   const { isDone, doneCount, totalParticipants, allDone, participants } = useParticipants()
   const [copied, setCopied] = useState(false)
@@ -83,6 +82,13 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
     }
   }
 
+  const goBackRetroPhase = () => {
+    const currentIdx = retroPhaseOrder.indexOf(session.retro_phase as typeof retroPhaseOrder[number])
+    if (currentIdx > 0) {
+      setRetroPhase(retroPhaseOrder[currentIdx - 1])
+    }
+  }
+
   const handleAdvanceStep = () => {
     resetDone()
     advanceStep()
@@ -100,8 +106,6 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
             return <RetroBoard sessionId={sessionId} />
           case 'voting':
             return <VotingPhase sessionId={sessionId} />
-          case 'grouping':
-            return <GroupingPhase sessionId={sessionId} />
           case 'brainstorming':
           case 'action_plan':
             return <BrainstormingPhase sessionId={sessionId} />
@@ -137,7 +141,7 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
             </Button>
           )}
         </div>
-        <StepIndicator currentStep={currentStep} />
+        <StepIndicator currentStep={currentStep} onStepClick={isOrganizer ? goToStep : undefined} />
       </div>
 
       {/* Retro sub-phase indicator */}
@@ -292,19 +296,27 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
         {/* Right: organizer controls */}
         {isOrganizer && (
           <div className="ml-auto flex gap-2 flex-wrap justify-end">
-            {currentStep === 3 && session.retro_phase !== 'brainstorming' && session.retro_phase !== 'action_plan' && (() => {
-              const needsReveal = (session.retro_phase === 'comments' || session.retro_phase === 'voting') && !session.retro_revealed
-              return needsReveal ? (
-                <Button size="sm" variant="secondary" onClick={revealRetro}>
-                  <Eye size={14} /> Mostra risultati
-                </Button>
-              ) : (
-                <Button size="sm" variant="secondary" onClick={advanceRetroPhase}>
-                  Fase successiva <ChevronRight size={14} />
-                </Button>
-              )
-            })()}
-            {(currentStep < 4 && (currentStep !== 3 || session.retro_phase === 'brainstorming' || session.retro_phase === 'action_plan')) && (
+            {currentStep === 3 && session.retro_phase !== 'comments' && (
+              <Button size="sm" variant="ghost" onClick={goBackRetroPhase}>
+                <ChevronLeft size={14} /> Fase precedente
+              </Button>
+            )}
+            {currentStep === 4 && (
+              <Button size="sm" variant="ghost" onClick={() => goToStep(3)}>
+                <ChevronLeft size={14} /> Torna alla retro
+              </Button>
+            )}
+            {currentStep === 3 && (session.retro_phase === 'comments' || session.retro_phase === 'voting') && !session.retro_revealed && (
+              <Button size="sm" variant="secondary" onClick={revealRetro}>
+                <Eye size={14} /> Mostra risultati
+              </Button>
+            )}
+            {currentStep === 3 && session.retro_phase !== 'brainstorming' && session.retro_phase !== 'action_plan' && (
+              <Button size="sm" variant="secondary" onClick={advanceRetroPhase}>
+                Fase successiva <ChevronRight size={14} />
+              </Button>
+            )}
+            {currentStep < 4 && (
               <Button size="sm" onClick={handleAdvanceStep}>
                 Passo successivo <ChevronRight size={14} />
               </Button>
