@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
 import type { QuizQuestion, QuizAnswer } from '@/types/database'
@@ -8,6 +8,7 @@ export function useQuiz(sessionId: string | undefined) {
   const [answers, setAnswers] = useState<QuizAnswer[]>([])
   const [loading, setLoading] = useState(true)
   const user = useAuthStore((s) => s.user)
+  const questionIdsRef = useRef<string[]>([])
 
   const fetchQuestions = useCallback(async () => {
     if (!sessionId) return
@@ -21,31 +22,33 @@ export function useQuiz(sessionId: string | undefined) {
       setLoading(false)
       return
     }
-    if (data) setQuestions(data)
+    if (data) {
+      setQuestions(data)
+      questionIdsRef.current = data.map((q) => q.id)
+    }
     setLoading(false)
   }, [sessionId])
 
   const fetchAnswers = useCallback(async () => {
-    if (!sessionId || !questions.length) return
-    const qIds = questions.map((q) => q.id)
+    if (!sessionId || !questionIdsRef.current.length) return
     const { data, error } = await supabase
       .from('quiz_answers')
       .select('*')
-      .in('question_id', qIds)
+      .in('question_id', questionIdsRef.current)
     if (error) {
       console.error('fetchAnswers failed:', error)
       return
     }
     if (data) setAnswers(data)
-  }, [sessionId, questions])
+  }, [sessionId])
 
   useEffect(() => {
-    fetchQuestions()
-  }, [fetchQuestions])
-
-  useEffect(() => {
-    fetchAnswers()
-  }, [fetchAnswers])
+    const init = async () => {
+      await fetchQuestions()
+      await fetchAnswers()
+    }
+    init()
+  }, [fetchQuestions]) // fetchAnswers runs after questions are loaded
 
   // Realtime
   useEffect(() => {
@@ -75,19 +78,15 @@ export function useQuiz(sessionId: string | undefined) {
 
   const submitAnswer = async (questionId: string, choice: number, timeTaken: number) => {
     if (!user) return
-    const question = questions.find((q) => q.id === questionId)
-    if (!question) return
-    const isCorrect = choice === question.correct_choice
-    const timeBonus = Math.max(0, Math.round((10 - timeTaken) * 100))
-    const points = isCorrect ? 1000 + timeBonus : 0
+    // Guard: prevent double submit (DB has UNIQUE constraint too)
+    if (answers.some((a) => a.question_id === questionId && a.user_id === user.id)) return
 
     const { error } = await supabase.from('quiz_answers').insert({
       question_id: questionId,
       user_id: user.id,
       choice,
       time_taken: timeTaken,
-      points,
-    })
+    } as any) // points computed server-side by trigger
     if (error) {
       console.error('submitAnswer failed:', error)
     } else {

@@ -14,6 +14,7 @@ export function QuizQuestion({ question, onAnswer, hasAnswered }: QuizQuestionPr
   const [selected, setSelected] = useState<number | null>(null)
   const [showResult, setShowResult] = useState(false)
   const startTime = useRef(Date.now())
+  const answeredRef = useRef(false)
 
   const choices: string[] = typeof question.choices === 'string'
     ? JSON.parse(question.choices)
@@ -21,6 +22,7 @@ export function QuizQuestion({ question, onAnswer, hasAnswered }: QuizQuestionPr
 
   useEffect(() => {
     startTime.current = Date.now()
+    answeredRef.current = false
     setTimeLeft(10)
     setSelected(null)
     setShowResult(false)
@@ -32,7 +34,7 @@ export function QuizQuestion({ question, onAnswer, hasAnswered }: QuizQuestionPr
       setTimeLeft((t) => {
         if (t <= 1) {
           clearInterval(interval)
-          if (selected === null) {
+          if (!answeredRef.current) {
             handleSelect(-1) // timeout
           }
           return 0
@@ -44,7 +46,8 @@ export function QuizQuestion({ question, onAnswer, hasAnswered }: QuizQuestionPr
   }, [question.id, hasAnswered, showResult]) // eslint-disable-line
 
   const handleSelect = (choice: number) => {
-    if (showResult || hasAnswered) return
+    if (answeredRef.current || hasAnswered) return
+    answeredRef.current = true
     const timeTaken = (Date.now() - startTime.current) / 1000
     setSelected(choice)
     setShowResult(true)
