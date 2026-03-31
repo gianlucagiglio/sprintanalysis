@@ -24,6 +24,7 @@ import {
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 
 interface SessionWizardProps {
   sessionId: string
@@ -155,23 +156,24 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
         </div>
       )}
 
-      {/* Banner "Tutti pronti" */}
-      <AnimatePresence>
-        {allDone && currentStep < 4 && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-500 text-white px-4 py-3 shadow-soft"
-          >
-            <PartyPopper size={20} className="shrink-0" />
-            <span className="text-sm font-medium">
-              Tutti hanno completato! Puoi passare allo step successivo.
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Toast "Tutti pronti" — portal to body */}
+      {createPortal(
+        <AnimatePresence>
+          {allDone && currentStep < 4 && (
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 40 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="fixed top-4 right-4 z-[100] flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 text-white px-4 py-3 shadow-lg max-w-xs"
+            >
+              <PartyPopper size={18} className="shrink-0" />
+              <span className="text-sm font-medium">Tutti pronti! Avanza allo step successivo.</span>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
 
       {/* Controls - floating action bar */}
       <div className="flex flex-wrap items-center gap-2 md:gap-3 bg-white rounded-2xl shadow-soft p-3 md:p-4">
