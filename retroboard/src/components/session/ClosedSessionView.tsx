@@ -7,7 +7,7 @@ import { useQuiz } from '@/hooks/useQuiz'
 import { useSessionStore } from '@/stores/sessionStore'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
-import { Heart, User, Calendar, Archive, Trophy, Medal } from 'lucide-react'
+import { Heart, User, Calendar, Archive, Trophy, Medal, Users } from 'lucide-react'
 import type { Action } from '@/types/database'
 
 const statusLabels: Record<Action['status'], string> = {
@@ -62,6 +62,31 @@ export function ClosedSessionView({ sessionId, sessionTitle }: ClosedSessionView
           <p className="text-sm text-retro-text-secondary">Retrospettiva chiusa</p>
         </div>
       </div>
+
+      {/* Partecipanti */}
+      {participants.length > 0 && (
+        <div>
+          <h2 className="text-lg font-semibold text-retro-text mb-4">
+            <Users size={18} className="inline mr-2 -mt-0.5" />
+            Partecipanti ({participants.length})
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {participants.map((p) => (
+              <Card key={p.user_id} className="!p-3 !rounded-xl !inline-flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-retro-primary-light flex items-center justify-center">
+                  <span className="text-sm font-bold text-retro-primary">
+                    {(p.profiles?.name || 'U').charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-retro-text">{p.profiles?.name || 'Utente'}</p>
+                  <p className="text-[10px] text-retro-text-secondary capitalize">{p.role}</p>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Mood del team */}
       {moodTotal > 0 && (
