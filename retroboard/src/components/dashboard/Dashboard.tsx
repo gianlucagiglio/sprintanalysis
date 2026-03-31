@@ -6,16 +6,29 @@ import { SessionCard } from './SessionCard'
 import { CreateSessionModal } from './CreateSessionModal'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import { Plus, Link as LinkIcon, Loader2 } from 'lucide-react'
+import { Card } from '@/components/ui/Card'
+import {
+  Plus,
+  Link as LinkIcon,
+  Loader2,
+  LayoutGrid,
+  Play,
+  CheckCircle2,
+  FolderOpen,
+  Users,
+} from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { canCreate } from '@/config/permissions'
 import type { Session } from '@/types/database'
+
+type FilterTab = 'all' | 'active' | 'closed'
 
 export function Dashboard() {
   const [sessions, setSessions] = useState<(Session & { participant_count: number })[]>([])
   const [loading, setLoading] = useState(true)
   const [showCreate, setShowCreate] = useState(false)
   const [joinCode, setJoinCode] = useState('')
+  const [filter, setFilter] = useState<FilterTab>('all')
   const user = useAuthStore((s) => s.user)
   const { teams } = useTeams()
   const navigate = useNavigate()
@@ -116,16 +129,27 @@ export function Dashboard() {
     return () => { supabase.removeChannel(channel) }
   }, [user, fetchSessions])
 
+  // Stats
+  const activeSessions = sessions.filter((s) => s.current_step >= 1 && s.current_step <= 4)
+  const closedSessions = sessions.filter((s) => s.current_step === 5)
+
+  // Filtered sessions
+  const filteredSessions = useMemo(() => {
+    if (filter === 'active') return sessions.filter((s) => s.current_step >= 1 && s.current_step <= 4)
+    if (filter === 'closed') return sessions.filter((s) => s.current_step === 5)
+    return sessions
+  }, [sessions, filter])
+
   // Group sessions by team
   const teamMap = useMemo(() => {
-    const map = new Map<string | null, typeof sessions>()
-    for (const s of sessions) {
+    const map = new Map<string | null, typeof filteredSessions>()
+    for (const s of filteredSessions) {
       const key = s.team_id ?? null
       if (!map.has(key)) map.set(key, [])
       map.get(key)!.push(s)
     }
     return map
-  }, [sessions])
+  }, [filteredSessions])
 
   const teamName = (teamId: string) =>
     teams.find((t) => t.id === teamId)?.name ?? teamId
@@ -162,48 +186,105 @@ export function Dashboard() {
     navigate(`/session/${sessionId}`)
   }
 
+  const filterTabs: { key: FilterTab; label: string; count: number; icon: typeof LayoutGrid }[] = [
+    { key: 'all', label: 'Tutte', count: sessions.length, icon: LayoutGrid },
+    { key: 'active', label: 'Attive', count: activeSessions.length, icon: Play },
+    { key: 'closed', label: 'Concluse', count: closedSessions.length, icon: CheckCircle2 },
+  ]
+
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-retro-text">
-          Le tue retrospettive 👋
-        </h1>
-        {canCreate(user?.email) && (
-          <Button onClick={() => setShowCreate(true)}>
-            <Plus size={16} />
-            Nuova sessione
+    <div className="max-w-4xl mx-auto space-y-6">
+
+      {/* ── Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl md:text-2xl font-bold text-retro-text">
+            Le tue retrospettive
+          </h1>
+          <p className="text-sm text-retro-text-secondary mt-1">
+            {sessions.length} {sessions.length === 1 ? 'sessione' : 'sessioni'} totali
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          {canCreate(user?.email) && (
+            <Button onClick={() => setShowCreate(true)}>
+              <Plus size={16} />
+              Nuova sessione
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* ── Join bar ── */}
+      <Card className="!p-3 !rounded-2xl">
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <LinkIcon size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-retro-text-secondary pointer-events-none" />
+            <Input
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value)}
+              placeholder="Incolla ID sessione per partecipare..."
+              className="!pl-9"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleJoin()
+              }}
+            />
+          </div>
+          <Button variant="secondary" onClick={handleJoin} disabled={!joinCode.trim()}>
+            Unisciti
           </Button>
-        )}
+        </div>
+      </Card>
+
+      {/* ── Stats + Filter tabs ── */}
+      <div className="flex items-center gap-1.5 bg-slate-100 rounded-xl p-1">
+        {filterTabs.map((tab) => {
+          const Icon = tab.icon
+          const isActive = filter === tab.key
+          return (
+            <button
+              key={tab.key}
+              onClick={() => setFilter(tab.key)}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                isActive
+                  ? 'bg-white shadow-soft text-retro-text'
+                  : 'text-retro-text-secondary hover:text-retro-text'
+              }`}
+            >
+              <Icon size={14} />
+              {tab.label}
+              <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold ${
+                isActive ? 'bg-retro-primary-light text-retro-primary' : 'bg-slate-200 text-retro-text-secondary'
+              }`}>
+                {tab.count}
+              </span>
+            </button>
+          )
+        })}
       </div>
 
-      <div className="flex gap-2 mb-8">
-        <Input
-          value={joinCode}
-          onChange={(e) => setJoinCode(e.target.value)}
-          placeholder="Incolla ID sessione per partecipare..."
-          className="flex-1"
-        />
-        <Button variant="secondary" onClick={handleJoin} disabled={!joinCode.trim()}>
-          <LinkIcon size={16} />
-          Unisciti
-        </Button>
-      </div>
-
+      {/* ── Content ── */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="animate-spin text-retro-primary" size={32} />
         </div>
       ) : sessions.length === 0 ? (
-        <div className="text-center py-20 text-retro-text-secondary">
-          <div className="text-5xl mb-4">📋</div>
-          <p className="text-lg font-medium mb-2">Nessuna retrospettiva</p>
-          <p className="text-sm mb-6">Crea una nuova sessione o unisciti a una esistente</p>
+        <Card className="!rounded-2xl text-center !py-16">
+          <div className="w-16 h-16 rounded-2xl bg-retro-primary-light flex items-center justify-center mx-auto mb-4">
+            <FolderOpen size={28} className="text-retro-primary" />
+          </div>
+          <p className="text-lg font-semibold text-retro-text mb-1">Nessuna retrospettiva</p>
+          <p className="text-sm text-retro-text-secondary mb-6">Crea una nuova sessione o unisciti a una esistente</p>
           {canCreate(user?.email) && (
             <Button onClick={() => setShowCreate(true)}>
               <Plus size={16} />
               Crea la prima sessione
             </Button>
           )}
+        </Card>
+      ) : filteredSessions.length === 0 ? (
+        <div className="text-center py-12 text-retro-text-secondary">
+          <p className="text-sm">Nessuna retrospettiva {filter === 'active' ? 'attiva' : 'conclusa'}</p>
         </div>
       ) : (
         <div className="space-y-8">
@@ -213,10 +294,16 @@ export function Dashboard() {
             .sort(([a], [b]) => teamName(a!).localeCompare(teamName(b!)))
             .map(([teamId, teamSessions]) => (
               <div key={teamId}>
-                <h2 className="inline-flex items-center bg-slate-100 rounded-xl px-4 py-2 text-sm font-semibold text-retro-text-secondary uppercase tracking-wide mb-3">
-                  {teamName(teamId!)}
-                </h2>
-                <div className="grid gap-4 sm:grid-cols-2 mt-3">
+                <div className="flex items-center gap-2 mb-3">
+                  <Users size={14} className="text-retro-primary" />
+                  <h2 className="text-sm font-bold text-retro-text uppercase tracking-wide">
+                    {teamName(teamId!)}
+                  </h2>
+                  <span className="text-xs text-retro-text-secondary bg-slate-100 rounded-full px-2 py-0.5">
+                    {teamSessions.length}
+                  </span>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
                   {teamSessions.map((s) => (
                     <SessionCard key={s.id} session={s} participantCount={s.participant_count} onDelete={handleDelete} />
                   ))}
@@ -227,10 +314,18 @@ export function Dashboard() {
           {/* Sessions without a team */}
           {teamMap.has(null) && (
             <div>
-              <h2 className="inline-flex items-center bg-slate-100 rounded-xl px-4 py-2 text-sm font-semibold text-retro-text-secondary uppercase tracking-wide mb-3">
-                Senza team
-              </h2>
-              <div className="grid gap-4 sm:grid-cols-2 mt-3">
+              {teamMap.size > 1 && (
+                <div className="flex items-center gap-2 mb-3">
+                  <FolderOpen size={14} className="text-retro-text-secondary" />
+                  <h2 className="text-sm font-bold text-retro-text uppercase tracking-wide">
+                    Senza team
+                  </h2>
+                  <span className="text-xs text-retro-text-secondary bg-slate-100 rounded-full px-2 py-0.5">
+                    {teamMap.get(null)!.length}
+                  </span>
+                </div>
+              )}
+              <div className="grid gap-3 sm:grid-cols-2">
                 {teamMap.get(null)!.map((s) => (
                   <SessionCard key={s.id} session={s} participantCount={s.participant_count} onDelete={handleDelete} />
                 ))}
