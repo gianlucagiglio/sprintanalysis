@@ -21,7 +21,7 @@ export function VotingPhase({ sessionId }: VotingPhaseProps) {
   const revealed = session?.retro_revealed ?? true
   const { comments } = useComments(sessionId, sections)
   const commentIds = useMemo(() => comments.map((c) => c.id), [comments])
-  const { toggleVote, getVoteCount, hasUserVoted, remainingVotes } = useVotes(commentIds, sessionId)
+  const { toggleVote, getVoteCount, hasUserVoted, getVoterNames, remainingVotes } = useVotes(commentIds, sessionId)
 
   // Only show parent comments (not grouped)
   const parentComments = comments.filter((c) => !c.group_id)
@@ -70,6 +70,7 @@ export function VotingPhase({ sessionId }: VotingPhaseProps) {
                   voteCount={revealed ? getVoteCount(comment.id) : (hasUserVoted(comment.id) ? 1 : 0)}
                   canVote={remainingVotes > 0}
                   onToggleVote={() => toggleVote(comment.id)}
+                  voterNames={revealed ? getVoterNames(comment.id) : []}
                   grouped={getGrouped(comment.id)}
                   groupCount={getGrouped(comment.id).length}
                 />

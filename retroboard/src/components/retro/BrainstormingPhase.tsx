@@ -74,7 +74,7 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
   const participants = useSessionStore((s) => s.participants)
   const { comments, addReply, updateDiscussionStatus } = useComments(sessionId, sections)
   const commentIds = useMemo(() => comments.map((c) => c.id), [comments])
-  const { getVoteCount } = useVotes(commentIds, sessionId)
+  const { getVoteCount, getVoterNames } = useVotes(commentIds, sessionId)
   const { actions, addAction } = useActions(sessionId)
 
   const [replyingTo, setReplyingTo] = useState<string | null>(null)
@@ -180,10 +180,25 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
             </div>
 
             {votes > 0 && (
-              <span className="flex items-center gap-1 text-sm text-rose-500 font-medium shrink-0">
-                <Heart size={14} className="fill-rose-500" />
-                {votes}
-              </span>
+              <div className="relative group/vote shrink-0">
+                <span className="flex items-center gap-1 text-sm text-rose-500 font-medium cursor-default">
+                  <Heart size={14} className="fill-rose-500" />
+                  {votes}
+                </span>
+                {getVoterNames(comment.id).length > 0 && (
+                  <div className="absolute bottom-full right-0 mb-2 hidden group-hover/vote:block z-50 pointer-events-none">
+                    <div className="bg-retro-text text-white text-xs rounded-xl px-3 py-2 shadow-float whitespace-nowrap">
+                      <p className="font-semibold text-white/60 mb-1">Votato da</p>
+                      {getVoterNames(comment.id).map((name, i) => (
+                        <p key={i} className="flex items-center gap-1.5">
+                          <Heart size={8} className="fill-rose-400 text-rose-400 shrink-0" />
+                          {name}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
           </div>
 

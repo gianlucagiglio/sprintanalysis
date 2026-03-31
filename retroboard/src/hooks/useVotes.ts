@@ -7,6 +7,7 @@ const MAX_VOTES = 3
 
 export function useVotes(commentIds: string[], sessionId: string | undefined) {
   const [votes, setVotes] = useState<Vote[]>([])
+  const [voterProfiles, setVoterProfiles] = useState<Map<string, string>>(new Map())
   const user = useAuthStore((s) => s.user)
 
   const fetchVotes = useCallback(async () => {
@@ -19,7 +20,21 @@ export function useVotes(commentIds: string[], sessionId: string | undefined) {
       console.error('fetchVotes failed:', error)
       return
     }
-    if (data) setVotes(data)
+    if (data) {
+      setVotes(data)
+
+      // Fetch profiles for all voters
+      const userIds = [...new Set(data.map((v) => v.user_id))]
+      if (userIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id, name')
+          .in('id', userIds)
+        if (profiles) {
+          setVoterProfiles(new Map(profiles.map((p) => [p.id, p.name])))
+        }
+      }
+    }
   }, [commentIds])
 
   useEffect(() => {
@@ -87,5 +102,11 @@ export function useVotes(commentIds: string[], sessionId: string | undefined) {
     return votes.some((v) => v.comment_id === commentId && v.user_id === user?.id)
   }
 
-  return { votes, toggleVote, getVoteCount, hasUserVoted, userVoteCount, remainingVotes }
+  const getVoterNames = (commentId: string): string[] => {
+    return votes
+      .filter((v) => v.comment_id === commentId)
+      .map((v) => voterProfiles.get(v.user_id) || 'Utente')
+  }
+
+  return { votes, toggleVote, getVoteCount, hasUserVoted, getVoterNames, userVoteCount, remainingVotes }
 }

@@ -13,6 +13,7 @@ interface CommentCardProps {
   voteCount?: number
   canVote?: boolean
   onToggleVote?: () => void
+  voterNames?: string[]
   grouped?: Comment[]
   onUngroup?: (commentId: string) => void
   isOver?: boolean
@@ -27,6 +28,7 @@ export function CommentCard({
   voteCount,
   canVote,
   onToggleVote,
+  voterNames,
   grouped,
   onUngroup,
   isOver,
@@ -102,27 +104,57 @@ export function CommentCard({
             )}
           </div>
           {votingMode && onToggleVote && (
-            <motion.button
-              whileTap={{ scale: 1.3 }}
-              transition={{ type: 'spring', stiffness: 400 }}
-              onClick={onToggleVote}
-              disabled={!hasVoted && !canVote}
-              className={`flex items-center gap-1 px-2 py-1 rounded-xl text-sm transition-all duration-200
-                ${hasVoted
-                  ? 'bg-rose-50 text-rose-500'
-                  : canVote
-                    ? 'text-retro-text-secondary hover:bg-rose-50 hover:text-rose-400'
-                    : 'text-retro-border cursor-not-allowed'
-                }`}
-            >
-              <Heart size={14} className={hasVoted ? 'fill-rose-500' : ''} />
-              {(voteCount ?? 0) > 0 && <span className="font-medium">{voteCount}</span>}
-            </motion.button>
+            <div className="relative group/vote">
+              <motion.button
+                whileTap={{ scale: 1.3 }}
+                transition={{ type: 'spring', stiffness: 400 }}
+                onClick={onToggleVote}
+                disabled={!hasVoted && !canVote}
+                className={`flex items-center gap-1 px-2 py-1 rounded-xl text-sm transition-all duration-200
+                  ${hasVoted
+                    ? 'bg-rose-50 text-rose-500'
+                    : canVote
+                      ? 'text-retro-text-secondary hover:bg-rose-50 hover:text-rose-400'
+                      : 'text-retro-border cursor-not-allowed'
+                  }`}
+              >
+                <Heart size={14} className={hasVoted ? 'fill-rose-500' : ''} />
+                {(voteCount ?? 0) > 0 && <span className="font-medium">{voteCount}</span>}
+              </motion.button>
+              {voterNames && voterNames.length > 0 && (
+                <div className="absolute bottom-full right-0 mb-2 hidden group-hover/vote:block z-50 pointer-events-none">
+                  <div className="bg-retro-text text-white text-xs rounded-xl px-3 py-2 shadow-float whitespace-nowrap">
+                    <p className="font-semibold text-white/60 mb-1">Votato da</p>
+                    {voterNames.map((name, i) => (
+                      <p key={i} className="flex items-center gap-1.5">
+                        <Heart size={8} className="fill-rose-400 text-rose-400 shrink-0" />
+                        {name}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           )}
           {!votingMode && voteCount !== undefined && voteCount > 0 && (
-            <span className="flex items-center gap-1 text-xs text-retro-text-secondary whitespace-nowrap">
-              {voteCount} <Heart size={10} className="inline fill-rose-300 text-rose-300" />
-            </span>
+            <div className="relative group/vote">
+              <span className="flex items-center gap-1 text-xs text-retro-text-secondary whitespace-nowrap cursor-default">
+                {voteCount} <Heart size={10} className="inline fill-rose-300 text-rose-300" />
+              </span>
+              {voterNames && voterNames.length > 0 && (
+                <div className="absolute bottom-full right-0 mb-2 hidden group-hover/vote:block z-50 pointer-events-none">
+                  <div className="bg-retro-text text-white text-xs rounded-xl px-3 py-2 shadow-float whitespace-nowrap">
+                    <p className="font-semibold text-white/60 mb-1">Votato da</p>
+                    {voterNames.map((name, i) => (
+                      <p key={i} className="flex items-center gap-1.5">
+                        <Heart size={8} className="fill-rose-400 text-rose-400 shrink-0" />
+                        {name}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </Card>

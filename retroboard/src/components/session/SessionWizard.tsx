@@ -18,9 +18,12 @@ import {
   ArrowRight,
   LogOut,
   Eye,
+  PartyPopper,
+  Users,
+  Check,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 interface SessionWizardProps {
   sessionId: string
@@ -38,8 +41,27 @@ const retroPhaseOrder = ['comments', 'grouping', 'voting', 'brainstorming'] as c
 export function SessionWizard({ sessionId }: SessionWizardProps) {
   const { session, isOrganizer, advanceStep, setRetroPhase, revealRetro, markDone, resetDone, closeSession } =
     useSession(sessionId)
-  const { isDone, doneCount, totalParticipants } = useParticipants()
+  const { isDone, doneCount, totalParticipants, allDone, participants } = useParticipants()
   const [copied, setCopied] = useState(false)
+  const [showParticipantList, setShowParticipantList] = useState(false)
+  const popoverRef = useRef<HTMLDivElement>(null)
+
+  // Close popover on outside click
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+        setShowParticipantList(false)
+      }
+    }
+    if (showParticipantList) {
+      document.addEventListener('mousedown', handleClick)
+      return () => document.removeEventListener('mousedown', handleClick)
+    }
+  }, [showParticipantList])
+
+  const getInitial = (name: string) => name?.charAt(0)?.toUpperCase() || '?'
+  const sortedParticipants = [...participants].sort((a, b) => Number(b.is_done) - Number(a.is_done))
+  const progressPercent = totalParticipants > 0 ? (doneCount / totalParticipants) * 100 : 0
 
   if (!session) return null
 
@@ -133,8 +155,27 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
         </div>
       )}
 
+      {/* Banner "Tutti pronti" */}
+      <AnimatePresence>
+        {allDone && currentStep < 4 && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-500 text-white px-4 py-3 shadow-soft"
+          >
+            <PartyPopper size={20} className="shrink-0" />
+            <span className="text-sm font-medium">
+              Tutti hanno completato! Puoi passare allo step successivo.
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Controls - floating action bar */}
       <div className="flex flex-wrap items-center gap-2 md:gap-3 bg-white rounded-2xl shadow-soft p-3 md:p-4">
+        {/* Left: "Ho finito" button or badge */}
         {!isDone && currentStep < 4 && (
           <Button variant="secondary" size="sm" onClick={markDone}>
             <CheckCircle2 size={14} />
@@ -146,9 +187,107 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
             <CheckCircle2 size={12} className="mr-1" /> Finito
           </Badge>
         )}
-        <span className="text-xs text-retro-text-secondary">
-          {doneCount}/{totalParticipants}
-        </span>
+
+        {/* Progress bar + avatar stack */}
+        {currentStep < 4 && (
+          <div className="flex items-center gap-2.5">
+            {/* Progress bar */}
+            <div className="flex items-center gap-2">
+              <div className="w-20 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full rounded-full bg-emerald-500"
+                  initial={false}
+                  animate={{ width: `${progressPercent}%` }}
+                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                />
+              </div>
+              <span className="text-xs font-medium text-retro-text-secondary whitespace-nowrap">
+                {doneCount}/{totalParticipants}
+              </span>
+            </div>
+
+            {/* Avatar stack */}
+            <div className="flex items-center -space-x-1.5">
+              {participants.slice(0, 8).map((p) => (
+                <div
+                  key={p.id}
+                  title={p.profiles?.name || 'Partecipante'}
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold border-2 border-white transition-colors duration-200 ${
+                    p.is_done
+                      ? 'bg-emerald-500 text-white'
+                      : 'bg-slate-200 text-slate-400'
+                  }`}
+                >
+                  {p.is_done ? (
+                    <Check size={12} strokeWidth={3} />
+                  ) : (
+                    getInitial(p.profiles?.name || '')
+                  )}
+                </div>
+              ))}
+              {participants.length > 8 && (
+                <div className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold bg-slate-100 text-slate-500 border-2 border-white">
+                  +{participants.length - 8}
+                </div>
+              )}
+            </div>
+
+            {/* Popover toggle (moderatore) */}
+            {isOrganizer && (
+              <div className="relative" ref={popoverRef}>
+                <button
+                  onClick={() => setShowParticipantList((v) => !v)}
+                  className={`p-1.5 rounded-lg transition-colors ${
+                    showParticipantList
+                      ? 'bg-retro-primary-light text-indigo-600'
+                      : 'text-retro-text-secondary hover:bg-retro-sidebar hover:text-retro-text'
+                  }`}
+                  title="Dettagli partecipanti"
+                >
+                  <Users size={16} />
+                </button>
+
+                {/* Popover lista partecipanti */}
+                <AnimatePresence>
+                  {showParticipantList && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 4, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 4, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-retro-border z-50 py-2 max-h-64 overflow-y-auto"
+                    >
+                      <div className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-retro-text-secondary">
+                        Partecipanti ({doneCount}/{totalParticipants})
+                      </div>
+                      {sortedParticipants.map((p) => (
+                        <div key={p.id} className="flex items-center gap-2.5 px-3 py-1.5 hover:bg-retro-sidebar">
+                          <div
+                            className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
+                              p.is_done
+                                ? 'bg-emerald-500 text-white'
+                                : 'bg-slate-200 text-slate-400'
+                            }`}
+                          >
+                            {getInitial(p.profiles?.name || '')}
+                          </div>
+                          <span className="text-sm text-retro-text truncate flex-1">
+                            {p.profiles?.name || 'Partecipante'}
+                          </span>
+                          <Badge variant={p.is_done ? 'glad' : 'default'} className="text-[10px] px-2 py-0.5">
+                            {p.is_done ? 'Pronto' : 'In attesa'}
+                          </Badge>
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Right: organizer controls */}
         {isOrganizer && (
           <div className="ml-auto flex gap-2 flex-wrap justify-end">
             {currentStep === 3 && session.retro_phase !== 'brainstorming' && session.retro_phase !== 'action_plan' && (() => {
