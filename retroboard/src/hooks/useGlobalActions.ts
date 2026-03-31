@@ -5,6 +5,7 @@ import type { Action } from '@/types/database'
 
 export type ActionWithSession = Action & {
   sessionTitle: string
+  assigneeName: string | null
 }
 
 export function useGlobalActions() {
@@ -44,11 +45,25 @@ export function useGlobalActions() {
     const sessions = sessionsRes.data || []
     const rawActions = actionsRes.data || []
 
+    // 3. Fetch assignee profiles
+    const assigneeIds = [...new Set(rawActions.map((a) => a.assigned_to).filter(Boolean))] as string[]
+    let profileMap = new Map<string, string>()
+    if (assigneeIds.length > 0) {
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, name')
+        .in('id', assigneeIds)
+      if (profiles) {
+        profileMap = new Map(profiles.map((p) => [p.id, p.name]))
+      }
+    }
+
     const sessionMap = new Map(sessions.map((s) => [s.id, s.title]))
 
     const enriched: ActionWithSession[] = rawActions.map((action) => ({
       ...action,
       sessionTitle: sessionMap.get(action.session_id) || 'Sessione sconosciuta',
+      assigneeName: (action.assigned_to && profileMap.get(action.assigned_to)) || null,
     }))
 
     setActions(enriched)

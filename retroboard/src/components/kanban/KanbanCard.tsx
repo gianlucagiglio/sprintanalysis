@@ -12,7 +12,10 @@ interface KanbanCardProps {
 
 export function KanbanCard({ action }: KanbanCardProps) {
   const participants = useSessionStore((s) => s.participants)
-  const assignee = participants.find((p) => p.user_id === action.assigned_to)
+  const assignee = action.assigned_to
+    ? participants.find((p) => p.user_id === action.assigned_to)
+    : undefined
+  const assigneeName = assignee?.profiles?.name || (action.assigned_to ? 'Utente' : null)
 
   const {
     attributes,
@@ -43,10 +46,10 @@ export function KanbanCard({ action }: KanbanCardProps) {
           <div className="flex-1 min-w-0">
             <p className="text-sm text-retro-text">{action.text}</p>
             <div className="flex items-center gap-2 mt-2">
-              {assignee && (
+              {assigneeName && (
                 <Badge variant="primary">
                   <User size={10} className="mr-1" />
-                  {assignee.profiles?.name}
+                  {assigneeName}
                 </Badge>
               )}
               {action.deadline && (

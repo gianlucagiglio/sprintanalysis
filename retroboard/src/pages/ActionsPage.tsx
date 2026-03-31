@@ -15,7 +15,7 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { useGlobalActions, type ActionWithSession } from '@/hooks/useGlobalActions'
-import { GripVertical, Calendar, FolderOpen, ListTodo, LayoutGrid, GanttChart } from 'lucide-react'
+import { GripVertical, Calendar, FolderOpen, ListTodo, LayoutGrid, GanttChart, User } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { GanttView } from '@/components/kanban/GanttChart'
 import type { Action } from '@/types/database'
@@ -67,6 +67,12 @@ function GlobalKanbanCard({ action }: { action: ActionWithSession }) {
                 <FolderOpen size={10} />
                 {action.sessionTitle}
               </button>
+              {action.assigneeName && (
+                <Badge variant="primary">
+                  <User size={10} className="mr-1" />
+                  {action.assigneeName}
+                </Badge>
+              )}
               {action.deadline && (
                 <Badge variant="warning">
                   <Calendar size={10} className="mr-1" />
