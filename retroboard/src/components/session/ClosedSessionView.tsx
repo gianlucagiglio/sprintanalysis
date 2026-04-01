@@ -335,17 +335,18 @@ export function ClosedSessionView({ sessionId, sessionTitle }: ClosedSessionView
                       <p className="text-xs text-retro-text-secondary text-center py-4">Nessuna azione</p>
                     )}
                     {statusActions.map((action) => {
-                      const assignee = participants.find((p) => p.user_id === action.assigned_to)
+                      const assigneeNames = (action.assigned_to_multi || [])
+                        .map((id) => participants.find((p) => p.user_id === id)?.profiles?.name || 'Utente')
                       return (
                         <Card key={action.id} className="!p-3 !rounded-xl">
                           <p className="text-sm text-retro-text">{action.text}</p>
                           <div className="flex items-center gap-2 mt-2 flex-wrap">
-                            {assignee && (
-                              <Badge variant="primary">
+                            {assigneeNames.map((name, i) => (
+                              <Badge key={i} variant="primary">
                                 <User size={10} className="mr-1" />
-                                {assignee.profiles?.name || 'Utente'}
+                                {name}
                               </Badge>
-                            )}
+                            ))}
                             {action.deadline && (
                               <Badge variant="warning">
                                 <Calendar size={10} className="mr-1" />

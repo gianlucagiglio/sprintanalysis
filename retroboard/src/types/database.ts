@@ -63,6 +63,7 @@ export type Action = {
   comment_id: string | null
   text: string
   assigned_to: string | null
+  assigned_to_multi: string[]
   deadline: string | null
   status: 'todo' | 'in_progress' | 'done'
   created_at: string
@@ -120,7 +121,7 @@ export type Database = {
       sections: { Row: Section; Insert: Omit<Section, 'id'>; Update: Partial<Section> }
       comments: { Row: Comment; Insert: Omit<Comment, 'id' | 'created_at'>; Update: Partial<Comment> }
       votes: { Row: Vote; Insert: Omit<Vote, 'id'>; Update: Partial<Vote> }
-      actions: { Row: Action; Insert: Omit<Action, 'id' | 'created_at' | 'status'>; Update: Partial<Action> }
+      actions: { Row: Action; Insert: Omit<Action, 'id' | 'created_at' | 'status' | 'assigned_to_multi'>; Update: Partial<Action> }
       quiz_questions: { Row: QuizQuestion; Insert: Omit<QuizQuestion, 'id'>; Update: Partial<QuizQuestion> }
       quiz_answers: { Row: QuizAnswer; Insert: Omit<QuizAnswer, 'id' | 'points'>; Update: Partial<QuizAnswer> }
       mood_votes: { Row: MoodVote; Insert: Omit<MoodVote, 'id' | 'created_at'>; Update: Partial<MoodVote> }

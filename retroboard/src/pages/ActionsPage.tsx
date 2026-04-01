@@ -15,6 +15,7 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { useGlobalActions, type ActionWithSession } from '@/hooks/useGlobalActions'
+import { ActionEditModal } from '@/components/kanban/ActionEditModal'
 import {
   GripVertical,
   Calendar,
@@ -30,6 +31,7 @@ import {
   Target,
   Clock,
   AlertTriangle,
+  Pencil,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { GanttView } from '@/components/kanban/GanttChart'
@@ -74,7 +76,13 @@ function isOverdue(action: ActionWithSession): boolean {
   return new Date(action.deadline) < new Date()
 }
 
-function GlobalKanbanCard({ action }: { action: ActionWithSession }) {
+function GlobalKanbanCard({
+  action,
+  onEdit,
+}: {
+  action: ActionWithSession
+  onEdit?: (action: ActionWithSession) => void
+}) {
   const navigate = useNavigate()
   const overdue = isOverdue(action)
   const {
@@ -103,7 +111,6 @@ function GlobalKanbanCard({ action }: { action: ActionWithSession }) {
               : 'border-slate-200/80 shadow-soft hover:shadow-card'
         }`}
       >
-        {/* Overdue indicator bar */}
         {overdue && (
           <div className="h-0.5 bg-gradient-to-r from-red-400 to-orange-400 rounded-t-xl" />
         )}
@@ -125,9 +132,19 @@ function GlobalKanbanCard({ action }: { action: ActionWithSession }) {
                 }`}>
                   {action.text}
                 </p>
-                {overdue && (
-                  <AlertTriangle size={14} className="text-red-400 shrink-0 mt-0.5" />
-                )}
+                <div className="flex items-center gap-1 shrink-0">
+                  {overdue && (
+                    <AlertTriangle size={14} className="text-red-400 mt-0.5" />
+                  )}
+                  {onEdit && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); onEdit(action) }}
+                      className="p-1 rounded-md text-slate-300 hover:text-retro-primary hover:bg-retro-primary-light transition-all"
+                    >
+                      <Pencil size={12} />
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center gap-1.5 mt-2.5 flex-wrap">
@@ -141,12 +158,12 @@ function GlobalKanbanCard({ action }: { action: ActionWithSession }) {
                   <FolderOpen size={10} />
                   {action.sessionTitle}
                 </button>
-                {action.assigneeName && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-indigo-50 text-indigo-600">
+                {action.assigneeNames.map((name, i) => (
+                  <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-indigo-50 text-indigo-600">
                     <User size={10} />
-                    {action.assigneeName}
+                    {name}
                   </span>
-                )}
+                ))}
                 {action.deadline && (
                   <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium ${
                     overdue
@@ -169,9 +186,11 @@ function GlobalKanbanCard({ action }: { action: ActionWithSession }) {
 function GlobalKanbanColumn({
   column,
   actions,
+  onEdit,
 }: {
   column: typeof columns[number]
   actions: ActionWithSession[]
+  onEdit?: (action: ActionWithSession) => void
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: column.id })
   const ColIcon = column.icon
@@ -183,7 +202,6 @@ function GlobalKanbanColumn({
         isOver ? `ring-2 ${column.dropBg}` : 'bg-slate-50/80'
       }`}
     >
-      {/* Column header */}
       <div className="flex items-center gap-2.5 px-3.5 py-3">
         <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${column.gradient} flex items-center justify-center`}>
           <ColIcon size={14} className="text-white" />
@@ -194,7 +212,6 @@ function GlobalKanbanColumn({
         </span>
       </div>
 
-      {/* Cards */}
       <SortableContext items={actions.map((a) => a.id)} strategy={verticalListSortingStrategy}>
         <div className="flex-1 space-y-2 px-2 pb-3">
           {actions.length === 0 ? (
@@ -203,7 +220,7 @@ function GlobalKanbanColumn({
             </div>
           ) : (
             actions.map((action) => (
-              <GlobalKanbanCard key={action.id} action={action} />
+              <GlobalKanbanCard key={action.id} action={action} onEdit={onEdit} />
             ))
           )}
         </div>
@@ -214,7 +231,8 @@ function GlobalKanbanColumn({
 
 export function ActionsPage() {
   const [viewMode, setViewMode] = useState<'kanban' | 'gantt'>('kanban')
-  const { actions, loading, updateActionStatus } = useGlobalActions()
+  const { actions, loading, updateActionStatus, updateAction, deleteAction } = useGlobalActions()
+  const [editingAction, setEditingAction] = useState<ActionWithSession | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -227,6 +245,14 @@ export function ActionsPage() {
     const overdueCount = actions.filter(isOverdue).length
     return { todo, inProgress, done, overdueCount, total: actions.length }
   }, [actions])
+
+  // Build a participant list from all assigneeNames across actions
+  const modalParticipants = useMemo(() => {
+    if (!editingAction) return []
+    const multi = editingAction.assigned_to_multi || []
+    const names = editingAction.assigneeNames || []
+    return multi.map((id, i) => ({ user_id: id, name: names[i] || 'Utente' }))
+  }, [editingAction])
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event
@@ -246,6 +272,10 @@ export function ActionsPage() {
     if (targetAction && targetAction.status !== action.status) {
       await updateActionStatus(actionId, targetAction.status)
     }
+  }
+
+  const handleEdit = (action: ActionWithSession) => {
+    setEditingAction(action)
   }
 
   return (
@@ -359,6 +389,7 @@ export function ActionsPage() {
                       key={col.id}
                       column={col}
                       actions={actions.filter((a) => a.status === col.id)}
+                      onEdit={handleEdit}
                     />
                   ))}
                 </div>
@@ -367,6 +398,18 @@ export function ActionsPage() {
               <GanttView actions={actions} />
             )}
           </>
+        )}
+
+        {editingAction && (
+          <ActionEditModal
+            action={editingAction}
+            participants={modalParticipants}
+            canEdit={true}
+            canDelete={true}
+            onSave={updateAction}
+            onDelete={deleteAction}
+            onClose={() => setEditingAction(null)}
+          />
         )}
       </div>
     </AppLayout>

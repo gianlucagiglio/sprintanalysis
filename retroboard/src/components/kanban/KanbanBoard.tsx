@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   DndContext,
   closestCorners,
@@ -7,7 +8,10 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import { useActions } from '@/hooks/useActions'
+import { useSessionStore } from '@/stores/sessionStore'
+import { useAuthStore } from '@/stores/authStore'
 import { KanbanColumn } from './KanbanColumn'
+import { ActionEditModal } from './ActionEditModal'
 import type { Action } from '@/types/database'
 
 const columns: { id: Action['status']; title: string; color: string }[] = [
@@ -21,7 +25,24 @@ interface KanbanBoardProps {
 }
 
 export function KanbanBoard({ sessionId }: KanbanBoardProps) {
-  const { actions, updateActionStatus } = useActions(sessionId)
+  const { actions, updateActionStatus, updateAction, deleteAction } = useActions(sessionId)
+  const session = useSessionStore((s) => s.session)
+  const participants = useSessionStore((s) => s.participants)
+  const user = useAuthStore((s) => s.user)
+  const [editingAction, setEditingAction] = useState<Action | null>(null)
+
+  const isOrganizer = session?.organizer_id === user?.id
+
+  const canEditAction = (action: Action) => {
+    if (isOrganizer) return true
+    if (user && (action.assigned_to_multi || []).includes(user.id)) return true
+    return false
+  }
+
+  const canDeleteAction = (_action: Action) => {
+    if (isOrganizer) return true
+    return false
+  }
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -35,19 +56,22 @@ export function KanbanBoard({ sessionId }: KanbanBoardProps) {
     const action = actions.find((a) => a.id === actionId)
     if (!action) return
 
-    // Check if dropped on a column
     const targetColumn = columns.find((c) => c.id === over.id)
     if (targetColumn && targetColumn.id !== action.status) {
       await updateActionStatus(actionId, targetColumn.id)
       return
     }
 
-    // Check if dropped on another card - get that card's status
     const targetAction = actions.find((a) => a.id === over.id)
     if (targetAction && targetAction.status !== action.status) {
       await updateActionStatus(actionId, targetAction.status)
     }
   }
+
+  const modalParticipants = participants.map((p) => ({
+    user_id: p.user_id,
+    name: p.profiles?.name || 'Utente',
+  }))
 
   return (
     <div className="space-y-6">
@@ -65,10 +89,24 @@ export function KanbanBoard({ sessionId }: KanbanBoardProps) {
               title={col.title}
               actions={actions.filter((a) => a.status === col.id)}
               color={col.color}
+              onEditAction={(action) => canEditAction(action) && setEditingAction(action)}
+              canEditAction={canEditAction}
             />
           ))}
         </div>
       </DndContext>
+
+      {editingAction && (
+        <ActionEditModal
+          action={editingAction}
+          participants={modalParticipants}
+          canEdit={canEditAction(editingAction)}
+          canDelete={canDeleteAction(editingAction)}
+          onSave={updateAction}
+          onDelete={deleteAction}
+          onClose={() => setEditingAction(null)}
+        />
+      )}
     </div>
   )
 }

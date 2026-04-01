@@ -6,6 +6,7 @@ import type { Action } from '@/types/database'
 export type ActionWithSession = Action & {
   sessionTitle: string
   assigneeName: string | null
+  assigneeNames: string[]
 }
 
 export function useGlobalActions() {
@@ -45,14 +46,14 @@ export function useGlobalActions() {
     const sessions = sessionsRes.data || []
     const rawActions = actionsRes.data || []
 
-    // 3. Fetch assignee profiles
-    const assigneeIds = [...new Set(rawActions.map((a) => a.assigned_to).filter(Boolean))] as string[]
+    // 3. Fetch assignee profiles from assigned_to_multi
+    const allAssigneeIds = [...new Set(rawActions.flatMap((a) => a.assigned_to_multi || []))]
     let profileMap = new Map<string, string>()
-    if (assigneeIds.length > 0) {
+    if (allAssigneeIds.length > 0) {
       const { data: profiles } = await supabase
         .from('profiles')
         .select('id, name')
-        .in('id', assigneeIds)
+        .in('id', allAssigneeIds)
       if (profiles) {
         profileMap = new Map(profiles.map((p) => [p.id, p.name]))
       }
@@ -60,11 +61,16 @@ export function useGlobalActions() {
 
     const sessionMap = new Map(sessions.map((s) => [s.id, s.title]))
 
-    const enriched: ActionWithSession[] = rawActions.map((action) => ({
-      ...action,
-      sessionTitle: sessionMap.get(action.session_id) || 'Sessione sconosciuta',
-      assigneeName: (action.assigned_to && profileMap.get(action.assigned_to)) || null,
-    }))
+    const enriched: ActionWithSession[] = rawActions.map((action) => {
+      const multi = action.assigned_to_multi || []
+      const names = multi.map((id: string) => profileMap.get(id)).filter(Boolean) as string[]
+      return {
+        ...action,
+        sessionTitle: sessionMap.get(action.session_id) || 'Sessione sconosciuta',
+        assigneeName: names[0] || null,
+        assigneeNames: names,
+      }
+    })
 
     setActions(enriched)
     setLoading(false)
@@ -88,5 +94,17 @@ export function useGlobalActions() {
     )
   }
 
-  return { actions, loading, updateActionStatus, refetch: fetchGlobalActions }
+  const updateAction = async (actionId: string, updates: Partial<Action>) => {
+    const { error } = await supabase.from('actions').update(updates).eq('id', actionId)
+    if (error) console.error('updateAction failed:', error)
+    else await fetchGlobalActions()
+  }
+
+  const deleteAction = async (actionId: string) => {
+    const { error } = await supabase.from('actions').delete().eq('id', actionId)
+    if (error) console.error('deleteAction failed:', error)
+    else await fetchGlobalActions()
+  }
+
+  return { actions, loading, updateActionStatus, updateAction, deleteAction, refetch: fetchGlobalActions }
 }

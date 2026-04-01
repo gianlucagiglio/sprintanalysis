@@ -8,9 +8,11 @@ interface KanbanColumnProps {
   title: string
   actions: Action[]
   color: string
+  onEditAction?: (action: Action) => void
+  canEditAction?: (action: Action) => boolean
 }
 
-export function KanbanColumn({ id, title, actions, color }: KanbanColumnProps) {
+export function KanbanColumn({ id, title, actions, color, onEditAction, canEditAction }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id })
 
   return (
@@ -28,7 +30,12 @@ export function KanbanColumn({ id, title, actions, color }: KanbanColumnProps) {
       <SortableContext items={actions.map((a) => a.id)} strategy={verticalListSortingStrategy}>
         <div className="flex-1 space-y-2">
           {actions.map((action) => (
-            <KanbanCard key={action.id} action={action} />
+            <KanbanCard
+              key={action.id}
+              action={action}
+              onEdit={onEditAction}
+              canEdit={canEditAction?.(action)}
+            />
           ))}
         </div>
       </SortableContext>

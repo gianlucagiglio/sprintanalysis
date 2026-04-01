@@ -13,7 +13,9 @@
       "Bash(powershell -Command:*)",
       "Bash(npm run dev:*)",
       "Bash(npm run build:*)",
-      "Bash(npx serve:*)"
+      "Bash(npx serve:*)",
+      "Bash(code:*)",
+      "Bash(dir:*)"
     ]
   }
 }

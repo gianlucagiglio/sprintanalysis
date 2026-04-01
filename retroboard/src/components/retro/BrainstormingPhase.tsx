@@ -23,6 +23,7 @@ import {
   User,
   Calendar,
   Layers,
+  X,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Comment } from '@/types/database'
@@ -87,7 +88,7 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
   // Modal state
   const [modalComment, setModalComment] = useState<Comment | null>(null)
   const [actionText, setActionText] = useState('')
-  const [actionAssignee, setActionAssignee] = useState('')
+  const [actionAssignees, setActionAssignees] = useState<string[]>([])
   const [actionDeadline, setActionDeadline] = useState('')
 
   const parentComments = comments.filter((c) => !c.group_id)
@@ -115,21 +116,27 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
   const openActionModal = (comment: Comment) => {
     setModalComment(comment)
     setActionText('')
-    setActionAssignee('')
+    setActionAssignees([])
     setActionDeadline('')
   }
 
   const closeActionModal = () => {
     setModalComment(null)
     setActionText('')
-    setActionAssignee('')
+    setActionAssignees([])
     setActionDeadline('')
   }
 
   const handleCreateAction = async () => {
     if (!actionText.trim() || !modalComment) return
-    await addAction(actionText.trim(), actionAssignee || undefined, actionDeadline || undefined, modalComment.id)
+    await addAction(actionText.trim(), actionAssignees, actionDeadline || undefined, modalComment.id)
     closeActionModal()
+  }
+
+  const toggleActionAssignee = (userId: string) => {
+    setActionAssignees((prev) =>
+      prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
+    )
   }
 
   const toggleColumn = (status: DiscussionStatus) => {
@@ -439,25 +446,43 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
                   }
                 }}
               />
-              <div className="flex gap-3">
-                <div className="flex-1 space-y-1">
+              <div className="space-y-3">
+                <div className="space-y-1">
                   <div className="flex items-center gap-1 text-xs font-medium text-retro-text-secondary">
-                    <User size={11} /> Assegnato a
+                    <User size={11} /> Assegnatari
                   </div>
+                  {actionAssignees.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-2">
+                      {actionAssignees.map((id) => {
+                        const p = participants.find((pp) => pp.user_id === id)
+                        return (
+                          <span
+                            key={id}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700"
+                          >
+                            {p?.profiles?.name || 'Utente'}
+                            <button onClick={() => toggleActionAssignee(id)} className="hover:text-indigo-900">
+                              <X size={12} />
+                            </button>
+                          </span>
+                        )
+                      })}
+                    </div>
+                  )}
                   <select
-                    value={actionAssignee}
-                    onChange={(e) => setActionAssignee(e.target.value)}
+                    value=""
+                    onChange={(e) => { if (e.target.value) toggleActionAssignee(e.target.value) }}
                     className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-retro-text transition-all focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10"
                   >
-                    <option value="">Nessuno</option>
-                    {participants.map((p) => (
+                    <option value="">Aggiungi assegnatario...</option>
+                    {participants.filter((p) => !actionAssignees.includes(p.user_id)).map((p) => (
                       <option key={p.user_id} value={p.user_id}>
                         {p.profiles?.name || 'Utente'}
                       </option>
                     ))}
                   </select>
                 </div>
-                <div className="flex-1 space-y-1">
+                <div className="space-y-1">
                   <div className="flex items-center gap-1 text-xs font-medium text-retro-text-secondary">
                     <Calendar size={11} /> Scadenza
                   </div>

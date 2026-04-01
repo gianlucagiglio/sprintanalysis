@@ -41,12 +41,13 @@ export function useActions(sessionId: string | undefined) {
     return () => clearInterval(interval)
   }, [sessionId, fetchActions])
 
-  const addAction = async (text: string, assignedTo?: string, deadline?: string, commentId?: string) => {
+  const addAction = async (text: string, assignedTo: string[], deadline?: string, commentId?: string) => {
     if (!sessionId) return
     const { error } = await supabase.from('actions').insert({
       session_id: sessionId,
       text,
-      assigned_to: assignedTo || null,
+      assigned_to: assignedTo[0] || null,
+      assigned_to_multi: assignedTo,
       deadline: deadline || null,
       comment_id: commentId || null,
     })
