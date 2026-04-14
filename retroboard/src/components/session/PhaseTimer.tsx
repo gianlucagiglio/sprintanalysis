@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Timer, Square, Play } from 'lucide-react'
+import { Timer, Square, Play, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -27,23 +27,12 @@ function formatTime(totalSeconds: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
-function getTimerColor(remaining: number): string {
-  if (remaining <= 15) return 'text-red-500'
-  if (remaining <= 60) return 'text-amber-500'
-  return 'text-emerald-500'
-}
-
-function getTimerBg(remaining: number): string {
-  if (remaining <= 15) return 'bg-red-50 border-red-200'
-  if (remaining <= 60) return 'bg-amber-50 border-amber-200'
-  return 'bg-emerald-50 border-emerald-200'
-}
-
 export function PhaseTimer({ isOrganizer, timerDuration, timerStartedAt, onStart, onStop, onExpired }: PhaseTimerProps) {
   const [remaining, setRemaining] = useState(0)
   const [showPopover, setShowPopover] = useState(false)
   const [customMinutes, setCustomMinutes] = useState('')
   const [popoverPos, setPopoverPos] = useState({ top: 0, left: 0 })
+  const [showExpired, setShowExpired] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const popoverRef = useRef<HTMLDivElement>(null)
   const expiredRef = useRef(false)
@@ -61,6 +50,7 @@ export function PhaseTimer({ isOrganizer, timerDuration, timerStartedAt, onStart
     if (!isActive) {
       setRemaining(0)
       expiredRef.current = false
+      setShowExpired(false)
       return
     }
 
@@ -72,7 +62,10 @@ export function PhaseTimer({ isOrganizer, timerDuration, timerStartedAt, onStart
       setRemaining(r)
       if (r <= 0 && !expiredRef.current) {
         expiredRef.current = true
+        setShowExpired(true)
         onExpired()
+        // Hide "Tempo scaduto" after 3 seconds
+        setTimeout(() => setShowExpired(false), 3000)
       }
     }, 1000)
 
@@ -125,21 +118,110 @@ export function PhaseTimer({ isOrganizer, timerDuration, timerStartedAt, onStart
     }
   }
 
-  // Timer attivo: mostra countdown
+  // Timer attivo: mostra countdown flottante + pulsante stop
   if (isActive && remaining >= 0) {
     const shouldPulse = remaining <= 10 && remaining > 0
+    const isLowTime = remaining <= 60
+    const isCritical = remaining <= 15
 
     return (
-      <div className="flex items-center gap-2">
-        <motion.div
-          animate={shouldPulse ? { scale: [1, 1.05, 1] } : {}}
-          transition={shouldPulse ? { duration: 1, repeat: Infinity } : {}}
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-sm font-mono font-semibold transition-colors ${getTimerBg(remaining)} ${getTimerColor(remaining)}`}
-        >
-          <Timer size={14} />
-          {formatTime(remaining)}
-        </motion.div>
+      <>
+        {/* Floating countdown at top center */}
+        {createPortal(
+          <AnimatePresence>
+            {!showExpired && remaining > 0 && (
+              <motion.div
+                initial={{ y: -100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -100, opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                className="fixed top-6 left-1/2 -translate-x-1/2 z-[100]"
+              >
+                <motion.div
+                  animate={shouldPulse ? { scale: [1, 1.08, 1] } : {}}
+                  transition={shouldPulse ? { duration: 0.8, repeat: Infinity, ease: 'easeInOut' } : {}}
+                  className={`
+                    relative px-8 py-4 rounded-3xl shadow-2xl backdrop-blur-sm border-2 transition-all duration-300
+                    ${isCritical
+                      ? 'bg-gradient-to-br from-red-50/95 to-rose-100/95 border-red-300'
+                      : isLowTime
+                        ? 'bg-gradient-to-br from-amber-50/95 to-orange-100/95 border-amber-300'
+                        : 'bg-gradient-to-br from-emerald-50/95 to-teal-100/95 border-emerald-300'
+                    }
+                  `}
+                >
+                  <div className="flex items-center gap-4">
+                    <motion.div
+                      animate={shouldPulse ? { rotate: [0, 10, -10, 0] } : {}}
+                      transition={shouldPulse ? { duration: 0.8, repeat: Infinity } : {}}
+                      className={`${isCritical ? 'text-red-600' : isLowTime ? 'text-amber-600' : 'text-emerald-600'}`}
+                    >
+                      <Clock size={32} strokeWidth={2.5} />
+                    </motion.div>
+                    <div className="text-center">
+                      <div className={`
+                        text-5xl font-bold font-mono tracking-tight
+                        ${isCritical ? 'text-red-600' : isLowTime ? 'text-amber-600' : 'text-emerald-600'}
+                      `}>
+                        {formatTime(remaining)}
+                      </div>
+                      <div className="text-xs font-medium text-retro-text-secondary uppercase tracking-wider mt-0.5">
+                        Tempo rimanente
+                      </div>
+                    </div>
+                  </div>
+                  {/* Progress bar */}
+                  <motion.div
+                    className="absolute bottom-0 left-0 h-1 rounded-b-3xl"
+                    style={{
+                      width: `${(remaining / timerDuration) * 100}%`,
+                      background: isCritical ? 'linear-gradient(90deg, #ef4444, #dc2626)'
+                                : isLowTime ? 'linear-gradient(90deg, #f59e0b, #d97706)'
+                                : 'linear-gradient(90deg, #10b981, #059669)',
+                    }}
+                    transition={{ duration: 1 }}
+                  />
+                </motion.div>
+              </motion.div>
+            )}
 
+            {/* Tempo scaduto message */}
+            {showExpired && (
+              <motion.div
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+                className="fixed inset-0 flex items-center justify-center z-[150] pointer-events-none"
+              >
+                <motion.div
+                  animate={{
+                    scale: [1, 1.05, 1],
+                    rotate: [0, 2, -2, 0]
+                  }}
+                  transition={{ duration: 0.5, repeat: Infinity }}
+                  className="bg-gradient-to-br from-rose-500 to-red-600 text-white px-12 py-8 rounded-3xl shadow-2xl border-4 border-white"
+                >
+                  <div className="text-center">
+                    <motion.div
+                      animate={{ rotate: [0, 360] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                      className="mx-auto mb-3"
+                    >
+                      <Timer size={48} strokeWidth={2.5} />
+                    </motion.div>
+                    <div className="text-4xl font-bold uppercase tracking-wide">
+                      Tempo scaduto!
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
+
+        {/* Stop button for organizer (in navbar area) */}
         {isOrganizer && (
           <button
             onClick={onStop}
@@ -149,7 +231,7 @@ export function PhaseTimer({ isOrganizer, timerDuration, timerStartedAt, onStart
             <Square size={14} />
           </button>
         )}
-      </div>
+      </>
     )
   }
 
