@@ -9,6 +9,7 @@ import { VotingPhase } from '@/components/retro/VotingPhase'
 import { GroupingPhase } from '@/components/retro/GroupingPhase'
 import { BrainstormingPhase } from '@/components/retro/BrainstormingPhase'
 
+import { PhaseTimer } from '@/components/session/PhaseTimer'
 import { KanbanBoard } from '@/components/kanban/KanbanBoard'
 import { Badge } from '@/components/ui/Badge'
 import {
@@ -22,9 +23,10 @@ import {
   PartyPopper,
   Users,
   Check,
+  Timer,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 
 interface SessionWizardProps {
@@ -38,15 +40,21 @@ const retroPhaseLabels: Record<string, string> = {
   brainstorming: 'Brainstorming',
 }
 
-const retroPhaseOrder = ['comments', 'voting', 'grouping', 'brainstorming'] as const
+const retroPhaseOrder = ['comments', 'grouping', 'voting', 'brainstorming'] as const
 
 export function SessionWizard({ sessionId }: SessionWizardProps) {
-  const { session, isOrganizer, advanceStep, goToStep, setRetroPhase, revealRetro, markDone, resetDone, closeSession } =
+  const { session, isOrganizer, advanceStep, goToStep, setRetroPhase, revealRetro, markDone, resetDone, closeSession, startPhaseTimer, stopPhaseTimer } =
     useSession(sessionId)
   const { isDone, doneCount, totalParticipants, allDone, participants } = useParticipants()
   const [copied, setCopied] = useState(false)
   const [showParticipantList, setShowParticipantList] = useState(false)
+  const [showTimerExpired, setShowTimerExpired] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
+
+  const onTimerExpired = useCallback(() => {
+    setShowTimerExpired(true)
+    setTimeout(() => setShowTimerExpired(false), 5000)
+  }, [])
 
   // Close popover on outside click
   useEffect(() => {
@@ -161,6 +169,17 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
               )}
             </div>
           ))}
+          <div className="ml-auto shrink-0">
+            <PhaseTimer
+              sessionId={sessionId}
+              isOrganizer={isOrganizer}
+              timerDuration={session.phase_timer_duration}
+              timerStartedAt={session.phase_timer_started_at}
+              onStart={startPhaseTimer}
+              onStop={stopPhaseTimer}
+              onExpired={onTimerExpired}
+            />
+          </div>
         </div>
       )}
 
@@ -177,6 +196,25 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
             >
               <PartyPopper size={18} className="shrink-0" />
               <span className="text-sm font-medium">Tutti pronti! Avanza allo step successivo.</span>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+
+      {/* Toast "Tempo scaduto!" — portal to body */}
+      {createPortal(
+        <AnimatePresence>
+          {showTimerExpired && (
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 40 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="fixed top-16 right-4 z-[100] flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-red-400 to-orange-500 text-white px-4 py-3 shadow-lg max-w-xs"
+            >
+              <Timer size={18} className="shrink-0" />
+              <span className="text-sm font-medium">Tempo scaduto!</span>
             </motion.div>
           )}
         </AnimatePresence>,
@@ -310,7 +348,7 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
                 <ChevronLeft size={14} /> Torna alla retro
               </Button>
             )}
-            {currentStep === 3 && (session.retro_phase === 'comments' || session.retro_phase === 'voting') && !session.retro_revealed && (
+            {currentStep === 3 && (session.retro_phase === 'comments' || session.retro_phase === 'grouping') && !session.retro_revealed && (
               <Button size="sm" variant="secondary" onClick={revealRetro}>
                 <Eye size={14} /> Mostra risultati
               </Button>

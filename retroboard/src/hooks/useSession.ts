@@ -142,10 +142,10 @@ export function useSession(sessionId: string | undefined) {
     const nextStep = Math.min(session.current_step + 1, 4)
     const prevStep = session.current_step
     const prevPhase = session.retro_phase
-    updateSession({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, quiz_current_index: -1 })
+    updateSession({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, quiz_current_index: -1, phase_timer_duration: 0, phase_timer_started_at: null })
     const { error } = await supabase
       .from('sessions')
-      .update({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, quiz_current_index: -1 })
+      .update({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, quiz_current_index: -1, phase_timer_duration: 0, phase_timer_started_at: null })
       .eq('id', session.id)
     if (error) {
       console.error('advanceStep failed:', error)
@@ -157,12 +157,12 @@ export function useSession(sessionId: string | undefined) {
     if (!session || session.organizer_id !== user?.id) return
     const prevPhase = session.retro_phase
     const prevRevealed = session.retro_revealed
-    const needsAnonymity = phase === 'comments' || phase === 'voting'
+    const needsAnonymity = phase === 'comments'
     const revealed = needsAnonymity ? false : session.retro_revealed
-    updateSession({ retro_phase: phase, retro_revealed: revealed })
+    updateSession({ retro_phase: phase, retro_revealed: revealed, phase_timer_duration: 0, phase_timer_started_at: null })
     const { error } = await supabase
       .from('sessions')
-      .update({ retro_phase: phase, retro_revealed: revealed })
+      .update({ retro_phase: phase, retro_revealed: revealed, phase_timer_duration: 0, phase_timer_started_at: null })
       .eq('id', session.id)
     if (error) {
       console.error('setRetroPhase failed:', error)
@@ -248,6 +248,32 @@ export function useSession(sessionId: string | undefined) {
     }
   }
 
+  const startPhaseTimer = async (durationSeconds: number) => {
+    if (!session || session.organizer_id !== user?.id) return
+    const startedAt = new Date().toISOString()
+    updateSession({ phase_timer_duration: durationSeconds, phase_timer_started_at: startedAt })
+    const { error } = await supabase
+      .from('sessions')
+      .update({ phase_timer_duration: durationSeconds, phase_timer_started_at: startedAt })
+      .eq('id', session.id)
+    if (error) {
+      console.error('startPhaseTimer failed:', error)
+      updateSession({ phase_timer_duration: 0, phase_timer_started_at: null })
+    }
+  }
+
+  const stopPhaseTimer = async () => {
+    if (!session || session.organizer_id !== user?.id) return
+    updateSession({ phase_timer_duration: 0, phase_timer_started_at: null })
+    const { error } = await supabase
+      .from('sessions')
+      .update({ phase_timer_duration: 0, phase_timer_started_at: null })
+      .eq('id', session.id)
+    if (error) {
+      console.error('stopPhaseTimer failed:', error)
+    }
+  }
+
   const closeSession = async () => {
     if (!session || session.organizer_id !== user?.id) return
     updateSession({ current_step: 5 })
@@ -275,6 +301,8 @@ export function useSession(sessionId: string | undefined) {
     markDone,
     resetDone,
     closeSession,
+    startPhaseTimer,
+    stopPhaseTimer,
     fetchSession,
     fetchParticipants,
   }
