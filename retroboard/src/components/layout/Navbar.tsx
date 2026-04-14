@@ -1,7 +1,7 @@
 import { useAuthStore } from '@/stores/authStore'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
-import { LayoutDashboard, LogOut, BarChart3, ListTodo, UsersRound, Trophy } from 'lucide-react'
+import { LayoutDashboard, LogOut, BarChart3, ListTodo, UsersRound, Trophy, Sparkles } from 'lucide-react'
 import packageJson from '../../../package.json'
 
 const navItems = [
@@ -31,18 +31,25 @@ export function Navbar() {
       {/* Desktop top navbar */}
       <nav className="h-14 md:h-16 border-b border-slate-200/60 bg-white/80 backdrop-blur-lg flex items-center justify-between px-3 md:px-6 sticky top-0 z-40">
         <div className="flex items-center gap-4 md:gap-8">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-1.5 md:gap-2 font-bold text-base md:text-lg"
-          >
-            <span className="text-lg md:text-xl">🔄</span>
-            <span className="bg-gradient-to-r from-retro-primary to-violet-500 bg-clip-text text-transparent">
-              RetroBoard
-            </span>
-            <span className="text-[10px] font-medium text-retro-text-secondary bg-slate-100 rounded-full px-1.5 py-0.5">
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="flex items-center gap-1.5 md:gap-2 font-bold text-base md:text-lg"
+            >
+              <span className="text-lg md:text-xl">🔄</span>
+              <span className="bg-gradient-to-r from-retro-primary to-violet-500 bg-clip-text text-transparent">
+                RetroBoard
+              </span>
+            </button>
+            <button
+              onClick={() => navigate('/changelog')}
+              className="group flex items-center gap-1 text-[10px] font-medium text-retro-text-secondary bg-slate-100 hover:bg-retro-primary-light hover:text-retro-primary rounded-full px-1.5 py-0.5 transition-all"
+              title="Changelog"
+            >
+              <Sparkles size={10} className="group-hover:animate-pulse" />
               v{packageJson.version}
-            </span>
-          </button>
+            </button>
+          </div>
           {/* Desktop nav links */}
           {user && (
             <div className="hidden md:flex items-center gap-1">

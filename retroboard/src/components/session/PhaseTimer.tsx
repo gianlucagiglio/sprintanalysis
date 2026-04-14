@@ -31,6 +31,7 @@ export function PhaseTimer({ isOrganizer, timerDuration, timerStartedAt, onStart
   const [remaining, setRemaining] = useState(0)
   const [showPopover, setShowPopover] = useState(false)
   const [customMinutes, setCustomMinutes] = useState('')
+  const [customSeconds, setCustomSeconds] = useState('')
   const [popoverPos, setPopoverPos] = useState({ top: 0, left: 0 })
   const [showExpired, setShowExpired] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -110,11 +111,14 @@ export function PhaseTimer({ isOrganizer, timerDuration, timerStartedAt, onStart
   }
 
   const handleStartCustom = () => {
-    const mins = parseInt(customMinutes, 10)
-    if (mins > 0 && mins <= 120) {
-      onStart(mins * 60)
+    const mins = parseInt(customMinutes, 10) || 0
+    const secs = parseInt(customSeconds, 10) || 0
+    const totalSeconds = mins * 60 + secs
+    if (totalSeconds > 0 && totalSeconds <= 7200) { // max 2 hours
+      onStart(totalSeconds)
       setShowPopover(false)
       setCustomMinutes('')
+      setCustomSeconds('')
     }
   }
 
@@ -135,44 +139,44 @@ export function PhaseTimer({ isOrganizer, timerDuration, timerStartedAt, onStart
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -100, opacity: 0 }}
                 transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-                className="fixed top-6 left-1/2 -translate-x-1/2 z-[100]"
+                className="fixed top-5 left-1/2 -translate-x-1/2 z-[100]"
               >
                 <motion.div
-                  animate={shouldPulse ? { scale: [1, 1.08, 1] } : {}}
+                  animate={shouldPulse ? { scale: [1, 1.06, 1] } : {}}
                   transition={shouldPulse ? { duration: 0.8, repeat: Infinity, ease: 'easeInOut' } : {}}
                   className={`
-                    relative px-8 py-4 rounded-3xl shadow-2xl backdrop-blur-sm border-2 transition-all duration-300
+                    relative px-6 py-3 rounded-2xl shadow-xl backdrop-blur-md border-2 transition-all duration-300
                     ${isCritical
-                      ? 'bg-gradient-to-br from-red-50/95 to-rose-100/95 border-red-300'
+                      ? 'bg-gradient-to-br from-red-50/95 to-rose-100/95 border-red-400 shadow-red-200/50'
                       : isLowTime
-                        ? 'bg-gradient-to-br from-amber-50/95 to-orange-100/95 border-amber-300'
-                        : 'bg-gradient-to-br from-emerald-50/95 to-teal-100/95 border-emerald-300'
+                        ? 'bg-gradient-to-br from-amber-50/95 to-orange-100/95 border-amber-400 shadow-amber-200/50'
+                        : 'bg-gradient-to-br from-emerald-50/95 to-teal-100/95 border-emerald-400 shadow-emerald-200/50'
                     }
                   `}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
                     <motion.div
-                      animate={shouldPulse ? { rotate: [0, 10, -10, 0] } : {}}
+                      animate={shouldPulse ? { rotate: [0, 8, -8, 0] } : {}}
                       transition={shouldPulse ? { duration: 0.8, repeat: Infinity } : {}}
                       className={`${isCritical ? 'text-red-600' : isLowTime ? 'text-amber-600' : 'text-emerald-600'}`}
                     >
-                      <Clock size={32} strokeWidth={2.5} />
+                      <Clock size={26} strokeWidth={2.5} />
                     </motion.div>
                     <div className="text-center">
                       <div className={`
-                        text-5xl font-bold font-mono tracking-tight
+                        text-4xl font-bold font-mono tracking-tight leading-none
                         ${isCritical ? 'text-red-600' : isLowTime ? 'text-amber-600' : 'text-emerald-600'}
                       `}>
                         {formatTime(remaining)}
                       </div>
-                      <div className="text-xs font-medium text-retro-text-secondary uppercase tracking-wider mt-0.5">
+                      <div className="text-[10px] font-medium text-retro-text-secondary uppercase tracking-wider mt-1">
                         Tempo rimanente
                       </div>
                     </div>
                   </div>
                   {/* Progress bar */}
                   <motion.div
-                    className="absolute bottom-0 left-0 h-1 rounded-b-3xl"
+                    className="absolute bottom-0 left-0 h-1 rounded-b-2xl"
                     style={{
                       width: `${(remaining / timerDuration) * 100}%`,
                       background: isCritical ? 'linear-gradient(90deg, #ef4444, #dc2626)'
@@ -185,32 +189,23 @@ export function PhaseTimer({ isOrganizer, timerDuration, timerStartedAt, onStart
               </motion.div>
             )}
 
-            {/* Tempo scaduto message */}
+            {/* Tempo scaduto message - top right corner */}
             {showExpired && (
               <motion.div
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-                className="fixed inset-0 flex items-center justify-center z-[150] pointer-events-none"
+                initial={{ x: 100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: 100, opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                className="fixed top-5 right-5 z-[150]"
               >
                 <motion.div
-                  animate={{
-                    scale: [1, 1.05, 1],
-                    rotate: [0, 2, -2, 0]
-                  }}
-                  transition={{ duration: 0.5, repeat: Infinity }}
-                  className="bg-gradient-to-br from-rose-500 to-red-600 text-white px-12 py-8 rounded-3xl shadow-2xl border-4 border-white"
+                  animate={{ scale: [1, 1.02, 1] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                  className="bg-gradient-to-br from-rose-500 to-red-600 text-white px-5 py-3 rounded-2xl shadow-xl border-2 border-red-300"
                 >
-                  <div className="text-center">
-                    <motion.div
-                      animate={{ rotate: [0, 360] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                      className="mx-auto mb-3"
-                    >
-                      <Timer size={48} strokeWidth={2.5} />
-                    </motion.div>
-                    <div className="text-4xl font-bold uppercase tracking-wide">
+                  <div className="flex items-center gap-2">
+                    <Timer size={20} strokeWidth={2.5} />
+                    <div className="text-lg font-bold">
                       Tempo scaduto!
                     </div>
                   </div>
@@ -285,10 +280,13 @@ export function PhaseTimer({ isOrganizer, timerDuration, timerStartedAt, onStart
 
               {/* Custom */}
               <div className="border-t border-retro-border mx-3 pt-2 mt-1">
-                <div className="flex items-center gap-1.5">
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-retro-text-secondary mb-1.5">
+                  Personalizzato
+                </div>
+                <div className="flex items-center gap-1.5 mb-1.5">
                   <input
                     type="number"
-                    min={1}
+                    min={0}
                     max={120}
                     placeholder="Min"
                     value={customMinutes}
@@ -296,10 +294,26 @@ export function PhaseTimer({ isOrganizer, timerDuration, timerStartedAt, onStart
                     onKeyDown={(e) => e.key === 'Enter' && handleStartCustom()}
                     className="w-full px-2 py-1.5 text-sm rounded-lg border border-retro-border focus:outline-none focus:ring-1 focus:ring-retro-primary/50"
                   />
-                  <Button size="sm" onClick={handleStartCustom} disabled={!customMinutes || parseInt(customMinutes, 10) <= 0}>
-                    Avvia
-                  </Button>
+                  <span className="text-xs text-retro-text-secondary">:</span>
+                  <input
+                    type="number"
+                    min={0}
+                    max={59}
+                    placeholder="Sec"
+                    value={customSeconds}
+                    onChange={(e) => setCustomSeconds(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleStartCustom()}
+                    className="w-full px-2 py-1.5 text-sm rounded-lg border border-retro-border focus:outline-none focus:ring-1 focus:ring-retro-primary/50"
+                  />
                 </div>
+                <Button
+                  size="sm"
+                  onClick={handleStartCustom}
+                  disabled={!customMinutes && !customSeconds}
+                  className="w-full"
+                >
+                  Avvia
+                </Button>
               </div>
             </motion.div>
           )}

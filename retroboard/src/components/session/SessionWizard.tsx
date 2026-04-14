@@ -23,10 +23,9 @@ import {
   PartyPopper,
   Users,
   Check,
-  Timer,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 
 interface SessionWizardProps {
@@ -48,13 +47,7 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
   const { isDone, doneCount, totalParticipants, allDone, participants } = useParticipants()
   const [copied, setCopied] = useState(false)
   const [showParticipantList, setShowParticipantList] = useState(false)
-  const [showTimerExpired, setShowTimerExpired] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
-
-  const onTimerExpired = useCallback(() => {
-    setShowTimerExpired(true)
-    setTimeout(() => setShowTimerExpired(false), 5000)
-  }, [])
 
   // Close popover on outside click
   useEffect(() => {
@@ -177,7 +170,7 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
               timerStartedAt={session.phase_timer_started_at}
               onStart={startPhaseTimer}
               onStop={stopPhaseTimer}
-              onExpired={onTimerExpired}
+              onExpired={() => {}}
             />
           </div>
         </div>
@@ -202,24 +195,6 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
         document.body
       )}
 
-      {/* Toast "Tempo scaduto!" — portal to body */}
-      {createPortal(
-        <AnimatePresence>
-          {showTimerExpired && (
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 40 }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="fixed top-16 right-4 z-[100] flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-red-400 to-orange-500 text-white px-4 py-3 shadow-lg max-w-xs"
-            >
-              <Timer size={18} className="shrink-0" />
-              <span className="text-sm font-medium">Tempo scaduto!</span>
-            </motion.div>
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
 
       {/* Controls - floating action bar */}
       <div className="flex flex-wrap items-center gap-2 md:gap-3 bg-white rounded-2xl shadow-soft p-3 md:p-4">

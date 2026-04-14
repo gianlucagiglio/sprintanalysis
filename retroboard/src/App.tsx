@@ -11,6 +11,7 @@ import { LeaderboardPage } from '@/pages/LeaderboardPage'
 import { ActionsPage } from '@/pages/ActionsPage'
 import { TeamsPage } from '@/pages/TeamsPage'
 import { TeamPage } from '@/pages/TeamPage'
+import { ChangelogPage } from '@/pages/ChangelogPage'
 
 export default function App() {
   const initialize = useAuthStore((s) => s.initialize)
@@ -69,6 +70,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <TeamPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/changelog"
+          element={
+            <ProtectedRoute>
+              <ChangelogPage />
             </ProtectedRoute>
           }
         />
