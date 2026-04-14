@@ -110,5 +110,26 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
     else await fetchComments()
   }
 
-  return { comments, addComment, addReply, toggleResolved, updateDiscussionStatus, updateGroup, fetchComments }
+  const editComment = async (commentId: string, newText: string) => {
+    const { error } = await supabase.from('comments').update({ text: newText }).eq('id', commentId)
+    if (error) console.error('editComment failed:', error)
+    else await fetchComments()
+  }
+
+  const deleteComment = async (commentId: string) => {
+    // Unlink children first (set group_id = null for comments grouped under this one)
+    const { error: unlinkError } = await supabase
+      .from('comments')
+      .update({ group_id: null })
+      .eq('group_id', commentId)
+    if (unlinkError) {
+      console.error('unlinkChildren failed:', unlinkError)
+      return
+    }
+    const { error } = await supabase.from('comments').delete().eq('id', commentId)
+    if (error) console.error('deleteComment failed:', error)
+    else await fetchComments()
+  }
+
+  return { comments, addComment, addReply, toggleResolved, updateDiscussionStatus, updateGroup, editComment, deleteComment, fetchComments }
 }

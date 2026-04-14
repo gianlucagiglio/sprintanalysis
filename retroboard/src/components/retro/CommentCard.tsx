@@ -1,7 +1,8 @@
+import { useState, useRef, useEffect } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Card } from '@/components/ui/Card'
-import { GripVertical, Heart, X } from 'lucide-react'
+import { GripVertical, Heart, X, Pencil, Trash2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { Comment } from '@/types/database'
 
@@ -18,6 +19,9 @@ interface CommentCardProps {
   onUngroup?: (commentId: string) => void
   isOver?: boolean
   groupCount?: number
+  isOwn?: boolean
+  onEdit?: (commentId: string, newText: string) => void
+  onDelete?: (commentId: string) => void
 }
 
 export function CommentCard({
@@ -33,7 +37,33 @@ export function CommentCard({
   onUngroup,
   isOver,
   groupCount,
+  isOwn,
+  onEdit,
+  onDelete,
 }: CommentCardProps) {
+  const [isEditing, setIsEditing] = useState(false)
+  const [editText, setEditText] = useState(comment.text)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (isEditing) inputRef.current?.focus()
+  }, [isEditing])
+
+  const handleEditSave = () => {
+    const trimmed = editText.trim()
+    if (trimmed && trimmed !== comment.text) {
+      onEdit?.(comment.id, trimmed)
+    }
+    setIsEditing(false)
+  }
+
+  const handleEditCancel = () => {
+    setEditText(comment.text)
+    setIsEditing(false)
+  }
+
+  const canEditDelete = isOwn && !isEditing && onEdit && onDelete
+
   const {
     attributes,
     listeners,
@@ -59,7 +89,7 @@ export function CommentCard({
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
     >
-      <Card className={`!p-3 !rounded-2xl transition-all duration-200
+      <Card className={`!p-3 !rounded-2xl transition-all duration-200 group/card
         ${isDragging ? 'shadow-float rotate-1' : 'shadow-card'}
         ${isOver ? 'ring-2 ring-retro-primary/40 bg-retro-primary/5' : ''}
         ${hasChildren ? 'border-l-[3px] border-l-retro-primary' : ''}
@@ -76,7 +106,39 @@ export function CommentCard({
           )}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <p className="text-sm text-retro-text flex-1">{comment.text}</p>
+              {isEditing ? (
+                <input
+                  ref={inputRef}
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleEditSave()
+                    if (e.key === 'Escape') handleEditCancel()
+                  }}
+                  onBlur={handleEditSave}
+                  className="text-sm text-retro-text flex-1 bg-transparent border-b border-retro-primary outline-none py-0.5"
+                />
+              ) : (
+                <p className="text-sm text-retro-text flex-1">{comment.text}</p>
+              )}
+              {canEditDelete && (
+                <div className="flex items-center gap-0.5 opacity-0 group-hover/card:opacity-100 transition-opacity shrink-0">
+                  <button
+                    onClick={() => { setEditText(comment.text); setIsEditing(true) }}
+                    className="p-1 rounded text-retro-text-secondary hover:text-retro-primary hover:bg-retro-primary/10 transition-all"
+                    title="Modifica commento"
+                  >
+                    <Pencil size={12} />
+                  </button>
+                  <button
+                    onClick={() => onDelete!(comment.id)}
+                    className="p-1 rounded text-retro-text-secondary hover:text-rose-500 hover:bg-rose-50 transition-all"
+                    title="Elimina commento"
+                  >
+                    <Trash2 size={12} />
+                  </button>
+                </div>
+              )}
               {hasChildren && (
                 <span className="bg-retro-primary/10 text-retro-primary text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">
                   +{groupCount}
