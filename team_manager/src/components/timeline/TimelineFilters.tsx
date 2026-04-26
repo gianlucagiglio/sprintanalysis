@@ -32,15 +32,19 @@ export function TimelineFilters({
   selectedFeatures,
   selectedMembers,
   selectedRoles,
+  selectedTypes,
   onFeatureToggle,
   onMemberToggle,
   onRoleToggle,
+  onTypeToggle,
   onSelectAllFeatures,
   onDeselectAllFeatures,
   onSelectAllMembers,
   onDeselectAllMembers,
   onSelectAllRoles,
   onDeselectAllRoles,
+  onSelectAllTypes,
+  onDeselectAllTypes,
 }: TimelineFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [expandedSection, setExpandedSection] = useState<string | null>('features')
@@ -49,10 +53,12 @@ export function TimelineFilters({
     setExpandedSection(expandedSection === section ? null : section)
   }
 
+  const totalTypes = 2 // strategic e small_change
   const activeFiltersCount =
     (features.length - selectedFeatures.length) +
     (members.length - selectedMembers.length) +
-    (roles.length - selectedRoles.length)
+    (roles.length - selectedRoles.length) +
+    (totalTypes - selectedTypes.length)
 
   return (
     <div className="relative">
@@ -212,7 +218,7 @@ export function TimelineFilters({
               </div>
 
               {/* Roles Filter */}
-              <div>
+              <div className="border-b border-[var(--border-primary)]">
                 <button
                   onClick={() => toggleSection('roles')}
                   className="w-full p-4 flex items-center justify-between hover:bg-[var(--bg-hover)] transition-colors"
@@ -265,6 +271,80 @@ export function TimelineFilters({
 
                     <p className="text-xs text-[var(--text-tertiary)] mt-3 italic">
                       Filtrando per ruolo vengono mostrati solo i membri con quel ruolo
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Type Filter */}
+              <div>
+                <button
+                  onClick={() => toggleSection('types')}
+                  className="w-full p-4 flex items-center justify-between hover:bg-[var(--bg-hover)] transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    {expandedSection === 'types' ? (
+                      <ChevronDown size={16} />
+                    ) : (
+                      <ChevronRight size={16} />
+                    )}
+                    <span className="font-medium">Tipologia</span>
+                    <span className="text-xs text-[var(--text-tertiary)]">
+                      ({selectedTypes.length}/2)
+                    </span>
+                  </div>
+                </button>
+
+                {expandedSection === 'types' && (
+                  <div className="px-4 pb-4 space-y-2">
+                    <div className="flex gap-2 mb-3">
+                      <button
+                        onClick={onSelectAllTypes}
+                        className="text-xs text-[var(--accent-primary)] hover:underline"
+                      >
+                        Seleziona tutto
+                      </button>
+                      <span className="text-xs text-[var(--text-tertiary)]">•</span>
+                      <button
+                        onClick={onDeselectAllTypes}
+                        className="text-xs text-[var(--accent-primary)] hover:underline"
+                      >
+                        Deseleziona tutto
+                      </button>
+                    </div>
+
+                    <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-[var(--bg-hover)]">
+                      <input
+                        type="checkbox"
+                        checked={selectedTypes.includes('strategic')}
+                        onChange={() => onTypeToggle('strategic')}
+                        className="w-4 h-4 accent-[var(--accent-primary)]"
+                      />
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">🎯 Strategica</span>
+                        <span className="text-xs text-[var(--text-tertiary)]">
+                          Feature a lungo termine
+                        </span>
+                      </div>
+                    </label>
+
+                    <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-[var(--bg-hover)]">
+                      <input
+                        type="checkbox"
+                        checked={selectedTypes.includes('small_change')}
+                        onChange={() => onTypeToggle('small_change')}
+                        className="w-4 h-4 accent-[var(--accent-primary)]"
+                      />
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">🔧 Small Change</span>
+                        <span className="text-xs text-[var(--text-tertiary)]">
+                          Modifiche minori e fix
+                        </span>
+                      </div>
+                    </label>
+
+                    <p className="text-xs text-[var(--text-tertiary)] mt-3 italic">
+                      Filtra le feature per tipologia di attività
                     </p>
                   </div>
                 )}
