@@ -1,0 +1,773 @@
+# PRD — Team Resource Manager
+
+> Questo documento è il riferimento completo per costruire l'intera applicazione.
+> Claude Code deve leggere questo file integralmente prima di scrivere qualsiasi codice.
+
+---
+
+## 1. Obiettivo del Prodotto
+
+Tool web per la gestione delle risorse di un team di sviluppo su una timeline settimanale organizzata per sprint. Permette di visualizzare e pianificare quanti giorni ogni persona lavora su ogni feature, settimana per settimana, con alert automatici di sovraccarico e gestione delle ferie.
+
+---
+
+## 2. Stack Tecnologico
+
+| Layer | Tecnologia |
+|-------|-----------|
+| Frontend framework | React 18 + TypeScript |
+| Build tool | Vite |
+| Styling | Tailwind CSS v3 |
+| Backend / DB | Supabase (Postgres) |
+| Routing | React Router v6 |
+| State management | Zustand |
+| Date utility | date-fns |
+| Icons | Lucide React |
+| Notifiche/Toast | Sonner |
+
+### Setup iniziale
+
+```bash
+npm create vite@latest . -- --template react-ts
+npm install @supabase/supabase-js zustand date-fns lucide-react sonner
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+### Variabili d'ambiente
+
+Creare `.env.local` nella root:
+
+```env
+VITE_SUPABASE_URL=YOUR_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+```
+
+---
+
+## 3. Schema Database Supabase
+
+Eseguire nell'ordine nell'editor SQL di Supabase:
+
+```sql
+-- =============================================
+-- ROLES
+-- =============================================
+CREATE TABLE roles (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  color       TEXT NOT NULL DEFAULT '#6366F1', -- hex color
+  created_at  TIMESTAMPTZ DEFAULT now()
+);
+
+-- =============================================
+-- TEAM MEMBERS
+-- =============================================
+CREATE TABLE team_members (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  role_id     UUID REFERENCES roles(id) ON DELETE SET NULL,
+  created_at  TIMESTAMPTZ DEFAULT now()
+);
+
+-- =============================================
+-- SPRINTS
+-- =============================================
+CREATE TABLE sprints (
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name           TEXT NOT NULL,           -- es. "Sprint 150"
+  start_date     DATE NOT NULL,
+  duration_weeks INTEGER NOT NULL DEFAULT 2 CHECK (duration_weeks IN (1, 2, 3)),
+  created_at     TIMESTAMPTZ DEFAULT now()
+);
+
+-- =============================================
+-- FEATURES
+-- =============================================
+CREATE TABLE features (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  type        TEXT NOT NULL CHECK (type IN ('ktlo', 'small_change', 'strategic_initiative')),
+  sprint_id   UUID REFERENCES sprints(id) ON DELETE SET NULL,
+  order_index INTEGER NOT NULL DEFAULT 0,
+  created_at  TIMESTAMPTZ DEFAULT now()
+);
+
+-- =============================================
+-- ALLOCATIONS (giorni lavoro per persona/feature/settimana)
+-- =============================================
+CREATE TABLE allocations (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  feature_id      UUID NOT NULL REFERENCES features(id) ON DELETE CASCADE,
+  team_member_id  UUID NOT NULL REFERENCES team_members(id) ON DELETE CASCADE,
+  week_start      DATE NOT NULL,  -- sempre un lunedì
+  days            NUMERIC(3,1) NOT NULL DEFAULT 0
+                    CHECK (days >= 0 AND days <= 5),
+  UNIQUE (feature_id, team_member_id, week_start)
+);
+
+-- =============================================
+-- TIME OFF / FERIE (globale per persona/settimana)
+-- =============================================
+CREATE TABLE time_off (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  team_member_id  UUID NOT NULL REFERENCES team_members(id) ON DELETE CASCADE,
+  week_start      DATE NOT NULL,  -- sempre un lunedì
+  days_off        NUMERIC(3,1) NOT NULL DEFAULT 5
+                    CHECK (days_off >= 0 AND days_off <= 5),
+  UNIQUE (team_member_id, week_start)
+);
+
+-- =============================================
+-- RLS (disabilitato per semplicità, abilitare in produzione)
+-- =============================================
+ALTER TABLE roles         ENABLE ROW LEVEL SECURITY;
+ALTER TABLE team_members  ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sprints        ENABLE ROW LEVEL SECURITY;
+ALTER TABLE features       ENABLE ROW LEVEL SECURITY;
+ALTER TABLE allocations    ENABLE ROW LEVEL SECURITY;
+ALTER TABLE time_off       ENABLE ROW LEVEL SECURITY;
+
+-- Policy temporanea: accesso pubblico (per sviluppo)
+CREATE POLICY "public_all" ON roles          FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "public_all" ON team_members   FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "public_all" ON sprints         FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "public_all" ON features        FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "public_all" ON allocations     FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "public_all" ON time_off        FOR ALL USING (true) WITH CHECK (true);
+```
+
+---
+
+## 4. Struttura File del Progetto
+
+```
+src/
+├── main.tsx
+├── App.tsx
+├── index.css                        ← import Tailwind
+│
+├── lib/
+│   ├── supabase.ts                  ← client Supabase
+│   └── capacity.ts                  ← logica calcolo capacity e alert
+│
+├── types/
+│   └── index.ts                     ← tutti i tipi TypeScript dell'app
+│
+├── store/
+│   └── useAppStore.ts               ← Zustand store globale
+│
+├── hooks/
+│   ├── useTeam.ts                   ← fetch/mutate team members e roles
+│   ├── useSprints.ts                ← fetch/mutate sprint
+│   ├── useFeatures.ts               ← fetch/mutate feature
+│   └── useAllocations.ts            ← fetch/mutate allocations + time_off
+│
+└── components/
+    ├── layout/
+    │   ├── Layout.tsx               ← wrapper con sidebar + main content
+    │   └── Sidebar.tsx              ← navigazione principale
+    │
+    ├── ui/
+    │   ├── ColorPicker.tsx          ← color picker inline
+    │   ├── Badge.tsx                ← badge colorato generico
+    │   └── Modal.tsx                ← modal generico riusabile
+    │
+    ├── team/
+    │   ├── TeamView.tsx             ← pagina /team
+    │   ├── RoleList.tsx             ← lista e gestione ruoli
+    │   ├── RoleForm.tsx             ← form aggiunta/modifica ruolo
+    │   ├── MemberList.tsx           ← lista e gestione membri
+    │   └── MemberForm.tsx           ← form aggiunta/modifica membro
+    │
+    ├── sprints/
+    │   ├── SprintView.tsx           ← pagina /sprints
+    │   ├── SprintList.tsx           ← lista sprint
+    │   └── SprintForm.tsx           ← form aggiunta/modifica sprint
+    │
+    └── timeline/
+        ├── TimelineView.tsx         ← pagina / (homepage), container principale
+        ├── TimelineHeader.tsx       ← header: barra sprint + colonne settimane
+        ├── FeatureGroup.tsx         ← gruppo righe per una feature
+        ├── FeatureRow.tsx           ← riga header della feature
+        ├── MemberRow.tsx            ← riga allocazione di un membro
+        ├── TimeOffRow.tsx           ← riga ferie (ultima di ogni gruppo)
+        ├── AllocationCell.tsx       ← singola cella editabile
+        └── CapacityTooltip.tsx      ← tooltip alert capacity
+```
+
+---
+
+## 5. Tipi TypeScript (`src/types/index.ts`)
+
+```typescript
+export interface Role {
+  id: string;
+  name: string;
+  color: string;
+  created_at: string;
+}
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  role_id: string | null;
+  role?: Role;
+  created_at: string;
+}
+
+export type FeatureType = 'ktlo' | 'small_change' | 'strategic_initiative';
+
+export interface Sprint {
+  id: string;
+  name: string;
+  start_date: string;   // ISO date string (YYYY-MM-DD)
+  duration_weeks: 1 | 2 | 3;
+  created_at: string;
+}
+
+export interface Feature {
+  id: string;
+  name: string;
+  type: FeatureType;
+  sprint_id: string | null;
+  order_index: number;
+  created_at: string;
+}
+
+export interface Allocation {
+  id: string;
+  feature_id: string;
+  team_member_id: string;
+  week_start: string;   // ISO date string (YYYY-MM-DD), sempre lunedì
+  days: number;
+}
+
+export interface TimeOff {
+  id: string;
+  team_member_id: string;
+  week_start: string;   // ISO date string (YYYY-MM-DD), sempre lunedì
+  days_off: number;
+}
+
+// Utility types per la timeline
+export interface WeekColumn {
+  weekStart: string;       // ISO date (lunedì)
+  label: string;           // es. "21 Apr"
+  sprintId: string | null;
+  sprintName: string | null;
+}
+
+export interface SprintSpan {
+  sprintId: string;
+  sprintName: string;
+  startColIndex: number;
+  colSpan: number;
+}
+
+export interface CapacityInfo {
+  totalDays: number;
+  availableDays: number;
+  isOverCapacity: boolean;
+  breakdown: { featureId: string; featureName: string; days: number }[];
+}
+```
+
+---
+
+## 6. Logica Capacity (`src/lib/capacity.ts`)
+
+```typescript
+import { Allocation, TimeOff, Feature, CapacityInfo } from '../types';
+
+/**
+ * Calcola la capacity di un membro per una specifica settimana.
+ * Considera tutte le allocazioni su tutte le feature + le ferie.
+ */
+export function getCapacityInfo(
+  memberId: string,
+  weekStart: string,
+  allocations: Allocation[],
+  timeOffList: TimeOff[],
+  features: Feature[]
+): CapacityInfo {
+  // Giorni di ferie questa settimana
+  const timeOff = timeOffList.find(
+    t => t.team_member_id === memberId && t.week_start === weekStart
+  );
+  const daysOff = timeOff?.days_off ?? 0;
+  const availableDays = 5 - daysOff;
+
+  // Tutte le allocazioni di questa persona questa settimana
+  const weekAllocations = allocations.filter(
+    a => a.team_member_id === memberId && a.week_start === weekStart && a.days > 0
+  );
+
+  const totalDays = weekAllocations.reduce((sum, a) => sum + a.days, 0);
+
+  const breakdown = weekAllocations.map(a => {
+    const feature = features.find(f => f.id === a.feature_id);
+    return {
+      featureId: a.feature_id,
+      featureName: feature?.name ?? 'Feature sconosciuta',
+      days: a.days,
+    };
+  });
+
+  return {
+    totalDays,
+    availableDays,
+    isOverCapacity: totalDays > availableDays,
+    breakdown,
+  };
+}
+
+/**
+ * Genera l'elenco di settimane (lunedì) coperte dagli sprint.
+ * Se non ci sono sprint, genera le prossime 8 settimane da oggi.
+ */
+export function generateWeekColumns(sprints: import('../types').Sprint[]): import('../types').WeekColumn[] {
+  const { startOfWeek, addWeeks, format, parseISO } = require('date-fns');
+  
+  if (sprints.length === 0) {
+    const today = new Date();
+    const start = startOfWeek(today, { weekStartsOn: 1 });
+    return Array.from({ length: 8 }, (_, i) => {
+      const date = addWeeks(start, i);
+      return {
+        weekStart: format(date, 'yyyy-MM-dd'),
+        label: format(date, 'd MMM'),
+        sprintId: null,
+        sprintName: null,
+      };
+    });
+  }
+
+  const sorted = [...sprints].sort((a, b) =>
+    a.start_date.localeCompare(b.start_date)
+  );
+
+  const columns: import('../types').WeekColumn[] = [];
+
+  for (const sprint of sorted) {
+    const sprintStart = startOfWeek(parseISO(sprint.start_date), { weekStartsOn: 1 });
+    for (let w = 0; w < sprint.duration_weeks; w++) {
+      const date = addWeeks(sprintStart, w);
+      const weekStart = format(date, 'yyyy-MM-dd');
+      if (!columns.find(c => c.weekStart === weekStart)) {
+        columns.push({
+          weekStart,
+          label: format(date, 'd MMM'),
+          sprintId: sprint.id,
+          sprintName: sprint.name,
+        });
+      }
+    }
+  }
+
+  return columns;
+}
+
+/**
+ * Calcola gli SprintSpan (quante colonne occupa ogni sprint nell'header).
+ */
+export function getSprintSpans(weeks: import('../types').WeekColumn[]): import('../types').SprintSpan[] {
+  const spans: import('../types').SprintSpan[] = [];
+  let i = 0;
+  while (i < weeks.length) {
+    const week = weeks[i];
+    if (!week.sprintId) {
+      i++;
+      continue;
+    }
+    let count = 1;
+    while (
+      i + count < weeks.length &&
+      weeks[i + count].sprintId === week.sprintId
+    ) {
+      count++;
+    }
+    spans.push({
+      sprintId: week.sprintId,
+      sprintName: week.sprintName!,
+      startColIndex: i,
+      colSpan: count,
+    });
+    i += count;
+  }
+  return spans;
+}
+```
+
+---
+
+## 7. Descrizione Dettagliata delle Viste
+
+### 7.1 Layout e Navigazione
+
+**Sidebar sinistra** (collassabile su mobile):
+- Logo / titolo app: "Resource Manager"
+- Link: **Timeline** (icona: LayoutGrid), **Team** (icona: Users), **Sprint** (icona: Calendar)
+- Link attivo evidenziato
+
+**Main content**: area a destra della sidebar, scrollabile.
+
+---
+
+### 7.2 Sezione Team (`/team`)
+
+Due pannelli affiancati o in sequenza verticale:
+
+#### Pannello Ruoli
+- Titolo "Ruoli"
+- Lista ruoli: ogni riga mostra `[● colore] Nome ruolo [✏️] [🗑️]`
+- Il cerchio colorato usa il `color` del ruolo
+- Pulsante "+ Aggiungi Ruolo" → apre form inline o modal
+- **Form Ruolo**: campo `name` (text), `color` (color picker nativo HTML + anteprima)
+- Eliminare un ruolo: conferma prima di procedere
+
+#### Pannello Membri
+- Titolo "Membri del Team"
+- Lista membri: ogni riga mostra `[Badge Ruolo] Nome [✏️] [🗑️]`
+- Badge ruolo = pillola colorata con il colore del ruolo e il nome del ruolo
+- Pulsante "+ Aggiungi Membro" → form
+- **Form Membro**: campo `name` (text), `role_id` (select con i ruoli disponibili, opzione "Nessun ruolo")
+- Eliminare membro: conferma prima
+
+---
+
+### 7.3 Sezione Sprint (`/sprints`)
+
+- Titolo "Sprint"
+- Lista sprint in ordine cronologico (per `start_date`)
+- Ogni riga: `Nome sprint | Data inizio → Data fine (calcolata) | N settimane | [✏️] [🗑️]`
+- Data fine = `start_date + duration_weeks * 7 - 1` giorni
+- Pulsante "+ Aggiungi Sprint" → form
+- **Form Sprint**:
+  - `name`: text (es. "Sprint 150")
+  - `start_date`: date picker
+  - `duration_weeks`: select con opzioni 1, 2, 3 (default 2)
+- Preview: "Questo sprint va dal [data inizio] al [data fine calcolata]"
+
+---
+
+### 7.4 Vista Timeline (`/`)
+
+È la vista principale. Struttura ad HTML table o CSS grid.
+
+#### Header (sticky top)
+
+**Riga 1 — Sprint bar:**
+```
+| [col sticky vuota]  | ← Sprint 150 (2 settimane) → | ← Sprint 151 (2 sett.) → |
+```
+- Ogni sprint occupa N celle (N = duration_weeks)
+- Sprint alternati: bg `#F1F5F9` / `#E2E8F0` (slate-100 / slate-200)
+- Nome sprint centrato in grassetto, border-radius sui lati esterni
+- Settimane senza sprint: cella grigia con label "—"
+
+**Riga 2 — Settimane:**
+```
+| [col sticky vuota]  | 14 Apr | 21 Apr | 28 Apr | 5 Mag | 12 Mag |
+```
+- Label = giorno e mese del lunedì
+- bg leggermente diverso per distinguere
+
+#### Colonna sticky sinistra
+
+Larghezza fissa ~220px, sticky left. Contiene:
+- Nome feature (nelle righe header feature)
+- Nome membro (nelle righe membro)
+- Label "🏖️ Ferie" (nelle righe ferie)
+
+#### Corpo — Feature Groups
+
+Per ogni feature, un gruppo di righe:
+
+**Riga 1 — Header Feature:**
+- Colonna sinistra: `[■ tipo-color] Nome Feature [badge tipo] [▼/▶] [🗑️]`
+  - Badge tipo: `KTLO` (rosso), `Small Change` (blu), `Strategic Initiative` (viola)
+  - Freccia per collassare/espandere il gruppo
+- Celle settimana: vuote, bg colorato tenue (colore del tipo, molto chiaro)
+
+**Righe 2..N — Membro:**
+- Colonna sinistra: `[● role-color] Nome Membro`
+- Celle settimana: **AllocationCell** (vedi sotto)
+
+**Ultima riga — Ferie (sempre visibile anche se il gruppo è collassato):**
+
+> ⚠️ La riga Ferie NON viene collassata con il gruppo feature. Rimane sempre visibile.
+> I dati ferie sono globali (tabella `time_off`), non per feature. La riga ferie mostra tutte le persone del team.
+> Modificare i giorni di ferie in qualsiasi feature group aggiorna lo stesso record in `time_off`.
+
+- Colonna sinistra: `🏖️ Ferie`
+- Sotto ogni membro: una cella ferie per settimana
+- Struttura: sub-righe per membro, ognuna con `[● role-color] Nome` a sinistra e celle ferie a destra
+- Celle ferie: stesso meccanismo edit di AllocationCell (0–5, step 0.5)
+- Se `days_off > 0`: cella con bg arancio molto chiaro `#FFF7ED`, testo arancio
+
+**In fondo alla lista feature:**
+- Pulsante "+ Aggiungi Feature" (centrato o a sinistra)
+- Click → modal
+
+**Modal Aggiungi Feature:**
+- `name`: text input
+- `type`: select/radio con tre opzioni visive:
+  - 🔴 KTLO
+  - 🔵 Small Change
+  - 🟣 Strategic Initiative
+- `sprint_id`: select opzionale "Associa a uno sprint" (lista sprint disponibili)
+- Tasto "Crea Feature"
+
+---
+
+#### AllocationCell (`src/components/timeline/AllocationCell.tsx`)
+
+Comportamento:
+- **Default**: mostra valore numerico (es. "3", "0.5") o vuoto se 0
+- **Click**: entra in modalità edit → `<input type="number" min="0" max="5" step="0.5">`
+- Input è autoselezionato (select all) all'apertura
+- **Enter / Tab / click fuori**: salva (upsert su Supabase)
+- **Escape**: annulla, ripristina valore precedente
+- **Saving**: breve stato di loading (opacità ridotta)
+
+Stili:
+- Cella normale: `w-16 h-9 text-center text-sm`
+- Con valore > 0: testo scuro, bg bianco
+- Con valore 0: testo grigio chiaro, bg grigio chiarissimo
+- In edit: bordo blu, ombra
+- **In sovraccarico** (isOverCapacity = true per quel membro in quella settimana):
+  - bg `#FEE2E2` (red-100)
+  - testo `#DC2626` (red-600)
+  - bordo rosso sottile
+  - icona `⚠️` affiancata al numero
+
+---
+
+#### CapacityTooltip (`src/components/timeline/CapacityTooltip.tsx`)
+
+Appare on hover sulle celle in sovraccarico:
+
+```
+┌─────────────────────────────────┐
+│ ⚠️ Capacità superata            │
+│ Mario Rossi — Sett. 21 Apr      │
+│                                 │
+│ Feature Alpha        3g         │
+│ Feature Beta         3g         │
+│ ─────────────────────           │
+│ Totale:              6g         │
+│ Disponibili:         5g ← ferie │
+│                                 │
+│ Eccedenza:          +1g         │
+└─────────────────────────────────┘
+```
+
+- Posizionamento: sopra/sotto la cella in base allo spazio disponibile
+- Implementare con Floating UI o posizionamento CSS manuale
+
+---
+
+## 8. Comportamenti e Regole di Business
+
+### Calcolo capacity
+
+Per ogni `(team_member_id, week_start)`:
+
+```
+giorni_disponibili = 5 - time_off.days_off   (default 5 se nessuna ferie)
+giorni_allocati    = SUM(allocations.days WHERE team_member_id AND week_start)
+
+sovraccapacity = giorni_allocati > giorni_disponibili
+```
+
+Il calcolo avviene **lato client** aggregando i dati già in memoria.
+
+### Alert ferie
+
+Quando si inseriscono ferie per una settimana, se la persona ha già allocazioni in quella settimana, ricalcolare immediatamente il capacity check → eventuali celle diventano rosse.
+
+### Sincronizzazione ferie
+
+Le righe ferie in ogni feature group mostrano gli stessi dati (da `time_off`). Modificare il valore in un punto aggiorna il singolo record `time_off` — le altre righe ferie si aggiornano di conseguenza tramite lo store Zustand.
+
+### Ordine feature
+
+Le feature vengono mostrate per `order_index ASC`. Non serve drag-and-drop per ora (v1).
+
+### Settimane visualizzate
+
+Le settimane in timeline = unione di tutte le settimane coperte dagli sprint, in ordine cronologico. Se non ci sono sprint, mostrare le 8 settimane correnti.
+
+---
+
+## 9. Design System e Stile
+
+### Palette colori base
+
+```css
+:root {
+  --color-bg:          #F8FAFC;    /* sfondo app */
+  --color-surface:     #FFFFFF;    /* card, panel */
+  --color-border:      #E2E8F0;    /* bordi */
+  --color-text:        #0F172A;    /* testo principale */
+  --color-muted:       #94A3B8;    /* testo secondario */
+  --color-primary:     #6366F1;    /* indigo — azioni primarie */
+  --color-danger:      #EF4444;    /* rosso — alert */
+  --color-warning:     #F59E0B;    /* arancio — attenzione */
+}
+```
+
+### Colori per tipo feature
+
+| Tipo | Accent | Background riga | Badge |
+|------|--------|-----------------|-------|
+| `ktlo` | `#EF4444` | `#FFF5F5` | `bg-red-100 text-red-700` |
+| `small_change` | `#3B82F6` | `#F0F7FF` | `bg-blue-100 text-blue-700` |
+| `strategic_initiative` | `#8B5CF6` | `#F5F3FF` | `bg-violet-100 text-violet-700` |
+
+### Tipografia
+
+- Font: **Geist Sans** (import da fontsource: `npm install @fontsource/geist-sans`) oppure **DM Sans**
+- Base: 14px
+- Header feature: 13px semibold
+- Celle: 13px
+- Labels settimana: 11px uppercase tracking-wide
+
+### Dimensioni griglia
+
+- Colonna sticky sinistra: `min-width: 220px`
+- Celle settimana: `min-width: 72px`, `height: 36px`
+- Riga header feature: `height: 44px`
+- Riga membro: `height: 36px`
+- Riga ferie: `height: 36px`
+
+### Comportamento scroll
+
+- La tabella timeline scrolla orizzontalmente dentro un container `overflow-x: auto`
+- La colonna sinistra ha `position: sticky; left: 0; z-index: 10; background: white`
+- L'header ha `position: sticky; top: 0; z-index: 20`
+
+---
+
+## 10. Hooks (reference API)
+
+### `useTeam`
+```typescript
+const { roles, members, addRole, updateRole, deleteRole,
+        addMember, updateMember, deleteMember, loading } = useTeam();
+```
+
+### `useSprints`
+```typescript
+const { sprints, addSprint, updateSprint, deleteSprint, loading } = useSprints();
+```
+
+### `useFeatures`
+```typescript
+const { features, addFeature, updateFeature, deleteFeature, loading } = useFeatures();
+```
+
+### `useAllocations`
+```typescript
+const { allocations, timeOffList, upsertAllocation, upsertTimeOff, loading } = useAllocations();
+```
+
+Tutti i hook:
+1. Fetchano i dati da Supabase al mount
+2. Aggiornano lo store Zustand locale
+3. Espongono le mutation functions che fanno upsert/delete su Supabase E aggiornano lo store locale (optimistic update)
+
+---
+
+## 11. Zustand Store (`src/store/useAppStore.ts`)
+
+```typescript
+interface AppStore {
+  // Data
+  roles: Role[];
+  members: TeamMember[];
+  sprints: Sprint[];
+  features: Feature[];
+  allocations: Allocation[];
+  timeOffList: TimeOff[];
+
+  // Setters
+  setRoles: (roles: Role[]) => void;
+  setMembers: (members: TeamMember[]) => void;
+  setSprints: (sprints: Sprint[]) => void;
+  setFeatures: (features: Feature[]) => void;
+  setAllocations: (allocations: Allocation[]) => void;
+  setTimeOffList: (list: TimeOff[]) => void;
+
+  // Granular updaters (per optimistic update)
+  upsertAllocationLocal: (allocation: Allocation) => void;
+  upsertTimeOffLocal: (timeOff: TimeOff) => void;
+
+  // UI state
+  collapsedFeatures: Set<string>;
+  toggleFeatureCollapse: (featureId: string) => void;
+}
+```
+
+---
+
+## 12. Routing (`src/App.tsx`)
+
+```tsx
+<BrowserRouter>
+  <Layout>
+    <Routes>
+      <Route path="/"        element={<TimelineView />} />
+      <Route path="/team"    element={<TeamView />} />
+      <Route path="/sprints" element={<SprintView />} />
+    </Routes>
+  </Layout>
+</BrowserRouter>
+```
+
+---
+
+## 13. Edge Cases da Gestire
+
+1. **Nessun membro nel team**: TimelineView mostra messaggio "Aggiungi prima i membri del team" con link a `/team`
+2. **Nessuno sprint**: mostrare le 8 settimane correnti, avvisare che non ci sono sprint configurati
+3. **Nessuna feature**: mostrare empty state con pulsante "Aggiungi la prima feature"
+4. **Errori Supabase**: mostrare toast di errore via Sonner, non crashare l'app
+5. **Valore allocation non valido**: validare lato client (0 ≤ days ≤ 5, step 0.5) prima di salvare
+6. **Sprint sovrapposti**: non bloccare, ma gestire le settimane duplicate (deduplicare in `generateWeekColumns`)
+7. **Membro senza ruolo**: mostrare badge grigio con testo "Nessun ruolo"
+
+---
+
+## 14. Ordine di Implementazione Consigliato
+
+1. Setup progetto (Vite + React + TypeScript + Tailwind)
+2. Setup Supabase client (`src/lib/supabase.ts`)
+3. Schema DB (eseguire SQL)
+4. Tipi TypeScript
+5. Zustand store
+6. Layout + Sidebar + Routing
+7. Sezione Team (ruoli + membri) — più semplice, valida il DB
+8. Sezione Sprint
+9. Hook `useAllocations` + logica capacity (`src/lib/capacity.ts`)
+10. Vista Timeline — header (sprint bar + settimane)
+11. Vista Timeline — feature groups + righe membro
+12. AllocationCell con editing inline
+13. Riga ferie + editing
+14. Capacity alert (colori rossi + tooltip)
+15. Polish UI, empty states, toast di errore
+16. Test end-to-end del flusso completo
+
+---
+
+## 15. Note Finali
+
+- Tutto il codice deve essere in **TypeScript strict** (no `any`)
+- Usare `async/await` con try/catch per tutte le chiamate Supabase
+- I `week_start` devono essere **sempre lunedì** — usare `startOfWeek(date, { weekStartsOn: 1 })` da date-fns
+- Gli upsert delle allocazioni usano `onConflict: 'feature_id,team_member_id,week_start'`
+- Gli upsert delle ferie usano `onConflict: 'team_member_id,week_start'`
+- **Non implementare** autenticazione in v1 (le RLS policy sono permissive)
+- **Non implementare** drag-and-drop per l'ordine feature in v1
+- **Non implementare** realtime Supabase subscriptions in v1
