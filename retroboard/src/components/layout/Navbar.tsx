@@ -13,9 +13,10 @@ const navItems = [
 ]
 
 export function Navbar() {
-  const { user, signOut } = useAuthStore()
+  const { user, signOut, isSuperAdmin } = useAuthStore()
   const navigate = useNavigate()
   const location = useLocation()
+  const isSuper = isSuperAdmin()
 
   const handleSignOut = async () => {
     try {
@@ -79,10 +80,19 @@ export function Navbar() {
         {user && (
           <div className="flex items-center gap-2 md:gap-3">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-gradient-to-br from-retro-primary to-violet-500 flex items-center justify-center text-white text-xs md:text-sm font-semibold">
+              <div className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-white text-xs md:text-sm font-semibold ${
+                isSuper ? 'bg-gradient-to-br from-amber-400 to-orange-500 ring-2 ring-amber-300' : 'bg-gradient-to-br from-retro-primary to-violet-500'
+              }`}>
                 {user.name?.charAt(0).toUpperCase() || '?'}
               </div>
-              <span className="hidden sm:inline text-sm font-medium text-retro-text">{user.name}</span>
+              <div className="hidden sm:flex flex-col items-start">
+                <span className="text-sm font-medium text-retro-text leading-tight">{user.name}</span>
+                {isSuper && (
+                  <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider leading-tight">
+                    Super Admin
+                  </span>
+                )}
+              </div>
             </div>
             <Button variant="ghost" size="sm" onClick={handleSignOut}>
               <LogOut size={16} />

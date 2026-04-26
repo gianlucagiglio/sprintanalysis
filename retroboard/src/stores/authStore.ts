@@ -5,6 +5,7 @@ import type { Profile } from '@/types/database'
 type AuthState = {
   user: Profile | null
   loading: boolean
+  isSuperAdmin: () => boolean
   initialize: () => Promise<void>
   signUp: (email: string, password: string, name: string) => Promise<void>
   signIn: (email: string, password: string) => Promise<void>
@@ -16,6 +17,11 @@ let _initialized = false
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   loading: true,
+
+  isSuperAdmin: () => {
+    const { user } = get()
+    return user?.is_super_admin === true
+  },
 
   initialize: async () => {
     // Guard: register listeners only once
@@ -101,6 +107,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         name,
         email,
         avatar_url: null,
+        is_super_admin: false,
       })
       if (profileError) {
         console.error('[Auth] Profile insert error:', profileError)
