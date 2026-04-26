@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "start": "serve -s dist -l 3000",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -17,7 +18,8 @@
     "date-fns": "^4.1.0",
     "lucide-react": "^0.468.0",
     "sonner": "^1.7.1",
-    "@supabase/supabase-js": "^2.47.10"
+    "@supabase/supabase-js": "^2.47.10",
+    "serve": "^14.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
