@@ -10,15 +10,19 @@ interface TimelineFiltersProps {
   selectedFeatures: string[]
   selectedMembers: string[]
   selectedRoles: string[]
+  selectedTypes: string[]
   onFeatureToggle: (featureId: string) => void
   onMemberToggle: (memberId: string) => void
   onRoleToggle: (roleId: string) => void
+  onTypeToggle: (type: string) => void
   onSelectAllFeatures: () => void
   onDeselectAllFeatures: () => void
   onSelectAllMembers: () => void
   onDeselectAllMembers: () => void
   onSelectAllRoles: () => void
   onDeselectAllRoles: () => void
+  onSelectAllTypes: () => void
+  onDeselectAllTypes: () => void
 }
 
 export function TimelineFilters({
