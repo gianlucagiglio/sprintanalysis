@@ -1,7 +1,6 @@
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { MemberRow } from './MemberRow'
-import { TimeOffRow } from './TimeOffRow'
 import type { Feature, TeamMember, WeekColumn, Allocation, TimeOff } from '@/types'
 
 interface FeatureGroupProps {
@@ -18,7 +17,6 @@ interface FeatureGroupProps {
     weekStart: string,
     days: number
   ) => Promise<void>
-  onTimeOffChange: (memberId: string, weekStart: string, days: number) => Promise<void>
 }
 
 export function FeatureGroup({
@@ -30,7 +28,6 @@ export function FeatureGroup({
   isCollapsed,
   onToggle,
   onAllocationChange,
-  onTimeOffChange,
 }: FeatureGroupProps) {
   const featureAllocations = allocations.filter((a) => a.feature_id === feature.id)
 
@@ -73,14 +70,6 @@ export function FeatureGroup({
               onAllocationChange={onAllocationChange}
             />
           ))}
-
-          {/* Time Off Row */}
-          <TimeOffRow
-            members={members}
-            weeks={weeks}
-            timeOffs={timeOffs}
-            onTimeOffChange={onTimeOffChange}
-          />
         </>
       )}
     </div>

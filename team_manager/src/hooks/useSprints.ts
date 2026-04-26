@@ -65,7 +65,7 @@ export function useSprints() {
   // Create multiple sprints
   const createMultipleSprints = async (sprints: Omit<Sprint, 'id' | 'created_at'>[]) => {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('sprints')
         .insert(sprints)
         .select()
@@ -73,7 +73,6 @@ export function useSprints() {
       if (error) throw error
       await fetchSprints()
       toast.success(`${sprints.length} sprint creati con successo`)
-      return data
     } catch (error) {
       console.error('Error creating multiple sprints:', error)
       toast.error('Errore creazione sprint multipli')
