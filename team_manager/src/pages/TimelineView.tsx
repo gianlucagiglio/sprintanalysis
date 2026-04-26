@@ -4,10 +4,12 @@ import { useAppStore } from '@/store/useAppStore'
 import { useTeam } from '@/hooks/useTeam'
 import { useSprints } from '@/hooks/useSprints'
 import { useAllocations } from '@/hooks/useAllocations'
+import { useKTLO } from '@/hooks/useKTLO'
 import { generateWeekColumns, getSprintSpans } from '@/lib/capacity'
 import { TimelineHeader } from '@/components/timeline/TimelineHeader'
 import { FeatureGroup } from '@/components/timeline/FeatureGroup'
 import { GlobalTimeOffRow } from '@/components/timeline/GlobalTimeOffRow'
+import { KTLORow } from '@/components/timeline/KTLORow'
 import { TimelineFilters } from '@/components/timeline/TimelineFilters'
 import { Modal } from '@/components/ui/Modal'
 import { FeatureForm } from '@/components/sprints/FeatureForm'
@@ -16,43 +18,97 @@ import type { Feature } from '@/types'
 export function TimelineView() {
   const { collapsedFeatures, toggleFeatureCollapse } = useAppStore()
   const { members, roles } = useTeam()
-  const { sprints, features, createFeature } = useSprints()
-  const { allocations, timeOffs, upsertAllocation } = useAllocations()
+  const { sprints, features, createFeature, updateFeature, deleteFeature } = useSprints()
+  const { allocations, timeOffs, upsertAllocation, upsertTimeOff } = useAllocations()
+  const { ktloAllocations, upsertKTLOAllocation } = useKTLO()
 
   const [featureModalOpen, setFeatureModalOpen] = useState(false)
+  const [editingFeature, setEditingFeature] = useState<Feature | null>(null)
 
   // Filters state
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([])
   const [selectedMembers, setSelectedMembers] = useState<string[]>([])
   const [selectedRoles, setSelectedRoles] = useState<string[]>([])
+  const [selectedTypes, setSelectedTypes] = useState<string[]>(['strategic', 'small_change'])
 
-  // Initialize filters when data loads
+  // Initialize filters when data loads and sync new features
   useEffect(() => {
-    if (features.length > 0 && selectedFeatures.length === 0) {
-      setSelectedFeatures(features.map((f) => f.id))
+    if (features.length > 0) {
+      if (selectedFeatures.length === 0) {
+        // Prima inizializzazione: seleziona tutte le feature
+        setSelectedFeatures(features.map((f) => f.id))
+      } else {
+        // Aggiungi automaticamente le nuove feature ai filtri
+        const newFeatureIds = features
+          .filter((f) => !selectedFeatures.includes(f.id))
+          .map((f) => f.id)
+
+        if (newFeatureIds.length > 0) {
+          setSelectedFeatures((prev) => [...prev, ...newFeatureIds])
+        }
+      }
     }
   }, [features])
 
   useEffect(() => {
-    if (members.length > 0 && selectedMembers.length === 0) {
-      setSelectedMembers(members.map((m) => m.id))
+    if (members.length > 0) {
+      if (selectedMembers.length === 0) {
+        setSelectedMembers(members.map((m) => m.id))
+      } else {
+        // Aggiungi automaticamente i nuovi membri ai filtri
+        const newMemberIds = members
+          .filter((m) => !selectedMembers.includes(m.id))
+          .map((m) => m.id)
+
+        if (newMemberIds.length > 0) {
+          setSelectedMembers((prev) => [...prev, ...newMemberIds])
+        }
+      }
     }
   }, [members])
 
   useEffect(() => {
-    if (roles.length > 0 && selectedRoles.length === 0) {
-      setSelectedRoles(roles.map((r) => r.id))
+    if (roles.length > 0) {
+      if (selectedRoles.length === 0) {
+        setSelectedRoles(roles.map((r) => r.id))
+      } else {
+        // Aggiungi automaticamente i nuovi ruoli ai filtri
+        const newRoleIds = roles
+          .filter((r) => !selectedRoles.includes(r.id))
+          .map((r) => r.id)
+
+        if (newRoleIds.length > 0) {
+          setSelectedRoles((prev) => [...prev, ...newRoleIds])
+        }
+      }
     }
   }, [roles])
 
   const handleFeatureSubmit = async (data: Omit<Feature, 'id' | 'created_at' | 'sprint'>) => {
-    await createFeature(data)
+    if (editingFeature) {
+      await updateFeature(editingFeature.id, data)
+    } else {
+      await createFeature(data)
+    }
+  }
+
+  const handleEditFeature = (feature: Feature) => {
+    setEditingFeature(feature)
+    setFeatureModalOpen(true)
+  }
+
+  const handleDeleteFeature = async (feature: Feature) => {
+    if (confirm(`Eliminare la feature "${feature.name}"? Verranno eliminate anche tutte le allocazioni associate.`)) {
+      await deleteFeature(feature.id)
+    }
   }
 
   // Filter logic
   const filteredFeatures = useMemo(() => {
-    return features.filter((f) => selectedFeatures.includes(f.id))
-  }, [features, selectedFeatures])
+    return features.filter(
+      (f) => selectedFeatures.includes(f.id) && selectedTypes.includes(f.type)
+    )
+  }, [features, selectedFeatures, selectedTypes])
 
   const filteredMembers = useMemo(() => {
     return members.filter(
@@ -85,6 +141,12 @@ export function TimelineView() {
     )
   }
 
+  const toggleType = (type: string) => {
+    setSelectedTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    )
+  }
+
   const weeks = generateWeekColumns(sprints)
   const sprintSpans = getSprintSpans(sprints, weeks)
 
@@ -101,27 +163,6 @@ export function TimelineView() {
         <div className="card text-center py-12">
           <p className="text-[var(--text-secondary)] mb-4">
             Nessuno sprint creato. Vai alla sezione Sprint per iniziare!
-          </p>
-          <a href="/sprints" className="btn btn-primary inline-block">
-            Vai a Sprint
-          </a>
-        </div>
-      </div>
-    )
-  }
-
-  if (features.length === 0) {
-    return (
-      <div className="p-8">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-[var(--text-primary)]">Timeline</h2>
-          <p className="text-[var(--text-secondary)] mt-1">
-            Vista settimanale allocazioni per feature e membro
-          </p>
-        </div>
-        <div className="card text-center py-12">
-          <p className="text-[var(--text-secondary)] mb-4">
-            Nessuna feature creata. Vai alla sezione Sprint per aggiungerne!
           </p>
           <a href="/sprints" className="btn btn-primary inline-block">
             Vai a Sprint
@@ -172,15 +213,19 @@ export function TimelineView() {
               selectedFeatures={selectedFeatures}
               selectedMembers={selectedMembers}
               selectedRoles={selectedRoles}
+              selectedTypes={selectedTypes}
               onFeatureToggle={toggleFeature}
               onMemberToggle={toggleMember}
               onRoleToggle={toggleRole}
+              onTypeToggle={toggleType}
               onSelectAllFeatures={() => setSelectedFeatures(features.map((f) => f.id))}
               onDeselectAllFeatures={() => setSelectedFeatures([])}
               onSelectAllMembers={() => setSelectedMembers(members.map((m) => m.id))}
               onDeselectAllMembers={() => setSelectedMembers([])}
               onSelectAllRoles={() => setSelectedRoles(roles.map((r) => r.id))}
               onDeselectAllRoles={() => setSelectedRoles([])}
+              onSelectAllTypes={() => setSelectedTypes(['strategic', 'small_change'])}
+              onDeselectAllTypes={() => setSelectedTypes([])}
             />
 
             <button
@@ -199,8 +244,21 @@ export function TimelineView() {
         <div className="border border-[var(--border-primary)] rounded-lg overflow-hidden">
           <TimelineHeader weeks={weeks} sprintSpans={sprintSpans} />
 
-          {filteredFeatures.length === 0 ? (
-            <div className="p-12 text-center">
+          {features.length === 0 ? (
+            <div className="p-12 text-center border-t border-[var(--border-primary)]">
+              <p className="text-[var(--text-secondary)] mb-3">
+                Nessuna feature creata. Inizia creando la tua prima feature!
+              </p>
+              <button
+                onClick={() => setFeatureModalOpen(true)}
+                className="btn btn-primary inline-flex items-center gap-2"
+              >
+                <Plus size={16} />
+                Crea Prima Feature
+              </button>
+            </div>
+          ) : filteredFeatures.length === 0 ? (
+            <div className="p-12 text-center border-t border-[var(--border-primary)]">
               <p className="text-[var(--text-secondary)]">
                 Nessuna feature corrisponde ai filtri selezionati
               </p>
@@ -222,26 +280,48 @@ export function TimelineView() {
                 timeOffs={timeOffs}
                 isCollapsed={!!collapsedFeatures[feature.id]}
                 onToggle={() => toggleFeatureCollapse(feature.id)}
+                onEdit={() => handleEditFeature(feature)}
+                onDelete={() => handleDeleteFeature(feature)}
                 onAllocationChange={upsertAllocation}
               />
             ))
           )}
 
+          {/* Riga KTLO */}
+          <KTLORow
+            members={filteredMembers}
+            weeks={weeks}
+            ktloAllocations={ktloAllocations}
+            onKTLOChange={upsertKTLOAllocation}
+          />
+
           {/* Riga Globale Ferie */}
-          <GlobalTimeOffRow weeks={weeks} timeOffs={timeOffs} />
+          <GlobalTimeOffRow
+            members={filteredMembers}
+            weeks={weeks}
+            timeOffs={timeOffs}
+            onTimeOffChange={upsertTimeOff}
+          />
         </div>
       </div>
 
       {/* Feature Modal */}
       <Modal
         isOpen={featureModalOpen}
-        onClose={() => setFeatureModalOpen(false)}
-        title="Nuova Feature"
+        onClose={() => {
+          setFeatureModalOpen(false)
+          setEditingFeature(null)
+        }}
+        title={editingFeature ? 'Modifica Feature' : 'Nuova Feature'}
       >
         <FeatureForm
+          feature={editingFeature}
           sprints={sprints}
           onSubmit={handleFeatureSubmit}
-          onCancel={() => setFeatureModalOpen(false)}
+          onCancel={() => {
+            setFeatureModalOpen(false)
+            setEditingFeature(null)
+          }}
         />
       </Modal>
     </div>

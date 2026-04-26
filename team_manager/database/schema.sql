@@ -36,7 +36,7 @@ CREATE TABLE sprints (
 CREATE TABLE features (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name VARCHAR(200) NOT NULL,
-  sprint_id UUID NOT NULL REFERENCES sprints(id) ON DELETE CASCADE,
+  sprint_id UUID REFERENCES sprints(id) ON DELETE SET NULL, -- Opzionale - le allocazioni vengono fatte sulla timeline
   color VARCHAR(7) NOT NULL, -- Hex color: #RRGGBB
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -101,6 +101,6 @@ INSERT INTO roles (name, color) VALUES
 COMMENT ON TABLE roles IS 'Ruoli del team (es. Frontend Developer, Designer)';
 COMMENT ON TABLE team_members IS 'Membri del team con capacità settimanale';
 COMMENT ON TABLE sprints IS 'Sprint con date inizio/fine';
-COMMENT ON TABLE features IS 'Feature da sviluppare, associate a sprint';
+COMMENT ON TABLE features IS 'Feature da sviluppare. Le allocazioni vengono gestite direttamente sulla timeline, sprint_id è opzionale';
 COMMENT ON TABLE allocations IS 'Allocazioni settimanali: feature + membro + giorni';
 COMMENT ON TABLE time_offs IS 'Ferie/assenze per membro e settimana';

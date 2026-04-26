@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ChevronDown, ChevronRight, Edit2, Trash2 } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { MemberRow } from './MemberRow'
 import type { Feature, TeamMember, WeekColumn, Allocation, TimeOff } from '@/types'
@@ -11,6 +11,8 @@ interface FeatureGroupProps {
   timeOffs: TimeOff[]
   isCollapsed: boolean
   onToggle: () => void
+  onEdit: () => void
+  onDelete: () => void
   onAllocationChange: (
     featureId: string,
     memberId: string,
@@ -27,6 +29,8 @@ export function FeatureGroup({
   timeOffs,
   isCollapsed,
   onToggle,
+  onEdit,
+  onDelete,
   onAllocationChange,
 }: FeatureGroupProps) {
   const featureAllocations = allocations.filter((a) => a.feature_id === feature.id)
@@ -35,7 +39,7 @@ export function FeatureGroup({
     <div className="border-b border-[var(--border-primary)]">
       {/* Feature Header */}
       <div className="flex bg-[var(--bg-secondary)] hover:bg-[var(--bg-hover)] transition-colors">
-        <div className="sticky left-0 w-[220px] bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-3 z-10">
+        <div className="sticky left-0 w-[220px] bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-2 z-10">
           <button
             onClick={onToggle}
             className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
@@ -43,6 +47,22 @@ export function FeatureGroup({
             {isCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
           </button>
           <Badge label={feature.name} color={feature.color} />
+          <div className="flex items-center gap-1 ml-auto">
+            <button
+              onClick={onEdit}
+              className="p-1 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+              title="Modifica feature"
+            >
+              <Edit2 size={14} />
+            </button>
+            <button
+              onClick={onDelete}
+              className="p-1 text-[var(--text-secondary)] hover:text-[var(--danger)] transition-colors"
+              title="Elimina feature"
+            >
+              <Trash2 size={14} />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 flex">

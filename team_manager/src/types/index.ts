@@ -24,11 +24,14 @@ export interface Sprint {
   created_at?: string
 }
 
+export type FeatureType = 'small_change' | 'strategic'
+
 export interface Feature {
   id: string
   name: string
-  sprint_id: string
+  sprint_id?: string | null
   color: string
+  type: FeatureType
   created_at?: string
   // Joined data
   sprint?: Sprint
@@ -44,6 +47,14 @@ export interface Allocation {
 }
 
 export interface TimeOff {
+  id: string
+  member_id: string
+  week_start: string // YYYY-MM-DD format (Monday)
+  days: number // 0-5, step 0.5
+  created_at?: string
+}
+
+export interface KTLOAllocation {
   id: string
   member_id: string
   week_start: string // YYYY-MM-DD format (Monday)
@@ -80,6 +91,7 @@ export interface AppStore {
   features: Feature[]
   allocations: Allocation[]
   timeOffs: TimeOff[]
+  ktloAllocations: KTLOAllocation[]
 
   // UI State
   collapsedFeatures: Record<string, boolean>
@@ -91,5 +103,6 @@ export interface AppStore {
   setFeatures: (features: Feature[]) => void
   setAllocations: (allocations: Allocation[]) => void
   setTimeOffs: (timeOffs: TimeOff[]) => void
+  setKTLOAllocations: (ktloAllocations: KTLOAllocation[]) => void
   toggleFeatureCollapse: (featureId: string) => void
 }

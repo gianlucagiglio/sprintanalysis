@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react'
-import { addWeeks, format } from 'date-fns'
+import { addWeeks, format, differenceInWeeks, differenceInDays, addDays } from 'date-fns'
 import type { Sprint } from '@/types'
 
 interface SprintFormProps {
   sprint?: Sprint | null
   onSubmit: (data: Omit<Sprint, 'id' | 'created_at'>) => Promise<void>
   onSubmitMultiple?: (sprints: Omit<Sprint, 'id' | 'created_at'>[]) => Promise<void>
+  onSubmitAndUpdateFollowing?: (data: Omit<Sprint, 'id' | 'created_at'>) => Promise<void>
   onCancel: () => void
 }
 
-export function SprintForm({ sprint, onSubmit, onSubmitMultiple, onCancel }: SprintFormProps) {
+export function SprintForm({ sprint, onSubmit, onSubmitMultiple, onSubmitAndUpdateFollowing, onCancel }: SprintFormProps) {
   // Mode: 'single' o 'auto'
   const [mode, setMode] = useState<'single' | 'auto'>('single')
 
@@ -17,9 +18,11 @@ export function SprintForm({ sprint, onSubmit, onSubmitMultiple, onCancel }: Spr
   const [name, setName] = useState('')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
+  const [durationWeeks, setDurationWeeks] = useState(2)
+  const [updateFollowing, setUpdateFollowing] = useState(true)
 
   // Auto generation fields
-  const [baseName, setBaseName] = useState('Sprint')
+  const [startNumber, setStartNumber] = useState(1)
   const [firstSprintDate, setFirstSprintDate] = useState('')
   const [sprintDuration, setSprintDuration] = useState(2) // settimane
   const [sprintCount, setSprintCount] = useState(4)
@@ -33,16 +36,37 @@ export function SprintForm({ sprint, onSubmit, onSubmitMultiple, onCancel }: Spr
       setName(sprint.name)
       setStartDate(sprint.start_date)
       setEndDate(sprint.end_date)
+
+      // Calcola durata in settimane
+      const start = new Date(sprint.start_date)
+      const end = new Date(sprint.end_date)
+      const days = differenceInDays(end, start) + 1 // +1 per includere l'ultimo giorno
+      const weeks = Math.round(days / 7)
+      setDurationWeeks(weeks)
     } else {
       setName('')
       setStartDate('')
       setEndDate('')
-      setBaseName('Sprint')
+      setDurationWeeks(2)
+      setUpdateFollowing(true)
+      setStartNumber(1)
       setFirstSprintDate('')
       setSprintDuration(2)
       setSprintCount(4)
     }
   }, [sprint])
+
+  // Handler per cambio durata
+  const handleDurationChange = (newDurationWeeks: number) => {
+    setDurationWeeks(newDurationWeeks)
+    if (startDate) {
+      // Ricalcola end_date basandosi sulla nuova durata
+      const start = new Date(startDate)
+      const newEnd = addWeeks(start, newDurationWeeks)
+      newEnd.setDate(newEnd.getDate() - 1) // Sottrai 1 giorno per avere l'ultimo giorno dello sprint
+      setEndDate(format(newEnd, 'yyyy-MM-dd'))
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -57,14 +81,21 @@ export function SprintForm({ sprint, onSubmit, onSubmitMultiple, onCancel }: Spr
           return
         }
 
-        await onSubmit({
+        const sprintData = {
           name: name.trim(),
           start_date: startDate,
           end_date: endDate,
-        })
+        }
+
+        // Se stiamo modificando e la checkbox è attiva, aggiorna anche le sprint successive
+        if (sprint && updateFollowing && onSubmitAndUpdateFollowing) {
+          await onSubmitAndUpdateFollowing(sprintData)
+        } else {
+          await onSubmit(sprintData)
+        }
       } else {
         // Modalità auto-generation
-        if (!baseName.trim() || !firstSprintDate || sprintCount < 1) return
+        if (!firstSprintDate || sprintCount < 1) return
 
         const sprints: Omit<Sprint, 'id' | 'created_at'>[] = []
         let currentStartDate = new Date(firstSprintDate)
@@ -75,7 +106,7 @@ export function SprintForm({ sprint, onSubmit, onSubmitMultiple, onCancel }: Spr
           sprintEndDate.setDate(sprintEndDate.getDate() - 1)
 
           sprints.push({
-            name: `${baseName.trim()} ${i + 1}`,
+            name: `Sprint ${startNumber + i}`,
             start_date: format(currentStartDate, 'yyyy-MM-dd'),
             end_date: format(sprintEndDate, 'yyyy-MM-dd'),
           })
@@ -176,6 +207,47 @@ export function SprintForm({ sprint, onSubmit, onSubmitMultiple, onCancel }: Spr
               />
             </div>
           </div>
+
+          {/* Durata in settimane - solo quando si modifica uno sprint */}
+          {sprint && (
+            <>
+              <div>
+                <label htmlFor="sprint-duration" className="label">
+                  Durata (settimane)
+                </label>
+                <input
+                  id="sprint-duration"
+                  type="number"
+                  value={durationWeeks}
+                  onChange={(e) => handleDurationChange(parseInt(e.target.value) || 2)}
+                  className="input w-full"
+                  min="1"
+                  max="8"
+                />
+                <p className="text-xs text-[var(--text-tertiary)] mt-1">
+                  Modificando la durata, la data di fine verrà aggiornata automaticamente
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-[var(--bg-tertiary)] rounded-lg">
+                <input
+                  id="update-following"
+                  type="checkbox"
+                  checked={updateFollowing}
+                  onChange={(e) => setUpdateFollowing(e.target.checked)}
+                  className="w-4 h-4 accent-[var(--accent-primary)]"
+                />
+                <label htmlFor="update-following" className="text-sm cursor-pointer">
+                  <span className="font-medium text-[var(--text-primary)]">
+                    Aggiorna sprint successive
+                  </span>
+                  <p className="text-xs text-[var(--text-tertiary)] mt-0.5">
+                    Le date di tutte le sprint successive verranno ricalcolate automaticamente
+                  </p>
+                </label>
+              </div>
+            </>
+          )}
         </>
       )}
 
@@ -183,21 +255,22 @@ export function SprintForm({ sprint, onSubmit, onSubmitMultiple, onCancel }: Spr
       {mode === 'auto' && (
         <>
           <div>
-            <label htmlFor="base-name" className="label">
-              Nome Base
+            <label htmlFor="start-number" className="label">
+              Numero di Partenza
             </label>
             <input
-              id="base-name"
-              type="text"
-              value={baseName}
-              onChange={(e) => setBaseName(e.target.value)}
-              className="input w-full"
-              placeholder="es. Sprint"
+              id="start-number"
+              type="number"
+              value={startNumber}
+              onChange={(e) => setStartNumber(parseInt(e.target.value) || 1)}
+              className="input w-full font-mono"
+              placeholder="es. 160"
               autoFocus
+              min="1"
               required
             />
             <p className="text-xs text-[var(--text-tertiary)] mt-1">
-              Verrà generato: "{baseName} 1", "{baseName} 2", ecc.
+              Verrà generato: "Sprint {startNumber}", "Sprint {startNumber + 1}", ecc.
             </p>
           </div>
 
@@ -263,7 +336,7 @@ export function SprintForm({ sprint, onSubmit, onSubmitMultiple, onCancel }: Spr
 
                   return (
                     <div key={i} className="text-xs text-[var(--text-primary)] font-mono">
-                      {baseName} {i + 1}: {format(startDate, 'dd/MM/yyyy')} - {format(endDate, 'dd/MM/yyyy')}
+                      Sprint {startNumber + i}: {format(startDate, 'dd/MM/yyyy')} - {format(endDate, 'dd/MM/yyyy')}
                     </div>
                   )
                 })}

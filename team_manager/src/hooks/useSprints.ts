@@ -99,6 +99,85 @@ export function useSprints() {
     }
   }
 
+  // Update sprint and all following sprints
+  const updateSprintAndFollowing = async (id: string, updates: Partial<Sprint>) => {
+    try {
+      // Get current sprint data
+      const currentSprint = sprints.find(s => s.id === id)
+      if (!currentSprint) throw new Error('Sprint non trovato')
+
+      // Update current sprint
+      const { error: updateError } = await supabase
+        .from('sprints')
+        .update(updates)
+        .eq('id', id)
+
+      if (updateError) throw updateError
+
+      // Get new end date (from updates or current)
+      const newEndDate = updates.end_date || currentSprint.end_date
+
+      // Find all following sprints
+      const followingSprints = sprints
+        .filter(s => s.start_date > currentSprint.start_date)
+        .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
+
+      if (followingSprints.length > 0) {
+        // Calculate new dates for all following sprints
+        let previousEndDate = new Date(newEndDate)
+
+        const sprintUpdates = followingSprints.map(sprint => {
+          // Calculate original duration in days
+          const originalStart = new Date(sprint.start_date)
+          const originalEnd = new Date(sprint.end_date)
+          const durationDays = Math.round(
+            (originalEnd.getTime() - originalStart.getTime()) / (1000 * 60 * 60 * 24)
+          )
+
+          // New start date is day after previous sprint ends
+          const newStart = new Date(previousEndDate)
+          newStart.setDate(newStart.getDate() + 1)
+
+          // New end date maintains the same duration
+          const newEnd = new Date(newStart)
+          newEnd.setDate(newEnd.getDate() + durationDays)
+
+          previousEndDate = newEnd
+
+          return {
+            id: sprint.id,
+            start_date: newStart.toISOString().split('T')[0],
+            end_date: newEnd.toISOString().split('T')[0],
+          }
+        })
+
+        // Batch update all following sprints
+        for (const update of sprintUpdates) {
+          const { error } = await supabase
+            .from('sprints')
+            .update({
+              start_date: update.start_date,
+              end_date: update.end_date,
+            })
+            .eq('id', update.id)
+
+          if (error) throw error
+        }
+
+        toast.success(`Sprint e ${followingSprints.length} sprint successive aggiornati`)
+      } else {
+        toast.success('Sprint aggiornato')
+      }
+
+      await fetchSprints()
+      await fetchFeatures()
+    } catch (error) {
+      console.error('Error updating sprint and following:', error)
+      toast.error('Errore aggiornamento sprint')
+      throw error
+    }
+  }
+
   // Delete sprint
   const deleteSprint = async (id: string) => {
     try {
@@ -179,6 +258,7 @@ export function useSprints() {
     createSprint,
     createMultipleSprints,
     updateSprint,
+    updateSprintAndFollowing,
     deleteSprint,
     createFeature,
     updateFeature,

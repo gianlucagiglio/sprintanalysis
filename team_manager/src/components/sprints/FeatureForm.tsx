@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { ColorPicker } from '@/components/ui/ColorPicker'
-import type { Feature, Sprint } from '@/types'
+import type { Feature, Sprint, FeatureType } from '@/types'
 
 interface FeatureFormProps {
   feature?: Feature | null
@@ -18,31 +18,31 @@ export function FeatureForm({
   onCancel,
 }: FeatureFormProps) {
   const [name, setName] = useState('')
-  const [sprintId, setSprintId] = useState('')
+  const [type, setType] = useState<FeatureType>('strategic')
   const [color, setColor] = useState('#3b82f6')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     if (feature) {
       setName(feature.name)
-      setSprintId(feature.sprint_id)
+      setType(feature.type || 'strategic')
       setColor(feature.color)
     } else {
       setName('')
-      setSprintId(initialSprintId || sprints[0]?.id || '')
+      setType('strategic')
       setColor('#3b82f6')
     }
-  }, [feature, initialSprintId, sprints])
+  }, [feature])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!name.trim() || !sprintId) return
+    if (!name.trim()) return
 
     setIsSubmitting(true)
     try {
       await onSubmit({
         name: name.trim(),
-        sprint_id: sprintId,
+        type,
         color,
       })
       onCancel()
@@ -51,14 +51,6 @@ export function FeatureForm({
     } finally {
       setIsSubmitting(false)
     }
-  }
-
-  if (sprints.length === 0) {
-    return (
-      <div className="text-center py-8 text-[var(--text-secondary)]">
-        Crea prima almeno uno sprint per aggiungere feature.
-      </div>
-    )
   }
 
   return (
@@ -77,25 +69,28 @@ export function FeatureForm({
           autoFocus
           required
         />
+        <p className="text-xs text-[var(--text-tertiary)] mt-1">
+          I giorni di lavoro verranno allocati direttamente sulla timeline
+        </p>
       </div>
 
       <div>
-        <label htmlFor="feature-sprint" className="label">
-          Sprint
+        <label htmlFor="feature-type" className="label">
+          Tipologia
         </label>
         <select
-          id="feature-sprint"
-          value={sprintId}
-          onChange={(e) => setSprintId(e.target.value)}
-          className="input w-full"
+          id="feature-type"
+          value={type}
+          onChange={(e) => setType(e.target.value as FeatureType)}
+          className="form-input form-select w-full"
           required
         >
-          {sprints.map((sprint) => (
-            <option key={sprint.id} value={sprint.id}>
-              {sprint.name}
-            </option>
-          ))}
+          <option value="strategic">Strategica</option>
+          <option value="small_change">Small Change</option>
         </select>
+        <p className="text-xs text-[var(--text-tertiary)] mt-1">
+          Strategica: feature importante a lungo termine • Small Change: modifica minore o fix
+        </p>
       </div>
 
       <ColorPicker label="Colore" value={color} onChange={setColor} />
@@ -103,7 +98,7 @@ export function FeatureForm({
       <div className="flex gap-3 pt-4">
         <button
           type="submit"
-          disabled={isSubmitting || !name.trim() || !sprintId}
+          disabled={isSubmitting || !name.trim()}
           className="btn btn-primary flex-1"
         >
           {isSubmitting ? 'Salvataggio...' : feature ? 'Aggiorna' : 'Crea Feature'}

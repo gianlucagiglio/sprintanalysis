@@ -27,7 +27,7 @@ export function MemberRow({
   timeOffs,
   onAllocationChange,
 }: MemberRowProps) {
-  const { allocations: allAllocations, features } = useAppStore()
+  const { allocations: allAllocations, features, ktloAllocations } = useAppStore()
 
   const getAllocation = (weekStart: string) => {
     return (
@@ -53,7 +53,7 @@ export function MemberRow({
       <div className="flex-1 flex">
         {weeks.map((week) => {
           const days = getAllocation(week.weekStart)
-          const capacityInfo = getCapacityInfo(member, week.weekStart, allocations, timeOffs)
+          const capacityInfo = getCapacityInfo(member, week.weekStart, allocations, timeOffs, ktloAllocations)
 
           return (
             <div
@@ -73,6 +73,7 @@ export function MemberRow({
                 week={week}
                 allAllocations={allAllocations}
                 timeOffs={timeOffs}
+                ktloAllocations={ktloAllocations}
                 features={features}
               />
             </div>

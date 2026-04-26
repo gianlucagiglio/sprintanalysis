@@ -5,6 +5,7 @@ import type {
   TeamMember,
   Allocation,
   TimeOff,
+  KTLOAllocation,
   WeekColumn,
   SprintSpan,
   CapacityInfo,
@@ -77,7 +78,8 @@ export function getCapacityInfo(
   member: TeamMember,
   weekStart: string,
   allocations: Allocation[],
-  timeOffs: TimeOff[]
+  timeOffs: TimeOff[],
+  ktloAllocations: KTLOAllocation[] = []
 ): CapacityInfo {
   // Allocazioni totali per questa settimana
   const allocated = allocations
@@ -89,14 +91,19 @@ export function getCapacityInfo(
     timeOffs.find((t) => t.member_id === member.id && t.week_start === weekStart)
       ?.days || 0
 
+  // KTLO per questa settimana (default 1.5 se non specificato)
+  const ktlo =
+    ktloAllocations.find((k) => k.member_id === member.id && k.week_start === weekStart)
+      ?.days ?? 1.5
+
   const total = member.weekly_capacity
-  const available = total - timeOff - allocated
+  const available = total - timeOff - ktlo - allocated
 
   return {
     allocated,
     timeOff,
     available,
     total,
-    isOverCapacity: allocated + timeOff > total,
+    isOverCapacity: allocated + timeOff + ktlo > total,
   }
 }
