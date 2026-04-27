@@ -46,7 +46,7 @@ export function FeatureGroup({
           >
             {isCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
           </button>
-          <Badge label={feature.name} color={feature.color} />
+          <Badge label={feature.name} color={feature.color} maxWidth="200px" />
           <div className="flex items-center gap-1 ml-auto">
             <button
               onClick={onEdit}

@@ -150,7 +150,7 @@ export function TimelineFilters({
                           onChange={() => onFeatureToggle(feature.id)}
                           className="w-4 h-4 accent-[var(--accent-primary)]"
                         />
-                        <Badge label={feature.name} color={feature.color} small />
+                        <Badge label={feature.name} color={feature.color} small maxWidth="180px" />
                       </label>
                     ))}
                   </div>
