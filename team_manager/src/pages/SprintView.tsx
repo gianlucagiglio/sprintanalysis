@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Plus } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
 import { useSprints } from '@/hooks/useSprints'
 import { Modal } from '@/components/ui/Modal'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { SprintList } from '@/components/sprints/SprintList'
 import { SprintForm } from '@/components/sprints/SprintForm'
 import type { Sprint } from '@/types'
@@ -14,10 +15,14 @@ export function SprintView() {
     updateSprint,
     updateSprintAndFollowing,
     deleteSprint,
+    deleteSprints,
   } = useSprints()
 
   const [sprintModalOpen, setSprintModalOpen] = useState(false)
   const [editingSprint, setEditingSprint] = useState<Sprint | null>(null)
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deletingSingleId, setDeletingSingleId] = useState<string | null>(null)
 
   const handleSprintSubmit = async (data: Omit<Sprint, 'id' | 'created_at'>) => {
     if (editingSprint) {
@@ -33,6 +38,49 @@ export function SprintView() {
     }
   }
 
+  const handleToggleSelect = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    )
+  }
+
+  const handleToggleSelectAll = () => {
+    if (selectedIds.length === sprints.length) {
+      setSelectedIds([])
+    } else {
+      setSelectedIds(sprints.map((s) => s.id))
+    }
+  }
+
+  const handleDeleteSingle = (id: string) => {
+    setDeletingSingleId(id)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteBulk = () => {
+    setDeletingSingleId(null)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (deletingSingleId) {
+      await deleteSprint(deletingSingleId)
+      setDeletingSingleId(null)
+    } else if (selectedIds.length > 0) {
+      await deleteSprints(selectedIds)
+      setSelectedIds([])
+    }
+    setDeleteDialogOpen(false)
+  }
+
+  const getDeleteMessage = () => {
+    if (deletingSingleId) {
+      const sprint = sprints.find((s) => s.id === deletingSingleId)
+      return `Sei sicuro di voler eliminare lo sprint "${sprint?.name}"? Questa azione non può essere annullata.`
+    }
+    return `Sei sicuro di voler eliminare ${selectedIds.length} sprint selezionati? Questa azione non può essere annullata.`
+  }
+
   return (
     <div className="p-8 max-w-5xl mx-auto">
       <div className="mb-8">
@@ -46,27 +94,42 @@ export function SprintView() {
             </p>
           </div>
 
-          <button
-            onClick={() => {
-              setEditingSprint(null)
-              setSprintModalOpen(true)
-            }}
-            className="btn btn-primary flex items-center gap-2"
-          >
-            <Plus size={16} />
-            Nuovo Sprint
-          </button>
+          <div className="flex items-center gap-3">
+            {selectedIds.length > 0 && (
+              <button
+                onClick={handleDeleteBulk}
+                className="btn bg-[var(--danger)] hover:bg-[#dc2626] text-white flex items-center gap-2"
+              >
+                <Trash2 size={16} />
+                Elimina {selectedIds.length} {selectedIds.length === 1 ? 'sprint' : 'sprint'}
+              </button>
+            )}
+
+            <button
+              onClick={() => {
+                setEditingSprint(null)
+                setSprintModalOpen(true)
+              }}
+              className="btn btn-primary flex items-center gap-2"
+            >
+              <Plus size={16} />
+              Nuovo Sprint
+            </button>
+          </div>
         </div>
       </div>
 
       <div className="card">
         <SprintList
           sprints={sprints}
+          selectedIds={selectedIds}
+          onToggleSelect={handleToggleSelect}
+          onToggleSelectAll={handleToggleSelectAll}
           onEditSprint={(sprint) => {
             setEditingSprint(sprint)
             setSprintModalOpen(true)
           }}
-          onDeleteSprint={deleteSprint}
+          onDeleteSprint={handleDeleteSingle}
         />
       </div>
 
@@ -90,6 +153,21 @@ export function SprintView() {
           }}
         />
       </Modal>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => {
+          setDeleteDialogOpen(false)
+          setDeletingSingleId(null)
+        }}
+        onConfirm={handleConfirmDelete}
+        title="Elimina Sprint"
+        message={getDeleteMessage()}
+        type="danger"
+        confirmText="Elimina"
+        cancelText="Annulla"
+      />
     </div>
   )
 }
