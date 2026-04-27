@@ -144,6 +144,7 @@ export function SprintView() {
       >
         <SprintForm
           sprint={editingSprint}
+          existingSprints={sprints}
           onSubmit={handleSprintSubmit}
           onSubmitMultiple={createMultipleSprints}
           onSubmitAndUpdateFollowing={handleSprintUpdateAndFollowing}

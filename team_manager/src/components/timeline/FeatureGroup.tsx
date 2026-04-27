@@ -7,6 +7,7 @@ interface FeatureGroupProps {
   feature: Feature
   members: TeamMember[]
   weeks: WeekColumn[]
+  gridWidth: number
   allocations: Allocation[]
   timeOffs: TimeOff[]
   isCollapsed: boolean
@@ -25,6 +26,7 @@ export function FeatureGroup({
   feature,
   members,
   weeks,
+  gridWidth,
   allocations,
   timeOffs,
   isCollapsed,
@@ -39,7 +41,7 @@ export function FeatureGroup({
     <div className="border-b border-[var(--border-primary)]">
       {/* Feature Header */}
       <div className="flex bg-[var(--bg-secondary)] hover:bg-[var(--bg-hover)] transition-colors">
-        <div className="sticky left-0 w-[220px] bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-2 z-10">
+        <div className="timeline-sticky-col sticky left-0 bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-2 z-10">
           <button
             onClick={onToggle}
             className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
@@ -65,7 +67,7 @@ export function FeatureGroup({
           </div>
         </div>
 
-        <div className="flex-1 flex">
+        <div className="flex" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
           {weeks.map((week) => (
             <div
               key={week.weekStart}
@@ -85,6 +87,7 @@ export function FeatureGroup({
               member={member}
               feature={feature}
               weeks={weeks}
+              gridWidth={gridWidth}
               allocations={featureAllocations}
               timeOffs={timeOffs}
               onAllocationChange={onAllocationChange}

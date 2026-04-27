@@ -6,6 +6,7 @@ import type { TeamMember, WeekColumn, KTLOAllocation } from '@/types'
 interface KTLORowProps {
   members: TeamMember[]
   weeks: WeekColumn[]
+  gridWidth: number
   ktloAllocations: KTLOAllocation[]
   onKTLOChange: (memberId: string, weekStart: string, days: number) => Promise<void>
 }
@@ -13,6 +14,7 @@ interface KTLORowProps {
 export function KTLORow({
   members,
   weeks,
+  gridWidth,
   ktloAllocations,
   onKTLOChange,
 }: KTLORowProps) {
@@ -34,7 +36,7 @@ export function KTLORow({
     <div className="border-t-2 border-[var(--accent-secondary)]">
       {/* Header Row */}
       <div className="flex bg-[var(--accent-secondary)]10">
-        <div className="sticky left-0 w-[220px] bg-[var(--accent-secondary)]20 border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-3 z-10">
+        <div className="timeline-sticky-col sticky left-0 bg-[var(--accent-secondary)]20 border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-3 z-10">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-[var(--accent-secondary)] hover:opacity-70 transition-opacity"
@@ -50,7 +52,7 @@ export function KTLORow({
           </div>
         </div>
 
-        <div className="flex-1 flex">
+        <div className="flex" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
           {weeks.map((week) => {
             const total = getTotalKTLO(week.weekStart)
 
@@ -77,6 +79,7 @@ export function KTLORow({
               key={member.id}
               member={member}
               weeks={weeks}
+              gridWidth={gridWidth}
               ktloAllocations={ktloAllocations}
               onKTLOChange={onKTLOChange}
             />

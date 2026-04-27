@@ -5,6 +5,7 @@ import type { TeamMember, WeekColumn, TimeOff } from '@/types'
 interface MemberTimeOffRowProps {
   member: TeamMember
   weeks: WeekColumn[]
+  gridWidth: number
   timeOffs: TimeOff[]
   onTimeOffChange: (memberId: string, weekStart: string, days: number) => Promise<void>
 }
@@ -12,6 +13,7 @@ interface MemberTimeOffRowProps {
 export function MemberTimeOffRow({
   member,
   weeks,
+  gridWidth,
   timeOffs,
   onTimeOffChange,
 }: MemberTimeOffRowProps) {
@@ -30,7 +32,7 @@ export function MemberTimeOffRow({
 
   return (
     <div className="flex hover:bg-[var(--bg-hover)] transition-colors border-t border-[var(--border-primary)]">
-      <div className="sticky left-0 w-[220px] bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
+      <div className="timeline-sticky-col sticky left-0 bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
         <div className="w-2 h-2 rounded-full bg-[var(--warning)]" />
         <span className="text-sm text-[var(--text-secondary)]">{member.name}</span>
         {member.role && (
@@ -38,7 +40,7 @@ export function MemberTimeOffRow({
         )}
       </div>
 
-      <div className="flex-1 flex">
+      <div className="flex" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
         {weeks.map((week) => {
           const days = getTimeOff(week.weekStart)
 

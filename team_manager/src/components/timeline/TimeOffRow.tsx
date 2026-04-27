@@ -26,7 +26,7 @@ export function TimeOffRow({ members, weeks, timeOffs, onTimeOffChange }: TimeOf
   if (!selectedMember) {
     return (
       <div className="flex bg-[var(--warning)]10 border-t border-[var(--border-primary)]">
-        <div className="sticky left-0 w-[220px] bg-[var(--warning)]20 border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
+        <div className="timeline-sticky-col sticky left-0 bg-[var(--warning)]20 border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
           <div className="w-2 h-2 rounded-full bg-[var(--warning)]" />
           <button
             onClick={() => setSelectedMember(members[0]?.id || null)}
@@ -36,7 +36,7 @@ export function TimeOffRow({ members, weeks, timeOffs, onTimeOffChange }: TimeOf
           </button>
         </div>
 
-        <div className="flex-1 flex">
+        <div className="flex">
           {weeks.map((week) => {
             const total = getTotalTimeOff(week.weekStart)
 
@@ -62,7 +62,7 @@ export function TimeOffRow({ members, weeks, timeOffs, onTimeOffChange }: TimeOf
     <div className="bg-[var(--warning)]05 border-t-2 border-[var(--warning)]">
       {/* Header con bottone per chiudere */}
       <div className="flex bg-[var(--warning)]15">
-        <div className="sticky left-0 w-[220px] bg-[var(--warning)]20 border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
+        <div className="timeline-sticky-col sticky left-0 bg-[var(--warning)]20 border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
           <div className="w-2 h-2 rounded-full bg-[var(--warning)]" />
           <button
             onClick={() => setSelectedMember(null)}
@@ -72,7 +72,7 @@ export function TimeOffRow({ members, weeks, timeOffs, onTimeOffChange }: TimeOf
           </button>
         </div>
 
-        <div className="flex-1 flex">
+        <div className="flex">
           {weeks.map((week) => (
             <div
               key={week.weekStart}
@@ -86,12 +86,12 @@ export function TimeOffRow({ members, weeks, timeOffs, onTimeOffChange }: TimeOf
       {/* Righe per ogni membro */}
       {members.map((member) => (
         <div key={member.id} className="flex hover:bg-[var(--warning)]10 transition-colors">
-          <div className="sticky left-0 w-[220px] bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
+          <div className="timeline-sticky-col sticky left-0 bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
             <div className="w-2 h-2 rounded-full bg-[var(--warning)]" />
             <span className="text-sm text-[var(--text-secondary)]">{member.name}</span>
           </div>
 
-          <div className="flex-1 flex">
+          <div className="flex">
             {weeks.map((week) => {
               const days = getMemberTimeOff(member.id, week.weekStart)
 

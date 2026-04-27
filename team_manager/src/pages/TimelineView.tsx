@@ -150,6 +150,9 @@ export function TimelineView() {
   const weeks = generateWeekColumns(sprints)
   const sprintSpans = getSprintSpans(sprints, weeks)
 
+  // Calcola larghezza totale griglia per garantire allineamento
+  const gridWidth = weeks.length * 72 // 72px per settimana
+
   // Empty states
   if (sprints.length === 0) {
     return (
@@ -241,8 +244,8 @@ export function TimelineView() {
 
       {/* Timeline Grid */}
       <div className="flex-1 overflow-auto px-8 pb-8">
-        <div className="border border-[var(--border-primary)] rounded-lg overflow-hidden">
-          <TimelineHeader weeks={weeks} sprintSpans={sprintSpans} />
+        <div className="border border-[var(--border-primary)] rounded-lg overflow-x-auto">
+          <TimelineHeader weeks={weeks} sprintSpans={sprintSpans} gridWidth={gridWidth} />
 
           {features.length === 0 ? (
             <div className="p-12 text-center border-t border-[var(--border-primary)]">
@@ -276,6 +279,7 @@ export function TimelineView() {
                 feature={feature}
                 members={filteredMembers}
                 weeks={weeks}
+                gridWidth={gridWidth}
                 allocations={allocations}
                 timeOffs={timeOffs}
                 isCollapsed={!!collapsedFeatures[feature.id]}
@@ -291,6 +295,7 @@ export function TimelineView() {
           <KTLORow
             members={filteredMembers}
             weeks={weeks}
+            gridWidth={gridWidth}
             ktloAllocations={ktloAllocations}
             onKTLOChange={upsertKTLOAllocation}
           />
@@ -299,6 +304,7 @@ export function TimelineView() {
           <GlobalTimeOffRow
             members={filteredMembers}
             weeks={weeks}
+            gridWidth={gridWidth}
             timeOffs={timeOffs}
             onTimeOffChange={upsertTimeOff}
           />

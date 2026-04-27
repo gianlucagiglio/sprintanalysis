@@ -4,13 +4,14 @@ import type { Sprint } from '@/types'
 
 interface SprintFormProps {
   sprint?: Sprint | null
+  existingSprints?: Sprint[]
   onSubmit: (data: Omit<Sprint, 'id' | 'created_at'>) => Promise<void>
   onSubmitMultiple?: (sprints: Omit<Sprint, 'id' | 'created_at'>[]) => Promise<void>
   onSubmitAndUpdateFollowing?: (data: Omit<Sprint, 'id' | 'created_at'>) => Promise<void>
   onCancel: () => void
 }
 
-export function SprintForm({ sprint, onSubmit, onSubmitMultiple, onSubmitAndUpdateFollowing, onCancel }: SprintFormProps) {
+export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMultiple, onSubmitAndUpdateFollowing, onCancel }: SprintFormProps) {
   // Mode: 'single' o 'auto'
   const [mode, setMode] = useState<'single' | 'auto'>('single')
 
@@ -29,6 +30,32 @@ export function SprintForm({ sprint, onSubmit, onSubmitMultiple, onSubmitAndUpda
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // Helper: calcola la prima data disponibile e il prossimo numero sprint
+  const getNextSprintDefaults = () => {
+    if (existingSprints.length === 0) {
+      return { nextDate: '', nextNumber: 1 }
+    }
+
+    // Trova l'ultimo sprint per data di fine
+    const sortedSprints = [...existingSprints].sort(
+      (a, b) => new Date(b.end_date).getTime() - new Date(a.end_date).getTime()
+    )
+    const lastSprint = sortedSprints[0]
+
+    // Prossima data = giorno dopo la fine dell'ultimo sprint
+    const lastEndDate = new Date(lastSprint.end_date)
+    const nextDate = addDays(lastEndDate, 1)
+
+    // Prossimo numero: estrai numero dall'ultimo sprint
+    const match = lastSprint.name.match(/Sprint\s+(\d+)/i)
+    const nextNumber = match ? parseInt(match[1]) + 1 : existingSprints.length + 1
+
+    return {
+      nextDate: format(nextDate, 'yyyy-MM-dd'),
+      nextNumber,
+    }
+  }
+
   useEffect(() => {
     if (sprint) {
       // Se stiamo editando, forza modalità single
@@ -44,17 +71,30 @@ export function SprintForm({ sprint, onSubmit, onSubmitMultiple, onSubmitAndUpda
       const weeks = Math.round(days / 7)
       setDurationWeeks(weeks)
     } else {
+      // Modalità creazione: usa valori predefiniti intelligenti
+      const { nextDate, nextNumber } = getNextSprintDefaults()
+
       setName('')
-      setStartDate('')
+      setStartDate(nextDate)
       setEndDate('')
       setDurationWeeks(2)
       setUpdateFollowing(true)
-      setStartNumber(1)
-      setFirstSprintDate('')
+      setStartNumber(nextNumber)
+      setFirstSprintDate(nextDate)
       setSprintDuration(2)
       setSprintCount(4)
     }
-  }, [sprint])
+  }, [sprint, existingSprints])
+
+  // Auto-calcola endDate quando startDate cambia (solo in modalità creazione)
+  useEffect(() => {
+    if (!sprint && startDate && !endDate) {
+      const start = new Date(startDate)
+      const end = addWeeks(start, durationWeeks)
+      end.setDate(end.getDate() - 1)
+      setEndDate(format(end, 'yyyy-MM-dd'))
+    }
+  }, [startDate, sprint])
 
   // Handler per cambio durata
   const handleDurationChange = (newDurationWeeks: number) => {

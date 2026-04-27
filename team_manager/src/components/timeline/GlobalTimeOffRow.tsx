@@ -6,6 +6,7 @@ import type { TeamMember, WeekColumn, TimeOff } from '@/types'
 interface GlobalTimeOffRowProps {
   members: TeamMember[]
   weeks: WeekColumn[]
+  gridWidth: number
   timeOffs: TimeOff[]
   onTimeOffChange: (memberId: string, weekStart: string, days: number) => Promise<void>
 }
@@ -13,6 +14,7 @@ interface GlobalTimeOffRowProps {
 export function GlobalTimeOffRow({
   members,
   weeks,
+  gridWidth,
   timeOffs,
   onTimeOffChange,
 }: GlobalTimeOffRowProps) {
@@ -28,7 +30,7 @@ export function GlobalTimeOffRow({
     <div className="border-t-2 border-[var(--warning)]">
       {/* Header Row */}
       <div className="flex bg-[var(--warning)]10">
-        <div className="sticky left-0 w-[220px] bg-[var(--warning)]20 border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-3 z-10">
+        <div className="timeline-sticky-col sticky left-0 bg-[var(--warning)]20 border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-3 z-10">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-[var(--warning)] hover:opacity-70 transition-opacity"
@@ -44,7 +46,7 @@ export function GlobalTimeOffRow({
           </div>
         </div>
 
-        <div className="flex-1 flex">
+        <div className="flex" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
           {weeks.map((week) => {
             const total = getTotalTimeOff(week.weekStart)
 
@@ -71,6 +73,7 @@ export function GlobalTimeOffRow({
               key={member.id}
               member={member}
               weeks={weeks}
+              gridWidth={gridWidth}
               timeOffs={timeOffs}
               onTimeOffChange={onTimeOffChange}
             />

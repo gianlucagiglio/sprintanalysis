@@ -3,20 +3,21 @@ import type { WeekColumn, SprintSpan } from '@/types'
 interface TimelineHeaderProps {
   weeks: WeekColumn[]
   sprintSpans: SprintSpan[]
+  gridWidth: number
 }
 
-export function TimelineHeader({ weeks, sprintSpans }: TimelineHeaderProps) {
+export function TimelineHeader({ weeks, sprintSpans, gridWidth }: TimelineHeaderProps) {
   return (
     <div className="sticky top-0 z-20 bg-[var(--bg-primary)]">
       {/* Sprint Row */}
       <div className="flex border-b border-[var(--border-primary)]">
-        <div className="sticky left-0 w-[220px] bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center">
+        <div className="timeline-sticky-col sticky left-0 bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center z-10">
           <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">
             Sprint
           </span>
         </div>
 
-        <div className="flex-1 flex">
+        <div className="flex" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
           {sprintSpans.map((span) => (
             <div
               key={span.sprint.id}
@@ -42,13 +43,13 @@ export function TimelineHeader({ weeks, sprintSpans }: TimelineHeaderProps) {
 
       {/* Week Row */}
       <div className="flex border-b-2 border-[var(--border-secondary)]">
-        <div className="sticky left-0 w-[220px] bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center">
+        <div className="timeline-sticky-col sticky left-0 bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center z-10">
           <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">
             Settimana
           </span>
         </div>
 
-        <div className="flex-1 flex">
+        <div className="flex" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
           {weeks.map((week) => (
             <div
               key={week.weekStart}

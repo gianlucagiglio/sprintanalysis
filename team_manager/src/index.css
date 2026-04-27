@@ -409,3 +409,16 @@ a:hover svg {
   transition-property: background-color, border-color, color;
   transition-duration: var(--transition-base);
 }
+
+/* 📐 Timeline Sticky Column - Fixed Width */
+.timeline-sticky-col {
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
+  flex-shrink: 0;
+  position: sticky;
+  left: 0;
+  z-index: 20;
+  /* Shadow per separazione visiva */
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}

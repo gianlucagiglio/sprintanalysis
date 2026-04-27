@@ -5,6 +5,7 @@ import type { TeamMember, WeekColumn, KTLOAllocation } from '@/types'
 interface MemberKTLORowProps {
   member: TeamMember
   weeks: WeekColumn[]
+  gridWidth: number
   ktloAllocations: KTLOAllocation[]
   onKTLOChange: (memberId: string, weekStart: string, days: number) => Promise<void>
 }
@@ -12,6 +13,7 @@ interface MemberKTLORowProps {
 export function MemberKTLORow({
   member,
   weeks,
+  gridWidth,
   ktloAllocations,
   onKTLOChange,
 }: MemberKTLORowProps) {
@@ -28,7 +30,7 @@ export function MemberKTLORow({
 
   return (
     <div className="flex hover:bg-[var(--bg-hover)] transition-colors border-t border-[var(--border-primary)]">
-      <div className="sticky left-0 w-[220px] bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
+      <div className="timeline-sticky-col sticky left-0 bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
         <div className="w-2 h-2 rounded-full bg-[var(--accent-secondary)]" />
         <span className="text-sm text-[var(--text-secondary)]">{member.name}</span>
         {member.role && (
@@ -36,7 +38,7 @@ export function MemberKTLORow({
         )}
       </div>
 
-      <div className="flex-1 flex">
+      <div className="flex" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
         {weeks.map((week) => {
           const days = getKTLO(week.weekStart)
 

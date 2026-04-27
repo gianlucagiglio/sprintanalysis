@@ -9,6 +9,7 @@ interface MemberRowProps {
   member: TeamMember
   feature: Feature
   weeks: WeekColumn[]
+  gridWidth: number
   allocations: Allocation[]
   timeOffs: TimeOff[]
   onAllocationChange: (
@@ -23,6 +24,7 @@ export function MemberRow({
   member,
   feature,
   weeks,
+  gridWidth,
   allocations,
   timeOffs,
   onAllocationChange,
@@ -42,7 +44,7 @@ export function MemberRow({
 
   return (
     <div className="flex hover:bg-[var(--bg-hover)] transition-colors">
-      <div className="sticky left-0 w-[220px] bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
+      <div className="timeline-sticky-col sticky left-0 bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
         <div className="w-2 h-2 rounded-full bg-[var(--text-tertiary)]" />
         <span className="text-sm text-[var(--text-secondary)]">{member.name}</span>
         {member.role && (
@@ -50,7 +52,7 @@ export function MemberRow({
         )}
       </div>
 
-      <div className="flex-1 flex">
+      <div className="flex" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
         {weeks.map((week) => {
           const days = getAllocation(week.weekStart)
           const capacityInfo = getCapacityInfo(member, week.weekStart, allocations, timeOffs, ktloAllocations)
