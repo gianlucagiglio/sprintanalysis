@@ -64,6 +64,13 @@ export function FeatureGroup({
     return orderA - orderB
   })
 
+  // Calcola totale giorni allocati per settimana (solo membri assegnati)
+  const getTotalDays = (weekStart: string) => {
+    return featureAllocations
+      .filter((a) => a.week_start === weekStart && assignedMemberIds.includes(a.member_id))
+      .reduce((sum, a) => sum + a.days, 0)
+  }
+
   return (
     <div className="border-b border-[var(--border-primary)]">
       {/* Feature Header */}
@@ -95,13 +102,23 @@ export function FeatureGroup({
         </div>
 
         <div className="flex hover:bg-[var(--bg-hover)]" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
-          {weeks.map((week) => (
-            <div
-              key={week.weekStart}
-              className="border-r border-[var(--border-primary)] bg-[var(--bg-primary)]"
-              style={{ width: '72px', minWidth: '72px' }}
-            />
-          ))}
+          {weeks.map((week) => {
+            const total = getTotalDays(week.weekStart)
+
+            return (
+              <div
+                key={week.weekStart}
+                className="border-r border-[var(--border-primary)] bg-[var(--bg-primary)] p-1 text-center"
+                style={{ width: '72px', minWidth: '72px', height: '40px' }}
+              >
+                {total > 0 && (
+                  <span className="text-sm font-mono font-semibold text-[var(--text-primary)] leading-[32px]">
+                    {total}
+                  </span>
+                )}
+              </div>
+            )
+          })}
         </div>
       </div>
 
