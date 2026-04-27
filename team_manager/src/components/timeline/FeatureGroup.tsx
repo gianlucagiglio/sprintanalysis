@@ -41,7 +41,7 @@ export function FeatureGroup({
     <div className="border-b border-[var(--border-primary)]">
       {/* Feature Header */}
       <div className="flex bg-[var(--bg-secondary)] hover:bg-[var(--bg-hover)] transition-colors">
-        <div className="timeline-sticky-col sticky left-0 bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-2 z-10">
+        <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-2">
           <button
             onClick={onToggle}
             className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]"

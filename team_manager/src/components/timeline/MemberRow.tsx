@@ -44,7 +44,7 @@ export function MemberRow({
 
   return (
     <div className="flex hover:bg-[var(--bg-hover)] transition-colors">
-      <div className="timeline-sticky-col sticky left-0 bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
+      <div className="timeline-sticky-col bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3">
         <div className="w-2 h-2 rounded-full bg-[var(--text-tertiary)]" />
         <span className="text-sm text-[var(--text-secondary)]">{member.name}</span>
         {member.role && (

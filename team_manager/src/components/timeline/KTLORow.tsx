@@ -36,7 +36,7 @@ export function KTLORow({
     <div className="border-t-2 border-[var(--accent-secondary)]">
       {/* Header Row */}
       <div className="flex bg-[var(--accent-secondary)]10">
-        <div className="timeline-sticky-col sticky left-0 bg-[var(--accent-secondary)]20 border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-3 z-10">
+        <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-3">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-[var(--accent-secondary)] hover:opacity-70 transition-opacity"

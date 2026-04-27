@@ -30,7 +30,7 @@ export function GlobalTimeOffRow({
     <div className="border-t-2 border-[var(--warning)]">
       {/* Header Row */}
       <div className="flex bg-[var(--warning)]10">
-        <div className="timeline-sticky-col sticky left-0 bg-[var(--warning)]20 border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-3 z-10">
+        <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-3">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-[var(--warning)] hover:opacity-70 transition-opacity"
