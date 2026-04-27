@@ -1,3 +1,1 @@
-Sprint: nella creazione devo poter dire quando inizia prima sprint, poi quante sprint in automatico creaare, e quanto la sprint dura, così da non dovere creare ogni singola sprint, la base è il nome sprint, poiil numero sarà progressivo 
-Le ferie sono un area dedicata per ogni componente del team sono un area dedicata, che presenta la stessa vista sprint, così da avere un area unica, poi automaticmente apparirà come una riga dedicata nella timeline, quindi non è legato alla singola feature
-le feature si devono poter creare nell'area timeline
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────❯ la popup che viene mostrata quando vado sopra ad un errore deve essere sora a qualsiasi elemento, ora va sotto la prima colonna 

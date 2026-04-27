@@ -3,6 +3,7 @@ import { Plus } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore'
 import { useTeam } from '@/hooks/useTeam'
 import { useSprints } from '@/hooks/useSprints'
+import { useFeatures } from '@/hooks/useFeatures'
 import { useAllocations } from '@/hooks/useAllocations'
 import { useKTLO } from '@/hooks/useKTLO'
 import { generateWeekColumns, getSprintSpans } from '@/lib/capacity'
@@ -16,11 +17,14 @@ import { FeatureForm } from '@/components/sprints/FeatureForm'
 import type { Feature } from '@/types'
 
 export function TimelineView() {
-  const { collapsedFeatures, toggleFeatureCollapse } = useAppStore()
+  const { collapsedFeatures, toggleFeatureCollapse, featureMembers } = useAppStore()
   const { members, roles } = useTeam()
   const { sprints, features, createFeature, updateFeature, deleteFeature } = useSprints()
   const { allocations, timeOffs, upsertAllocation, upsertTimeOff } = useAllocations()
   const { ktloAllocations, upsertKTLOAllocation } = useKTLO()
+
+  // Carica feature members per filtrare i membri visibili nella timeline
+  useFeatures()
 
   const [featureModalOpen, setFeatureModalOpen] = useState(false)
   const [editingFeature, setEditingFeature] = useState<Feature | null>(null)
@@ -278,6 +282,7 @@ export function TimelineView() {
                 key={feature.id}
                 feature={feature}
                 members={filteredMembers}
+                featureMembers={featureMembers}
                 weeks={weeks}
                 gridWidth={gridWidth}
                 allocations={allocations}

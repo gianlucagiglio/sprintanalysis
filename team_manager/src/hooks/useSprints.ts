@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 import type { Sprint, Feature } from '@/types'
 
 export function useSprints() {
-  const { sprints, features, setSprints, setFeatures } = useAppStore()
+  const { sprints, features, members, featureMembers, setSprints, setFeatures, setFeatureMembers } = useAppStore()
 
   // Fetch sprints
   const fetchSprints = async () => {
@@ -218,8 +218,34 @@ export function useSprints() {
         .single()
 
       if (error) throw error
+
+      // Assegna automaticamente tutti i membri del team alla nuova feature
+      if (data && members.length > 0) {
+        const assignments = members.map((member) => ({
+          feature_id: data.id,
+          member_id: member.id,
+        }))
+
+        const { error: assignError } = await supabase
+          .from('feature_members')
+          .insert(assignments)
+
+        if (assignError) {
+          console.error('Errore nell\'assegnazione automatica membri:', assignError)
+          // Non blocchiamo la creazione della feature per questo errore
+        } else {
+          // Aggiorna lo store con le nuove assegnazioni
+          const newAssignments = assignments.map((a) => ({
+            id: crypto.randomUUID(), // Temporaneo, verrà sovrascritto dal refresh
+            ...a,
+            created_at: new Date().toISOString(),
+          }))
+          setFeatureMembers([...featureMembers, ...newAssignments])
+        }
+      }
+
       await fetchFeatures()
-      toast.success('Feature creata')
+      toast.success('Feature creata con team assegnato')
       return data
     } catch (error) {
       console.error('Error creating feature:', error)

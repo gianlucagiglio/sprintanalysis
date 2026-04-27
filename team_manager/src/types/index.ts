@@ -62,6 +62,13 @@ export interface KTLOAllocation {
   created_at?: string
 }
 
+export interface FeatureMember {
+  id: string
+  feature_id: string
+  member_id: string
+  created_at?: string
+}
+
 // UI Helper Types
 export interface WeekColumn {
   weekStart: string // ISO date string (Monday)
@@ -92,6 +99,7 @@ export interface AppStore {
   allocations: Allocation[]
   timeOffs: TimeOff[]
   ktloAllocations: KTLOAllocation[]
+  featureMembers: FeatureMember[]
 
   // UI State
   collapsedFeatures: Record<string, boolean>
@@ -104,5 +112,6 @@ export interface AppStore {
   setAllocations: (allocations: Allocation[]) => void
   setTimeOffs: (timeOffs: TimeOff[]) => void
   setKTLOAllocations: (ktloAllocations: KTLOAllocation[]) => void
+  setFeatureMembers: (featureMembers: FeatureMember[]) => void
   toggleFeatureCollapse: (featureId: string) => void
 }

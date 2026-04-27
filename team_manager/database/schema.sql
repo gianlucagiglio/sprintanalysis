@@ -64,6 +64,15 @@ CREATE TABLE time_offs (
   CONSTRAINT unique_time_off UNIQUE (member_id, week_start)
 );
 
+-- Table: feature_members (assegnazione membri a feature)
+CREATE TABLE feature_members (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  feature_id UUID NOT NULL REFERENCES features(id) ON DELETE CASCADE,
+  member_id UUID NOT NULL REFERENCES team_members(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT unique_feature_member UNIQUE (feature_id, member_id)
+);
+
 -- Indexes for performance
 CREATE INDEX idx_team_members_role ON team_members(role_id);
 CREATE INDEX idx_features_sprint ON features(sprint_id);
@@ -72,6 +81,8 @@ CREATE INDEX idx_allocations_member ON allocations(member_id);
 CREATE INDEX idx_allocations_week ON allocations(week_start);
 CREATE INDEX idx_time_offs_member ON time_offs(member_id);
 CREATE INDEX idx_time_offs_week ON time_offs(week_start);
+CREATE INDEX idx_feature_members_feature ON feature_members(feature_id);
+CREATE INDEX idx_feature_members_member ON feature_members(member_id);
 
 -- Enable Row Level Security (RLS) - DISABLED for v1
 -- In production, enable RLS and create appropriate policies
@@ -81,6 +92,7 @@ ALTER TABLE sprints ENABLE ROW LEVEL SECURITY;
 ALTER TABLE features ENABLE ROW LEVEL SECURITY;
 ALTER TABLE allocations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE time_offs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE feature_members ENABLE ROW LEVEL SECURITY;
 
 -- Temporary policy: allow all operations (for development)
 -- IMPORTANT: Replace with proper policies in production
@@ -90,6 +102,7 @@ CREATE POLICY "Allow all for development" ON sprints FOR ALL USING (true);
 CREATE POLICY "Allow all for development" ON features FOR ALL USING (true);
 CREATE POLICY "Allow all for development" ON allocations FOR ALL USING (true);
 CREATE POLICY "Allow all for development" ON time_offs FOR ALL USING (true);
+CREATE POLICY "Allow all for development" ON feature_members FOR ALL USING (true);
 
 -- Sample data (optional, for testing)
 INSERT INTO roles (name, color) VALUES
@@ -104,3 +117,4 @@ COMMENT ON TABLE sprints IS 'Sprint con date inizio/fine';
 COMMENT ON TABLE features IS 'Feature da sviluppare. Le allocazioni vengono gestite direttamente sulla timeline, sprint_id è opzionale';
 COMMENT ON TABLE allocations IS 'Allocazioni settimanali: feature + membro + giorni';
 COMMENT ON TABLE time_offs IS 'Ferie/assenze per membro e settimana';
+COMMENT ON TABLE feature_members IS 'Assegnazione membri a feature (quali membri lavoreranno su questa feature)';

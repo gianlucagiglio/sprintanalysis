@@ -3,6 +3,7 @@ import { Layout } from '@/components/layout/Layout'
 import { TimelineView } from '@/pages/TimelineView'
 import { TeamView } from '@/pages/TeamView'
 import { SprintView } from '@/pages/SprintView'
+import { FeaturesView } from '@/pages/FeaturesView'
 import { TimeOffView } from '@/pages/TimeOffView'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
           <Route index element={<TimelineView />} />
           <Route path="team" element={<TeamView />} />
           <Route path="sprints" element={<SprintView />} />
+          <Route path="features" element={<FeaturesView />} />
           <Route path="timeoff" element={<TimeOffView />} />
         </Route>
       </Routes>

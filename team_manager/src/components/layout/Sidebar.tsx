@@ -1,11 +1,12 @@
 import { NavLink } from 'react-router-dom'
-import { Calendar, Users, LayoutGrid, Palmtree } from 'lucide-react'
+import { Calendar, Users, LayoutGrid, Palmtree, Layers } from 'lucide-react'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 const NAV_ITEMS = [
   { to: '/', icon: LayoutGrid, label: 'Timeline' },
   { to: '/team', icon: Users, label: 'Team' },
   { to: '/sprints', icon: Calendar, label: 'Sprint' },
+  { to: '/features', icon: Layers, label: 'Feature' },
   { to: '/timeoff', icon: Palmtree, label: 'Ferie' },
 ]
 

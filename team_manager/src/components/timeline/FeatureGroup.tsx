@@ -1,11 +1,12 @@
 import { ChevronDown, ChevronRight, Edit2, Trash2 } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { MemberRow } from './MemberRow'
-import type { Feature, TeamMember, WeekColumn, Allocation, TimeOff } from '@/types'
+import type { Feature, TeamMember, WeekColumn, Allocation, TimeOff, FeatureMember } from '@/types'
 
 interface FeatureGroupProps {
   feature: Feature
   members: TeamMember[]
+  featureMembers: FeatureMember[]
   weeks: WeekColumn[]
   gridWidth: number
   allocations: Allocation[]
@@ -25,6 +26,7 @@ interface FeatureGroupProps {
 export function FeatureGroup({
   feature,
   members,
+  featureMembers,
   weeks,
   gridWidth,
   allocations,
@@ -37,6 +39,13 @@ export function FeatureGroup({
 }: FeatureGroupProps) {
   const featureAllocations = allocations.filter((a) => a.feature_id === feature.id)
 
+  // Filtra membri: mostra solo quelli assegnati a questa feature
+  const assignedMemberIds = featureMembers
+    .filter((fm) => fm.feature_id === feature.id)
+    .map((fm) => fm.member_id)
+
+  const assignedMembers = members.filter((m) => assignedMemberIds.includes(m.id))
+
   // Ordine ruoli: PA, PD, BE, FE, QA, QAA
   const roleOrder: Record<string, number> = {
     PA: 1,
@@ -47,7 +56,7 @@ export function FeatureGroup({
     QAA: 6,
   }
 
-  const sortedMembers = [...members].sort((a, b) => {
+  const sortedMembers = [...assignedMembers].sort((a, b) => {
     const roleA = a.role?.name || ''
     const roleB = b.role?.name || ''
     const orderA = roleOrder[roleA] || 999
