@@ -37,6 +37,24 @@ export function FeatureGroup({
 }: FeatureGroupProps) {
   const featureAllocations = allocations.filter((a) => a.feature_id === feature.id)
 
+  // Ordine ruoli: PA, PD, BE, FE, QA, QAA
+  const roleOrder: Record<string, number> = {
+    PA: 1,
+    PD: 2,
+    BE: 3,
+    FE: 4,
+    QA: 5,
+    QAA: 6,
+  }
+
+  const sortedMembers = [...members].sort((a, b) => {
+    const roleA = a.role?.name || ''
+    const roleB = b.role?.name || ''
+    const orderA = roleOrder[roleA] || 999
+    const orderB = roleOrder[roleB] || 999
+    return orderA - orderB
+  })
+
   return (
     <div className="border-b border-[var(--border-primary)]">
       {/* Feature Header */}
@@ -81,7 +99,7 @@ export function FeatureGroup({
       {/* Member Rows */}
       {!isCollapsed && (
         <>
-          {members.map((member) => (
+          {sortedMembers.map((member) => (
             <MemberRow
               key={member.id}
               member={member}

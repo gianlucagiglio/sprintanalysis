@@ -53,7 +53,7 @@ export function GlobalTimeOffRow({
             return (
               <div
                 key={week.weekStart}
-                className="border-r border-[var(--border-primary)] p-1 text-center bg-[var(--warning)]10"
+                className="border-r border-[var(--border-primary)] p-1 text-center bg-[var(--bg-primary)]"
                 style={{ width: '72px', minWidth: '72px', height: '40px' }}
               >
                 <span className="text-sm font-mono text-[var(--warning)] font-semibold leading-[32px]">

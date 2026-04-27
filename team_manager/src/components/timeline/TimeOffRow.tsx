@@ -43,7 +43,7 @@ export function TimeOffRow({ members, weeks, timeOffs, onTimeOffChange }: TimeOf
             return (
               <div
                 key={week.weekStart}
-                className="border-r border-[var(--border-primary)] p-1 text-center bg-[var(--warning)]10"
+                className="border-r border-[var(--border-primary)] p-1 text-center bg-[var(--bg-primary)]"
                 style={{ width: '72px', minWidth: '72px', height: '32px' }}
               >
                 <span className="text-xs font-mono text-[var(--warning)] leading-[32px]">
@@ -98,7 +98,7 @@ export function TimeOffRow({ members, weeks, timeOffs, onTimeOffChange }: TimeOf
               return (
                 <div
                   key={week.weekStart}
-                  className="border-r border-[var(--border-primary)] bg-[var(--warning)]05"
+                  className="border-r border-[var(--border-primary)] bg-[var(--bg-primary)]"
                   style={{ width: '72px', minWidth: '72px', height: '32px' }}
                 >
                   <TimeOffCell

@@ -59,7 +59,7 @@ export function KTLORow({
             return (
               <div
                 key={week.weekStart}
-                className="border-r border-[var(--border-primary)] p-1 text-center bg-[var(--accent-secondary)]10"
+                className="border-r border-[var(--border-primary)] p-1 text-center bg-[var(--bg-primary)]"
                 style={{ width: '72px', minWidth: '72px', height: '40px' }}
               >
                 <span className="text-sm font-mono text-[var(--accent-secondary)] font-semibold leading-[32px]">
