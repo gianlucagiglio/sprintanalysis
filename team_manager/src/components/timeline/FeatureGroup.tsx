@@ -67,7 +67,7 @@ export function FeatureGroup({
           </div>
         </div>
 
-        <div className="flex" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
+        <div className="flex hover:bg-[var(--bg-hover)]" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
           {weeks.map((week) => (
             <div
               key={week.weekStart}
