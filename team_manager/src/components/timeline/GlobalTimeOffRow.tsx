@@ -46,7 +46,7 @@ export function GlobalTimeOffRow({
           </div>
         </div>
 
-        <div className="flex" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
+        <div className="flex border-t-2 border-[var(--warning)]" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
           {weeks.map((week) => {
             const total = getTotalTimeOff(week.weekStart)
 

@@ -61,7 +61,7 @@ export function TimeOffRow({ members, weeks, timeOffs, onTimeOffChange }: TimeOf
   return (
     <div className="bg-[var(--warning)]05 border-t-2 border-[var(--warning)]">
       {/* Header con bottone per chiudere */}
-      <div className="flex bg-[var(--warning)]15">
+      <div className="flex bg-[var(--warning)]15 border-t-2 border-[var(--warning)]">
         <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3">
           <div className="w-2 h-2 rounded-full bg-[var(--warning)]" />
           <button
@@ -76,7 +76,7 @@ export function TimeOffRow({ members, weeks, timeOffs, onTimeOffChange }: TimeOf
           {weeks.map((week) => (
             <div
               key={week.weekStart}
-              className="border-r border-[var(--border-primary)]"
+              className="border-r border-[var(--border-primary)] bg-[var(--bg-primary)]"
               style={{ width: '72px', minWidth: '72px', height: '32px' }}
             />
           ))}

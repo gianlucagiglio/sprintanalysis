@@ -52,7 +52,7 @@ export function KTLORow({
           </div>
         </div>
 
-        <div className="flex" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
+        <div className="flex border-t-2 border-[var(--accent-secondary)]" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
           {weeks.map((week) => {
             const total = getTotalKTLO(week.weekStart)
 

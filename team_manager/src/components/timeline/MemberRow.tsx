@@ -60,7 +60,7 @@ export function MemberRow({
           return (
             <div
               key={week.weekStart}
-              className="border-r border-[var(--border-primary)] relative"
+              className="border-r border-[var(--border-primary)] bg-[var(--bg-primary)] relative"
               style={{ width: '72px', minWidth: '72px', height: '32px' }}
             >
               <AllocationCell
