@@ -73,7 +73,7 @@ export function TimeOffView() {
         <div className="border border-[var(--border-primary)] rounded-lg overflow-hidden">
           {/* Header Settimane */}
           <div className="flex border-b-2 border-[var(--border-secondary)] sticky top-0 z-20 bg-[var(--bg-primary)]">
-            <div className="sticky left-0 w-[220px] bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center z-10">
+            <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center">
               <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">
                 Membro
               </span>
@@ -97,7 +97,7 @@ export function TimeOffView() {
           {/* Righe Membri */}
           {members.map((member) => (
             <div key={member.id} className="flex hover:bg-[var(--bg-hover)] transition-colors border-b border-[var(--border-primary)]">
-              <div className="sticky left-0 w-[220px] bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
+              <div className="timeline-sticky-col bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-[var(--warning)]" />
                 <span className="text-sm text-[var(--text-primary)]">{member.name}</span>
               </div>

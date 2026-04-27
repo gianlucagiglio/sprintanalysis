@@ -86,7 +86,7 @@ export function TimeOffRow({ members, weeks, timeOffs, onTimeOffChange }: TimeOf
       {/* Righe per ogni membro */}
       {members.map((member) => (
         <div key={member.id} className="flex hover:bg-[var(--warning)]10 transition-colors">
-          <div className="timeline-sticky-col sticky left-0 bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 z-10">
+          <div className="timeline-sticky-col bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3">
             <div className="w-2 h-2 rounded-full bg-[var(--warning)]" />
             <span className="text-sm text-[var(--text-secondary)]">{member.name}</span>
           </div>
