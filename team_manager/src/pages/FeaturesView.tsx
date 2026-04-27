@@ -155,8 +155,9 @@ export function FeaturesView() {
         onConfirm={handleConfirmDelete}
         title="Conferma eliminazione"
         message={getDeleteMessage()}
-        confirmLabel="Elimina"
-        cancelLabel="Annulla"
+        type="danger"
+        confirmText="Elimina"
+        cancelText="Annulla"
       />
     </div>
   )
