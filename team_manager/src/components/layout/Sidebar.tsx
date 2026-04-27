@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { Calendar, Users, LayoutGrid, Palmtree } from 'lucide-react'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 const NAV_ITEMS = [
   { to: '/', icon: LayoutGrid, label: 'Timeline' },
@@ -45,8 +46,11 @@ export function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-[var(--border-primary)] text-xs text-[var(--text-tertiary)]">
-        v1.0.0 • Team Resource Manager
+      <div className="p-4 border-t border-[var(--border-primary)] space-y-3">
+        <ThemeToggle />
+        <div className="text-xs text-[var(--text-tertiary)]">
+          v1.0.0 • Team Resource Manager
+        </div>
       </div>
     </aside>
   )

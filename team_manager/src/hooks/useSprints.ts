@@ -193,6 +193,21 @@ export function useSprints() {
     }
   }
 
+  // Delete multiple sprints (bulk)
+  const deleteSprints = async (ids: string[]) => {
+    try {
+      const { error } = await supabase.from('sprints').delete().in('id', ids)
+
+      if (error) throw error
+      await fetchSprints()
+      toast.success(`${ids.length} sprint eliminati`)
+    } catch (error) {
+      console.error('Error deleting sprints:', error)
+      toast.error('Errore eliminazione sprint')
+      throw error
+    }
+  }
+
   // Create feature
   const createFeature = async (feature: Omit<Feature, 'id' | 'created_at' | 'sprint'>) => {
     try {
@@ -260,6 +275,7 @@ export function useSprints() {
     updateSprint,
     updateSprintAndFollowing,
     deleteSprint,
+    deleteSprints,
     createFeature,
     updateFeature,
     deleteFeature,

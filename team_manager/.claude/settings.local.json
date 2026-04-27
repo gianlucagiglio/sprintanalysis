@@ -6,7 +6,13 @@
       "Bash(npm install:*)",
       "Bash(npm run build:*)",
       "Bash(npm run dev:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(findstr:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(powershell \"Get-Content ''C:\\\\Users\\\\Gianluca\\\\.claude\\\\projects\\\\C--Users-Gianluca-King-Folder-React-Claude-Code-team-manager\\\\724f5ed0-0d38-4003-9c36-593a6e5f3e42.jsonl'' -Tail 1\")",
+      "Bash(powershell \"Get-Content ''C:\\\\Users\\\\Gianluca\\\\.claude\\\\projects\\\\C--Users-Gianluca-King-Folder-React-Claude-Code-team-manager\\\\724f5ed0-0d38-4003-9c36-593a6e5f3e42.jsonl'' -Tail 30 | Select-String ''\"\"type\"\":\"\"user\"\"'' | Select-Object -Last 1\")",
+      "Bash(powershell:*)"
     ]
   }
 }
