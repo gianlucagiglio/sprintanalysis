@@ -42,7 +42,7 @@ export function CapacityTooltip({
 
   return (
     <div
-      className="absolute top-1 right-1 z-30"
+      className="absolute top-1 right-1 z-10"
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
