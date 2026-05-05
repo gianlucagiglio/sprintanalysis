@@ -9,6 +9,7 @@ import { useKTLO } from '@/hooks/useKTLO'
 import { useNRT } from '@/hooks/useNRT'
 import { generateWeekColumns, getSprintSpans } from '@/lib/capacity'
 import { TimelineHeader } from '@/components/timeline/TimelineHeader'
+import { CapacityRecapRow } from '@/components/timeline/CapacityRecapRow'
 import { FeatureGroup } from '@/components/timeline/FeatureGroup'
 import { GlobalTimeOffRow } from '@/components/timeline/GlobalTimeOffRow'
 import { NRTRow } from '@/components/timeline/NRTRow'
@@ -253,6 +254,18 @@ export function TimelineView() {
       <div className="flex-1 overflow-auto px-8 pb-8">
         <div className="border border-[var(--border-primary)] rounded-lg overflow-x-auto">
           <TimelineHeader weeks={weeks} sprintSpans={sprintSpans} gridWidth={gridWidth} />
+
+          {/* Capacity Recap - Riepilogo allocazioni totali per membro */}
+          <CapacityRecapRow
+            members={filteredMembers}
+            weeks={weeks}
+            gridWidth={gridWidth}
+            sprints={sprints}
+            allocations={allocations}
+            timeOffs={timeOffs}
+            ktloAllocations={ktloAllocations}
+            nrtAllocations={nrtAllocations}
+          />
 
           {features.length === 0 ? (
             <div className="p-12 text-center border-t border-[var(--border-primary)]">
