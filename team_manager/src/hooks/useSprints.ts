@@ -43,6 +43,45 @@ export function useSprints() {
     }
   }
 
+  // Helper: Sposta in avanti le feature con display_order >= al valore target
+  const shiftDisplayOrders = async (targetOrder: number, excludeId?: string) => {
+    try {
+      // Trova tutte le feature con display_order >= targetOrder (esclusa quella corrente)
+      let query = supabase
+        .from('features')
+        .select('id, display_order')
+        .gte('display_order', targetOrder)
+
+      if (excludeId) {
+        query = query.neq('id', excludeId)
+      }
+
+      const { data: affectedFeatures, error: fetchError } = await query
+
+      if (fetchError) throw fetchError
+
+      if (affectedFeatures && affectedFeatures.length > 0) {
+        // IMPORTANTE: Ordina in ordine DECRESCENTE per evitare conflitti temporanei
+        // Se ho A=2, B=3, C=4 e inserisco D=2, devo aggiornare C→B→A (dal più alto al più basso)
+        // Altrimenti se aggiorno A→B→C, quando A diventa 3 crea conflitto con B che è già 3
+        const sortedFeatures = affectedFeatures.sort((a, b) => b.display_order - a.display_order)
+
+        // Incrementa di 1 tutte le feature trovate (dall'alto verso il basso)
+        for (const feature of sortedFeatures) {
+          const { error: updateError } = await supabase
+            .from('features')
+            .update({ display_order: feature.display_order + 1 })
+            .eq('id', feature.id)
+
+          if (updateError) throw updateError
+        }
+      }
+    } catch (error) {
+      console.error('Error shifting display orders:', error)
+      throw error
+    }
+  }
+
   // Create sprint
   const createSprint = async (sprint: Omit<Sprint, 'id' | 'created_at'>) => {
     try {
@@ -212,6 +251,11 @@ export function useSprints() {
   // Create feature
   const createFeature = async (feature: Omit<Feature, 'id' | 'created_at' | 'sprint'>) => {
     try {
+      // Prima di inserire, sposta le feature esistenti se necessario
+      if (feature.display_order !== undefined && feature.display_order >= 0) {
+        await shiftDisplayOrders(feature.display_order)
+      }
+
       const { data, error } = await supabase
         .from('features')
         .insert(feature)
@@ -258,6 +302,11 @@ export function useSprints() {
   // Update feature
   const updateFeature = async (id: string, updates: Partial<Feature>) => {
     try {
+      // Se stiamo cambiando display_order, sposta le altre feature
+      if (updates.display_order !== undefined && updates.display_order >= 0) {
+        await shiftDisplayOrders(updates.display_order, id)
+      }
+
       const { error } = await supabase
         .from('features')
         .update(updates)
