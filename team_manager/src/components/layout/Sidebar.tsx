@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { Calendar, Users, LayoutGrid, Palmtree, Layers, BarChart3 } from 'lucide-react'
+import { Calendar, Users, LayoutGrid, Palmtree, Layers, BarChart3, ScrollText } from 'lucide-react'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 const NAV_ITEMS = [
@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { to: '/sprints', icon: Calendar, label: 'Sprint' },
   { to: '/features', icon: Layers, label: 'Feature' },
   { to: '/timeoff', icon: Palmtree, label: 'Ferie' },
+  { to: '/changelog', icon: ScrollText, label: 'Changelog' },
 ]
 
 export function Sidebar() {

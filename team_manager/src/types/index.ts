@@ -77,6 +77,18 @@ export interface FeatureMember {
   created_at?: string
 }
 
+export type ChangelogType = 'major' | 'minor' | 'patch'
+
+export interface Changelog {
+  id: string
+  version: string // es. "1.2.0"
+  type: ChangelogType
+  title: string
+  description: string // Markdown
+  release_date: string // YYYY-MM-DD
+  created_at?: string
+}
+
 // UI Helper Types
 export interface WeekColumn {
   weekStart: string // ISO date string (Monday)

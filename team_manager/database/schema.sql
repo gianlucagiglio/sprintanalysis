@@ -84,6 +84,17 @@ CREATE TABLE feature_members (
   CONSTRAINT unique_feature_member UNIQUE (feature_id, member_id)
 );
 
+-- Table: changelog (tracciamento versioni e modifiche software)
+CREATE TABLE changelog (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  version VARCHAR(20) NOT NULL UNIQUE, -- es. "1.2.0"
+  type VARCHAR(10) NOT NULL CHECK (type IN ('major', 'minor', 'patch')),
+  title VARCHAR(200) NOT NULL,
+  description TEXT NOT NULL, -- Markdown con lista modifiche
+  release_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Indexes for performance
 CREATE INDEX idx_team_members_role ON team_members(role_id);
 CREATE INDEX idx_features_sprint ON features(sprint_id);
@@ -96,6 +107,8 @@ CREATE INDEX idx_nrt_allocations_member ON nrt_allocations(member_id);
 CREATE INDEX idx_nrt_allocations_week ON nrt_allocations(week_start);
 CREATE INDEX idx_feature_members_feature ON feature_members(feature_id);
 CREATE INDEX idx_feature_members_member ON feature_members(member_id);
+CREATE INDEX idx_changelog_version ON changelog(version);
+CREATE INDEX idx_changelog_release_date ON changelog(release_date DESC);
 
 -- Enable Row Level Security (RLS) - DISABLED for v1
 -- In production, enable RLS and create appropriate policies
@@ -107,6 +120,7 @@ ALTER TABLE allocations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE time_offs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE nrt_allocations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE feature_members ENABLE ROW LEVEL SECURITY;
+ALTER TABLE changelog ENABLE ROW LEVEL SECURITY;
 
 -- Temporary policy: allow all operations (for development)
 -- IMPORTANT: Replace with proper policies in production
@@ -118,6 +132,7 @@ CREATE POLICY "Allow all for development" ON allocations FOR ALL USING (true);
 CREATE POLICY "Allow all for development" ON time_offs FOR ALL USING (true);
 CREATE POLICY "Allow all for development" ON nrt_allocations FOR ALL USING (true);
 CREATE POLICY "Allow all for development" ON feature_members FOR ALL USING (true);
+CREATE POLICY "Allow all for development" ON changelog FOR ALL USING (true);
 
 -- Sample data (optional, for testing)
 INSERT INTO roles (name, color) VALUES
@@ -134,3 +149,4 @@ COMMENT ON TABLE allocations IS 'Allocazioni settimanali: feature + membro + gio
 COMMENT ON TABLE time_offs IS 'Ferie/assenze per membro e settimana';
 COMMENT ON TABLE nrt_allocations IS 'NRT (Non-Regression Testing) - Allocazioni per membri QA/QAA con default 2 giorni prima settimana sprint';
 COMMENT ON TABLE feature_members IS 'Assegnazione membri a feature (quali membri lavoreranno su questa feature)';
+COMMENT ON TABLE changelog IS 'Changelog applicazione - tracciamento versioni e modifiche (semantic versioning: major.minor.patch)';

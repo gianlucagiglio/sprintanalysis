@@ -6,6 +6,7 @@ import { TeamView } from '@/pages/TeamView'
 import { SprintView } from '@/pages/SprintView'
 import { FeaturesView } from '@/pages/FeaturesView'
 import { TimeOffView } from '@/pages/TimeOffView'
+import { ChangelogView } from '@/pages/ChangelogView'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="sprints" element={<SprintView />} />
           <Route path="features" element={<FeaturesView />} />
           <Route path="timeoff" element={<TimeOffView />} />
+          <Route path="changelog" element={<ChangelogView />} />
         </Route>
       </Routes>
     </BrowserRouter>
