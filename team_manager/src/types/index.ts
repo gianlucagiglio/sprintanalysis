@@ -73,6 +73,7 @@ export interface FeatureMember {
 export interface WeekColumn {
   weekStart: string // ISO date string (Monday)
   label: string // e.g. "22 Apr"
+  isCurrentWeek: boolean // true se questa settimana contiene oggi
 }
 
 export interface SprintSpan {

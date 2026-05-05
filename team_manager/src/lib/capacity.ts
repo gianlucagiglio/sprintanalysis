@@ -1,4 +1,4 @@
-import { startOfWeek, addWeeks, format, differenceInWeeks } from 'date-fns'
+import { startOfWeek, addWeeks, format, differenceInWeeks, isSameDay } from 'date-fns'
 import { it } from 'date-fns/locale'
 import type {
   Sprint,
@@ -10,6 +10,16 @@ import type {
   SprintSpan,
   CapacityInfo,
 } from '@/types'
+
+/**
+ * Verifica se una data weekStart corrisponde alla settimana corrente
+ */
+export function isCurrentWeek(weekStart: string): boolean {
+  const today = new Date()
+  const currentMonday = startOfWeek(today, { weekStartsOn: 1 })
+  const weekMonday = new Date(weekStart)
+  return isSameDay(currentMonday, weekMonday)
+}
 
 /**
  * Genera le colonne settimanali basate sugli sprint disponibili
@@ -33,9 +43,11 @@ export function generateWeekColumns(sprints: Sprint[]): WeekColumn[] {
   let currentMonday = firstMonday
 
   while (currentMonday <= lastMonday) {
+    const weekStart = format(currentMonday, 'yyyy-MM-dd')
     weeks.push({
-      weekStart: format(currentMonday, 'yyyy-MM-dd'),
+      weekStart,
       label: format(currentMonday, 'd MMM', { locale: it }),
+      isCurrentWeek: isCurrentWeek(weekStart),
     })
     currentMonday = addWeeks(currentMonday, 1)
   }

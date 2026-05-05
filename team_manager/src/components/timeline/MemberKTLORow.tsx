@@ -45,7 +45,11 @@ export function MemberKTLORow({
           return (
             <div
               key={week.weekStart}
-              className="border-r border-[var(--border-primary)] bg-[var(--bg-primary)]"
+              className={`border-r ${
+                week.isCurrentWeek
+                  ? 'border-[var(--accent-primary)] border-l-2 border-r-2 bg-[var(--accent-primary)]05'
+                  : 'border-[var(--border-primary)] bg-[var(--bg-primary)]'
+              }`}
               style={{ width: '72px', minWidth: '72px', height: '32px' }}
               title="KTLO - Keep The Lights On (default: 1.5 giorni, personalizzabile)"
             >

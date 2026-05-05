@@ -53,10 +53,18 @@ export function TimelineHeader({ weeks, sprintSpans, gridWidth }: TimelineHeader
           {weeks.map((week) => (
             <div
               key={week.weekStart}
-              className="border-r border-[var(--border-primary)] px-2 py-2 text-center bg-[var(--bg-primary)]"
+              className={`border-r px-2 py-2 text-center ${
+                week.isCurrentWeek
+                  ? 'border-[var(--accent-primary)] border-l-2 border-r-2 bg-[var(--accent-primary)]10'
+                  : 'border-[var(--border-primary)] bg-[var(--bg-primary)]'
+              }`}
               style={{ width: '72px', minWidth: '72px' }}
             >
-              <span className="text-xs text-[var(--text-secondary)] font-medium">
+              <span className={`text-xs font-medium ${
+                week.isCurrentWeek
+                  ? 'text-[var(--accent-primary)] font-semibold'
+                  : 'text-[var(--text-secondary)]'
+              }`}>
                 {week.label}
               </span>
             </div>

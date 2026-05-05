@@ -83,10 +83,18 @@ export function TimeOffView() {
               {weeks.map((week) => (
                 <div
                   key={week.weekStart}
-                  className="border-r border-[var(--border-primary)] px-2 py-2 text-center"
+                  className={`border-r px-2 py-2 text-center ${
+                    week.isCurrentWeek
+                      ? 'border-[var(--accent-primary)] border-l-2 border-r-2 bg-[var(--accent-primary)]10'
+                      : 'border-[var(--border-primary)]'
+                  }`}
                   style={{ width: '72px', minWidth: '72px' }}
                 >
-                  <span className="text-xs text-[var(--text-secondary)] font-medium">
+                  <span className={`text-xs font-medium ${
+                    week.isCurrentWeek
+                      ? 'text-[var(--accent-primary)] font-semibold'
+                      : 'text-[var(--text-secondary)]'
+                  }`}>
                     {week.label}
                   </span>
                 </div>
@@ -109,7 +117,11 @@ export function TimeOffView() {
                   return (
                     <div
                       key={week.weekStart}
-                      className="border-r border-[var(--border-primary)] bg-[var(--warning)]05"
+                      className={`border-r ${
+                        week.isCurrentWeek
+                          ? 'border-[var(--accent-primary)] border-l-2 border-r-2 bg-[var(--accent-primary)]05'
+                          : 'border-[var(--border-primary)] bg-[var(--warning)]05'
+                      }`}
                       style={{ width: '72px', minWidth: '72px', height: '40px' }}
                     >
                       <TimeOffCell
