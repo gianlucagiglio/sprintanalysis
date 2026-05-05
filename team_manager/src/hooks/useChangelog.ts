@@ -15,9 +15,26 @@ export function useChangelog() {
         .from('changelog')
         .select('*')
         .order('release_date', { ascending: false })
+        .order('created_at', { ascending: false })
 
       if (error) throw error
-      setChangelogs(data || [])
+
+      // Ordina anche lato client per semantic versioning
+      const sorted = (data || []).sort((a, b) => {
+        // Prima per data
+        const dateCompare = new Date(b.release_date).getTime() - new Date(a.release_date).getTime()
+        if (dateCompare !== 0) return dateCompare
+
+        // Poi per versione semantica
+        const [aMajor, aMinor, aPatch] = a.version.split('.').map(Number)
+        const [bMajor, bMinor, bPatch] = b.version.split('.').map(Number)
+
+        if (bMajor !== aMajor) return bMajor - aMajor
+        if (bMinor !== aMinor) return bMinor - aMinor
+        return bPatch - aPatch
+      })
+
+      setChangelogs(sorted)
     } catch (error) {
       console.error('Error fetching changelogs:', error)
       toast.error('Errore caricamento changelog')

@@ -10,6 +10,7 @@ interface MemberNRTRowProps {
   sprints: Sprint[]
   nrtAllocations: NRTAllocation[]
   onNRTChange: (memberId: string, weekStart: string, days: number) => Promise<void>
+  color: string
 }
 
 export function MemberNRTRow({
@@ -19,6 +20,7 @@ export function MemberNRTRow({
   sprints,
   nrtAllocations,
   onNRTChange,
+  color,
 }: MemberNRTRowProps) {
   const getNRT = (weekStart: string) => {
     const allocation = nrtAllocations.find(
@@ -41,7 +43,7 @@ export function MemberNRTRow({
   return (
     <div className="flex hover:bg-[var(--bg-hover)] transition-colors border-t border-[var(--border-primary)]">
       <div className="timeline-sticky-col bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3">
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#9333ea' }} />
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
         <span className="text-sm text-[var(--text-secondary)]">{member.name}</span>
         {member.role && (
           <Badge label={member.role.name} color={member.role.color} small />

@@ -16,6 +16,7 @@ export function ChangelogView() {
     createChangelog,
     updateChangelog,
     deleteChangelog,
+    refreshChangelogs,
   } = useChangelog()
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -79,16 +80,24 @@ export function ChangelogView() {
             </span>
           </p>
         </div>
-        <button
-          onClick={() => {
-            setEditingChangelog(null)
-            setModalOpen(true)
-          }}
-          className="btn btn-primary flex items-center gap-2"
-        >
-          <Plus size={20} />
-          Nuova Versione
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={refreshChangelogs}
+            className="btn btn-secondary"
+          >
+            Ricarica
+          </button>
+          <button
+            onClick={() => {
+              setEditingChangelog(null)
+              setModalOpen(true)
+            }}
+            className="btn btn-primary flex items-center gap-2"
+          >
+            <Plus size={20} />
+            Nuova Versione
+          </button>
+        </div>
       </div>
 
       {/* Changelog List */}

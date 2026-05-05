@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Calendar, Users, LayoutGrid, Palmtree, Layers, BarChart3, ScrollText } from 'lucide-react'
+import { Calendar, Users, LayoutGrid, Palmtree, Layers, BarChart3, ScrollText, Settings } from 'lucide-react'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { SettingsModal } from '@/components/settings/SettingsModal'
 
 const NAV_ITEMS = [
   { to: '/', icon: LayoutGrid, label: 'Timeline' },
@@ -13,7 +15,10 @@ const NAV_ITEMS = [
 ]
 
 export function Sidebar() {
+  const [settingsOpen, setSettingsOpen] = useState(false)
+
   return (
+    <>
     <aside className="w-[var(--sidebar-width)] h-screen bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-[var(--border-primary)]">
@@ -50,11 +55,21 @@ export function Sidebar() {
 
       {/* Footer */}
       <div className="p-4 border-t border-[var(--border-primary)] space-y-3">
+        <button
+          onClick={() => setSettingsOpen(true)}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] transition-colors"
+        >
+          <Settings size={18} />
+          <span className="text-sm">Impostazioni Colori</span>
+        </button>
         <ThemeToggle />
         <div className="text-xs text-[var(--text-tertiary)]">
-          v1.0.0 • Team Resource Manager
+          v1.7.0 • Team Resource Manager
         </div>
       </div>
     </aside>
+
+    <SettingsModal isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
+    </>
   )
 }

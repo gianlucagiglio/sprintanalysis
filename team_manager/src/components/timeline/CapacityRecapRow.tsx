@@ -12,6 +12,7 @@ interface CapacityRecapRowProps {
   timeOffs: TimeOff[]
   ktloAllocations: KTLOAllocation[]
   nrtAllocations: NRTAllocation[]
+  color: string
 }
 
 interface WeekBreakdown {
@@ -33,6 +34,7 @@ export function CapacityRecapRow({
   timeOffs,
   ktloAllocations,
   nrtAllocations,
+  color,
 }: CapacityRecapRowProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -104,30 +106,31 @@ export function CapacityRecapRow({
   }
 
   return (
-    <div className="border-b-2 border-[var(--accent-primary)] mb-4">
+    <div className="mb-4" style={{ borderBottom: `2px solid ${color}` }}>
       {/* Header */}
-      <div className="flex bg-[var(--accent-primary)]15">
+      <div className="flex" style={{ backgroundColor: `${color}1A` }}>
         <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-3">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-[var(--accent-primary)] hover:opacity-70 transition-opacity"
+            className="hover:opacity-70 transition-opacity"
+            style={{ color }}
           >
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
-          <div className="w-2 h-2 rounded-full bg-[var(--accent-primary)]" />
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
           <div className="flex-1">
-            <div className="text-sm text-[var(--accent-primary)] font-semibold">
+            <div className="text-sm font-semibold" style={{ color }}>
               Riepilogo Capacità
             </div>
-            <div className="text-xs text-[var(--accent-primary)] opacity-70 mt-0.5">
+            <div className="text-xs mt-0.5" style={{ color, opacity: 0.7 }}>
               Totale allocazioni per persona/settimana
             </div>
           </div>
         </div>
 
         <div
-          className="flex border-t-2 border-[var(--accent-primary)]"
-          style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}
+          className="flex"
+          style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px`, borderTop: `2px solid ${color}` }}
         >
           {weeks.map((week) => (
             <div

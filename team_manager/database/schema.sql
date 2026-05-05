@@ -95,6 +95,17 @@ CREATE TABLE changelog (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Table: settings (singleton - impostazioni globali)
+CREATE TABLE settings (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  nrt_color VARCHAR(7) NOT NULL DEFAULT '#9333ea',
+  ktlo_color VARCHAR(7) NOT NULL DEFAULT '#3b82f6',
+  timeoff_color VARCHAR(7) NOT NULL DEFAULT '#f59e0b',
+  capacity_color VARCHAR(7) NOT NULL DEFAULT '#3b82f6',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Indexes for performance
 CREATE INDEX idx_team_members_role ON team_members(role_id);
 CREATE INDEX idx_features_sprint ON features(sprint_id);
@@ -121,6 +132,7 @@ ALTER TABLE time_offs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE nrt_allocations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE feature_members ENABLE ROW LEVEL SECURITY;
 ALTER TABLE changelog ENABLE ROW LEVEL SECURITY;
+ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
 
 -- Temporary policy: allow all operations (for development)
 -- IMPORTANT: Replace with proper policies in production
@@ -133,6 +145,7 @@ CREATE POLICY "Allow all for development" ON time_offs FOR ALL USING (true);
 CREATE POLICY "Allow all for development" ON nrt_allocations FOR ALL USING (true);
 CREATE POLICY "Allow all for development" ON feature_members FOR ALL USING (true);
 CREATE POLICY "Allow all for development" ON changelog FOR ALL USING (true);
+CREATE POLICY "Allow all for development" ON settings FOR ALL USING (true);
 
 -- Sample data (optional, for testing)
 INSERT INTO roles (name, color) VALUES
@@ -150,3 +163,4 @@ COMMENT ON TABLE time_offs IS 'Ferie/assenze per membro e settimana';
 COMMENT ON TABLE nrt_allocations IS 'NRT (Non-Regression Testing) - Allocazioni per membri QA/QAA con default 2 giorni prima settimana sprint';
 COMMENT ON TABLE feature_members IS 'Assegnazione membri a feature (quali membri lavoreranno su questa feature)';
 COMMENT ON TABLE changelog IS 'Changelog applicazione - tracciamento versioni e modifiche (semantic versioning: major.minor.patch)';
+COMMENT ON TABLE settings IS 'Impostazioni globali applicazione - colori personalizzabili per sezioni (singleton)';

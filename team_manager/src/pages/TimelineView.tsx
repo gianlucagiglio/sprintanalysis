@@ -7,6 +7,7 @@ import { useFeatures } from '@/hooks/useFeatures'
 import { useAllocations } from '@/hooks/useAllocations'
 import { useKTLO } from '@/hooks/useKTLO'
 import { useNRT } from '@/hooks/useNRT'
+import { useSettings } from '@/hooks/useSettings'
 import { generateWeekColumns, getSprintSpans } from '@/lib/capacity'
 import { TimelineHeader } from '@/components/timeline/TimelineHeader'
 import { CapacityRecapRow } from '@/components/timeline/CapacityRecapRow'
@@ -26,6 +27,7 @@ export function TimelineView() {
   const { allocations, timeOffs, upsertAllocation, upsertTimeOff } = useAllocations()
   const { ktloAllocations, upsertKTLOAllocation } = useKTLO()
   const { nrtAllocations, upsertNRTAllocation } = useNRT()
+  const { settings } = useSettings()
 
   // Carica feature members per filtrare i membri visibili nella timeline
   useFeatures()
@@ -265,6 +267,7 @@ export function TimelineView() {
             timeOffs={timeOffs}
             ktloAllocations={ktloAllocations}
             nrtAllocations={nrtAllocations}
+            color={settings.capacity_color}
           />
 
           {features.length === 0 ? (
@@ -320,6 +323,7 @@ export function TimelineView() {
             sprints={sprints}
             nrtAllocations={nrtAllocations}
             onNRTChange={upsertNRTAllocation}
+            color={settings.nrt_color}
           />
 
           {/* Riga KTLO */}
@@ -329,6 +333,7 @@ export function TimelineView() {
             gridWidth={gridWidth}
             ktloAllocations={ktloAllocations}
             onKTLOChange={upsertKTLOAllocation}
+            color={settings.ktlo_color}
           />
 
           {/* Riga Globale Ferie */}
@@ -338,6 +343,7 @@ export function TimelineView() {
             gridWidth={gridWidth}
             timeOffs={timeOffs}
             onTimeOffChange={upsertTimeOff}
+            color={settings.timeoff_color}
           />
         </div>
       </div>

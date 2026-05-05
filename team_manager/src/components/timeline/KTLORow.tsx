@@ -9,6 +9,7 @@ interface KTLORowProps {
   gridWidth: number
   ktloAllocations: KTLOAllocation[]
   onKTLOChange: (memberId: string, weekStart: string, days: number) => Promise<void>
+  color: string
 }
 
 export function KTLORow({
@@ -17,6 +18,7 @@ export function KTLORow({
   gridWidth,
   ktloAllocations,
   onKTLOChange,
+  color,
 }: KTLORowProps) {
   const [isExpanded, setIsExpanded] = useState(true)
 
@@ -33,26 +35,27 @@ export function KTLORow({
   }
 
   return (
-    <div className="border-t-2 border-[var(--accent-secondary)]">
+    <div style={{ borderTop: `2px solid ${color}` }}>
       {/* Header Row */}
-      <div className="flex bg-[var(--accent-secondary)]10">
+      <div className="flex" style={{ backgroundColor: `${color}1A` }}>
         <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-3">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-[var(--accent-secondary)] hover:opacity-70 transition-opacity"
+            className="hover:opacity-70 transition-opacity"
+            style={{ color }}
           >
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
-          <div className="w-2 h-2 rounded-full bg-[var(--accent-secondary)]" />
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
           <div className="flex-1">
-            <div className="text-sm text-[var(--accent-secondary)] font-semibold">KTLO</div>
-            <div className="text-xs text-[var(--accent-secondary)] opacity-70 mt-0.5">
+            <div className="text-sm font-semibold" style={{ color }}>KTLO</div>
+            <div className="text-xs mt-0.5" style={{ color, opacity: 0.7 }}>
               Keep The Lights On • 15% consigliato
             </div>
           </div>
         </div>
 
-        <div className="flex border-t-2 border-[var(--accent-secondary)]" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
+        <div className="flex" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px`, borderTop: `2px solid ${color}` }}>
           {weeks.map((week) => {
             const total = getTotalKTLO(week.weekStart)
 
@@ -66,7 +69,7 @@ export function KTLORow({
                 }`}
                 style={{ width: '72px', minWidth: '72px', height: '40px' }}
               >
-                <span className="text-sm font-mono text-[var(--accent-secondary)] font-semibold leading-[32px]">
+                <span className="text-sm font-mono font-semibold leading-[32px]" style={{ color }}>
                   {total > 0 ? total : ''}
                 </span>
               </div>
@@ -86,6 +89,7 @@ export function KTLORow({
               gridWidth={gridWidth}
               ktloAllocations={ktloAllocations}
               onKTLOChange={onKTLOChange}
+              color={color}
             />
           ))}
         </div>

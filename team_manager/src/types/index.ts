@@ -89,6 +89,16 @@ export interface Changelog {
   created_at?: string
 }
 
+export interface Settings {
+  id: string
+  nrt_color: string // Hex color
+  ktlo_color: string
+  timeoff_color: string
+  capacity_color: string
+  created_at?: string
+  updated_at?: string
+}
+
 // UI Helper Types
 export interface WeekColumn {
   weekStart: string // ISO date string (Monday)
