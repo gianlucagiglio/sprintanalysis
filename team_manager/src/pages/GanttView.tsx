@@ -43,6 +43,35 @@ export function GanttView() {
     }
   }, [roles])
 
+  // Toggle functions for filters
+  const toggleFeature = (featureId: string) => {
+    setSelectedFeatures((prev) =>
+      prev.includes(featureId)
+        ? prev.filter((id) => id !== featureId)
+        : [...prev, featureId]
+    )
+  }
+
+  const toggleMember = (memberId: string) => {
+    setSelectedMembers((prev) =>
+      prev.includes(memberId)
+        ? prev.filter((id) => id !== memberId)
+        : [...prev, memberId]
+    )
+  }
+
+  const toggleRole = (roleId: string) => {
+    setSelectedRoles((prev) =>
+      prev.includes(roleId) ? prev.filter((id) => id !== roleId) : [...prev, roleId]
+    )
+  }
+
+  const toggleType = (type: string) => {
+    setSelectedTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    )
+  }
+
   // Generate weeks and sprints
   const weeks = useMemo(() => generateWeekColumns(sprints), [sprints])
   const sprintSpans = useMemo(() => getSprintSpans(sprints, weeks), [sprints, weeks])
@@ -147,10 +176,18 @@ export function GanttView() {
           selectedMembers={selectedMembers}
           selectedRoles={selectedRoles}
           selectedTypes={selectedTypes}
-          onFeatureChange={setSelectedFeatures}
-          onMemberChange={setSelectedMembers}
-          onRoleChange={setSelectedRoles}
-          onTypeChange={setSelectedTypes}
+          onFeatureToggle={toggleFeature}
+          onMemberToggle={toggleMember}
+          onRoleToggle={toggleRole}
+          onTypeToggle={toggleType}
+          onSelectAllFeatures={() => setSelectedFeatures(features.map((f) => f.id))}
+          onDeselectAllFeatures={() => setSelectedFeatures([])}
+          onSelectAllMembers={() => setSelectedMembers(members.map((m) => m.id))}
+          onDeselectAllMembers={() => setSelectedMembers([])}
+          onSelectAllRoles={() => setSelectedRoles(roles.map((r) => r.id))}
+          onDeselectAllRoles={() => setSelectedRoles([])}
+          onSelectAllTypes={() => setSelectedTypes(['strategic', 'small_change'])}
+          onDeselectAllTypes={() => setSelectedTypes([])}
         />
       </div>
 
