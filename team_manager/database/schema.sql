@@ -17,7 +17,7 @@ CREATE TABLE team_members (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name VARCHAR(200) NOT NULL,
   role_id UUID NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
-  weekly_capacity NUMERIC(3, 1) NOT NULL DEFAULT 5.0, -- 0-5 days, step 0.5
+  weekly_capacity NUMERIC(4, 2) NOT NULL DEFAULT 5.0, -- 0-5 days, step 0.01
   created_at TIMESTAMPTZ DEFAULT NOW(),
   CONSTRAINT weekly_capacity_range CHECK (weekly_capacity >= 0 AND weekly_capacity <= 5)
 );
@@ -47,7 +47,7 @@ CREATE TABLE allocations (
   feature_id UUID NOT NULL REFERENCES features(id) ON DELETE CASCADE,
   member_id UUID NOT NULL REFERENCES team_members(id) ON DELETE CASCADE,
   week_start DATE NOT NULL, -- Monday of the week
-  days NUMERIC(3, 1) NOT NULL DEFAULT 0, -- 0-5 days, step 0.5
+  days NUMERIC(4, 2) NOT NULL DEFAULT 0, -- 0-5 days, step 0.01
   created_at TIMESTAMPTZ DEFAULT NOW(),
   CONSTRAINT days_range CHECK (days >= 0 AND days <= 5),
   CONSTRAINT unique_allocation UNIQUE (feature_id, member_id, week_start)
@@ -58,7 +58,7 @@ CREATE TABLE time_offs (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   member_id UUID NOT NULL REFERENCES team_members(id) ON DELETE CASCADE,
   week_start DATE NOT NULL, -- Monday of the week
-  days NUMERIC(3, 1) NOT NULL DEFAULT 0, -- 0-5 days, step 0.5
+  days NUMERIC(4, 2) NOT NULL DEFAULT 0, -- 0-5 days, step 0.01
   created_at TIMESTAMPTZ DEFAULT NOW(),
   CONSTRAINT time_off_days_range CHECK (days >= 0 AND days <= 5),
   CONSTRAINT unique_time_off UNIQUE (member_id, week_start)

@@ -31,8 +31,8 @@ export function TimeOffCell({ value, onChange }: TimeOffCellProps) {
   const handleSave = async () => {
     const numValue = parseFloat(inputValue) || 0
 
-    // Validazione: 0-5, step 0.5
-    const validated = Math.max(0, Math.min(5, Math.round(numValue * 2) / 2))
+    // Validazione: 0-5, step 0.01
+    const validated = Math.max(0, Math.min(5, Math.round(numValue * 100) / 100))
 
     if (validated !== value) {
       setIsSaving(true)
@@ -77,7 +77,7 @@ export function TimeOffCell({ value, onChange }: TimeOffCellProps) {
         className="w-full h-full bg-[var(--warning)]30 border border-[var(--warning)] text-xs font-mono text-[var(--text-primary)] text-center outline-none"
         min="0"
         max="5"
-        step="0.5"
+        step="0.01"
         disabled={isSaving}
       />
     )

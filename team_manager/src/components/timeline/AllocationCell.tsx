@@ -32,8 +32,8 @@ export function AllocationCell({ value, isOverCapacity, onChange }: AllocationCe
   const handleSave = async () => {
     const numValue = parseFloat(inputValue) || 0
 
-    // Validazione: 0-5, step 0.5
-    const validated = Math.max(0, Math.min(5, Math.round(numValue * 2) / 2))
+    // Validazione: 0-5, step 0.01
+    const validated = Math.max(0, Math.min(5, Math.round(numValue * 100) / 100))
 
     if (validated !== value) {
       setIsSaving(true)
@@ -78,7 +78,7 @@ export function AllocationCell({ value, isOverCapacity, onChange }: AllocationCe
         className="w-full h-full bg-[var(--accent-primary)]20 border border-[var(--accent-primary)] text-xs font-mono text-[var(--text-primary)] text-center outline-none"
         min="0"
         max="5"
-        step="0.5"
+        step="0.01"
         disabled={isSaving}
       />
     )

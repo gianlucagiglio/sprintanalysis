@@ -102,11 +102,11 @@ export function MemberForm({ member, roles, onSubmit, onCancel }: MemberFormProp
           className="input w-full font-mono"
           min="0"
           max="5"
-          step="0.5"
+          step="0.01"
           required
         />
         <p className="text-xs text-[var(--text-tertiary)] mt-1">
-          Giorni lavorativi disponibili a settimana (0-5, step 0.5)
+          Giorni lavorativi disponibili a settimana (0-5, step 0.01)
         </p>
       </div>
 
