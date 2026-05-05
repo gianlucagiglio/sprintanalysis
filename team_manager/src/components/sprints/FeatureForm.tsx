@@ -20,6 +20,7 @@ export function FeatureForm({
   const [name, setName] = useState('')
   const [type, setType] = useState<FeatureType>('strategic')
   const [color, setColor] = useState('#3b82f6')
+  const [displayOrder, setDisplayOrder] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
@@ -27,10 +28,12 @@ export function FeatureForm({
       setName(feature.name)
       setType(feature.type || 'strategic')
       setColor(feature.color)
+      setDisplayOrder(feature.display_order ?? 0)
     } else {
       setName('')
       setType('strategic')
       setColor('#3b82f6')
+      setDisplayOrder(0)
     }
   }, [feature])
 
@@ -44,6 +47,7 @@ export function FeatureForm({
         name: name.trim(),
         type,
         color,
+        display_order: displayOrder,
       })
       onCancel()
     } catch (error) {
@@ -94,6 +98,24 @@ export function FeatureForm({
       </div>
 
       <ColorPicker label="Colore" value={color} onChange={setColor} />
+
+      <div>
+        <label htmlFor="feature-order" className="label">
+          Ordine Visualizzazione
+        </label>
+        <input
+          id="feature-order"
+          type="number"
+          value={displayOrder}
+          onChange={(e) => setDisplayOrder(parseInt(e.target.value) || 0)}
+          className="input w-full"
+          min="0"
+          step="1"
+        />
+        <p className="text-xs text-[var(--text-tertiary)] mt-1">
+          Numero d'ordine nella timeline (0 = prima, valori più alti = dopo)
+        </p>
+      </div>
 
       <div className="flex gap-3 pt-4">
         <button

@@ -32,7 +32,8 @@ export function useSprints() {
           *,
           sprint:sprints(*)
         `)
-        .order('name')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true })
 
       if (error) throw error
       setFeatures(data || [])

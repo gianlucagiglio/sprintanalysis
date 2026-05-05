@@ -32,6 +32,7 @@ export interface Feature {
   sprint_id?: string | null
   color: string
   type: FeatureType
+  display_order: number
   created_at?: string
   // Joined data
   sprint?: Sprint

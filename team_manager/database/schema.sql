@@ -38,6 +38,7 @@ CREATE TABLE features (
   name VARCHAR(200) NOT NULL,
   sprint_id UUID REFERENCES sprints(id) ON DELETE SET NULL, -- Opzionale - le allocazioni vengono fatte sulla timeline
   color VARCHAR(7) NOT NULL, -- Hex color: #RRGGBB
+  display_order INTEGER DEFAULT 0, -- Ordine visualizzazione (0 = primo)
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -109,6 +110,7 @@ CREATE TABLE settings (
 -- Indexes for performance
 CREATE INDEX idx_team_members_role ON team_members(role_id);
 CREATE INDEX idx_features_sprint ON features(sprint_id);
+CREATE INDEX idx_features_display_order ON features(display_order);
 CREATE INDEX idx_allocations_feature ON allocations(feature_id);
 CREATE INDEX idx_allocations_member ON allocations(member_id);
 CREATE INDEX idx_allocations_week ON allocations(week_start);
