@@ -6,10 +6,12 @@ import { useSprints } from '@/hooks/useSprints'
 import { useFeatures } from '@/hooks/useFeatures'
 import { useAllocations } from '@/hooks/useAllocations'
 import { useKTLO } from '@/hooks/useKTLO'
+import { useNRT } from '@/hooks/useNRT'
 import { generateWeekColumns, getSprintSpans } from '@/lib/capacity'
 import { TimelineHeader } from '@/components/timeline/TimelineHeader'
 import { FeatureGroup } from '@/components/timeline/FeatureGroup'
 import { GlobalTimeOffRow } from '@/components/timeline/GlobalTimeOffRow'
+import { NRTRow } from '@/components/timeline/NRTRow'
 import { KTLORow } from '@/components/timeline/KTLORow'
 import { TimelineFilters } from '@/components/timeline/TimelineFilters'
 import { Modal } from '@/components/ui/Modal'
@@ -22,6 +24,7 @@ export function TimelineView() {
   const { sprints, features, createFeature, updateFeature, deleteFeature } = useSprints()
   const { allocations, timeOffs, upsertAllocation, upsertTimeOff } = useAllocations()
   const { ktloAllocations, upsertKTLOAllocation } = useKTLO()
+  const { nrtAllocations, upsertNRTAllocation } = useNRT()
 
   // Carica feature members per filtrare i membri visibili nella timeline
   useFeatures()
@@ -295,6 +298,16 @@ export function TimelineView() {
               />
             ))
           )}
+
+          {/* Riga NRT (Non-Regression Testing) - Solo QA/QAA */}
+          <NRTRow
+            members={filteredMembers}
+            weeks={weeks}
+            gridWidth={gridWidth}
+            sprints={sprints}
+            nrtAllocations={nrtAllocations}
+            onNRTChange={upsertNRTAllocation}
+          />
 
           {/* Riga KTLO */}
           <KTLORow

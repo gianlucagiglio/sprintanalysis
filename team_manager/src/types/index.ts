@@ -58,7 +58,15 @@ export interface KTLOAllocation {
   id: string
   member_id: string
   week_start: string // YYYY-MM-DD format (Monday)
-  days: number // 0-5, step 0.5
+  days: number // 0-5, step 0.01
+  created_at?: string
+}
+
+export interface NRTAllocation {
+  id: string
+  member_id: string
+  week_start: string // YYYY-MM-DD format (Monday)
+  days: number // 0-5, step 0.01, default 2 on first sprint week
   created_at?: string
 }
 
@@ -100,6 +108,7 @@ export interface AppStore {
   allocations: Allocation[]
   timeOffs: TimeOff[]
   ktloAllocations: KTLOAllocation[]
+  nrtAllocations: NRTAllocation[]
   featureMembers: FeatureMember[]
 
   // UI State
@@ -113,6 +122,7 @@ export interface AppStore {
   setAllocations: (allocations: Allocation[]) => void
   setTimeOffs: (timeOffs: TimeOff[]) => void
   setKTLOAllocations: (ktloAllocations: KTLOAllocation[]) => void
+  setNRTAllocations: (nrtAllocations: NRTAllocation[]) => void
   setFeatureMembers: (featureMembers: FeatureMember[]) => void
   toggleFeatureCollapse: (featureId: string) => void
 }

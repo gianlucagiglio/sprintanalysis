@@ -10,6 +10,7 @@ export const useAppStore = create<AppStore>((set) => ({
   allocations: [],
   timeOffs: [],
   ktloAllocations: [],
+  nrtAllocations: [],
   featureMembers: [],
 
   // UI State
@@ -23,6 +24,7 @@ export const useAppStore = create<AppStore>((set) => ({
   setAllocations: (allocations) => set({ allocations }),
   setTimeOffs: (timeOffs) => set({ timeOffs }),
   setKTLOAllocations: (ktloAllocations) => set({ ktloAllocations }),
+  setNRTAllocations: (nrtAllocations) => set({ nrtAllocations }),
   setFeatureMembers: (featureMembers) => set({ featureMembers }),
 
   toggleFeatureCollapse: (featureId) =>

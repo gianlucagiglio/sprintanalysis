@@ -64,6 +64,17 @@ CREATE TABLE time_offs (
   CONSTRAINT unique_time_off UNIQUE (member_id, week_start)
 );
 
+-- Table: nrt_allocations (NRT - Non-Regression Testing per QA/QAA)
+CREATE TABLE nrt_allocations (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  member_id UUID NOT NULL REFERENCES team_members(id) ON DELETE CASCADE,
+  week_start DATE NOT NULL, -- Monday of the week
+  days NUMERIC(4, 2) NOT NULL DEFAULT 2.0, -- 0-5 days, step 0.01, default 2
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT nrt_days_range CHECK (days >= 0 AND days <= 5),
+  CONSTRAINT unique_nrt_allocation UNIQUE (member_id, week_start)
+);
+
 -- Table: feature_members (assegnazione membri a feature)
 CREATE TABLE feature_members (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -81,6 +92,8 @@ CREATE INDEX idx_allocations_member ON allocations(member_id);
 CREATE INDEX idx_allocations_week ON allocations(week_start);
 CREATE INDEX idx_time_offs_member ON time_offs(member_id);
 CREATE INDEX idx_time_offs_week ON time_offs(week_start);
+CREATE INDEX idx_nrt_allocations_member ON nrt_allocations(member_id);
+CREATE INDEX idx_nrt_allocations_week ON nrt_allocations(week_start);
 CREATE INDEX idx_feature_members_feature ON feature_members(feature_id);
 CREATE INDEX idx_feature_members_member ON feature_members(member_id);
 
@@ -92,6 +105,7 @@ ALTER TABLE sprints ENABLE ROW LEVEL SECURITY;
 ALTER TABLE features ENABLE ROW LEVEL SECURITY;
 ALTER TABLE allocations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE time_offs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE nrt_allocations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE feature_members ENABLE ROW LEVEL SECURITY;
 
 -- Temporary policy: allow all operations (for development)
@@ -102,6 +116,7 @@ CREATE POLICY "Allow all for development" ON sprints FOR ALL USING (true);
 CREATE POLICY "Allow all for development" ON features FOR ALL USING (true);
 CREATE POLICY "Allow all for development" ON allocations FOR ALL USING (true);
 CREATE POLICY "Allow all for development" ON time_offs FOR ALL USING (true);
+CREATE POLICY "Allow all for development" ON nrt_allocations FOR ALL USING (true);
 CREATE POLICY "Allow all for development" ON feature_members FOR ALL USING (true);
 
 -- Sample data (optional, for testing)
@@ -117,4 +132,5 @@ COMMENT ON TABLE sprints IS 'Sprint con date inizio/fine';
 COMMENT ON TABLE features IS 'Feature da sviluppare. Le allocazioni vengono gestite direttamente sulla timeline, sprint_id è opzionale';
 COMMENT ON TABLE allocations IS 'Allocazioni settimanali: feature + membro + giorni';
 COMMENT ON TABLE time_offs IS 'Ferie/assenze per membro e settimana';
+COMMENT ON TABLE nrt_allocations IS 'NRT (Non-Regression Testing) - Allocazioni per membri QA/QAA con default 2 giorni prima settimana sprint';
 COMMENT ON TABLE feature_members IS 'Assegnazione membri a feature (quali membri lavoreranno su questa feature)';
