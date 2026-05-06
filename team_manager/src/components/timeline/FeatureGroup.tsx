@@ -15,12 +15,7 @@ interface FeatureGroupProps {
   onToggle: () => void
   onEdit: () => void
   onDelete: () => void
-  onAllocationChange: (
-    featureId: string,
-    memberId: string,
-    weekStart: string,
-    days: number
-  ) => Promise<void>
+  onAllocationChange: (featureId: string, memberId: string, weekStart: string, days: number) => Promise<void>
 }
 
 export function FeatureGroup({
@@ -38,33 +33,16 @@ export function FeatureGroup({
   onAllocationChange,
 }: FeatureGroupProps) {
   const featureAllocations = allocations.filter((a) => a.feature_id === feature.id)
-
-  // Filtra membri: mostra solo quelli assegnati a questa feature
-  const assignedMemberIds = featureMembers
-    .filter((fm) => fm.feature_id === feature.id)
-    .map((fm) => fm.member_id)
-
+  const assignedMemberIds = featureMembers.filter((fm) => fm.feature_id === feature.id).map((fm) => fm.member_id)
   const assignedMembers = members.filter((m) => assignedMemberIds.includes(m.id))
 
-  // Ordine ruoli: PA, PD, BE, FE, QA, QAA
-  const roleOrder: Record<string, number> = {
-    PA: 1,
-    PD: 2,
-    BE: 3,
-    FE: 4,
-    QA: 5,
-    QAA: 6,
-  }
-
+  const roleOrder: Record<string, number> = { PA: 1, PD: 2, BE: 3, FE: 4, QA: 5, QAA: 6 }
   const sortedMembers = [...assignedMembers].sort((a, b) => {
-    const roleA = a.role?.name || ''
-    const roleB = b.role?.name || ''
-    const orderA = roleOrder[roleA] || 999
-    const orderB = roleOrder[roleB] || 999
+    const orderA = roleOrder[a.role?.name || ''] || 999
+    const orderB = roleOrder[b.role?.name || ''] || 999
     return orderA - orderB
   })
 
-  // Calcola totale giorni allocati per settimana (solo membri assegnati)
   const getTotalDays = (weekStart: string) => {
     return featureAllocations
       .filter((a) => a.week_start === weekStart && assignedMemberIds.includes(a.member_id))
@@ -74,49 +52,50 @@ export function FeatureGroup({
   return (
     <div className="border-b border-[var(--border-primary)]">
       {/* Feature Header */}
-      <div className="flex bg-[var(--bg-secondary)] hover:bg-[var(--bg-hover)] transition-colors">
-        <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-2">
-          <button
-            onClick={onToggle}
-            className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-          >
+      <div className="flex timeline-feature-header">
+        <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-2.5 flex items-center gap-3">
+          <button onClick={onToggle} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
             {isCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
           </button>
-          <Badge label={feature.name} color={feature.color} maxWidth="200px" />
+          <Badge label={feature.name} color={feature.color} maxWidth="180px" />
           <div className="flex items-center gap-1 ml-auto">
             <button
               onClick={onEdit}
-              className="p-1 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
-              title="Modifica feature"
+              className="p-1 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors rounded"
+              title="Modifica"
             >
               <Edit2 size={14} />
             </button>
             <button
               onClick={onDelete}
-              className="p-1 text-[var(--text-secondary)] hover:text-[var(--danger)] transition-colors"
-              title="Elimina feature"
+              className="p-1 text-[var(--text-secondary)] hover:text-[var(--danger)] transition-colors rounded"
+              title="Elimina"
             >
               <Trash2 size={14} />
             </button>
           </div>
         </div>
 
-        <div className="flex hover:bg-[var(--bg-hover)]" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
+        <div className="flex" style={{ width: `${gridWidth}px` }}>
           {weeks.map((week) => {
             const total = getTotalDays(week.weekStart)
-
             return (
               <div
                 key={week.weekStart}
-                className={`border-r p-1 text-center ${
-                  week.isCurrentWeek
-                    ? 'border-[var(--accent-primary)] border-l-2 border-r-2 bg-[var(--accent-primary)]05'
-                    : 'border-[var(--border-primary)] bg-[var(--bg-primary)]'
+                className={`border-r border-[var(--border-primary)] p-1 text-center ${
+                  week.isCurrentWeek ? 'timeline-week-current' : ''
                 }`}
-                style={{ width: '72px', minWidth: '72px', height: '40px' }}
+                style={{ width: '72px', height: '36px' }}
               >
                 {total > 0 && (
-                  <span className="text-sm font-mono font-semibold text-[var(--text-primary)] leading-[32px]">
+                  <span
+                    className="inline-block px-1.5 py-0.5 rounded text-xs font-mono font-bold"
+                    style={{
+                      backgroundColor: `${feature.color}20`,
+                      color: feature.color,
+                      border: `1px solid ${feature.color}40`,
+                    }}
+                  >
                     {total}
                   </span>
                 )}
@@ -127,22 +106,18 @@ export function FeatureGroup({
       </div>
 
       {/* Member Rows */}
-      {!isCollapsed && (
-        <>
-          {sortedMembers.map((member) => (
-            <MemberRow
-              key={member.id}
-              member={member}
-              feature={feature}
-              weeks={weeks}
-              gridWidth={gridWidth}
-              allocations={featureAllocations}
-              timeOffs={timeOffs}
-              onAllocationChange={onAllocationChange}
-            />
-          ))}
-        </>
-      )}
+      {!isCollapsed && sortedMembers.map((member) => (
+        <MemberRow
+          key={member.id}
+          member={member}
+          feature={feature}
+          weeks={weeks}
+          gridWidth={gridWidth}
+          allocations={featureAllocations}
+          timeOffs={timeOffs}
+          onAllocationChange={onAllocationChange}
+        />
+      ))}
     </div>
   )
 }

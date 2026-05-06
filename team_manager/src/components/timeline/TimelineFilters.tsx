@@ -142,13 +142,14 @@ export function TimelineFilters({
                     {features.map((feature) => (
                       <label
                         key={feature.id}
-                        className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-[var(--bg-hover)]"
+                        className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-[var(--bg-hover)] min-h-[44px]"
                       >
                         <input
                           type="checkbox"
                           checked={selectedFeatures.includes(feature.id)}
                           onChange={() => onFeatureToggle(feature.id)}
-                          className="w-4 h-4 accent-[var(--accent-primary)]"
+                          className="w-5 h-5 accent-[var(--accent-primary)] cursor-pointer"
+                          aria-label={`Mostra/nascondi feature ${feature.name}`}
                         />
                         <Badge label={feature.name} color={feature.color} small maxWidth="180px" />
                       </label>
@@ -197,13 +198,14 @@ export function TimelineFilters({
                     {members.map((member) => (
                       <label
                         key={member.id}
-                        className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-[var(--bg-hover)]"
+                        className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-[var(--bg-hover)] min-h-[44px]"
                       >
                         <input
                           type="checkbox"
                           checked={selectedMembers.includes(member.id)}
                           onChange={() => onMemberToggle(member.id)}
-                          className="w-4 h-4 accent-[var(--accent-primary)]"
+                          className="w-5 h-5 accent-[var(--accent-primary)] cursor-pointer"
+                          aria-label={`Mostra/nascondi membro ${member.name}`}
                         />
                         <div className="flex items-center gap-2">
                           <span className="text-sm">{member.name}</span>
@@ -257,13 +259,14 @@ export function TimelineFilters({
                     {roles.map((role) => (
                       <label
                         key={role.id}
-                        className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-[var(--bg-hover)]"
+                        className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-[var(--bg-hover)] min-h-[44px]"
                       >
                         <input
                           type="checkbox"
                           checked={selectedRoles.includes(role.id)}
                           onChange={() => onRoleToggle(role.id)}
-                          className="w-4 h-4 accent-[var(--accent-primary)]"
+                          className="w-5 h-5 accent-[var(--accent-primary)] cursor-pointer"
+                          aria-label={`Filtra per ruolo ${role.name}`}
                         />
                         <Badge label={role.name} color={role.color} small />
                       </label>
@@ -313,12 +316,13 @@ export function TimelineFilters({
                       </button>
                     </div>
 
-                    <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-[var(--bg-hover)]">
+                    <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-[var(--bg-hover)] min-h-[44px]">
                       <input
                         type="checkbox"
                         checked={selectedTypes.includes('strategic')}
                         onChange={() => onTypeToggle('strategic')}
-                        className="w-4 h-4 accent-[var(--accent-primary)]"
+                        className="w-5 h-5 accent-[var(--accent-primary)] cursor-pointer"
+                        aria-label="Mostra/nascondi feature strategiche"
                       />
                       <div className="flex items-center gap-2">
                         <span className="text-sm">🎯 Strategica</span>
@@ -328,12 +332,13 @@ export function TimelineFilters({
                       </div>
                     </label>
 
-                    <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-[var(--bg-hover)]">
+                    <label className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-[var(--bg-hover)] min-h-[44px]">
                       <input
                         type="checkbox"
                         checked={selectedTypes.includes('small_change')}
                         onChange={() => onTypeToggle('small_change')}
-                        className="w-4 h-4 accent-[var(--accent-primary)]"
+                        className="w-5 h-5 accent-[var(--accent-primary)] cursor-pointer"
+                        aria-label="Mostra/nascondi small changes"
                       />
                       <div className="flex items-center gap-2">
                         <span className="text-sm">🔧 Small Change</span>

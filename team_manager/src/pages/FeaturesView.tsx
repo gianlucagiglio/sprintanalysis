@@ -1,25 +1,17 @@
 import { useState } from 'react'
-import { Plus } from 'lucide-react'
+import { Plus, Calendar, Users } from 'lucide-react'
 import { useFeatures } from '@/hooks/useFeatures'
 import { useTeam } from '@/hooks/useTeam'
 import { useSprints } from '@/hooks/useSprints'
 import { Modal } from '@/components/ui/Modal'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { FeatureList } from '@/components/features/FeatureList'
 import { FeatureForm } from '@/components/sprints/FeatureForm'
 import type { Feature } from '@/types'
 
 export function FeaturesView() {
-  const {
-    features,
-    featureMembers,
-    createFeature,
-    updateFeature,
-    deleteFeature,
-    assignMembers,
-    getFeatureMembers,
-  } = useFeatures()
-
+  const { features, featureMembers, createFeature, updateFeature, deleteFeature, assignMembers, getFeatureMembers } = useFeatures()
   const { members } = useTeam()
   const { sprints } = useSprints()
 
@@ -73,92 +65,52 @@ export function FeaturesView() {
 
   const getDeleteMessage = () => {
     const feature = features.find((f) => f.id === deletingId)
-    return `Sei sicuro di voler eliminare la feature "${feature?.name}"? Verranno eliminate anche tutte le allocazioni associate. Questa azione non può essere annullata.`
+    return `Sei sicuro di voler eliminare la feature "${feature?.name}"? Verranno eliminate anche tutte le allocazioni associate.`
   }
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-[var(--text-primary)]">Feature</h1>
-          <p className="text-[var(--text-secondary)] mt-2">
+          <h1 className="text-2xl font-bold text-[var(--text-primary)]">Feature</h1>
+          <p className="text-sm text-[var(--text-secondary)] mt-1">
             Gestisci le feature e assegna i membri del team
           </p>
         </div>
-        <button
-          onClick={() => {
-            setEditingFeature(null)
-            setFeatureModalOpen(true)
-          }}
-          className="flex items-center gap-2 px-4 py-2 bg-[var(--accent-primary)] text-white rounded-lg hover:opacity-90 transition-opacity"
-        >
-          <Plus size={20} />
+        <button onClick={() => { setEditingFeature(null); setFeatureModalOpen(true); }} className="btn btn-primary flex items-center gap-2">
+          <Plus size={18} />
           Nuova Feature
         </button>
       </div>
 
-      <FeatureList
-        features={features}
-        members={members}
-        featureMembers={featureMembers}
-        getFeatureMembers={getFeatureMembers}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onAssignMembers={handleAssignMembers}
-      />
-
-      <Modal
-        isOpen={featureModalOpen}
-        onClose={() => {
-          setFeatureModalOpen(false)
-          setEditingFeature(null)
-        }}
-        title={editingFeature ? 'Modifica Feature' : 'Nuova Feature'}
-      >
-        <FeatureForm
-          feature={editingFeature || undefined}
-          sprints={sprints}
-          onSubmit={handleFeatureSubmit}
-          onCancel={() => {
-            setFeatureModalOpen(false)
-            setEditingFeature(null)
-          }}
+      {features.length === 0 ? (
+        <EmptyState
+          icon={Calendar}
+          title="Nessuna feature creata"
+          description="Le feature rappresentano i progetti su cui lavora il team. Crea la prima feature per iniziare."
+          action={{ label: 'Crea Feature', onClick: () => setFeatureModalOpen(true) }}
         />
-      </Modal>
-
-      <Modal
-        isOpen={assignModalOpen}
-        onClose={() => {
-          setAssignModalOpen(false)
-          setAssigningFeatureId(null)
-        }}
-        title="Assegna Membri al Team"
-      >
-        <MemberAssignForm
+      ) : (
+        <FeatureList
+          features={features}
           members={members}
-          selectedIds={
-            assigningFeatureId
-              ? getFeatureMembers(assigningFeatureId).map((fm) => fm.member_id)
-              : []
-          }
-          onConfirm={handleConfirmAssign}
-          onCancel={() => {
-            setAssignModalOpen(false)
-            setAssigningFeatureId(null)
-          }}
+          featureMembers={featureMembers}
+          getFeatureMembers={getFeatureMembers}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onAssignMembers={handleAssignMembers}
         />
+      )}
+
+      <Modal isOpen={featureModalOpen} onClose={() => { setFeatureModalOpen(false); setEditingFeature(null); }} title={editingFeature ? 'Modifica Feature' : 'Nuova Feature'}>
+        <FeatureForm feature={editingFeature || undefined} sprints={sprints} onSubmit={handleFeatureSubmit} onCancel={() => { setFeatureModalOpen(false); setEditingFeature(null); }} />
       </Modal>
 
-      <ConfirmDialog
-        isOpen={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-        onConfirm={handleConfirmDelete}
-        title="Conferma eliminazione"
-        message={getDeleteMessage()}
-        type="danger"
-        confirmText="Elimina"
-        cancelText="Annulla"
-      />
+      <Modal isOpen={assignModalOpen} onClose={() => { setAssignModalOpen(false); setAssigningFeatureId(null); }} title="Assegna Membri">
+        <MemberAssignForm members={members} selectedIds={assigningFeatureId ? getFeatureMembers(assigningFeatureId).map((fm) => fm.member_id) : []} onConfirm={handleConfirmAssign} onCancel={() => { setAssignModalOpen(false); setAssigningFeatureId(null); }} />
+      </Modal>
+
+      <ConfirmDialog isOpen={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)} onConfirm={handleConfirmDelete} title="Elimina Feature" message={getDeleteMessage()} type="danger" confirmText="Elimina" cancelText="Annulla" />
     </div>
   )
 }
@@ -174,78 +126,38 @@ function MemberAssignForm({ members, selectedIds, onConfirm, onCancel }: MemberA
   const [selected, setSelected] = useState<string[]>(selectedIds)
 
   const handleToggle = (memberId: string) => {
-    setSelected((prev) =>
-      prev.includes(memberId) ? prev.filter((id) => id !== memberId) : [...prev, memberId]
-    )
+    setSelected((prev) => prev.includes(memberId) ? prev.filter((id) => id !== memberId) : [...prev, memberId])
   }
 
-  // Ordine ruoli: PA, PD, BE, FE, QA, QAA
-  const roleOrder: Record<string, number> = {
-    PA: 1,
-    PD: 2,
-    BE: 3,
-    FE: 4,
-    QA: 5,
-    QAA: 6,
-  }
-
+  const roleOrder: Record<string, number> = { PA: 1, PD: 2, BE: 3, FE: 4, QA: 5, QAA: 6 }
   const sortedMembers = [...members].sort((a, b) => {
-    const roleA = a.role?.name || ''
-    const roleB = b.role?.name || ''
-    const orderA = roleOrder[roleA] || 999
-    const orderB = roleOrder[roleB] || 999
+    const orderA = roleOrder[a.role?.name || ''] || 999
+    const orderB = roleOrder[b.role?.name || ''] || 999
     return orderA - orderB
   })
 
   return (
     <div className="space-y-4">
       <p className="text-sm text-[var(--text-secondary)]">
-        Seleziona i membri del team che lavoreranno su questa feature
+        Seleziona i membri che lavoreranno su questa feature
       </p>
 
       <div className="max-h-96 overflow-y-auto space-y-2">
         {sortedMembers.map((member) => (
-          <label
-            key={member.id}
-            className="flex items-center gap-3 p-3 rounded-lg border border-[var(--border-primary)] hover:bg-[var(--bg-hover)] cursor-pointer transition-colors"
-          >
-            <input
-              type="checkbox"
-              checked={selected.includes(member.id)}
-              onChange={() => handleToggle(member.id)}
-              className="w-4 h-4 accent-[var(--accent-primary)]"
-            />
+          <label key={member.id} className="flex items-center gap-3 p-3 rounded border border-[var(--border-primary)] hover:bg-[var(--bg-hover)] cursor-pointer transition-colors min-h-[44px]">
+            <input type="checkbox" checked={selected.includes(member.id)} onChange={() => handleToggle(member.id)} className="w-5 h-5 accent-[var(--accent-primary)] cursor-pointer" />
             <div className="flex-1">
-              <div className="font-medium text-[var(--text-primary)]">{member.name}</div>
-              {member.role && (
-                <div className="text-xs text-[var(--text-secondary)] mt-0.5">
-                  {member.role.name}
-                </div>
-              )}
+              <div className="font-medium text-sm text-[var(--text-primary)]">{member.name}</div>
+              {member.role && <div className="text-xs text-[var(--text-secondary)]">{member.role.name}</div>}
             </div>
-            {member.role && (
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: member.role.color }}
-              />
-            )}
+            {member.role && <div className="w-2 h-2 rounded-full" style={{ backgroundColor: member.role.color }} />}
           </label>
         ))}
       </div>
 
       <div className="flex gap-3 pt-4 border-t border-[var(--border-primary)]">
-        <button
-          onClick={onCancel}
-          className="flex-1 px-4 py-2 border border-[var(--border-primary)] rounded-lg hover:bg-[var(--bg-hover)] transition-colors"
-        >
-          Annulla
-        </button>
-        <button
-          onClick={() => onConfirm(selected)}
-          className="flex-1 px-4 py-2 bg-[var(--accent-primary)] text-white rounded-lg hover:opacity-90 transition-opacity"
-        >
-          Salva Assegnazioni
-        </button>
+        <button onClick={onCancel} className="btn btn-secondary flex-1">Annulla</button>
+        <button onClick={() => onConfirm(selected)} className="btn btn-primary flex-1">Salva</button>
       </div>
     </div>
   )

@@ -106,25 +106,16 @@ export function CapacityRecapRow({
   }
 
   return (
-    <div className="mb-4" style={{ borderBottom: `2px solid ${color}` }}>
+    <div className="mb-4 border-b-2 border-[var(--border-primary)]">
       {/* Header */}
-      <div className="flex" style={{ backgroundColor: `${color}1A` }}>
-        <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-3">
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="hover:opacity-70 transition-opacity"
-            style={{ color }}
-          >
+      <div className="flex" style={{ backgroundColor: `${color}10` }}>
+        <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-2.5 flex items-center gap-3">
+          <button onClick={() => setIsExpanded(!isExpanded)} className="hover:opacity-70 transition-opacity" style={{ color }}>
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
           <div className="flex-1">
-            <div className="text-sm font-semibold" style={{ color }}>
-              Riepilogo Capacità
-            </div>
-            <div className="text-xs mt-0.5" style={{ color, opacity: 0.7 }}>
-              Totale allocazioni per persona/settimana
-            </div>
+            <div className="text-sm font-bold" style={{ color }}>Riepilogo Capacità</div>
+            <div className="text-xs opacity-70" style={{ color }}>Totale allocazioni per settimana</div>
           </div>
         </div>
 

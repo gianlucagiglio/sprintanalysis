@@ -5,10 +5,41 @@
 @tailwind utilities;
 
 :root {
-  /* 📐 Spacing & Layout - Shared across themes */
+  /* 📐 Spacing Scale - 8pt Grid System (4/8/12/16/24/32/48/64) */
+  --space-xs: 0.25rem; /* 4px */
+  --space-sm: 0.5rem; /* 8px */
+  --space-md: 0.75rem; /* 12px */
+  --space-lg: 1rem; /* 16px */
+  --space-xl: 1.5rem; /* 24px */
+  --space-2xl: 2rem; /* 32px */
+  --space-3xl: 3rem; /* 48px */
+  --space-4xl: 4rem; /* 64px */
+
+  /* 📐 Layout-Specific Measurements */
   --sidebar-width: 220px;
   --week-col-width: 72px;
   --header-height: 100px;
+
+  /* 📝 Typography Scale - Based on type scale */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px */
+
+  /* 📏 Line Heights */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* 🎨 Font Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
 
   /* ✨ Border Radius - Shared across themes */
   --radius-sm: 6px;
@@ -275,19 +306,57 @@ a:hover {
   background: rgba(0, 0, 0, 0.6);
 }
 
-/* 📊 Timeline-Specific Styles */
+/* 📊 Timeline Design System */
+
+/* Header */
+.timeline-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-sprint-badge {
+  padding: 0.25rem 0.625rem;
+  background: var(--accent-subtle);
+  color: var(--accent-primary);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--accent-primary);
+  opacity: 0.85;
+}
+
+.timeline-week-current {
+  background: var(--accent-subtle);
+  border-left: 2px solid var(--accent-primary) !important;
+  border-right: 2px solid var(--accent-primary) !important;
+}
+
+/* Feature Groups */
+.timeline-feature-header {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.timeline-feature-header:hover {
+  background: var(--bg-tertiary);
+}
+
+/* Cells */
 .timeline-cell {
-  transition: all var(--transition-fast);
+  transition: background var(--transition-fast);
 }
 
 .timeline-cell:hover {
   background: var(--bg-hover);
 }
 
-.timeline-header {
-  background: var(--bg-elevated);
-  border-bottom: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-sm);
+/* Sections */
+.timeline-section {
+  margin-top: 1.5rem;
+  border-top: 2px solid currentColor;
 }
 
 /* 🎨 Badge Improvements */

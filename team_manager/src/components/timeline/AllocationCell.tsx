@@ -23,16 +23,8 @@ export function AllocationCell({ value, isOverCapacity, onChange }: AllocationCe
     setInputValue(value.toString())
   }, [value])
 
-  const handleClick = () => {
-    if (!isEditing) {
-      setIsEditing(true)
-    }
-  }
-
   const handleSave = async () => {
     const numValue = parseFloat(inputValue) || 0
-
-    // Validazione: 0-5, step 0.01
     const validated = Math.max(0, Math.min(5, Math.round(numValue * 100) / 100))
 
     if (validated !== value) {
@@ -40,29 +32,21 @@ export function AllocationCell({ value, isOverCapacity, onChange }: AllocationCe
       try {
         await onChange(validated)
       } catch (error) {
-        // Rollback in caso di errore
         setInputValue(value.toString())
       } finally {
         setIsSaving(false)
       }
     }
-
-    setIsEditing(false)
-  }
-
-  const handleCancel = () => {
-    setInputValue(value.toString())
     setIsEditing(false)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSave()
-    } else if (e.key === 'Escape') {
-      handleCancel()
-    } else if (e.key === 'Tab') {
+    if (e.key === 'Enter' || e.key === 'Tab') {
       e.preventDefault()
       handleSave()
+    } else if (e.key === 'Escape') {
+      setInputValue(value.toString())
+      setIsEditing(false)
     }
   }
 
@@ -75,7 +59,7 @@ export function AllocationCell({ value, isOverCapacity, onChange }: AllocationCe
         onChange={(e) => setInputValue(e.target.value)}
         onBlur={handleSave}
         onKeyDown={handleKeyDown}
-        className="w-full h-full bg-[var(--accent-primary)]20 border border-[var(--accent-primary)] text-xs font-mono text-[var(--text-primary)] text-center outline-none"
+        className="w-full h-full bg-[var(--accent-subtle)] border border-[var(--accent-primary)] text-xs font-mono font-semibold text-[var(--text-primary)] text-center outline-none"
         min="0"
         max="5"
         step="0.01"
@@ -86,14 +70,16 @@ export function AllocationCell({ value, isOverCapacity, onChange }: AllocationCe
 
   return (
     <button
-      onClick={handleClick}
-      className={`w-full h-full text-xs font-mono transition-colors hover:bg-[var(--bg-hover)] ${
+      onClick={() => setIsEditing(true)}
+      className={`w-full h-full text-xs font-mono font-semibold transition-all cursor-pointer ${
         isOverCapacity
-          ? 'bg-[var(--danger)]20 text-[var(--danger)]'
-          : 'text-[var(--text-secondary)]'
+          ? 'bg-[var(--danger-bg)] text-[var(--danger)]'
+          : value > 0
+          ? 'text-[var(--text-primary)] hover:bg-[var(--accent-subtle)] hover:text-[var(--accent-primary)]'
+          : 'text-[var(--text-tertiary)] hover:bg-[var(--bg-hover)]'
       }`}
     >
-      {value > 0 ? value : ''}
+      {isSaving ? '...' : value > 0 ? value : ''}
     </button>
   )
 }

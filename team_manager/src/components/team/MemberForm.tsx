@@ -79,7 +79,7 @@ export function MemberForm({ member, roles, onSubmit, onCancel }: MemberFormProp
           id="member-role"
           value={roleId}
           onChange={(e) => setRoleId(e.target.value)}
-          className="input w-full"
+          className="form-input form-select w-full"
           required
         >
           {roles.map((role) => (

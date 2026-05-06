@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Plus } from 'lucide-react'
+import { Plus, Calendar, Users, Layers } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore'
 import { useTeam } from '@/hooks/useTeam'
 import { useSprints } from '@/hooks/useSprints'
@@ -17,6 +17,8 @@ import { NRTRow } from '@/components/timeline/NRTRow'
 import { KTLORow } from '@/components/timeline/KTLORow'
 import { TimelineFilters } from '@/components/timeline/TimelineFilters'
 import { Modal } from '@/components/ui/Modal'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { FeatureForm } from '@/components/sprints/FeatureForm'
 import type { Feature } from '@/types'
 
@@ -34,6 +36,8 @@ export function TimelineView() {
 
   const [featureModalOpen, setFeatureModalOpen] = useState(false)
   const [editingFeature, setEditingFeature] = useState<Feature | null>(null)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+  const [featureToDelete, setFeatureToDelete] = useState<Feature | null>(null)
 
   // Filters state
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([])
@@ -107,9 +111,15 @@ export function TimelineView() {
     setFeatureModalOpen(true)
   }
 
-  const handleDeleteFeature = async (feature: Feature) => {
-    if (confirm(`Eliminare la feature "${feature.name}"? Verranno eliminate anche tutte le allocazioni associate.`)) {
-      await deleteFeature(feature.id)
+  const handleDeleteFeature = (feature: Feature) => {
+    setFeatureToDelete(feature)
+    setDeleteConfirmOpen(true)
+  }
+
+  const confirmDeleteFeature = async () => {
+    if (featureToDelete) {
+      await deleteFeature(featureToDelete.id)
+      setFeatureToDelete(null)
     }
   }
 
@@ -173,13 +183,16 @@ export function TimelineView() {
             Vista settimanale allocazioni per feature e membro
           </p>
         </div>
-        <div className="card text-center py-12">
-          <p className="text-[var(--text-secondary)] mb-4">
-            Nessuno sprint creato. Vai alla sezione Sprint per iniziare!
-          </p>
-          <a href="/sprints" className="btn btn-primary inline-block">
-            Vai a Sprint
-          </a>
+        <div className="card">
+          <EmptyState
+            icon={Calendar}
+            title="Nessuno sprint creato"
+            description="Per iniziare a pianificare il lavoro del team, crea il tuo primo sprint nella sezione Sprint."
+            action={{
+              label: 'Vai a Sprint',
+              onClick: () => (window.location.href = '/sprints'),
+            }}
+          />
         </div>
       </div>
     )
@@ -194,13 +207,16 @@ export function TimelineView() {
             Vista settimanale allocazioni per feature e membro
           </p>
         </div>
-        <div className="card text-center py-12">
-          <p className="text-[var(--text-secondary)] mb-4">
-            Nessun membro nel team. Vai alla sezione Team per aggiungerne!
-          </p>
-          <a href="/team" className="btn btn-primary inline-block">
-            Vai a Team
-          </a>
+        <div className="card">
+          <EmptyState
+            icon={Users}
+            title="Nessun membro nel team"
+            description="Aggiungi i membri del team per poter allocare le risorse sulle feature."
+            action={{
+              label: 'Vai a Team',
+              onClick: () => (window.location.href = '/team'),
+            }}
+          />
         </div>
       </div>
     )
@@ -271,29 +287,29 @@ export function TimelineView() {
           />
 
           {features.length === 0 ? (
-            <div className="p-12 text-center border-t border-[var(--border-primary)]">
-              <p className="text-[var(--text-secondary)] mb-3">
-                Nessuna feature creata. Inizia creando la tua prima feature!
-              </p>
-              <button
-                onClick={() => setFeatureModalOpen(true)}
-                className="btn btn-primary inline-flex items-center gap-2"
-              >
-                <Plus size={16} />
-                Crea Prima Feature
-              </button>
+            <div className="border-t border-[var(--border-primary)]">
+              <EmptyState
+                icon={Layers}
+                title="Nessuna feature creata"
+                description="Le feature rappresentano i progetti o le attività su cui lavora il team. Crea la tua prima feature per iniziare."
+                action={{
+                  label: 'Crea Prima Feature',
+                  onClick: () => setFeatureModalOpen(true),
+                }}
+              />
             </div>
           ) : filteredFeatures.length === 0 ? (
-            <div className="p-12 text-center border-t border-[var(--border-primary)]">
-              <p className="text-[var(--text-secondary)]">
-                Nessuna feature corrisponde ai filtri selezionati
-              </p>
-              <button
-                onClick={() => setSelectedFeatures(features.map((f) => f.id))}
-                className="btn btn-secondary mt-4"
-              >
-                Ripristina filtri feature
-              </button>
+            <div className="border-t border-[var(--border-primary)]">
+              <EmptyState
+                icon={Layers}
+                title="Nessuna feature visibile"
+                description="Nessuna feature corrisponde ai filtri selezionati. Modifica i filtri per visualizzare più feature."
+                action={{
+                  label: 'Ripristina filtri',
+                  onClick: () => setSelectedFeatures(features.map((f) => f.id)),
+                  variant: 'secondary',
+                }}
+              />
             </div>
           ) : (
             filteredFeatures.map((feature) => (
@@ -367,6 +383,21 @@ export function TimelineView() {
           }}
         />
       </Modal>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteConfirmOpen}
+        onClose={() => {
+          setDeleteConfirmOpen(false)
+          setFeatureToDelete(null)
+        }}
+        onConfirm={confirmDeleteFeature}
+        title="Elimina Feature"
+        message={`Sei sicuro di voler eliminare la feature "${featureToDelete?.name}"? Verranno eliminate anche tutte le allocazioni associate. Questa azione non può essere annullata.`}
+        type="danger"
+        confirmText="Elimina"
+        cancelText="Annulla"
+      />
     </div>
   )
 }
