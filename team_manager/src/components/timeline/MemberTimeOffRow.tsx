@@ -34,9 +34,11 @@ export function MemberTimeOffRow({
 
   return (
     <div className="flex hover:bg-[var(--bg-hover)] transition-colors border-t border-[var(--border-primary)]">
-      <div className="timeline-sticky-col bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3">
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-        <span className="text-sm text-[var(--text-secondary)]">{member.name}</span>
+      <div className="timeline-sticky-col bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+          <span className="text-sm text-[var(--text-secondary)]">{member.name}</span>
+        </div>
         {member.role && (
           <Badge label={member.role.name} color={member.role.color} small />
         )}
