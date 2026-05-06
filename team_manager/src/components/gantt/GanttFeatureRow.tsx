@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
 import type { Feature, WeekColumn, Allocation, TeamMember } from '@/types'
 
 interface GanttFeatureRowProps {
@@ -95,16 +94,20 @@ export function GanttFeatureRow({
     <div className="border-b border-[var(--border-primary)]">
       {/* Feature Header */}
       <div className="flex bg-[var(--bg-secondary)] hover:bg-[var(--bg-hover)] transition-colors">
-        <div className="w-[280px] min-w-[280px] bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-2">
+        <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-2">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
           >
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
-          <div className="flex-1 flex items-center gap-2">
-            <Badge label={feature.name} color={feature.color} maxWidth="150px" />
-            <span className="text-xs text-[var(--text-tertiary)] font-mono ml-auto">
+          <div className="flex-1 flex items-center gap-2 min-w-0">
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-bold timeline-text-truncate" style={{ color: feature.color }} title={feature.name}>
+                {feature.name}
+              </div>
+            </div>
+            <span className="text-xs text-[var(--text-tertiary)] font-mono flex-shrink-0">
               {totalElapsed.toFixed(1)} gg
             </span>
           </div>
@@ -159,7 +162,7 @@ export function GanttFeatureRow({
               key={role.roleName}
               className="flex hover:bg-[var(--bg-hover)] transition-colors border-t border-[var(--border-primary)]"
             >
-              <div className="w-[280px] min-w-[280px] bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 pl-12">
+              <div className="timeline-sticky-col bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 pl-12">
                 <div
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: role.roleColor }}

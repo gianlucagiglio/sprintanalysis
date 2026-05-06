@@ -11,7 +11,7 @@ export function GanttHeader({ weeks, sprintSpans, gridWidth }: GanttHeaderProps)
     <div className="sticky top-0 z-20 bg-[var(--bg-primary)]">
       {/* Sprint Row */}
       <div className="flex border-b border-[var(--border-primary)]">
-        <div className="w-[280px] min-w-[280px] bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center">
+        <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center">
           <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">
             Feature
           </span>
@@ -43,7 +43,7 @@ export function GanttHeader({ weeks, sprintSpans, gridWidth }: GanttHeaderProps)
 
       {/* Week Row */}
       <div className="flex border-b-2 border-[var(--border-secondary)]">
-        <div className="w-[280px] min-w-[280px] bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center">
+        <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center">
           <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">
             Settimana
           </span>

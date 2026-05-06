@@ -64,7 +64,7 @@ export function Sidebar() {
         </button>
         <ThemeToggle />
         <div className="text-xs text-[var(--text-tertiary)]">
-          v1.8.4 • Team Resource Manager
+          v1.8.5 • Team Resource Manager
         </div>
       </div>
     </aside>

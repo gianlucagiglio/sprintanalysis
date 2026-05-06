@@ -66,7 +66,7 @@ export function TimeOffView() {
       </div>
 
       <div className="flex-1 overflow-auto px-8 pb-8">
-        <div className="border border-[var(--border-primary)] rounded-lg overflow-hidden">
+        <div className="border border-[var(--border-primary)] rounded-lg overflow-x-auto">
           {/* Header */}
           <div className="timeline-header">
             <div className="flex border-b border-[var(--border-secondary)]">
