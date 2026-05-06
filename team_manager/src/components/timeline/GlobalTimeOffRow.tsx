@@ -35,8 +35,9 @@ export function GlobalTimeOffRow({ members, weeks, gridWidth, timeOffs, onTimeOf
           </button>
           <Palmtree size={16} style={{ color }} />
           <div className="flex-1">
-            <div className="text-sm font-bold" style={{ color }}>Ferie & Assenze</div>
-            <div className="text-xs opacity-70" style={{ color }}>Dettaglio per persona</div>
+            <div className="text-sm font-bold cursor-help" style={{ color }} title="Dettaglio per persona">
+              Ferie & Assenze
+            </div>
           </div>
         </div>
 

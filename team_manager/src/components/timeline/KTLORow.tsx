@@ -38,8 +38,9 @@ export function KTLORow({ members, weeks, gridWidth, ktloAllocations, onKTLOChan
           </button>
           <Wrench size={16} style={{ color }} />
           <div className="flex-1">
-            <div className="text-sm font-bold" style={{ color }}>KTLO</div>
-            <div className="text-xs opacity-70" style={{ color }}>Keep The Lights On</div>
+            <div className="text-sm font-bold cursor-help" style={{ color }} title="Keep The Lights On">
+              KTLO
+            </div>
           </div>
         </div>
 

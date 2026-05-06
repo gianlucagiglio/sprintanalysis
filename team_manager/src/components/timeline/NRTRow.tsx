@@ -49,8 +49,9 @@ export function NRTRow({ members, weeks, gridWidth, sprints, nrtAllocations, onN
           </button>
           <FlaskConical size={16} style={{ color }} />
           <div className="flex-1">
-            <div className="text-sm font-bold" style={{ color }}>NRT</div>
-            <div className="text-xs opacity-70" style={{ color }}>Non-Regression Testing</div>
+            <div className="text-sm font-bold cursor-help" style={{ color }} title="Non-Regression Testing">
+              NRT
+            </div>
           </div>
         </div>
 

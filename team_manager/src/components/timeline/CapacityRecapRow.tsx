@@ -114,8 +114,9 @@ export function CapacityRecapRow({
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
           <div className="flex-1">
-            <div className="text-sm font-bold" style={{ color }}>Riepilogo Capacità</div>
-            <div className="text-xs opacity-70" style={{ color }}>Totale allocazioni per settimana</div>
+            <div className="text-sm font-bold cursor-help" style={{ color }} title="Totale allocazioni per settimana">
+              Riepilogo Capacità
+            </div>
           </div>
         </div>
 
