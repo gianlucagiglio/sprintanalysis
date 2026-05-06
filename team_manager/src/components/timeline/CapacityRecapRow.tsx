@@ -145,7 +145,14 @@ export function CapacityRecapRow({
                 style={{ width: '72px', minWidth: '72px', height: '40px' }}
               >
                 {total > 0 && (
-                  <span className="text-sm font-mono font-semibold" style={{ color }}>
+                  <span
+                    className="inline-block px-1.5 py-0.5 rounded text-xs font-mono font-bold"
+                    style={{
+                      backgroundColor: `${color}20`,
+                      color: color,
+                      border: `1px solid ${color}40`,
+                    }}
+                  >
                     {total.toFixed(2)}
                   </span>
                 )}

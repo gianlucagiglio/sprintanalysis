@@ -55,9 +55,18 @@ export function KTLORow({ members, weeks, gridWidth, ktloAllocations, onKTLOChan
                 }`}
                 style={{ width: '72px', height: '36px' }}
               >
-                <span className="text-sm font-mono font-semibold" style={{ color }}>
-                  {total > 0 ? total : ''}
-                </span>
+                {total > 0 && (
+                  <span
+                    className="inline-block px-1.5 py-0.5 rounded text-xs font-mono font-bold"
+                    style={{
+                      backgroundColor: `${color}20`,
+                      color: color,
+                      border: `1px solid ${color}40`,
+                    }}
+                  >
+                    {total % 1 === 0 ? total : total.toFixed(2)}
+                  </span>
+                )}
               </div>
             )
           })}
