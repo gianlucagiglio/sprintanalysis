@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import type { TeamMember, WeekColumn, Allocation, TimeOff, KTLOAllocation, NRTAllocation, Sprint } from '@/types'
 import { startOfWeek, format } from 'date-fns'
@@ -13,6 +12,8 @@ interface CapacityRecapRowProps {
   ktloAllocations: KTLOAllocation[]
   nrtAllocations: NRTAllocation[]
   color: string
+  isExpanded: boolean
+  onToggle: () => void
 }
 
 interface WeekBreakdown {
@@ -35,8 +36,9 @@ export function CapacityRecapRow({
   ktloAllocations,
   nrtAllocations,
   color,
+  isExpanded,
+  onToggle,
 }: CapacityRecapRowProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
 
   // Ordina membri per ruolo (stesso ordine timeline)
   const roleOrder: Record<string, number> = {
@@ -118,7 +120,7 @@ export function CapacityRecapRow({
       {/* Header */}
       <div className="flex" style={{ backgroundColor: `${color}10` }}>
         <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-2.5 flex items-center gap-3">
-          <button onClick={() => setIsExpanded(!isExpanded)} className="hover:opacity-70 transition-opacity" style={{ color }}>
+          <button onClick={onToggle} className="hover:opacity-70 transition-opacity" style={{ color }}>
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
           <div className="flex-1">

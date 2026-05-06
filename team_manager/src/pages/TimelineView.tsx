@@ -19,11 +19,26 @@ import { TimelineFilters } from '@/components/timeline/TimelineFilters'
 import { Modal } from '@/components/ui/Modal'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { ExpandCollapseButtons } from '@/components/ui/ExpandCollapseButtons'
 import { FeatureForm } from '@/components/sprints/FeatureForm'
 import type { Feature } from '@/types'
 
 export function TimelineView() {
-  const { collapsedFeatures, toggleFeatureCollapse, featureMembers } = useAppStore()
+  const {
+    collapsedFeatures,
+    toggleFeatureCollapse,
+    featureMembers,
+    nrtExpanded,
+    ktloExpanded,
+    timeOffExpanded,
+    capacityRecapExpanded,
+    setNRTExpanded,
+    setKTLOExpanded,
+    setTimeOffExpanded,
+    setCapacityRecapExpanded,
+    expandAllTimeline,
+    collapseAllTimeline,
+  } = useAppStore()
   const { members, roles } = useTeam()
   const { sprints, features, createFeature, updateFeature, deleteFeature } = useSprints()
   const { allocations, timeOffs, upsertAllocation, upsertTimeOff } = useAllocations()
@@ -235,6 +250,11 @@ export function TimelineView() {
           </div>
 
           <div className="flex items-center gap-3">
+            <ExpandCollapseButtons
+              onExpandAll={expandAllTimeline}
+              onCollapseAll={collapseAllTimeline}
+            />
+
             <TimelineFilters
               features={features}
               members={members}
@@ -284,6 +304,8 @@ export function TimelineView() {
             ktloAllocations={ktloAllocations}
             nrtAllocations={nrtAllocations}
             color={settings.capacity_color}
+            isExpanded={capacityRecapExpanded}
+            onToggle={() => setCapacityRecapExpanded(!capacityRecapExpanded)}
           />
 
           {features.length === 0 ? (
@@ -340,6 +362,8 @@ export function TimelineView() {
             nrtAllocations={nrtAllocations}
             onNRTChange={upsertNRTAllocation}
             color={settings.nrt_color}
+            isExpanded={nrtExpanded}
+            onToggle={() => setNRTExpanded(!nrtExpanded)}
           />
 
           {/* Riga KTLO */}
@@ -350,6 +374,8 @@ export function TimelineView() {
             ktloAllocations={ktloAllocations}
             onKTLOChange={upsertKTLOAllocation}
             color={settings.ktlo_color}
+            isExpanded={ktloExpanded}
+            onToggle={() => setKTLOExpanded(!ktloExpanded)}
           />
 
           {/* Riga Globale Ferie */}
@@ -360,6 +386,8 @@ export function TimelineView() {
             timeOffs={timeOffs}
             onTimeOffChange={upsertTimeOff}
             color={settings.timeoff_color}
+            isExpanded={timeOffExpanded}
+            onToggle={() => setTimeOffExpanded(!timeOffExpanded)}
           />
         </div>
       </div>

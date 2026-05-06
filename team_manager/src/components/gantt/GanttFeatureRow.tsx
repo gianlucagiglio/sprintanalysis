@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
+import { useAppStore } from '@/store/useAppStore'
 import type { Feature, WeekColumn, Allocation, TeamMember } from '@/types'
 
 interface GanttFeatureRowProps {
@@ -24,7 +24,8 @@ export function GanttFeatureRow({
   allocations,
   members,
 }: GanttFeatureRowProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
+  const { collapsedGanttFeatures, toggleGanttFeatureCollapse } = useAppStore()
+  const isExpanded = !collapsedGanttFeatures[feature.id]
 
   // Filtra allocazioni per questa feature
   const featureAllocations = allocations.filter((a) => a.feature_id === feature.id)
@@ -96,7 +97,7 @@ export function GanttFeatureRow({
       <div className="flex bg-[var(--bg-secondary)] hover:bg-[var(--bg-hover)] transition-colors">
         <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-3 flex items-center gap-2">
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={() => toggleGanttFeatureCollapse(feature.id)}
             className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
           >
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}

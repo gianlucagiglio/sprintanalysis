@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { ChevronDown, ChevronRight, FlaskConical } from 'lucide-react'
 import { MemberNRTRow } from './MemberNRTRow'
 import type { TeamMember, WeekColumn, NRTAllocation, Sprint } from '@/types'
@@ -12,10 +11,11 @@ interface NRTRowProps {
   nrtAllocations: NRTAllocation[]
   onNRTChange: (memberId: string, weekStart: string, days: number) => Promise<void>
   color: string
+  isExpanded: boolean
+  onToggle: () => void
 }
 
-export function NRTRow({ members, weeks, gridWidth, sprints, nrtAllocations, onNRTChange, color }: NRTRowProps) {
-  const [isExpanded, setIsExpanded] = useState(true)
+export function NRTRow({ members, weeks, gridWidth, sprints, nrtAllocations, onNRTChange, color, isExpanded, onToggle }: NRTRowProps) {
 
   const roleOrder: Record<string, number> = { PA: 1, PD: 2, BE: 3, FE: 4, QA: 5, QAA: 6 }
   const qaMembers = members
@@ -44,7 +44,7 @@ export function NRTRow({ members, weeks, gridWidth, sprints, nrtAllocations, onN
     <div className="timeline-section" style={{ color }}>
       <div className="flex timeline-section-header" style={{ backgroundColor: `${color}10` }}>
         <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-2.5 flex items-center gap-3">
-          <button onClick={() => setIsExpanded(!isExpanded)} className="hover:opacity-70 transition-opacity" style={{ color }}>
+          <button onClick={onToggle} className="hover:opacity-70 transition-opacity" style={{ color }}>
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
           <FlaskConical size={16} style={{ color }} />

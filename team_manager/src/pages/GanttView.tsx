@@ -8,9 +8,10 @@ import { generateWeekColumns, getSprintSpans } from '@/lib/capacity'
 import { GanttHeader } from '@/components/gantt/GanttHeader'
 import { GanttFeatureRow } from '@/components/gantt/GanttFeatureRow'
 import { TimelineFilters } from '@/components/timeline/TimelineFilters'
+import { ExpandCollapseButtons } from '@/components/ui/ExpandCollapseButtons'
 
 export function GanttView() {
-  const { featureMembers } = useAppStore()
+  const { featureMembers, expandAllGantt, collapseAllGantt } = useAppStore()
   const { members, roles } = useTeam()
   const { sprints, features } = useSprints()
   const { allocations } = useAllocations()
@@ -167,7 +168,12 @@ export function GanttView() {
       </div>
 
       {/* Filters */}
-      <div className="px-8 pb-4">
+      <div className="px-8 pb-4 flex items-start gap-3">
+        <ExpandCollapseButtons
+          onExpandAll={expandAllGantt}
+          onCollapseAll={collapseAllGantt}
+        />
+
         <TimelineFilters
           features={features}
           members={members}

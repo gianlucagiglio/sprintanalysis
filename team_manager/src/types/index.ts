@@ -136,6 +136,11 @@ export interface AppStore {
 
   // UI State
   collapsedFeatures: Record<string, boolean>
+  collapsedGanttFeatures: Record<string, boolean>
+  nrtExpanded: boolean
+  ktloExpanded: boolean
+  timeOffExpanded: boolean
+  capacityRecapExpanded: boolean
 
   // Setters
   setRoles: (roles: Role[]) => void
@@ -148,4 +153,13 @@ export interface AppStore {
   setNRTAllocations: (nrtAllocations: NRTAllocation[]) => void
   setFeatureMembers: (featureMembers: FeatureMember[]) => void
   toggleFeatureCollapse: (featureId: string) => void
+  toggleGanttFeatureCollapse: (featureId: string) => void
+  setNRTExpanded: (expanded: boolean) => void
+  setKTLOExpanded: (expanded: boolean) => void
+  setTimeOffExpanded: (expanded: boolean) => void
+  setCapacityRecapExpanded: (expanded: boolean) => void
+  expandAllTimeline: () => void
+  collapseAllTimeline: () => void
+  expandAllGantt: () => void
+  collapseAllGantt: () => void
 }

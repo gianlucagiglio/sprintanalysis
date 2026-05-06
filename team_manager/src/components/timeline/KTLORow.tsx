@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { ChevronDown, ChevronRight, Wrench } from 'lucide-react'
 import { MemberKTLORow } from './MemberKTLORow'
 import type { TeamMember, WeekColumn, KTLOAllocation } from '@/types'
@@ -10,10 +9,11 @@ interface KTLORowProps {
   ktloAllocations: KTLOAllocation[]
   onKTLOChange: (memberId: string, weekStart: string, days: number) => Promise<void>
   color: string
+  isExpanded: boolean
+  onToggle: () => void
 }
 
-export function KTLORow({ members, weeks, gridWidth, ktloAllocations, onKTLOChange, color }: KTLORowProps) {
-  const [isExpanded, setIsExpanded] = useState(true)
+export function KTLORow({ members, weeks, gridWidth, ktloAllocations, onKTLOChange, color, isExpanded, onToggle }: KTLORowProps) {
 
   const roleOrder: Record<string, number> = { PA: 1, PD: 2, BE: 3, FE: 4, QA: 5, QAA: 6 }
   const sortedMembers = [...members].sort((a, b) => {
@@ -33,7 +33,7 @@ export function KTLORow({ members, weeks, gridWidth, ktloAllocations, onKTLOChan
     <div className="timeline-section" style={{ color }}>
       <div className="flex timeline-section-header" style={{ backgroundColor: `${color}10` }}>
         <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-2.5 flex items-center gap-3">
-          <button onClick={() => setIsExpanded(!isExpanded)} className="hover:opacity-70 transition-opacity" style={{ color }}>
+          <button onClick={onToggle} className="hover:opacity-70 transition-opacity" style={{ color }}>
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
           <Wrench size={16} style={{ color }} />
