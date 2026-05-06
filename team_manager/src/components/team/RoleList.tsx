@@ -12,7 +12,7 @@ export function RoleList({ roles, onEdit, onDelete }: RoleListProps) {
   if (roles.length === 0) {
     return (
       <div className="text-center py-8 text-[var(--text-tertiary)]">
-        Nessun ruolo definito. Inizia creandone uno!
+        No roles defined. Start by creating one!
       </div>
     )
   }
@@ -32,18 +32,18 @@ export function RoleList({ roles, onEdit, onDelete }: RoleListProps) {
             <button
               onClick={() => onEdit(role)}
               className="p-2 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
-              title="Modifica"
+              title="Edit"
             >
               <Edit2 size={16} />
             </button>
             <button
               onClick={() => {
-                if (confirm(`Eliminare il ruolo "${role.name}"?`)) {
+                if (confirm(`Delete role "${role.name}"?`)) {
                   onDelete(role.id)
                 }
               }}
               className="p-2 text-[var(--text-secondary)] hover:text-[var(--danger)] transition-colors"
-              title="Elimina"
+              title="Delete"
             >
               <Trash2 size={16} />
             </button>

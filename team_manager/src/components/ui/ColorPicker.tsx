@@ -40,18 +40,18 @@ export function ColorPicker({ value, onChange, label }: ColorPickerProps) {
             }`}
             style={{ backgroundColor: color }}
             title={color}
-            aria-label={`Seleziona colore ${color}`}
+            aria-label={`Select color ${color}`}
           />
         ))}
       </div>
       <div className="mt-3">
-        <label className="text-xs text-[var(--text-tertiary)] block mb-1">Colore personalizzato</label>
+        <label className="text-xs text-[var(--text-tertiary)] block mb-1">Custom color</label>
         <input
           type="color"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           className="w-full h-10 rounded-md cursor-pointer border border-[var(--border-primary)]"
-          aria-label="Seleziona colore personalizzato"
+          aria-label="Select custom color"
         />
       </div>
     </div>

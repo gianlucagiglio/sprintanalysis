@@ -195,16 +195,16 @@ export function TimelineView() {
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-[var(--text-primary)]">Timeline</h2>
           <p className="text-[var(--text-secondary)] mt-1">
-            Vista settimanale allocazioni per feature e membro
+            Weekly allocation view per feature and member
           </p>
         </div>
         <div className="card">
           <EmptyState
             icon={Calendar}
-            title="Nessuno sprint creato"
-            description="Per iniziare a pianificare il lavoro del team, crea il tuo primo sprint nella sezione Sprint."
+            title="No sprints created"
+            description="To start planning team work, create your first sprint in the Sprints section."
             action={{
-              label: 'Vai a Sprint',
+              label: 'Go to Sprints',
               onClick: () => (window.location.href = '/sprints'),
             }}
           />
@@ -219,16 +219,16 @@ export function TimelineView() {
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-[var(--text-primary)]">Timeline</h2>
           <p className="text-[var(--text-secondary)] mt-1">
-            Vista settimanale allocazioni per feature e membro
+            Weekly allocation view per feature and member
           </p>
         </div>
         <div className="card">
           <EmptyState
             icon={Users}
-            title="Nessun membro nel team"
-            description="Aggiungi i membri del team per poter allocare le risorse sulle feature."
+            title="No team members"
+            description="Add team members to allocate resources on features."
             action={{
-              label: 'Vai a Team',
+              label: 'Go to Team',
               onClick: () => (window.location.href = '/team'),
             }}
           />
@@ -245,7 +245,7 @@ export function TimelineView() {
           <div>
             <h2 className="text-2xl font-bold text-[var(--text-primary)]">Timeline</h2>
             <p className="text-[var(--text-secondary)] mt-1">
-              Vista settimanale allocazioni per feature e membro
+              Weekly allocation view per feature and member
             </p>
           </div>
 
@@ -282,7 +282,7 @@ export function TimelineView() {
               className="btn btn-primary flex items-center gap-2"
             >
               <Plus size={16} />
-              Nuova Feature
+              New Feature
             </button>
           </div>
         </div>
@@ -312,10 +312,10 @@ export function TimelineView() {
             <div className="border-t border-[var(--border-primary)]">
               <EmptyState
                 icon={Layers}
-                title="Nessuna feature creata"
-                description="Le feature rappresentano i progetti o le attività su cui lavora il team. Crea la tua prima feature per iniziare."
+                title="No features created"
+                description="Features represent projects or tasks the team works on. Create your first feature to get started."
                 action={{
-                  label: 'Crea Prima Feature',
+                  label: 'Create First Feature',
                   onClick: () => setFeatureModalOpen(true),
                 }}
               />
@@ -324,10 +324,10 @@ export function TimelineView() {
             <div className="border-t border-[var(--border-primary)]">
               <EmptyState
                 icon={Layers}
-                title="Nessuna feature visibile"
-                description="Nessuna feature corrisponde ai filtri selezionati. Modifica i filtri per visualizzare più feature."
+                title="No visible features"
+                description="No features match the selected filters. Modify filters to view more features."
                 action={{
-                  label: 'Ripristina filtri',
+                  label: 'Reset filters',
                   onClick: () => setSelectedFeatures(features.map((f) => f.id)),
                   variant: 'secondary',
                 }}
@@ -399,7 +399,7 @@ export function TimelineView() {
           setFeatureModalOpen(false)
           setEditingFeature(null)
         }}
-        title={editingFeature ? 'Modifica Feature' : 'Nuova Feature'}
+        title={editingFeature ? 'Edit Feature' : 'New Feature'}
       >
         <FeatureForm
           feature={editingFeature}
@@ -420,11 +420,11 @@ export function TimelineView() {
           setFeatureToDelete(null)
         }}
         onConfirm={confirmDeleteFeature}
-        title="Elimina Feature"
-        message={`Sei sicuro di voler eliminare la feature "${featureToDelete?.name}"? Verranno eliminate anche tutte le allocazioni associate. Questa azione non può essere annullata.`}
+        title="Delete Feature"
+        message={`Are you sure you want to delete feature "${featureToDelete?.name}"? All associated allocations will also be deleted. This action cannot be undone.`}
         type="danger"
-        confirmText="Elimina"
-        cancelText="Annulla"
+        confirmText="Delete"
+        cancelText="Cancel"
       />
     </div>
   )

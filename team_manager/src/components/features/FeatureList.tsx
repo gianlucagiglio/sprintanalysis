@@ -38,7 +38,7 @@ export function FeatureList({ features, members, getFeatureMembers, onEdit, onDe
                   <Badge label={feature.name} color={feature.color} />
                   {feature.type && (
                     <span className="text-xs px-2 py-0.5 rounded bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]">
-                      {feature.type === 'strategic' ? 'Strategica' : 'Small Change'}
+                      {feature.type === 'strategic' ? 'Strategic' : 'Small Change'}
                     </span>
                   )}
                 </div>
@@ -47,7 +47,7 @@ export function FeatureList({ features, members, getFeatureMembers, onEdit, onDe
                   <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
                     <Users size={14} />
                     <span>
-                      {assignedMembers.length === 0 ? 'Nessun membro assegnato' : `${assignedMembers.length} ${assignedMembers.length === 1 ? 'membro' : 'membri'}`}
+                      {assignedMembers.length === 0 ? 'No members assigned' : `${assignedMembers.length} ${assignedMembers.length === 1 ? 'member' : 'members'}`}
                     </span>
                   </div>
 
@@ -66,13 +66,13 @@ export function FeatureList({ features, members, getFeatureMembers, onEdit, onDe
               </div>
 
               <div className="flex items-center gap-1">
-                <button onClick={() => onAssignMembers(feature.id)} className="p-2 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:bg-[var(--bg-hover)] rounded transition-colors" title="Assegna membri">
+                <button onClick={() => onAssignMembers(feature.id)} className="p-2 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:bg-[var(--bg-hover)] rounded transition-colors" title="Assign members">
                   <Users size={16} />
                 </button>
-                <button onClick={() => onEdit(feature)} className="p-2 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:bg-[var(--bg-hover)] rounded transition-colors" title="Modifica">
+                <button onClick={() => onEdit(feature)} className="p-2 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:bg-[var(--bg-hover)] rounded transition-colors" title="Edit">
                   <Edit2 size={16} />
                 </button>
-                <button onClick={() => onDelete(feature.id)} className="p-2 text-[var(--text-secondary)] hover:text-[var(--danger)] hover:bg-[var(--bg-hover)] rounded transition-colors" title="Elimina">
+                <button onClick={() => onDelete(feature.id)} className="p-2 text-[var(--text-secondary)] hover:text-[var(--danger)] hover:bg-[var(--bg-hover)] rounded transition-colors" title="Delete">
                   <Trash2 size={16} />
                 </button>
               </div>

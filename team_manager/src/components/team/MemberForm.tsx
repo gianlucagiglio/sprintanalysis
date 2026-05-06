@@ -48,7 +48,7 @@ export function MemberForm({ member, roles, onSubmit, onCancel }: MemberFormProp
   if (roles.length === 0) {
     return (
       <div className="text-center py-8 text-[var(--text-secondary)]">
-        Crea prima almeno un ruolo per aggiungere membri al team.
+        Create at least one role first to add team members.
       </div>
     )
   }
@@ -57,7 +57,7 @@ export function MemberForm({ member, roles, onSubmit, onCancel }: MemberFormProp
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="member-name" className="label">
-          Nome
+          Name
         </label>
         <input
           id="member-name"
@@ -65,7 +65,7 @@ export function MemberForm({ member, roles, onSubmit, onCancel }: MemberFormProp
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="input w-full"
-          placeholder="es. Mario Rossi"
+          placeholder="e.g. John Doe"
           autoFocus
           required
         />
@@ -73,7 +73,7 @@ export function MemberForm({ member, roles, onSubmit, onCancel }: MemberFormProp
 
       <div>
         <label htmlFor="member-role" className="label">
-          Ruolo
+          Role
         </label>
         <select
           id="member-role"
@@ -92,7 +92,7 @@ export function MemberForm({ member, roles, onSubmit, onCancel }: MemberFormProp
 
       <div>
         <label htmlFor="member-capacity" className="label">
-          Capacità settimanale (giorni)
+          Weekly capacity (days)
         </label>
         <input
           id="member-capacity"
@@ -106,7 +106,7 @@ export function MemberForm({ member, roles, onSubmit, onCancel }: MemberFormProp
           required
         />
         <p className="text-xs text-[var(--text-tertiary)] mt-1">
-          Giorni lavorativi disponibili a settimana (0-5, step 0.01)
+          Working days available per week (0-5, step 0.01)
         </p>
       </div>
 
@@ -116,10 +116,10 @@ export function MemberForm({ member, roles, onSubmit, onCancel }: MemberFormProp
           disabled={isSubmitting || !name.trim() || !roleId}
           className="btn btn-primary flex-1"
         >
-          {isSubmitting ? 'Salvataggio...' : member ? 'Aggiorna' : 'Aggiungi'}
+          {isSubmitting ? 'Saving...' : member ? 'Update' : 'Add'}
         </button>
         <button type="button" onClick={onCancel} className="btn btn-secondary">
-          Annulla
+          Cancel
         </button>
       </div>
     </form>

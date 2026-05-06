@@ -11,18 +11,18 @@ export function ExpandCollapseButtons({ onExpandAll, onCollapseAll }: ExpandColl
       <button
         onClick={onExpandAll}
         className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] border border-[var(--border-primary)] rounded-lg transition-colors"
-        title="Espandi tutto"
+        title="Expand all"
       >
         <ChevronsDown size={14} />
-        <span>Espandi tutto</span>
+        <span>Expand all</span>
       </button>
       <button
         onClick={onCollapseAll}
         className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] border border-[var(--border-primary)] rounded-lg transition-colors"
-        title="Collassa tutto"
+        title="Collapse all"
       >
         <ChevronsUp size={14} />
-        <span>Collassa tutto</span>
+        <span>Collapse all</span>
       </button>
     </div>
   )

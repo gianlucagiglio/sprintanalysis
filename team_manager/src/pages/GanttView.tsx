@@ -119,17 +119,17 @@ export function GanttView() {
     return (
       <div className="p-8">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-[var(--text-primary)]">Vista Gantt</h2>
+          <h2 className="text-2xl font-bold text-[var(--text-primary)]">Gantt View</h2>
           <p className="text-[var(--text-secondary)] mt-1">
-            Visualizzazione timeline delle feature con intensità allocazioni
+            Feature timeline visualization with allocation intensity
           </p>
         </div>
         <div className="card text-center py-12">
           <p className="text-[var(--text-secondary)] mb-4">
-            Nessuno sprint creato. Vai alla sezione Sprint per iniziare!
+            No sprints created. Go to the Sprints section to get started!
           </p>
           <a href="/sprints" className="btn btn-primary inline-block">
-            Vai a Sprint
+            Go to Sprints
           </a>
         </div>
       </div>
@@ -140,17 +140,17 @@ export function GanttView() {
     return (
       <div className="p-8">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-[var(--text-primary)]">Vista Gantt</h2>
+          <h2 className="text-2xl font-bold text-[var(--text-primary)]">Gantt View</h2>
           <p className="text-[var(--text-secondary)] mt-1">
-            Visualizzazione timeline delle feature con intensità allocazioni
+            Feature timeline visualization with allocation intensity
           </p>
         </div>
         <div className="card text-center py-12">
           <p className="text-[var(--text-secondary)] mb-4">
-            Nessuna feature creata. Vai alla sezione Timeline per creare feature!
+            No features created. Go to the Timeline section to create features!
           </p>
           <a href="/timeline" className="btn btn-primary inline-block">
-            Vai a Timeline
+            Go to Timeline
           </a>
         </div>
       </div>
@@ -161,9 +161,9 @@ export function GanttView() {
     <div className="h-full flex flex-col">
       {/* Header */}
       <div className="p-8 pb-4">
-        <h2 className="text-2xl font-bold text-[var(--text-primary)]">Vista Gantt</h2>
+        <h2 className="text-2xl font-bold text-[var(--text-primary)]">Gantt View</h2>
         <p className="text-[var(--text-secondary)] mt-1">
-          Visualizzazione timeline delle feature con intensità allocazioni e breakdown per ruolo
+          Feature timeline visualization with allocation intensity and role breakdown
         </p>
       </div>
 
@@ -205,7 +205,7 @@ export function GanttView() {
           {filteredFeatures.length === 0 ? (
             <div className="p-12 text-center border-t border-[var(--border-primary)]">
               <p className="text-[var(--text-secondary)]">
-                Nessuna feature trovata con i filtri selezionati.
+                No features found with the selected filters.
               </p>
             </div>
           ) : (

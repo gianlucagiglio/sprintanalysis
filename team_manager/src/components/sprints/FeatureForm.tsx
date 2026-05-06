@@ -61,7 +61,7 @@ export function FeatureForm({
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="feature-name" className="label">
-          Nome Feature
+          Feature Name
         </label>
         <input
           id="feature-name"
@@ -69,18 +69,18 @@ export function FeatureForm({
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="input w-full"
-          placeholder="es. User Authentication"
+          placeholder="e.g. User Authentication"
           autoFocus
           required
         />
         <p className="text-xs text-[var(--text-tertiary)] mt-1">
-          I giorni di lavoro verranno allocati direttamente sulla timeline
+          Work days will be allocated directly on the timeline
         </p>
       </div>
 
       <div>
         <label htmlFor="feature-type" className="label">
-          Tipologia
+          Type
         </label>
         <select
           id="feature-type"
@@ -89,19 +89,19 @@ export function FeatureForm({
           className="form-input form-select w-full"
           required
         >
-          <option value="strategic">Strategica</option>
+          <option value="strategic">Strategic</option>
           <option value="small_change">Small Change</option>
         </select>
         <p className="text-xs text-[var(--text-tertiary)] mt-1">
-          Strategica: feature importante a lungo termine • Small Change: modifica minore o fix
+          Strategic: long-term important feature • Small Change: minor modification or fix
         </p>
       </div>
 
-      <ColorPicker label="Colore" value={color} onChange={setColor} />
+      <ColorPicker label="Color" value={color} onChange={setColor} />
 
       <div>
         <label htmlFor="feature-order" className="label">
-          Ordine Visualizzazione
+          Display Order
         </label>
         <input
           id="feature-order"
@@ -113,7 +113,7 @@ export function FeatureForm({
           step="1"
         />
         <p className="text-xs text-[var(--text-tertiary)] mt-1">
-          Numero d'ordine nella timeline (0 = prima, valori più alti = dopo)
+          Order number in timeline (0 = first, higher values = after)
         </p>
       </div>
 
@@ -123,10 +123,10 @@ export function FeatureForm({
           disabled={isSubmitting || !name.trim()}
           className="btn btn-primary flex-1"
         >
-          {isSubmitting ? 'Salvataggio...' : feature ? 'Aggiorna' : 'Crea Feature'}
+          {isSubmitting ? 'Saving...' : feature ? 'Update' : 'Create Feature'}
         </button>
         <button type="button" onClick={onCancel} className="btn btn-secondary">
-          Annulla
+          Cancel
         </button>
       </div>
     </form>

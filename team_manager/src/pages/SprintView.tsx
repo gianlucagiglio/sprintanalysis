@@ -76,9 +76,9 @@ export function SprintView() {
   const getDeleteMessage = () => {
     if (deletingSingleId) {
       const sprint = sprints.find((s) => s.id === deletingSingleId)
-      return `Sei sicuro di voler eliminare lo sprint "${sprint?.name}"? Questa azione non può essere annullata.`
+      return `Are you sure you want to delete sprint "${sprint?.name}"? This action cannot be undone.`
     }
-    return `Sei sicuro di voler eliminare ${selectedIds.length} sprint selezionati? Questa azione non può essere annullata.`
+    return `Are you sure you want to delete ${selectedIds.length} selected sprints? This action cannot be undone.`
   }
 
   return (
@@ -87,10 +87,10 @@ export function SprintView() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-[var(--text-primary)]">
-              Sprint
+              Sprints
             </h2>
             <p className="text-[var(--text-secondary)] mt-1">
-              Gestione sprint e pianificazione temporale
+              Sprint management and time planning
             </p>
           </div>
 
@@ -101,7 +101,7 @@ export function SprintView() {
                 className="btn bg-[var(--danger)] hover:bg-[#dc2626] text-white flex items-center gap-2"
               >
                 <Trash2 size={16} />
-                Elimina {selectedIds.length} {selectedIds.length === 1 ? 'sprint' : 'sprint'}
+                Delete {selectedIds.length} {selectedIds.length === 1 ? 'sprint' : 'sprints'}
               </button>
             )}
 
@@ -113,7 +113,7 @@ export function SprintView() {
               className="btn btn-primary flex items-center gap-2"
             >
               <Plus size={16} />
-              Nuovo Sprint
+              New Sprint
             </button>
           </div>
         </div>
@@ -140,7 +140,7 @@ export function SprintView() {
           setSprintModalOpen(false)
           setEditingSprint(null)
         }}
-        title={editingSprint ? 'Modifica Sprint' : 'Nuovo Sprint'}
+        title={editingSprint ? 'Edit Sprint' : 'New Sprint'}
       >
         <SprintForm
           sprint={editingSprint}
@@ -163,11 +163,11 @@ export function SprintView() {
           setDeletingSingleId(null)
         }}
         onConfirm={handleConfirmDelete}
-        title="Elimina Sprint"
+        title="Delete Sprint"
         message={getDeleteMessage()}
         type="danger"
-        confirmText="Elimina"
-        cancelText="Annulla"
+        confirmText="Delete"
+        cancelText="Cancel"
       />
     </div>
   )

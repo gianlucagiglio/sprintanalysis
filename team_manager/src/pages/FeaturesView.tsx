@@ -65,30 +65,30 @@ export function FeaturesView() {
 
   const getDeleteMessage = () => {
     const feature = features.find((f) => f.id === deletingId)
-    return `Sei sicuro di voler eliminare la feature "${feature?.name}"? Verranno eliminate anche tutte le allocazioni associate.`
+    return `Are you sure you want to delete feature "${feature?.name}"? All associated allocations will also be deleted.`
   }
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--text-primary)]">Feature</h1>
+          <h1 className="text-2xl font-bold text-[var(--text-primary)]">Features</h1>
           <p className="text-sm text-[var(--text-secondary)] mt-1">
-            Gestisci le feature e assegna i membri del team
+            Manage features and assign team members
           </p>
         </div>
         <button onClick={() => { setEditingFeature(null); setFeatureModalOpen(true); }} className="btn btn-primary flex items-center gap-2">
           <Plus size={18} />
-          Nuova Feature
+          New Feature
         </button>
       </div>
 
       {features.length === 0 ? (
         <EmptyState
           icon={Calendar}
-          title="Nessuna feature creata"
-          description="Le feature rappresentano i progetti su cui lavora il team. Crea la prima feature per iniziare."
-          action={{ label: 'Crea Feature', onClick: () => setFeatureModalOpen(true) }}
+          title="No features created"
+          description="Features represent projects the team works on. Create the first feature to get started."
+          action={{ label: 'Create Feature', onClick: () => setFeatureModalOpen(true) }}
         />
       ) : (
         <FeatureList
@@ -102,15 +102,15 @@ export function FeaturesView() {
         />
       )}
 
-      <Modal isOpen={featureModalOpen} onClose={() => { setFeatureModalOpen(false); setEditingFeature(null); }} title={editingFeature ? 'Modifica Feature' : 'Nuova Feature'}>
+      <Modal isOpen={featureModalOpen} onClose={() => { setFeatureModalOpen(false); setEditingFeature(null); }} title={editingFeature ? 'Edit Feature' : 'New Feature'}>
         <FeatureForm feature={editingFeature || undefined} sprints={sprints} onSubmit={handleFeatureSubmit} onCancel={() => { setFeatureModalOpen(false); setEditingFeature(null); }} />
       </Modal>
 
-      <Modal isOpen={assignModalOpen} onClose={() => { setAssignModalOpen(false); setAssigningFeatureId(null); }} title="Assegna Membri">
+      <Modal isOpen={assignModalOpen} onClose={() => { setAssignModalOpen(false); setAssigningFeatureId(null); }} title="Assign Members">
         <MemberAssignForm members={members} selectedIds={assigningFeatureId ? getFeatureMembers(assigningFeatureId).map((fm) => fm.member_id) : []} onConfirm={handleConfirmAssign} onCancel={() => { setAssignModalOpen(false); setAssigningFeatureId(null); }} />
       </Modal>
 
-      <ConfirmDialog isOpen={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)} onConfirm={handleConfirmDelete} title="Elimina Feature" message={getDeleteMessage()} type="danger" confirmText="Elimina" cancelText="Annulla" />
+      <ConfirmDialog isOpen={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)} onConfirm={handleConfirmDelete} title="Delete Feature" message={getDeleteMessage()} type="danger" confirmText="Delete" cancelText="Cancel" />
     </div>
   )
 }
@@ -139,7 +139,7 @@ function MemberAssignForm({ members, selectedIds, onConfirm, onCancel }: MemberA
   return (
     <div className="space-y-4">
       <p className="text-sm text-[var(--text-secondary)]">
-        Seleziona i membri che lavoreranno su questa feature
+        Select members who will work on this feature
       </p>
 
       <div className="max-h-96 overflow-y-auto space-y-2">
@@ -155,9 +155,9 @@ function MemberAssignForm({ members, selectedIds, onConfirm, onCancel }: MemberA
         ))}
       </div>
 
-      <div className="flex gap-3 pt-4 border-t border-[var(--border-primary)]">
-        <button onClick={onCancel} className="btn btn-secondary flex-1">Annulla</button>
-        <button onClick={() => onConfirm(selected)} className="btn btn-primary flex-1">Salva</button>
+      <div className="flex gap-3 pt-4 border-[var(--border-primary)]">
+        <button onClick={onCancel} className="btn btn-secondary flex-1">Cancel</button>
+        <button onClick={() => onConfirm(selected)} className="btn btn-primary flex-1">Save</button>
       </div>
     </div>
   )

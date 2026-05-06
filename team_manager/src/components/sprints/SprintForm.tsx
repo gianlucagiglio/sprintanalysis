@@ -117,7 +117,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
         // Modalità singolo sprint
         if (!name.trim() || !startDate || !endDate) return
         if (new Date(endDate) < new Date(startDate)) {
-          alert('La data di fine deve essere successiva alla data di inizio')
+          alert('End date must be after start date')
           return
         }
 
@@ -183,7 +183,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
                 : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]'
             }`}
           >
-            Singolo Sprint
+            Single Sprint
           </button>
           <button
             type="button"
@@ -194,7 +194,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
                 : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]'
             }`}
           >
-            Generazione Automatica
+            Auto Generation
           </button>
         </div>
       )}
@@ -204,7 +204,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
         <>
           <div>
             <label htmlFor="sprint-name" className="label">
-              Nome Sprint
+              Sprint Name
             </label>
             <input
               id="sprint-name"
@@ -212,7 +212,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="input w-full"
-              placeholder="es. Sprint 1 - Auth & Dashboard"
+              placeholder="e.g. Sprint 1 - Auth & Dashboard"
               autoFocus
               required
             />
@@ -221,7 +221,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="sprint-start" className="label">
-                Data Inizio
+                Start date
               </label>
               <input
                 id="sprint-start"
@@ -235,7 +235,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
 
             <div>
               <label htmlFor="sprint-end" className="label">
-                Data Fine
+                End date
               </label>
               <input
                 id="sprint-end"
@@ -253,7 +253,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
             <>
               <div>
                 <label htmlFor="sprint-duration" className="label">
-                  Durata (settimane)
+                  Duration (weeks)
                 </label>
                 <input
                   id="sprint-duration"
@@ -265,7 +265,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
                   max="8"
                 />
                 <p className="text-xs text-[var(--text-tertiary)] mt-1">
-                  Modificando la durata, la data di fine verrà aggiornata automaticamente
+                  By changing duration, the end date will be updated automatically
                 </p>
               </div>
 
@@ -279,10 +279,10 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
                 />
                 <label htmlFor="update-following" className="text-sm cursor-pointer">
                   <span className="font-medium text-[var(--text-primary)]">
-                    Aggiorna sprint successive
+                    Update following sprints
                   </span>
                   <p className="text-xs text-[var(--text-tertiary)] mt-0.5">
-                    Le date di tutte le sprint successive verranno ricalcolate automaticamente
+                    Dates for all following sprints will be automatically recalculated
                   </p>
                 </label>
               </div>
@@ -296,7 +296,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
         <>
           <div>
             <label htmlFor="start-number" className="label">
-              Numero di Partenza
+              Starting Number
             </label>
             <input
               id="start-number"
@@ -304,19 +304,19 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
               value={startNumber}
               onChange={(e) => setStartNumber(parseInt(e.target.value) || 1)}
               className="input w-full font-mono"
-              placeholder="es. 160"
+              placeholder="e.g. 160"
               autoFocus
               min="1"
               required
             />
             <p className="text-xs text-[var(--text-tertiary)] mt-1">
-              Verrà generato: "Sprint {startNumber}", "Sprint {startNumber + 1}", ecc.
+              Will generate: "Sprint {startNumber}", "Sprint {startNumber + 1}", etc.
             </p>
           </div>
 
           <div>
             <label htmlFor="first-sprint-date" className="label">
-              Data Inizio Primo Sprint
+              First Sprint Start Date
             </label>
             <input
               id="first-sprint-date"
@@ -331,7 +331,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="sprint-duration" className="label">
-                Durata Sprint (settimane)
+                Sprint Duration (weeks)
               </label>
               <input
                 id="sprint-duration"
@@ -347,7 +347,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
 
             <div>
               <label htmlFor="sprint-count" className="label">
-                Numero Sprint da Creare
+                Number of Sprints to Create
               </label>
               <input
                 id="sprint-count"
@@ -366,7 +366,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
           {firstSprintDate && (
             <div className="p-3 bg-[var(--bg-tertiary)] rounded-lg">
               <p className="text-xs text-[var(--text-secondary)] mb-2">
-                Anteprima sprint che verranno creati:
+                Preview of sprints that will be created:
               </p>
               <div className="space-y-1 max-h-32 overflow-y-auto">
                 {Array.from({ length: Math.min(sprintCount, 5) }).map((_, i) => {
@@ -382,7 +382,7 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
                 })}
                 {sprintCount > 5 && (
                   <div className="text-xs text-[var(--text-tertiary)]">
-                    ... e altri {sprintCount - 5} sprint
+                    ... and {sprintCount - 5} more sprints
                   </div>
                 )}
               </div>
@@ -398,15 +398,15 @@ export function SprintForm({ sprint, existingSprints = [], onSubmit, onSubmitMul
           className="btn btn-primary flex-1"
         >
           {isSubmitting
-            ? 'Creazione...'
+            ? 'Creating...'
             : sprint
-            ? 'Aggiorna'
+            ? 'Update'
             : mode === 'auto'
-            ? `Crea ${sprintCount} Sprint`
-            : 'Crea Sprint'}
+            ? `Create ${sprintCount} Sprints`
+            : 'Create Sprint'}
         </button>
         <button type="button" onClick={onCancel} className="btn btn-secondary">
-          Annulla
+          Cancel
         </button>
       </div>
     </form>

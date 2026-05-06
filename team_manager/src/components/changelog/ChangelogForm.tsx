@@ -10,7 +10,7 @@ interface ChangelogFormProps {
 
 const TYPE_OPTIONS: { value: ChangelogType; label: string; color: string }[] = [
   { value: 'major', label: 'Major - Breaking changes', color: 'var(--danger)' },
-  { value: 'minor', label: 'Minor - Nuove funzionalità', color: 'var(--warning)' },
+  { value: 'minor', label: 'Minor - New features', color: 'var(--warning)' },
   { value: 'patch', label: 'Patch - Bug fixes', color: 'var(--success)' },
 ]
 
@@ -61,7 +61,7 @@ export function ChangelogForm({ changelog, nextVersion, onSubmit, onCancel }: Ch
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Type Selection */}
       <div>
-        <label className="label">Tipo versione</label>
+        <label className="label">Version type</label>
         <div className="space-y-2">
           {TYPE_OPTIONS.map((option) => (
             <label
@@ -76,13 +76,13 @@ export function ChangelogForm({ changelog, nextVersion, onSubmit, onCancel }: Ch
                 onChange={(e) => setType(e.target.value as ChangelogType)}
                 className="w-4 h-4"
                 style={{ accentColor: option.color }}
-                disabled={!!changelog} // Non modificabile in edit
+                disabled={!!changelog}
               />
               <div className="flex-1">
                 <div className="font-medium text-[var(--text-primary)]">{option.label}</div>
                 {!changelog && (
                   <div className="text-xs text-[var(--text-tertiary)] mt-0.5">
-                    Prossima versione: <span className="font-mono font-semibold">{nextVersion(option.value)}</span>
+                    Next version: <span className="font-mono font-semibold">{nextVersion(option.value)}</span>
                   </div>
                 )}
               </div>
@@ -93,7 +93,7 @@ export function ChangelogForm({ changelog, nextVersion, onSubmit, onCancel }: Ch
 
       {/* Preview Version */}
       <div className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-primary)]">
-        <div className="text-sm text-[var(--text-secondary)] mb-1">Versione</div>
+        <div className="text-sm text-[var(--text-secondary)] mb-1">Version</div>
         <div className="text-2xl font-bold font-mono text-[var(--text-primary)]">
           v{previewVersion}
         </div>
@@ -102,7 +102,7 @@ export function ChangelogForm({ changelog, nextVersion, onSubmit, onCancel }: Ch
       {/* Title */}
       <div>
         <label htmlFor="title" className="label">
-          Titolo
+          Title
         </label>
         <input
           id="title"
@@ -110,7 +110,7 @@ export function ChangelogForm({ changelog, nextVersion, onSubmit, onCancel }: Ch
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="input w-full"
-          placeholder="es. Rilascio nuova vista Gantt"
+          placeholder="e.g. New Gantt view release"
           required
           autoFocus
         />
@@ -119,7 +119,7 @@ export function ChangelogForm({ changelog, nextVersion, onSubmit, onCancel }: Ch
       {/* Description */}
       <div>
         <label htmlFor="description" className="label">
-          Modifiche (Markdown)
+          Changes (Markdown)
         </label>
         <textarea
           id="description"
@@ -127,18 +127,18 @@ export function ChangelogForm({ changelog, nextVersion, onSubmit, onCancel }: Ch
           onChange={(e) => setDescription(e.target.value)}
           className="input w-full font-mono text-sm"
           rows={10}
-          placeholder={`**Funzionalità:**\n- Aggiunta vista Gantt\n- Filtri avanzati\n\n**Bug fixes:**\n- Fix calcolo capacità\n- Fix validazione date`}
+          placeholder={`**Features:**\n- Added Gantt view\n- Advanced filters\n\n**Bug fixes:**\n- Fix capacity calculation\n- Fix date validation`}
           required
         />
         <p className="text-xs text-[var(--text-tertiary)] mt-1">
-          Usa **testo** per grassetto, - per liste
+          Use **text** for bold, - for lists
         </p>
       </div>
 
       {/* Release Date */}
       <div>
         <label htmlFor="releaseDate" className="label">
-          Data rilascio
+          Release date
         </label>
         <input
           id="releaseDate"
@@ -157,10 +157,10 @@ export function ChangelogForm({ changelog, nextVersion, onSubmit, onCancel }: Ch
           disabled={isSubmitting || !title.trim() || !description.trim()}
           className="btn btn-primary flex-1"
         >
-          {isSubmitting ? 'Salvataggio...' : changelog ? 'Aggiorna' : 'Crea Versione'}
+          {isSubmitting ? 'Saving...' : changelog ? 'Update' : 'Create Version'}
         </button>
         <button type="button" onClick={onCancel} className="btn btn-secondary">
-          Annulla
+          Cancel
         </button>
       </div>
     </form>

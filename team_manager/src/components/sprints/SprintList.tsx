@@ -23,7 +23,7 @@ export function SprintList({
   if (sprints.length === 0) {
     return (
       <div className="text-center py-8 text-[var(--text-tertiary)]">
-        Nessuno sprint creato. Inizia pianificando il tuo primo sprint!
+        No sprints created. Start by planning your first sprint!
       </div>
     )
   }
@@ -44,14 +44,14 @@ export function SprintList({
             }}
             onChange={onToggleSelectAll}
             className="w-4 h-4 accent-[var(--accent-primary)] cursor-pointer"
-            aria-label="Seleziona tutti gli sprint"
+            aria-label="Select all sprints"
           />
           <span className="text-sm font-medium text-[var(--text-secondary)]">
             {allSelected
-              ? 'Deseleziona tutti'
+              ? 'Deselect all'
               : someSelected
-              ? `${selectedIds.length} selezionati`
-              : 'Seleziona tutti'}
+              ? `${selectedIds.length} selected`
+              : 'Select all'}
           </span>
         </label>
       </div>
@@ -77,7 +77,7 @@ export function SprintList({
                   checked={isSelected}
                   onChange={() => onToggleSelect(sprint.id)}
                   className="w-4 h-4 accent-[var(--accent-primary)] cursor-pointer"
-                  aria-label={`Seleziona sprint ${sprint.name}`}
+                  aria-label={`Select sprint ${sprint.name}`}
                 />
               </label>
 
@@ -97,16 +97,16 @@ export function SprintList({
                 <button
                   onClick={() => onEditSprint(sprint)}
                   className="p-2 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
-                  aria-label="Modifica sprint"
-                  title="Modifica sprint"
+                  aria-label="Edit sprint"
+                  title="Edit sprint"
                 >
                   <Edit2 size={16} />
                 </button>
                 <button
                   onClick={() => onDeleteSprint(sprint.id)}
                   className="p-2 text-[var(--text-secondary)] hover:text-[var(--danger)] transition-colors"
-                  aria-label="Elimina sprint"
-                  title="Elimina sprint"
+                  aria-label="Delete sprint"
+                  title="Delete sprint"
                 >
                   <Trash2 size={16} />
                 </button>

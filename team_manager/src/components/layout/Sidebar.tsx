@@ -8,9 +8,9 @@ const NAV_ITEMS = [
   { to: '/', icon: LayoutGrid, label: 'Timeline' },
   { to: '/gantt', icon: BarChart3, label: 'Gantt' },
   { to: '/team', icon: Users, label: 'Team' },
-  { to: '/sprints', icon: Calendar, label: 'Sprint' },
-  { to: '/features', icon: Layers, label: 'Feature' },
-  { to: '/timeoff', icon: Palmtree, label: 'Ferie' },
+  { to: '/sprints', icon: Calendar, label: 'Sprints' },
+  { to: '/features', icon: Layers, label: 'Features' },
+  { to: '/timeoff', icon: Palmtree, label: 'Time Off' },
   { to: '/changelog', icon: ScrollText, label: 'Changelog' },
 ]
 
@@ -60,11 +60,11 @@ export function Sidebar() {
           className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] transition-colors"
         >
           <Settings size={18} />
-          <span className="text-sm">Impostazioni Colori</span>
+          <span className="text-sm">Color Settings</span>
         </button>
         <ThemeToggle />
         <div className="text-xs text-[var(--text-tertiary)]">
-          v1.10.0 • Team Resource Manager
+          v1.11.0 • Team Resource Manager
         </div>
       </div>
     </aside>

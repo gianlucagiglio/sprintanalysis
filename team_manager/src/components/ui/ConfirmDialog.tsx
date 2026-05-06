@@ -19,8 +19,8 @@ export function ConfirmDialog({
   title,
   message,
   type = 'warning',
-  confirmText = 'Conferma',
-  cancelText = 'Annulla',
+  confirmText = 'Confirm',
+  cancelText = 'Cancel',
 }: ConfirmDialogProps) {
   // Close on Escape
   useEffect(() => {

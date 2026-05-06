@@ -11,8 +11,8 @@ interface SettingsModalProps {
 const SECTION_LABELS = {
   nrt_color: 'NRT (Non-Regression Testing)',
   ktlo_color: 'KTLO (Keep The Lights On)',
-  timeoff_color: 'Ferie & Assenze',
-  capacity_color: 'Riepilogo Capacità',
+  timeoff_color: 'Time Off & Absences',
+  capacity_color: 'Capacity Summary',
 }
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
@@ -56,10 +56,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Impostazioni Colori">
+    <Modal isOpen={isOpen} onClose={onClose} title="Color Settings">
       <div className="space-y-6">
         <p className="text-sm text-[var(--text-secondary)]">
-          Personalizza i colori delle sezioni della timeline
+          Customize timeline section colors
         </p>
 
         {/* NRT Color */}
@@ -99,7 +99,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             disabled={isSaving}
             className="btn btn-primary flex-1"
           >
-            {isSaving ? 'Salvataggio...' : 'Salva'}
+            {isSaving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>

@@ -46,7 +46,7 @@ export function TeamView() {
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-[var(--text-primary)]">Team</h2>
         <p className="text-[var(--text-secondary)] mt-1">
-          Gestione ruoli e membri del team
+          Manage roles and team members
         </p>
       </div>
 
@@ -55,7 +55,7 @@ export function TeamView() {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-[var(--text-primary)]">
-              Ruoli
+              Roles
             </h3>
             <button
               onClick={() => {
@@ -65,7 +65,7 @@ export function TeamView() {
               className="btn btn-primary flex items-center gap-2"
             >
               <Plus size={16} />
-              Nuovo Ruolo
+              New Role
             </button>
           </div>
 
@@ -85,7 +85,7 @@ export function TeamView() {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-[var(--text-primary)]">
-              Membri ({members.length})
+              Members ({members.length})
             </h3>
             <button
               onClick={() => {
@@ -95,7 +95,7 @@ export function TeamView() {
               className="btn btn-primary flex items-center gap-2"
             >
               <Plus size={16} />
-              Nuovo Membro
+              New Member
             </button>
           </div>
 
@@ -119,7 +119,7 @@ export function TeamView() {
           setRoleModalOpen(false)
           setEditingRole(null)
         }}
-        title={editingRole ? 'Modifica Ruolo' : 'Nuovo Ruolo'}
+        title={editingRole ? 'Edit Role' : 'New Role'}
       >
         <RoleForm
           role={editingRole}
@@ -138,7 +138,7 @@ export function TeamView() {
           setMemberModalOpen(false)
           setEditingMember(null)
         }}
-        title={editingMember ? 'Modifica Membro' : 'Nuovo Membro'}
+        title={editingMember ? 'Edit Member' : 'New Member'}
       >
         <MemberForm
           member={editingMember}

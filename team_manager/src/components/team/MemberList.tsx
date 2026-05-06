@@ -12,7 +12,7 @@ export function MemberList({ members, onEdit, onDelete }: MemberListProps) {
   if (members.length === 0) {
     return (
       <div className="text-center py-8 text-[var(--text-tertiary)]">
-        Nessun membro nel team. Aggiungine uno!
+        No team members. Add one!
       </div>
     )
   }
@@ -30,7 +30,7 @@ export function MemberList({ members, onEdit, onDelete }: MemberListProps) {
                 {member.name}
               </div>
               <div className="text-sm text-[var(--text-secondary)] mt-1">
-                Capacità: <span className="font-mono">{member.weekly_capacity}</span> giorni/settimana
+                Capacity: <span className="font-mono">{member.weekly_capacity}</span> days/week
               </div>
             </div>
             {member.role && (
@@ -42,18 +42,18 @@ export function MemberList({ members, onEdit, onDelete }: MemberListProps) {
             <button
               onClick={() => onEdit(member)}
               className="p-2 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
-              title="Modifica"
+              title="Edit"
             >
               <Edit2 size={16} />
             </button>
             <button
               onClick={() => {
-                if (confirm(`Rimuovere ${member.name} dal team?`)) {
+                if (confirm(`Remove ${member.name} from team?`)) {
                   onDelete(member.id)
                 }
               }}
               className="p-2 text-[var(--text-secondary)] hover:text-[var(--danger)] transition-colors"
-              title="Elimina"
+              title="Delete"
             >
               <Trash2 size={16} />
             </button>

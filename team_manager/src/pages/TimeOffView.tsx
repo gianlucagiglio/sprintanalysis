@@ -28,14 +28,14 @@ export function TimeOffView() {
     return (
       <div className="p-8">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-[var(--text-primary)]">Ferie & Assenze</h2>
-          <p className="text-sm text-[var(--text-secondary)] mt-1">Gestione ferie e assenze del team</p>
+          <h2 className="text-2xl font-bold text-[var(--text-primary)]">Time Off & Absences</h2>
+          <p className="text-sm text-[var(--text-secondary)] mt-1">Manage team time off and absences</p>
         </div>
         <EmptyState
           icon={Calendar}
-          title="Nessuno sprint creato"
-          description="Crea sprint nella sezione Sprint per gestire le ferie."
-          action={{ label: 'Vai a Sprint', onClick: () => (window.location.href = '/sprints') }}
+          title="No sprints created"
+          description="Create sprints in the Sprints section to manage time off."
+          action={{ label: 'Go to Sprints', onClick: () => (window.location.href = '/sprints') }}
         />
       </div>
     )
@@ -45,14 +45,14 @@ export function TimeOffView() {
     return (
       <div className="p-8">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-[var(--text-primary)]">Ferie & Assenze</h2>
-          <p className="text-sm text-[var(--text-secondary)] mt-1">Gestione ferie e assenze del team</p>
+          <h2 className="text-2xl font-bold text-[var(--text-primary)]">Time Off & Absences</h2>
+          <p className="text-sm text-[var(--text-secondary)] mt-1">Manage team time off and absences</p>
         </div>
         <EmptyState
           icon={Users}
-          title="Nessun membro nel team"
-          description="Aggiungi membri nella sezione Team per gestire le loro ferie."
-          action={{ label: 'Vai a Team', onClick: () => (window.location.href = '/team') }}
+          title="No team members"
+          description="Add members in the Team section to manage their time off."
+          action={{ label: 'Go to Team', onClick: () => (window.location.href = '/team') }}
         />
       </div>
     )
@@ -61,8 +61,8 @@ export function TimeOffView() {
   return (
     <div className="h-full flex flex-col">
       <div className="p-8 pb-4">
-        <h2 className="text-2xl font-bold text-[var(--text-primary)]">Ferie & Assenze</h2>
-        <p className="text-sm text-[var(--text-secondary)] mt-1">Gestione ferie e assenze per settimana</p>
+        <h2 className="text-2xl font-bold text-[var(--text-primary)]">Time Off & Absences</h2>
+        <p className="text-sm text-[var(--text-secondary)] mt-1">Manage time off and absences per week</p>
       </div>
 
       <div className="flex-1 overflow-auto px-8 pb-8">
@@ -71,7 +71,7 @@ export function TimeOffView() {
           <div className="timeline-header">
             <div className="flex border-b border-[var(--border-secondary)]">
               <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-2.5">
-                <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">Membro</span>
+                <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">Member</span>
               </div>
               <div className="flex" style={{ width: `${weeks.length * 72}px` }}>
                 {weeks.map((week) => (

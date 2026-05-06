@@ -54,14 +54,14 @@ export function ChangelogView() {
 
   const getDeleteMessage = () => {
     const changelog = changelogs.find((c) => c.id === deletingId)
-    return `Sei sicuro di voler eliminare la versione ${changelog?.version}? Questa azione non può essere annullata.`
+    return `Are you sure you want to delete version ${changelog?.version}? This action cannot be undone.`
   }
 
   if (isLoading) {
     return (
       <div className="p-8">
         <div className="flex items-center justify-center py-12">
-          <div className="text-[var(--text-secondary)]">Caricamento changelog...</div>
+          <div className="text-[var(--text-secondary)]">Loading changelog...</div>
         </div>
       </div>
     )
@@ -74,7 +74,7 @@ export function ChangelogView() {
         <div>
           <h1 className="text-3xl font-bold text-[var(--text-primary)]">Changelog</h1>
           <p className="text-[var(--text-secondary)] mt-2">
-            Storico versioni e modifiche • Versione corrente:{' '}
+            Version history and changes • Current version:{' '}
             <span className="font-mono font-semibold text-[var(--accent-primary)]">
               v{latestVersion}
             </span>
@@ -85,7 +85,7 @@ export function ChangelogView() {
             onClick={refreshChangelogs}
             className="btn btn-secondary"
           >
-            Ricarica
+            Reload
           </button>
           <button
             onClick={() => {
@@ -95,7 +95,7 @@ export function ChangelogView() {
             className="btn btn-primary flex items-center gap-2"
           >
             <Plus size={20} />
-            Nuova Versione
+            New Version
           </button>
         </div>
       </div>
@@ -104,14 +104,14 @@ export function ChangelogView() {
       {changelogs.length === 0 ? (
         <div className="card text-center py-12">
           <p className="text-[var(--text-secondary)] mb-4">
-            Nessuna versione nel changelog. Inizia creando la prima versione!
+            No versions in changelog. Start by creating the first version!
           </p>
           <button
             onClick={() => setModalOpen(true)}
             className="btn btn-primary inline-flex items-center gap-2"
           >
             <Plus size={16} />
-            Crea Prima Versione
+            Create First Version
           </button>
         </div>
       ) : (
@@ -152,11 +152,11 @@ export function ChangelogView() {
         isOpen={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
         onConfirm={handleConfirmDelete}
-        title="Conferma eliminazione"
+        title="Confirm deletion"
         message={getDeleteMessage()}
         type="danger"
-        confirmText="Elimina"
-        cancelText="Annulla"
+        confirmText="Delete"
+        cancelText="Cancel"
       />
     </div>
   )

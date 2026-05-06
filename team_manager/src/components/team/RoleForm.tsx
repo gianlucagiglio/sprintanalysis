@@ -42,7 +42,7 @@ export function RoleForm({ role, onSubmit, onCancel }: RoleFormProps) {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="role-name" className="label">
-          Nome ruolo
+          Role name
         </label>
         <input
           id="role-name"
@@ -50,13 +50,13 @@ export function RoleForm({ role, onSubmit, onCancel }: RoleFormProps) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="input w-full"
-          placeholder="es. Frontend Developer"
+          placeholder="e.g. Frontend Developer"
           autoFocus
           required
         />
       </div>
 
-      <ColorPicker label="Colore" value={color} onChange={setColor} />
+      <ColorPicker label="Color" value={color} onChange={setColor} />
 
       <div className="flex gap-3 pt-4">
         <button
@@ -64,10 +64,10 @@ export function RoleForm({ role, onSubmit, onCancel }: RoleFormProps) {
           disabled={isSubmitting || !name.trim()}
           className="btn btn-primary flex-1"
         >
-          {isSubmitting ? 'Salvataggio...' : role ? 'Aggiorna' : 'Crea'}
+          {isSubmitting ? 'Saving...' : role ? 'Update' : 'Create'}
         </button>
         <button type="button" onClick={onCancel} className="btn btn-secondary">
-          Annulla
+          Cancel
         </button>
       </div>
     </form>

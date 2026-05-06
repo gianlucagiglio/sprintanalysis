@@ -65,14 +65,14 @@ export function ChangelogEntry({ changelog, onEdit, onDelete }: ChangelogEntryPr
               <button
                 onClick={() => onEdit(changelog)}
                 className="p-2 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
-                title="Modifica"
+                title="Edit"
               >
                 <Edit2 size={16} />
               </button>
               <button
                 onClick={() => onDelete(changelog.id)}
                 className="p-2 text-[var(--text-secondary)] hover:text-[var(--danger)] transition-colors"
-                title="Elimina"
+                title="Delete"
               >
                 <Trash2 size={16} />
               </button>

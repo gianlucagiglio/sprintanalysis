@@ -70,7 +70,7 @@ export function TimelineFilters({
         }`}
       >
         <Filter size={16} />
-        Filtri
+        Filters
         {activeFiltersCount > 0 && (
           <span className="bg-white text-[var(--accent-primary)] text-xs font-bold px-1.5 py-0.5 rounded-full">
             {activeFiltersCount}
@@ -91,7 +91,7 @@ export function TimelineFilters({
           <div className="absolute right-0 top-full mt-2 w-80 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg shadow-2xl z-40 max-h-[500px] overflow-hidden flex flex-col">
             {/* Header */}
             <div className="p-4 border-b border-[var(--border-primary)] flex items-center justify-between">
-              <h3 className="font-semibold text-[var(--text-primary)]">Filtri Timeline</h3>
+              <h3 className="font-semibold text-[var(--text-primary)]">Timeline Filters</h3>
               <button
                 onClick={() => setIsOpen(false)}
                 className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
@@ -114,7 +114,7 @@ export function TimelineFilters({
                     ) : (
                       <ChevronRight size={16} />
                     )}
-                    <span className="font-medium">Feature</span>
+                    <span className="font-medium">Features</span>
                     <span className="text-xs text-[var(--text-tertiary)]">
                       ({selectedFeatures.length}/{features.length})
                     </span>
@@ -128,14 +128,14 @@ export function TimelineFilters({
                         onClick={onSelectAllFeatures}
                         className="text-xs text-[var(--accent-primary)] hover:underline"
                       >
-                        Seleziona tutto
+                        Select all
                       </button>
                       <span className="text-xs text-[var(--text-tertiary)]">•</span>
                       <button
                         onClick={onDeselectAllFeatures}
                         className="text-xs text-[var(--accent-primary)] hover:underline"
                       >
-                        Deseleziona tutto
+                        Deselect all
                       </button>
                     </div>
 
@@ -149,7 +149,7 @@ export function TimelineFilters({
                           checked={selectedFeatures.includes(feature.id)}
                           onChange={() => onFeatureToggle(feature.id)}
                           className="w-5 h-5 accent-[var(--accent-primary)] cursor-pointer"
-                          aria-label={`Mostra/nascondi feature ${feature.name}`}
+                          aria-label={`Show/hide feature ${feature.name}`}
                         />
                         <Badge label={feature.name} color={feature.color} small maxWidth="180px" />
                       </label>
@@ -170,7 +170,7 @@ export function TimelineFilters({
                     ) : (
                       <ChevronRight size={16} />
                     )}
-                    <span className="font-medium">Membri</span>
+                    <span className="font-medium">Members</span>
                     <span className="text-xs text-[var(--text-tertiary)]">
                       ({selectedMembers.length}/{members.length})
                     </span>
@@ -184,14 +184,14 @@ export function TimelineFilters({
                         onClick={onSelectAllMembers}
                         className="text-xs text-[var(--accent-primary)] hover:underline"
                       >
-                        Seleziona tutto
+                        Select all
                       </button>
                       <span className="text-xs text-[var(--text-tertiary)]">•</span>
                       <button
                         onClick={onDeselectAllMembers}
                         className="text-xs text-[var(--accent-primary)] hover:underline"
                       >
-                        Deseleziona tutto
+                        Deselect all
                       </button>
                     </div>
 
@@ -205,7 +205,7 @@ export function TimelineFilters({
                           checked={selectedMembers.includes(member.id)}
                           onChange={() => onMemberToggle(member.id)}
                           className="w-5 h-5 accent-[var(--accent-primary)] cursor-pointer"
-                          aria-label={`Mostra/nascondi membro ${member.name}`}
+                          aria-label={`Show/hide member ${member.name}`}
                         />
                         <div className="flex items-center gap-2">
                           <span className="text-sm">{member.name}</span>
@@ -231,7 +231,7 @@ export function TimelineFilters({
                     ) : (
                       <ChevronRight size={16} />
                     )}
-                    <span className="font-medium">Ruoli</span>
+                    <span className="font-medium">Roles</span>
                     <span className="text-xs text-[var(--text-tertiary)]">
                       ({selectedRoles.length}/{roles.length})
                     </span>
@@ -245,14 +245,14 @@ export function TimelineFilters({
                         onClick={onSelectAllRoles}
                         className="text-xs text-[var(--accent-primary)] hover:underline"
                       >
-                        Seleziona tutto
+                        Select all
                       </button>
                       <span className="text-xs text-[var(--text-tertiary)]">•</span>
                       <button
                         onClick={onDeselectAllRoles}
                         className="text-xs text-[var(--accent-primary)] hover:underline"
                       >
-                        Deseleziona tutto
+                        Deselect all
                       </button>
                     </div>
 
@@ -266,14 +266,14 @@ export function TimelineFilters({
                           checked={selectedRoles.includes(role.id)}
                           onChange={() => onRoleToggle(role.id)}
                           className="w-5 h-5 accent-[var(--accent-primary)] cursor-pointer"
-                          aria-label={`Filtra per ruolo ${role.name}`}
+                          aria-label={`Filter by role ${role.name}`}
                         />
                         <Badge label={role.name} color={role.color} small />
                       </label>
                     ))}
 
                     <p className="text-xs text-[var(--text-tertiary)] mt-3 italic">
-                      Filtrando per ruolo vengono mostrati solo i membri con quel ruolo
+                      Filtering by role shows only members with that role
                     </p>
                   </div>
                 )}
@@ -291,7 +291,7 @@ export function TimelineFilters({
                     ) : (
                       <ChevronRight size={16} />
                     )}
-                    <span className="font-medium">Tipologia</span>
+                    <span className="font-medium">Type</span>
                     <span className="text-xs text-[var(--text-tertiary)]">
                       ({selectedTypes.length}/2)
                     </span>
@@ -305,14 +305,14 @@ export function TimelineFilters({
                         onClick={onSelectAllTypes}
                         className="text-xs text-[var(--accent-primary)] hover:underline"
                       >
-                        Seleziona tutto
+                        Select all
                       </button>
                       <span className="text-xs text-[var(--text-tertiary)]">•</span>
                       <button
                         onClick={onDeselectAllTypes}
                         className="text-xs text-[var(--accent-primary)] hover:underline"
                       >
-                        Deseleziona tutto
+                        Deselect all
                       </button>
                     </div>
 
@@ -322,12 +322,12 @@ export function TimelineFilters({
                         checked={selectedTypes.includes('strategic')}
                         onChange={() => onTypeToggle('strategic')}
                         className="w-5 h-5 accent-[var(--accent-primary)] cursor-pointer"
-                        aria-label="Mostra/nascondi feature strategiche"
+                        aria-label="Show/hide strategic features"
                       />
                       <div className="flex items-center gap-2">
-                        <span className="text-sm">🎯 Strategica</span>
+                        <span className="text-sm">🎯 Strategic</span>
                         <span className="text-xs text-[var(--text-tertiary)]">
-                          Feature a lungo termine
+                          Long-term features
                         </span>
                       </div>
                     </label>
@@ -338,18 +338,18 @@ export function TimelineFilters({
                         checked={selectedTypes.includes('small_change')}
                         onChange={() => onTypeToggle('small_change')}
                         className="w-5 h-5 accent-[var(--accent-primary)] cursor-pointer"
-                        aria-label="Mostra/nascondi small changes"
+                        aria-label="Show/hide small changes"
                       />
                       <div className="flex items-center gap-2">
                         <span className="text-sm">🔧 Small Change</span>
                         <span className="text-xs text-[var(--text-tertiary)]">
-                          Modifiche minori e fix
+                          Minor changes and fixes
                         </span>
                       </div>
                     </label>
 
                     <p className="text-xs text-[var(--text-tertiary)] mt-3 italic">
-                      Filtra le feature per tipologia di attività
+                      Filter features by activity type
                     </p>
                   </div>
                 )}
