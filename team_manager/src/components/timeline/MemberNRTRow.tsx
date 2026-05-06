@@ -59,7 +59,7 @@ export function MemberNRTRow({
           return (
             <div
               key={week.weekStart}
-              className={`border-r ${
+              className={`border-r pointer-events-auto ${
                 week.isCurrentWeek
                   ? 'border-[var(--accent-primary)] border-l-2 border-r-2 bg-[var(--accent-primary)]05'
                   : 'border-[var(--border-primary)] bg-[var(--bg-primary)]'
