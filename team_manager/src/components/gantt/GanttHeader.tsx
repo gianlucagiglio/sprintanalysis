@@ -45,7 +45,7 @@ export function GanttHeader({ weeks, sprintSpans, gridWidth }: GanttHeaderProps)
       <div className="flex border-b-2 border-[var(--border-secondary)]">
         <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center">
           <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">
-            Settimana
+            Week
           </span>
         </div>
 

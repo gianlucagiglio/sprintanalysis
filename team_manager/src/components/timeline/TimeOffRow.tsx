@@ -32,7 +32,7 @@ export function TimeOffRow({ members, weeks, timeOffs, onTimeOffChange }: TimeOf
             onClick={() => setSelectedMember(members[0]?.id || null)}
             className="text-sm text-[var(--warning)] font-medium hover:underline"
           >
-            Ferie/Assenze (click per dettaglio)
+            Time Off/Absences (click for details)
           </button>
         </div>
 

@@ -63,7 +63,7 @@ export function MemberNRTRow({
                 week.isCurrentWeek ? 'timeline-week-current' : ''
               }`}
               style={{ width: '72px', minWidth: '72px', height: '32px' }}
-              title="NRT - Non-Regression Testing (default: 2 giorni prima settimana sprint)"
+              title="NRT - Non-Regression Testing (default: 2 days on sprint first week)"
             >
               <AllocationCell
                 value={days}

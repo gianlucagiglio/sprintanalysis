@@ -53,43 +53,43 @@ export function CapacityTooltip({
           <div className="flex items-center gap-2 mb-3">
             <AlertTriangle size={16} className="text-[var(--danger)]" />
             <h4 className="font-semibold text-[var(--danger)] text-sm">
-              ⚠️ Sovraccarico Capacità
+              ⚠️ Capacity Overload
             </h4>
           </div>
 
           <div className="space-y-3 text-xs">
-            {/* Capacità Totale */}
+            {/* Weekly Capacity */}
             <div className="flex justify-between items-center bg-[var(--bg-tertiary)] p-2 rounded">
-              <span className="font-medium text-[var(--text-primary)]">Capacità settimanale:</span>
+              <span className="font-medium text-[var(--text-primary)]">Weekly capacity:</span>
               <span className="font-mono font-semibold text-[var(--text-primary)]">
-                {capacityInfo.total} giorni
+                {capacityInfo.total} days
               </span>
             </div>
 
             {/* Breakdown */}
             <div className="space-y-1.5">
-              <div className="font-medium text-[var(--text-secondary)] mb-2">Utilizzo:</div>
+              <div className="font-medium text-[var(--text-secondary)] mb-2">Usage:</div>
 
               {/* KTLO */}
               <div className="flex justify-between items-center pl-3">
                 <div className="flex items-center gap-1.5">
                   <div className="w-2 h-2 rounded-full bg-[var(--accent-secondary)]" />
-                  <span className="text-[var(--text-secondary)]">KTLO (mantenimento)</span>
+                  <span className="text-[var(--text-secondary)]">KTLO (maintenance)</span>
                 </div>
                 <span className="font-mono text-[var(--accent-secondary)]">
-                  {ktlo} giorni
+                  {ktlo} days
                 </span>
               </div>
 
-              {/* Ferie */}
+              {/* Time Off */}
               {capacityInfo.timeOff > 0 && (
                 <div className="flex justify-between items-center pl-3">
                   <div className="flex items-center gap-1.5">
                     <div className="w-2 h-2 rounded-full bg-[var(--warning)]" />
-                    <span className="text-[var(--text-secondary)]">Ferie/Assenze</span>
+                    <span className="text-[var(--text-secondary)]">Time Off/Absences</span>
                   </div>
                   <span className="font-mono text-[var(--warning)]">
-                    {capacityInfo.timeOff} giorni
+                    {capacityInfo.timeOff} days
                   </span>
                 </div>
               )}
@@ -112,7 +112,7 @@ export function CapacityTooltip({
                           </span>
                         </div>
                         <span className="font-mono text-[var(--text-primary)] ml-2 flex-shrink-0">
-                          {alloc.days} giorni
+                          {alloc.days} days
                         </span>
                       </div>
                     )
@@ -121,24 +121,24 @@ export function CapacityTooltip({
               )}
             </div>
 
-            {/* Totali */}
+            {/* Totals */}
             <div className="border-t-2 border-[var(--border-primary)] pt-3 space-y-2">
               <div className="flex justify-between items-center">
-                <span className="font-medium text-[var(--text-secondary)]">Totale impegnato:</span>
+                <span className="font-medium text-[var(--text-secondary)]">Total allocated:</span>
                 <span className="font-mono font-semibold text-[var(--text-primary)]">
-                  {totalUsed.toFixed(1)} giorni
+                  {totalUsed.toFixed(1)} days
                 </span>
               </div>
 
               <div className="flex justify-between items-center bg-[var(--danger)]10 p-2 rounded">
-                <span className="font-semibold text-[var(--danger)]">🔴 Eccedenza:</span>
+                <span className="font-semibold text-[var(--danger)]">🔴 Overload:</span>
                 <span className="font-mono font-bold text-[var(--danger)]">
-                  +{overCapacity.toFixed(1)} giorni
+                  +{overCapacity.toFixed(1)} days
                 </span>
               </div>
 
               <div className="text-[10px] text-[var(--text-tertiary)] italic mt-2">
-                Riduci allocazioni o KTLO per rientrare nella capacità disponibile
+                Reduce allocations or KTLO to stay within available capacity
               </div>
             </div>
           </div>

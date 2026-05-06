@@ -124,8 +124,8 @@ export function CapacityRecapRow({
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
           <div className="flex-1">
-            <div className="text-sm font-bold cursor-help" style={{ color }} title="Totale allocazioni per settimana">
-              Riepilogo Capacità
+            <div className="text-sm font-bold cursor-help" style={{ color }} title="Total weekly allocations">
+              Capacity Summary
             </div>
           </div>
         </div>
@@ -230,7 +230,7 @@ export function CapacityRecapRow({
                                 <div className="flex justify-between gap-4">
                                   <span>Feature:</span>
                                   <span className="font-mono text-[var(--text-primary)]">
-                                    {breakdown.features.toFixed(2)} gg
+                                    {breakdown.features.toFixed(2)} d
                                   </span>
                                 </div>
                               )}
@@ -238,7 +238,7 @@ export function CapacityRecapRow({
                                 <div className="flex justify-between gap-4">
                                   <span>KTLO:</span>
                                   <span className="font-mono text-[var(--text-primary)]">
-                                    {breakdown.ktlo.toFixed(2)} gg
+                                    {breakdown.ktlo.toFixed(2)} d
                                   </span>
                                 </div>
                               )}
@@ -246,21 +246,21 @@ export function CapacityRecapRow({
                                 <div className="flex justify-between gap-4">
                                   <span>NRT:</span>
                                   <span className="font-mono text-[var(--text-primary)]">
-                                    {breakdown.nrt.toFixed(2)} gg
+                                    {breakdown.nrt.toFixed(2)} d
                                   </span>
                                 </div>
                               )}
                               {breakdown.timeOff > 0 && (
                                 <div className="flex justify-between gap-4">
-                                  <span>Ferie:</span>
+                                  <span>Time Off:</span>
                                   <span className="font-mono text-[var(--text-primary)]">
-                                    {breakdown.timeOff.toFixed(2)} gg
+                                    {breakdown.timeOff.toFixed(2)} d
                                   </span>
                                 </div>
                               )}
                               <div className="border-t border-[var(--border-primary)] pt-1 mt-1">
                                 <div className="flex justify-between gap-4 font-semibold">
-                                  <span>Totale:</span>
+                                  <span>Total:</span>
                                   <span
                                     className={`font-mono ${
                                       breakdown.isOverCapacity
@@ -268,17 +268,17 @@ export function CapacityRecapRow({
                                         : 'text-[var(--success)]'
                                     }`}
                                   >
-                                    {breakdown.total.toFixed(2)} gg
+                                    {breakdown.total.toFixed(2)} d
                                   </span>
                                 </div>
                                 <div className="flex justify-between gap-4">
-                                  <span>Capacità:</span>
+                                  <span>Capacity:</span>
                                   <span className="font-mono text-[var(--text-primary)]">
-                                    {breakdown.capacity.toFixed(2)} gg
+                                    {breakdown.capacity.toFixed(2)} d
                                   </span>
                                 </div>
                                 <div className="flex justify-between gap-4">
-                                  <span>Residuo:</span>
+                                  <span>Remaining:</span>
                                   <span
                                     className={`font-mono ${
                                       breakdown.isOverCapacity
@@ -287,7 +287,7 @@ export function CapacityRecapRow({
                                     }`}
                                   >
                                     {breakdown.isOverCapacity ? '-' : '+'}
-                                    {Math.abs(breakdown.capacity - breakdown.total).toFixed(2)} gg
+                                    {Math.abs(breakdown.capacity - breakdown.total).toFixed(2)} d
                                   </span>
                                 </div>
                               </div>

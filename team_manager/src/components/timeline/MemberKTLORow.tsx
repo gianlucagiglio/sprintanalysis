@@ -53,7 +53,7 @@ export function MemberKTLORow({
                 week.isCurrentWeek ? 'timeline-week-current' : ''
               }`}
               style={{ width: '72px', minWidth: '72px', height: '32px' }}
-              title="KTLO - Keep The Lights On (default: 1.5 giorni, personalizzabile)"
+              title="KTLO - Keep The Lights On (default: 1.5 days, customizable)"
             >
               <AllocationCell
                 value={days}
