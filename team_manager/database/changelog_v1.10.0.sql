@@ -224,13 +224,37 @@ className="flex items-center gap-1.5 px-3 py-1.5
 **Componenti Gantt:**
 - `src/components/gantt/GanttFeatureRow.tsx` → Usa `collapsedGanttFeatures` da store
 
+### Bugfix Incluso
+
+**Celle KTLO/NRT non editabili** (risolto):
+
+**Problema:** Le celle KTLO e NRT non rispondevano ai click.
+
+**Causa:**
+- Mancava `pointer-events-auto` sulle celle
+- Mancava `relative` positioning
+- Background `bg-[var(--bg-primary)]` copriva il pulsante
+
+**Soluzione:**
+Rese celle KTLO/NRT identiche a celle Feature:
+```tsx
+// Prima (non cliccabili)
+className={`border-r ${...} bg-[var(--bg-primary)]`}
+
+// Dopo (cliccabili)
+className={`border-r border-[var(--border-primary)] relative pointer-events-auto ${
+  week.isCurrentWeek ? ''timeline-week-current'' : ''''
+}`}
+```
+
 ### Versioning
 
 **v1.10.0** (MINOR) perché:
 - ✅ Nuova funzionalità significativa
 - ✅ Migliora UX senza breaking changes
 - ✅ Retrocompatibile
-- ✅ Aggiunge capacità non esistenti prima',
+- ✅ Aggiunge capacità non esistenti prima
+- ✅ Include bugfix critico per celle editabili',
   '2026-05-06'
 );
 

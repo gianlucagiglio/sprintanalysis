@@ -59,10 +59,8 @@ export function MemberNRTRow({
           return (
             <div
               key={week.weekStart}
-              className={`border-r pointer-events-auto ${
-                week.isCurrentWeek
-                  ? 'border-[var(--accent-primary)] border-l-2 border-r-2 bg-[var(--accent-primary)]05'
-                  : 'border-[var(--border-primary)] bg-[var(--bg-primary)]'
+              className={`border-r border-[var(--border-primary)] relative pointer-events-auto ${
+                week.isCurrentWeek ? 'timeline-week-current' : ''
               }`}
               style={{ width: '72px', minWidth: '72px', height: '32px' }}
               title="NRT - Non-Regression Testing (default: 2 giorni prima settimana sprint)"
