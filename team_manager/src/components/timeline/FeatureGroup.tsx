@@ -1,5 +1,4 @@
 import { ChevronDown, ChevronRight, Edit2, Trash2 } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
 import { MemberRow } from './MemberRow'
 import type { Feature, TeamMember, WeekColumn, Allocation, TimeOff, FeatureMember } from '@/types'
 
@@ -54,23 +53,17 @@ export function FeatureGroup({
       {/* Feature Header */}
       <div className="flex timeline-feature-header">
         <div className="timeline-sticky-col bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] px-4 py-2.5 flex items-center gap-3">
-          <button onClick={onToggle} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
+          <button onClick={onToggle} className="hover:opacity-70 transition-opacity" style={{ color: feature.color }}>
             {isCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
           </button>
-          <Badge label={feature.name} color={feature.color} maxWidth="180px" />
-          <div className="flex items-center gap-1 ml-auto">
-            <button
-              onClick={onEdit}
-              className="p-1 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors rounded"
-              title="Modifica"
-            >
+          <div className="flex-1">
+            <div className="text-sm font-bold" style={{ color: feature.color }}>{feature.name}</div>
+          </div>
+          <div className="flex items-center gap-1">
+            <button onClick={onEdit} className="p-1 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors rounded" title="Modifica">
               <Edit2 size={14} />
             </button>
-            <button
-              onClick={onDelete}
-              className="p-1 text-[var(--text-secondary)] hover:text-[var(--danger)] transition-colors rounded"
-              title="Elimina"
-            >
+            <button onClick={onDelete} className="p-1 text-[var(--text-secondary)] hover:text-[var(--danger)] transition-colors rounded" title="Elimina">
               <Trash2 size={14} />
             </button>
           </div>
