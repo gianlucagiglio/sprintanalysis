@@ -16,7 +16,15 @@ interface NRTRowProps {
 
 export function NRTRow({ members, weeks, gridWidth, sprints, nrtAllocations, onNRTChange, color }: NRTRowProps) {
   const [isExpanded, setIsExpanded] = useState(true)
-  const qaMembers = members.filter((m) => m.role?.name === 'QA' || m.role?.name === 'QAA')
+
+  const roleOrder: Record<string, number> = { PA: 1, PD: 2, BE: 3, FE: 4, QA: 5, QAA: 6 }
+  const qaMembers = members
+    .filter((m) => m.role?.name === 'QA' || m.role?.name === 'QAA')
+    .sort((a, b) => {
+      const orderA = roleOrder[a.role?.name || ''] || 999
+      const orderB = roleOrder[b.role?.name || ''] || 999
+      return orderA - orderB
+    })
 
   const getTotalNRT = (weekStart: string) => {
     const isFirstWeekOfSprint = sprints.some((sprint) => {

@@ -15,8 +15,15 @@ interface KTLORowProps {
 export function KTLORow({ members, weeks, gridWidth, ktloAllocations, onKTLOChange, color }: KTLORowProps) {
   const [isExpanded, setIsExpanded] = useState(true)
 
+  const roleOrder: Record<string, number> = { PA: 1, PD: 2, BE: 3, FE: 4, QA: 5, QAA: 6 }
+  const sortedMembers = [...members].sort((a, b) => {
+    const orderA = roleOrder[a.role?.name || ''] || 999
+    const orderB = roleOrder[b.role?.name || ''] || 999
+    return orderA - orderB
+  })
+
   const getTotalKTLO = (weekStart: string) => {
-    return members.reduce((sum, member) => {
+    return sortedMembers.reduce((sum, member) => {
       const ktlo = ktloAllocations.find((k) => k.member_id === member.id && k.week_start === weekStart)?.days ?? 1.5
       return sum + ktlo
     }, 0)
@@ -56,7 +63,7 @@ export function KTLORow({ members, weeks, gridWidth, ktloAllocations, onKTLOChan
         </div>
       </div>
 
-      {isExpanded && members.map((member) => (
+      {isExpanded && sortedMembers.map((member) => (
         <MemberKTLORow
           key={member.id}
           member={member}

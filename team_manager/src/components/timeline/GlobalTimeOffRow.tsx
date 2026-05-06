@@ -15,6 +15,13 @@ interface GlobalTimeOffRowProps {
 export function GlobalTimeOffRow({ members, weeks, gridWidth, timeOffs, onTimeOffChange, color }: GlobalTimeOffRowProps) {
   const [isExpanded, setIsExpanded] = useState(true)
 
+  const roleOrder: Record<string, number> = { PA: 1, PD: 2, BE: 3, FE: 4, QA: 5, QAA: 6 }
+  const sortedMembers = [...members].sort((a, b) => {
+    const orderA = roleOrder[a.role?.name || ''] || 999
+    const orderB = roleOrder[b.role?.name || ''] || 999
+    return orderA - orderB
+  })
+
   const getTotalTimeOff = (weekStart: string) => {
     return timeOffs.filter((t) => t.week_start === weekStart).reduce((sum, t) => sum + t.days, 0)
   }
@@ -55,7 +62,7 @@ export function GlobalTimeOffRow({ members, weeks, gridWidth, timeOffs, onTimeOf
 
       {isExpanded && (
         <div className="bg-[var(--bg-secondary)]">
-          {members.map((member) => (
+          {sortedMembers.map((member) => (
             <MemberTimeOffRow
               key={member.id}
               member={member}

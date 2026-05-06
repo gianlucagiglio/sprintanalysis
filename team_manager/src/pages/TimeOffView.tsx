@@ -13,6 +13,13 @@ export function TimeOffView() {
 
   const weeks = generateWeekColumns(sprints)
 
+  const roleOrder: Record<string, number> = { PA: 1, PD: 2, BE: 3, FE: 4, QA: 5, QAA: 6 }
+  const sortedMembers = [...members].sort((a, b) => {
+    const orderA = roleOrder[a.role?.name || ''] || 999
+    const orderB = roleOrder[b.role?.name || ''] || 999
+    return orderA - orderB
+  })
+
   const getMemberTimeOff = (memberId: string, weekStart: string) => {
     return timeOffs.find((t) => t.member_id === memberId && t.week_start === weekStart)?.days || 0
   }
@@ -79,7 +86,7 @@ export function TimeOffView() {
           </div>
 
           {/* Rows */}
-          {members.map((member) => (
+          {sortedMembers.map((member) => (
             <div key={member.id} className="flex hover:bg-[var(--bg-hover)] transition-colors border-b border-[var(--border-primary)]">
               <div className="timeline-sticky-col bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-2.5">
                 <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: member.role?.color || 'var(--warning)' }} />
