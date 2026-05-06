@@ -19,7 +19,9 @@
       "Bash(cmd /c \"taskkill /PID 18388 /F\")",
       "Bash(for file in MemberKTLORow.tsx MemberNRTRow.tsx MemberTimeOffRow.tsx)",
       "Bash(do sed -i 's/className=\"\"\\\\\\(.*\\\\\\)border-r border-\\\\[var\\(--border-primary\\)\\\\]\\\\\\(.*\\\\\\)\"\"/className=\"\"\\\\1border-r border-[var\\(--border-primary\\)] pointer-events-auto\\\\2\"\"/g' \"$file\")",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nv1.9.0 - Stile badge unificato per totali timeline\n\nApplicato lo stile badge delle Feature a tutte le sezioni header\n\\(NRT, KTLO, Ferie, Riepilogo Capacità\\) per uniformità visiva.\n\nModifiche:\n- NRTRow: Badge viola con sfondo 20%, bordo 40%\n- KTLORow: Badge arancio, decimali condizionali\n- GlobalTimeOffRow: Badge blu\n- CapacityRecapRow: Badge viola, mantiene .toFixed\\(2\\)\n- Sidebar: Versione → v1.9.0\n\nBenefici:\n- Coerenza visiva completa\n- Migliore scannabilità totali\n- Identità colore per sezione\n- Accessibilità contrasto migliorata\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
