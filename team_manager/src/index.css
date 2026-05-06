@@ -481,13 +481,21 @@ a:hover svg {
 
 /* 📐 Timeline Sticky Column - Fixed Width */
 .timeline-sticky-col {
-  width: 220px;
-  min-width: 220px;
-  max-width: 220px;
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
   flex-shrink: 0;
   position: sticky;
   left: 0;
   z-index: 20;
   /* Shadow per separazione visiva */
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 📐 Timeline Text Truncate - Ellipsis con Tooltip */
+.timeline-text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: help;
 }

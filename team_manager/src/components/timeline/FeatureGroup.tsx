@@ -56,8 +56,10 @@ export function FeatureGroup({
           <button onClick={onToggle} className="hover:opacity-70 transition-opacity" style={{ color: feature.color }}>
             {isCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
           </button>
-          <div className="flex-1">
-            <div className="text-sm font-bold" style={{ color: feature.color }}>{feature.name}</div>
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-bold timeline-text-truncate" style={{ color: feature.color }} title={feature.name}>
+              {feature.name}
+            </div>
           </div>
           <div className="flex items-center gap-1">
             <button onClick={onEdit} className="p-1 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors rounded" title="Modifica">
