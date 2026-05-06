@@ -105,6 +105,14 @@ export function CapacityRecapRow({
     }
   }
 
+  // Calcola totale generale per settimana (tutti i membri)
+  const getWeekTotal = (weekStart: string): number => {
+    return sortedMembers.reduce((sum, member) => {
+      const breakdown = getWeekBreakdown(member, weekStart)
+      return sum + breakdown.total
+    }, 0)
+  }
+
   return (
     <div className="mb-4 border-b-2 border-[var(--border-primary)]">
       {/* Header */}
@@ -124,17 +132,26 @@ export function CapacityRecapRow({
           className="flex"
           style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px`, borderTop: `2px solid ${color}` }}
         >
-          {weeks.map((week) => (
-            <div
-              key={week.weekStart}
-              className={`border-r p-1 text-center ${
-                week.isCurrentWeek
-                  ? 'border-[var(--accent-primary)] border-l-2 border-r-2 bg-[var(--accent-primary)]10'
-                  : 'border-[var(--border-primary)] bg-[var(--bg-primary)]'
-              }`}
-              style={{ width: '72px', minWidth: '72px', height: '40px' }}
-            />
-          ))}
+          {weeks.map((week) => {
+            const total = getWeekTotal(week.weekStart)
+            return (
+              <div
+                key={week.weekStart}
+                className={`border-r p-1 text-center flex items-center justify-center ${
+                  week.isCurrentWeek
+                    ? 'border-[var(--accent-primary)] border-l-2 border-r-2 bg-[var(--accent-primary)]10'
+                    : 'border-[var(--border-primary)] bg-[var(--bg-primary)]'
+                }`}
+                style={{ width: '72px', minWidth: '72px', height: '40px' }}
+              >
+                {total > 0 && (
+                  <span className="text-sm font-mono font-semibold" style={{ color }}>
+                    {total.toFixed(2)}
+                  </span>
+                )}
+              </div>
+            )
+          })}
         </div>
       </div>
 
@@ -144,9 +161,9 @@ export function CapacityRecapRow({
           {sortedMembers.map((member) => (
             <div
               key={member.id}
-              className="flex hover:bg-[var(--bg-hover)] transition-colors border-t border-[var(--border-primary)]"
+              className="group/row flex transition-colors border-t border-[var(--border-primary)]"
             >
-              <div className="timeline-sticky-col bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3">
+              <div className="timeline-sticky-col bg-[var(--bg-primary)] group-hover/row:bg-[var(--bg-hover)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center gap-3 transition-colors">
                 <div className="w-2 h-2 rounded-full bg-[var(--text-tertiary)]" />
                 <span className="text-sm text-[var(--text-primary)] font-medium">
                   {member.name}
@@ -159,7 +176,7 @@ export function CapacityRecapRow({
               </div>
 
               <div
-                className="flex"
+                className="flex group-hover/row:bg-[var(--bg-hover)] transition-colors pointer-events-none"
                 style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}
               >
                 {weeks.map((week) => {
@@ -168,7 +185,7 @@ export function CapacityRecapRow({
                   return (
                     <div
                       key={week.weekStart}
-                      className={`border-r relative group ${
+                      className={`border-r relative group/cell pointer-events-auto ${
                         week.isCurrentWeek
                           ? 'border-[var(--accent-primary)] border-l-2 border-r-2'
                           : 'border-[var(--border-primary)]'
@@ -194,7 +211,7 @@ export function CapacityRecapRow({
 
                       {/* Tooltip Breakdown */}
                       {breakdown.total > 0 && (
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50">
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/cell:block z-50">
                           <div className="bg-[var(--bg-elevated)] border border-[var(--border-primary)] rounded-lg shadow-lg p-3 text-xs whitespace-nowrap">
                             <div className="font-semibold text-[var(--text-primary)] mb-2 border-b border-[var(--border-primary)] pb-1">
                               {member.name} • {week.label}

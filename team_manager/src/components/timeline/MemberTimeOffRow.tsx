@@ -33,8 +33,8 @@ export function MemberTimeOffRow({
   // if (!hasTimeOff) return null
 
   return (
-    <div className="flex hover:bg-[var(--bg-hover)] transition-colors border-t border-[var(--border-primary)]">
-      <div className="timeline-sticky-col bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center justify-between gap-3">
+    <div className="group flex transition-colors border-t border-[var(--border-primary)]">
+      <div className="timeline-sticky-col bg-[var(--bg-primary)] group-hover:bg-[var(--bg-hover)] border-r border-[var(--border-primary)] pointer-events-auto px-4 py-2 flex items-center justify-between gap-3 transition-colors">
         <div className="flex items-center gap-3">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
           <span className="text-sm text-[var(--text-secondary)]">{member.name}</span>
@@ -44,7 +44,7 @@ export function MemberTimeOffRow({
         )}
       </div>
 
-      <div className="flex hover:bg-[var(--bg-hover)]" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
+      <div className="flex group-hover:bg-[var(--bg-hover)] transition-colors pointer-events-none" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>
         {weeks.map((week) => {
           const days = getTimeOff(week.weekStart)
 

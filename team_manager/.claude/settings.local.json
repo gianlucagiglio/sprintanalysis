@@ -16,7 +16,10 @@
       "Bash(grep:*)",
       "Bash(netstat:*)",
       "Bash(taskkill:*)",
-      "Bash(cmd /c \"taskkill /PID 18388 /F\")"
+      "Bash(cmd /c \"taskkill /PID 18388 /F\")",
+      "Bash(for file in MemberKTLORow.tsx MemberNRTRow.tsx MemberTimeOffRow.tsx)",
+      "Bash(do sed -i 's/className=\"\"\\\\\\(.*\\\\\\)border-r border-\\\\[var\\(--border-primary\\)\\\\]\\\\\\(.*\\\\\\)\"\"/className=\"\"\\\\1border-r border-[var\\(--border-primary\\)] pointer-events-auto\\\\2\"\"/g' \"$file\")",
+      "Bash(done)"
     ]
   }
 }

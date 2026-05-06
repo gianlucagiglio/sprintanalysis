@@ -23,8 +23,8 @@ export function MemberRow({ member, feature, weeks, gridWidth, allocations, time
   }
 
   return (
-    <div className="flex hover:bg-[var(--bg-hover)] transition-colors">
-      <div className="timeline-sticky-col bg-[var(--bg-primary)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center justify-between gap-2.5">
+    <div className="group flex transition-colors">
+      <div className="timeline-sticky-col bg-[var(--bg-primary)] group-hover:bg-[var(--bg-hover)] border-r border-[var(--border-primary)] px-4 py-2 flex items-center justify-between gap-2.5 transition-colors">
         <div className="flex items-center gap-2.5">
           <div
             className="w-1.5 h-1.5 rounded-full flex-shrink-0"
@@ -35,7 +35,7 @@ export function MemberRow({ member, feature, weeks, gridWidth, allocations, time
         {member.role && <Badge label={member.role.name} color={member.role.color} small />}
       </div>
 
-      <div className="flex" style={{ width: `${gridWidth}px` }}>
+      <div className="flex group-hover:bg-[var(--bg-hover)] transition-colors pointer-events-none" style={{ width: `${gridWidth}px` }}>
         {weeks.map((week) => {
           const days = getAllocation(week.weekStart)
           const capacityInfo = getCapacityInfo(member, week.weekStart, allocations, timeOffs, ktloAllocations)
@@ -43,7 +43,7 @@ export function MemberRow({ member, feature, weeks, gridWidth, allocations, time
           return (
             <div
               key={week.weekStart}
-              className={`border-r border-[var(--border-primary)] relative ${
+              className={`border-r border-[var(--border-primary)] relative pointer-events-auto ${
                 week.isCurrentWeek ? 'timeline-week-current' : ''
               }`}
               style={{ width: '72px', height: '32px' }}
