@@ -15,7 +15,9 @@
       "Bash(npm run build:*)",
       "Bash(npx serve:*)",
       "Bash(code:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(supabase --version:*)",
+      "Bash(npx supabase login:*)"
     ]
   }
 }
