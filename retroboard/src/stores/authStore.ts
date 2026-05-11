@@ -10,6 +10,8 @@ type AuthState = {
   signUp: (email: string, password: string, name: string) => Promise<void>
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
+  requestPasswordReset: (email: string) => Promise<void>
+  resetPassword: (newPassword: string) => Promise<void>
 }
 
 let _initialized = false
@@ -41,6 +43,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
 
     supabase.auth.onAuthStateChange(async (event, session) => {
+      // Skip profile fetch during password recovery to avoid race conditions
+      if (event === 'PASSWORD_RECOVERY') {
+        return
+      }
+
       if (session?.user) {
         // Only update store if user actually changed (avoid cascading re-renders)
         const currentUser = get().user
@@ -133,6 +140,40 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await supabase.auth.signOut({ scope: 'local' })
     } catch (e) {
       console.error('supabase signOut error:', e)
+    }
+  },
+
+  requestPasswordReset: async (email: string) => {
+    console.log('[Auth] Requesting password reset for', email)
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    })
+    if (error) {
+      console.error('[Auth] Password reset request error:', error.message)
+      throw new Error(error.message)
+    }
+    console.log('[Auth] Password reset email sent')
+  },
+
+  resetPassword: async (newPassword: string) => {
+    console.log('[Auth] Updating password')
+    const { data, error } = await supabase.auth.updateUser({
+      password: newPassword,
+    })
+    if (error) {
+      console.error('[Auth] Password update error:', error.message)
+      throw new Error(error.message)
+    }
+    console.log('[Auth] Password updated successfully')
+
+    // Fetch profile after password reset
+    if (data.user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .single()
+      if (profile) set({ user: profile })
     }
   },
 }))

@@ -40,14 +40,21 @@ export function LoginForm() {
         placeholder="nome@email.com"
         required
       />
-      <Input
-        label="Password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="La tua password"
-        required
-      />
+      <div>
+        <Input
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="La tua password"
+          required
+        />
+        <div className="text-right mt-1">
+          <Link to="/forgot-password" className="text-xs text-retro-primary hover:underline">
+            Password dimenticata?
+          </Link>
+        </div>
+      </div>
       {error && <p className="text-sm text-retro-mad">{error}</p>}
       <Button type="submit" className="w-full" disabled={loading}>
         <LogIn size={16} />
