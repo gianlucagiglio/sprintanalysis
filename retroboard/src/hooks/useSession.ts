@@ -139,12 +139,7 @@ export function useSession(sessionId: string | undefined) {
   }, [sessionId, ready, fetchSession, fetchParticipants, fetchSections])
 
   // Helper: check if user can moderate (organizer or super admin)
-  const canModerate = () => {
-    const isOrg = session?.organizer_id === user?.id
-    const isSuper = isSuperAdmin()
-    console.log('[useSession] canModerate check:', { isOrg, isSuper, userId: user?.id, organizerId: session?.organizer_id })
-    return isOrg || isSuper
-  }
+  const canModerate = () => session?.organizer_id === user?.id || isSuperAdmin()
 
   const advanceStep = async () => {
     if (!session || !canModerate()) return
@@ -293,22 +288,6 @@ export function useSession(sessionId: string | undefined) {
     if (error) {
       console.error('closeSession failed:', error)
       updateSession({ current_step: session.current_step })
-      return
-    }
-
-    // Send recap email via Edge Function
-    try {
-      const { error: emailError } = await supabase.functions.invoke('send-retro-recap', {
-        body: { sessionId: session.id },
-      })
-      if (emailError) {
-        console.error('Failed to send recap email:', emailError)
-        // Don't block session closure if email fails
-      } else {
-        console.log('Recap email sent successfully')
-      }
-    } catch (e) {
-      console.error('Error sending recap email:', e)
     }
   }
 

@@ -22,9 +22,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   isSuperAdmin: () => {
     const { user } = get()
-    const result = user?.is_super_admin === true
-    console.log('[authStore] isSuperAdmin check:', { user: user?.email, is_super_admin: user?.is_super_admin, result })
-    return result
+    return user?.is_super_admin === true
   },
 
   initialize: async () => {
