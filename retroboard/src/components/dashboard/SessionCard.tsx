@@ -56,7 +56,8 @@ interface SessionCardProps {
 export function SessionCard({ session, participantCount, onDelete }: SessionCardProps) {
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
-  const isOrganizer = user?.id === session.organizer_id
+  const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin)
+  const isOrganizer = user?.id === session.organizer_id || isSuperAdmin()
   const status = getSessionStatus(session.current_step)
   const StatusIcon = status.icon
   const progress = stepProgress[session.current_step] || 0

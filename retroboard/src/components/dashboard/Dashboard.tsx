@@ -30,12 +30,38 @@ export function Dashboard() {
   const [joinCode, setJoinCode] = useState('')
   const [filter, setFilter] = useState<FilterTab>('all')
   const user = useAuthStore((s) => s.user)
+  const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin)
   const { teams } = useTeams()
   const navigate = useNavigate()
   const location = useLocation()
 
   const fetchSessions = useCallback(async () => {
     if (!user) return
+
+    // Super admin sees ALL sessions
+    if (isSuperAdmin()) {
+      const { data: sessionsData, error: sessError } = await supabase
+        .from('sessions')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (sessError) return
+
+      if (sessionsData) {
+        const withCounts = await Promise.all(
+          sessionsData.map(async (s) => {
+            const { count } = await supabase
+              .from('session_participants')
+              .select('*', { count: 'exact', head: true })
+              .eq('session_id', s.id)
+            return { ...s, participant_count: count || 0 }
+          })
+        )
+        setSessions(withCounts)
+      }
+      setLoading(false)
+      return
+    }
 
     // 1. Sessions where user is a participant
     const { data: participations, error: partError } = await supabase
@@ -199,10 +225,10 @@ export function Dashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl md:text-2xl font-bold text-retro-text">
-            Le tue retrospettive
+            {isSuperAdmin() ? 'Tutte le retrospettive' : 'Le tue retrospettive'}
           </h1>
           <p className="text-sm text-retro-text-secondary mt-1">
-            {sessions.length} {sessions.length === 1 ? 'sessione' : 'sessioni'} totali
+            {sessions.length} {sessions.length === 1 ? 'sessione' : 'sessioni'} {isSuperAdmin() ? 'nel sistema' : 'totali'}
           </p>
         </div>
         <div className="flex items-center gap-2">

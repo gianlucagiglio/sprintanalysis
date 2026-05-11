@@ -7,6 +7,7 @@ import type { Session } from '@/types/database'
 export function useSession(sessionId: string | undefined) {
   const { session, setSession, setParticipants, setSections, updateSession } = useSessionStore()
   const user = useAuthStore((s) => s.user)
+  const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin)
   const userId = user?.id
   const userRef = useRef(user)
   userRef.current = user
@@ -137,8 +138,16 @@ export function useSession(sessionId: string | undefined) {
     return () => document.removeEventListener('visibilitychange', handleVisibility)
   }, [sessionId, ready, fetchSession, fetchParticipants, fetchSections])
 
+  // Helper: check if user can moderate (organizer or super admin)
+  const canModerate = () => {
+    const isOrg = session?.organizer_id === user?.id
+    const isSuper = isSuperAdmin()
+    console.log('[useSession] canModerate check:', { isOrg, isSuper, userId: user?.id, organizerId: session?.organizer_id })
+    return isOrg || isSuper
+  }
+
   const advanceStep = async () => {
-    if (!session || session.organizer_id !== user?.id) return
+    if (!session || !canModerate()) return
     const nextStep = Math.min(session.current_step + 1, 4)
     const prevStep = session.current_step
     const prevPhase = session.retro_phase
@@ -154,7 +163,7 @@ export function useSession(sessionId: string | undefined) {
   }
 
   const setRetroPhase = async (phase: Session['retro_phase']) => {
-    if (!session || session.organizer_id !== user?.id) return
+    if (!session || !canModerate()) return
     const prevPhase = session.retro_phase
     const prevRevealed = session.retro_revealed
     const needsAnonymity = phase === 'comments'
@@ -171,7 +180,7 @@ export function useSession(sessionId: string | undefined) {
   }
 
   const revealRetro = async () => {
-    if (!session || session.organizer_id !== user?.id) return
+    if (!session || !canModerate()) return
     updateSession({ retro_revealed: true })
     const { error } = await supabase
       .from('sessions')
@@ -198,7 +207,7 @@ export function useSession(sessionId: string | undefined) {
   }
 
   const resetDone = async () => {
-    if (!session || session.organizer_id !== user?.id) return
+    if (!session || !canModerate()) return
     const { error } = await supabase
       .from('session_participants')
       .update({ is_done: false })
@@ -211,7 +220,7 @@ export function useSession(sessionId: string | undefined) {
   }
 
   const advanceQuiz = async () => {
-    if (!session || session.organizer_id !== user?.id) return
+    if (!session || !canModerate()) return
     const nextIndex = session.quiz_current_index + 1
     updateSession({ quiz_current_index: nextIndex })
     const { error } = await supabase
@@ -225,7 +234,7 @@ export function useSession(sessionId: string | undefined) {
   }
 
   const resetQuizIndex = async () => {
-    if (!session || session.organizer_id !== user?.id) return
+    if (!session || !canModerate()) return
     updateSession({ quiz_current_index: -1 })
     await supabase
       .from('sessions')
@@ -234,7 +243,7 @@ export function useSession(sessionId: string | undefined) {
   }
 
   const goToStep = async (step: number) => {
-    if (!session || session.organizer_id !== user?.id) return
+    if (!session || !canModerate()) return
     if (step < 1 || step > 4 || step >= session.current_step) return
     const prevStep = session.current_step
     updateSession({ current_step: step })
@@ -249,7 +258,7 @@ export function useSession(sessionId: string | undefined) {
   }
 
   const startPhaseTimer = async (durationSeconds: number) => {
-    if (!session || session.organizer_id !== user?.id) return
+    if (!session || !canModerate()) return
     const startedAt = new Date().toISOString()
     updateSession({ phase_timer_duration: durationSeconds, phase_timer_started_at: startedAt })
     const { error } = await supabase
@@ -263,7 +272,7 @@ export function useSession(sessionId: string | undefined) {
   }
 
   const stopPhaseTimer = async () => {
-    if (!session || session.organizer_id !== user?.id) return
+    if (!session || !canModerate()) return
     updateSession({ phase_timer_duration: 0, phase_timer_started_at: null })
     const { error } = await supabase
       .from('sessions')
@@ -275,7 +284,7 @@ export function useSession(sessionId: string | undefined) {
   }
 
   const closeSession = async () => {
-    if (!session || session.organizer_id !== user?.id) return
+    if (!session || !canModerate()) return
     updateSession({ current_step: 5 })
     const { error } = await supabase
       .from('sessions')
@@ -287,7 +296,7 @@ export function useSession(sessionId: string | undefined) {
     }
   }
 
-  const isOrganizer = session?.organizer_id === user?.id
+  const isOrganizer = session?.organizer_id === user?.id || isSuperAdmin()
 
   return {
     session,

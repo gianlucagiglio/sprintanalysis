@@ -22,7 +22,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   isSuperAdmin: () => {
     const { user } = get()
-    return user?.is_super_admin === true
+    const result = user?.is_super_admin === true
+    console.log('[authStore] isSuperAdmin check:', { user: user?.email, is_super_admin: user?.is_super_admin, result })
+    return result
   },
 
   initialize: async () => {
@@ -145,8 +147,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   requestPasswordReset: async (email: string) => {
     console.log('[Auth] Requesting password reset for', email)
+    const redirectUrl = import.meta.env.VITE_APP_URL || window.location.origin
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: `${redirectUrl}/reset-password`,
     })
     if (error) {
       console.error('[Auth] Password reset request error:', error.message)
