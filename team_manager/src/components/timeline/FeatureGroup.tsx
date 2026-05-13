@@ -43,9 +43,11 @@ export function FeatureGroup({
   })
 
   const getTotalDays = (weekStart: string) => {
-    return featureAllocations
+    const total = featureAllocations
       .filter((a) => a.week_start === weekStart && assignedMemberIds.includes(a.member_id))
       .reduce((sum, a) => sum + a.days, 0)
+    // Arrotonda a 2 decimali per evitare errori di floating point
+    return Math.round(total * 100) / 100
   }
 
   return (
@@ -91,7 +93,7 @@ export function FeatureGroup({
                       border: `1px solid ${feature.color}40`,
                     }}
                   >
-                    {total}
+                    {total % 1 === 0 ? total : total.toFixed(2)}
                   </span>
                 )}
               </div>
