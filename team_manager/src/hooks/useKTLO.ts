@@ -46,45 +46,29 @@ export function useKTLO() {
       let updatedAllocations: KTLOAllocation[]
       if (existingIndex >= 0) {
         updatedAllocations = [...ktloAllocations]
-        if (days === 0) {
-          updatedAllocations.splice(existingIndex, 1)
-        } else {
-          updatedAllocations[existingIndex] = {
-            ...updatedAllocations[existingIndex],
-            days,
-          }
+        updatedAllocations[existingIndex] = {
+          ...updatedAllocations[existingIndex],
+          days,
         }
-      } else if (days > 0) {
-        updatedAllocations = [...ktloAllocations, newAllocation]
       } else {
-        return
+        updatedAllocations = [...ktloAllocations, newAllocation]
       }
 
       setKTLOAllocations(updatedAllocations)
 
-      // Database update
-      if (days === 0) {
-        const { error } = await supabase
-          .from('ktlo_allocations')
-          .delete()
-          .eq('member_id', memberId)
-          .eq('week_start', weekStart)
+      // Database update - salva sempre il valore (anche 0)
+      const { error } = await supabase
+        .from('ktlo_allocations')
+        .upsert(
+          {
+            member_id: memberId,
+            week_start: weekStart,
+            days,
+          },
+          { onConflict: 'member_id,week_start' }
+        )
 
-        if (error) throw error
-      } else {
-        const { error } = await supabase
-          .from('ktlo_allocations')
-          .upsert(
-            {
-              member_id: memberId,
-              week_start: weekStart,
-              days,
-            },
-            { onConflict: 'member_id,week_start' }
-          )
-
-        if (error) throw error
-      }
+      if (error) throw error
     } catch (error) {
       console.error('Error upserting KTLO allocation:', error)
       toast.error('Errore salvataggio allocazione KTLO')

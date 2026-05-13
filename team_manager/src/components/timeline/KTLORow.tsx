@@ -24,7 +24,7 @@ export function KTLORow({ members, weeks, gridWidth, ktloAllocations, onKTLOChan
 
   const getTotalKTLO = (weekStart: string) => {
     return sortedMembers.reduce((sum, member) => {
-      const ktlo = ktloAllocations.find((k) => k.member_id === member.id && k.week_start === weekStart)?.days ?? 1.5
+      const ktlo = ktloAllocations.find((k) => k.member_id === member.id && k.week_start === weekStart)?.days ?? 0.75
       return sum + ktlo
     }, 0)
   }

@@ -23,12 +23,12 @@ export function MemberKTLORow({
     const allocation = ktloAllocations.find(
       (k) => k.member_id === member.id && k.week_start === weekStart
     )
-    // Default: 1.5 giorni se non specificato
-    return allocation ? allocation.days : 1.5
+    // Default: 0.75 giorni se non specificato
+    return allocation ? allocation.days : 0.75
   }
 
-  // KTLO consigliato: 1.5 giorni
-  const suggestedKTLO = 1.5
+  // KTLO consigliato: 0.75 giorni
+  const suggestedKTLO = 0.75
 
   return (
     <div className="group flex transition-colors border-t border-[var(--border-primary)]">
@@ -53,7 +53,7 @@ export function MemberKTLORow({
                 week.isCurrentWeek ? 'timeline-week-current' : ''
               }`}
               style={{ width: '72px', minWidth: '72px', height: '32px' }}
-              title="KTLO - Keep The Lights On (default: 1.5 days, customizable)"
+              title="KTLO - Keep The Lights On (default: 0.75 days, customizable)"
             >
               <AllocationCell
                 value={days}
