@@ -64,10 +64,10 @@ export function CapacityRecapRow({
       .filter((a) => a.member_id === member.id && a.week_start === weekStart)
       .reduce((sum, a) => sum + a.days, 0)
 
-    // KTLO (default 1.5)
+    // KTLO (default 0.75)
     const ktlo =
       ktloAllocations.find((k) => k.member_id === member.id && k.week_start === weekStart)
-        ?.days ?? 1.5
+        ?.days ?? 0.75
 
     // NRT (solo QA/QAA, default 2 su prima settimana sprint)
     const isQA = member.role?.name === 'QA' || member.role?.name === 'QAA'
@@ -199,8 +199,10 @@ export function CapacityRecapRow({
                           ? 'border-[var(--accent-primary)] border-l-2 border-r-2'
                           : 'border-[var(--border-primary)]'
                       } ${
-                        breakdown.isOverCapacity
+                        breakdown.total > breakdown.capacity
                           ? 'bg-[var(--danger)]20'
+                          : breakdown.total === breakdown.capacity
+                          ? 'bg-transparent'
                           : 'bg-[var(--success)]20'
                       }`}
                       style={{ width: '72px', minWidth: '72px', height: '32px' }}
@@ -209,8 +211,10 @@ export function CapacityRecapRow({
                       <div className="flex items-center justify-center h-full">
                         <span
                           className={`text-xs font-mono font-semibold ${
-                            breakdown.isOverCapacity
+                            breakdown.total > breakdown.capacity
                               ? 'text-[var(--danger)]'
+                              : breakdown.total === breakdown.capacity
+                              ? 'text-[var(--text-primary)]'
                               : 'text-[var(--success)]'
                           }`}
                         >
