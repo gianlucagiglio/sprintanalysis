@@ -78,6 +78,17 @@ export interface FeatureMember {
   created_at?: string
 }
 
+export interface FeatureEstimatedEffort {
+  id: string
+  feature_id: string
+  role_id: string
+  estimated_days: number
+  created_at?: string
+  updated_at?: string
+  // Joined data
+  role?: Role
+}
+
 export type ChangelogType = 'major' | 'minor' | 'patch'
 
 export interface Changelog {

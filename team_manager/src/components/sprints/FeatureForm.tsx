@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ColorPicker } from '@/components/ui/ColorPicker'
+import { useTeam } from '@/hooks/useTeam'
+import { useEstimatedEfforts } from '@/hooks/useEstimatedEfforts'
 import type { Feature, Sprint, FeatureType } from '@/types'
 
 interface FeatureFormProps {
@@ -17,11 +19,17 @@ export function FeatureForm({
   onSubmit,
   onCancel,
 }: FeatureFormProps) {
+  const { roles } = useTeam()
+  const { estimatedEfforts, batchUpsertEstimatedEfforts } = useEstimatedEfforts(feature?.id)
+
   const [name, setName] = useState('')
   const [type, setType] = useState<FeatureType>('strategic')
   const [color, setColor] = useState('#3b82f6')
   const [displayOrder, setDisplayOrder] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // State per effort stimati per ruolo
+  const [effortsByRole, setEffortsByRole] = useState<Record<string, number>>({})
 
   useEffect(() => {
     if (feature) {
@@ -29,13 +37,21 @@ export function FeatureForm({
       setType(feature.type || 'strategic')
       setColor(feature.color)
       setDisplayOrder(feature.display_order ?? 0)
+
+      // Carica effort stimati
+      const efforts: Record<string, number> = {}
+      estimatedEfforts.forEach((effort) => {
+        efforts[effort.role_id] = effort.estimated_days
+      })
+      setEffortsByRole(efforts)
     } else {
       setName('')
       setType('strategic')
       setColor('#3b82f6')
       setDisplayOrder(0)
+      setEffortsByRole({})
     }
-  }, [feature])
+  }, [feature, estimatedEfforts])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -43,18 +59,40 @@ export function FeatureForm({
 
     setIsSubmitting(true)
     try {
+      // Salva feature
       await onSubmit({
         name: name.trim(),
         type,
         color,
         display_order: displayOrder,
       })
+
+      // Salva effort stimati (solo se in edit mode)
+      if (feature?.id) {
+        const efforts = Object.entries(effortsByRole).map(([roleId, days]) => ({
+          roleId,
+          estimatedDays: days || 0,
+        }))
+
+        if (efforts.length > 0) {
+          await batchUpsertEstimatedEfforts(feature.id, efforts)
+        }
+      }
+
       onCancel()
     } catch (error) {
       console.error(error)
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  const handleEffortChange = (roleId: string, value: string) => {
+    const numValue = parseFloat(value) || 0
+    setEffortsByRole((prev) => ({
+      ...prev,
+      [roleId]: numValue,
+    }))
   }
 
   return (
@@ -116,6 +154,50 @@ export function FeatureForm({
           Order number in timeline (0 = first, higher values = after)
         </p>
       </div>
+
+      {/* Effort Stimati per Ruolo - Solo in edit mode */}
+      {feature && (
+        <div className="border-t border-[var(--border-primary)] pt-4">
+          <label className="label mb-3">
+            Effort Stimato per Famiglia Professionale
+          </label>
+          <p className="text-xs text-[var(--text-tertiary)] mb-3">
+            Inserisci i giorni stimati per ogni ruolo. Questo servirà per confrontare l'effort
+            pianificato (timeline) vs stimato.
+          </p>
+          <div className="grid grid-cols-2 gap-3">
+            {roles.map((role) => (
+              <div key={role.id}>
+                <label htmlFor={`effort-${role.id}`} className="label text-xs">
+                  {role.name}
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    id={`effort-${role.id}`}
+                    type="number"
+                    value={effortsByRole[role.id] || ''}
+                    onChange={(e) => handleEffortChange(role.id, e.target.value)}
+                    className="input w-full"
+                    placeholder="0"
+                    min="0"
+                    max="999"
+                    step="0.5"
+                  />
+                  <span
+                    className="text-xs font-medium px-2 py-1 rounded"
+                    style={{
+                      backgroundColor: `${role.color}20`,
+                      color: role.color,
+                    }}
+                  >
+                    d
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="flex gap-3 pt-4">
         <button

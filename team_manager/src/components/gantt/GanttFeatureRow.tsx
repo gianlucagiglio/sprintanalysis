@@ -1,5 +1,6 @@
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore'
+import { useEstimatedEfforts } from '@/hooks/useEstimatedEfforts'
 import type { Feature, WeekColumn, Allocation, TeamMember } from '@/types'
 
 interface GanttFeatureRowProps {
@@ -26,6 +27,7 @@ export function GanttFeatureRow({
 }: GanttFeatureRowProps) {
   const { collapsedGanttFeatures, toggleGanttFeatureCollapse } = useAppStore()
   const isExpanded = !collapsedGanttFeatures[feature.id]
+  const { estimatedEfforts } = useEstimatedEfforts(feature.id)
 
   // Filtra allocazioni per questa feature
   const featureAllocations = allocations.filter((a) => a.feature_id === feature.id)
@@ -37,13 +39,22 @@ export function GanttFeatureRow({
       .reduce((sum, a) => sum + a.days, 0)
   }
 
-  // Calcola totale giorni allocati su tutta la feature
-  const totalElapsed = featureAllocations.reduce((sum, a) => sum + a.days, 0)
+  // Calcola totale giorni allocati su tutta la feature (pianificato)
+  const totalPlanned = featureAllocations.reduce((sum, a) => sum + a.days, 0)
+
+  // Calcola totale giorni stimati
+  const totalEstimated = estimatedEfforts.reduce((sum, e) => sum + e.estimated_days, 0)
 
   // Calcola intensità colore (0-1) basata sui giorni
   const getIntensity = (days: number) => {
     // Normalizza: 5 giorni = massima intensità
     return Math.min(days / 5, 1)
+  }
+
+  // Get effort stimato per ruolo
+  const getEstimatedForRole = (roleName: string): number => {
+    const effort = estimatedEfforts.find((e) => e.role?.name === roleName)
+    return effort?.estimated_days || 0
   }
 
   // Breakdown per ruolo
@@ -102,14 +113,33 @@ export function GanttFeatureRow({
           >
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
-          <div className="flex-1 flex items-center gap-2 min-w-0">
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-bold timeline-text-truncate" style={{ color: feature.color }} title={feature.name}>
-                {feature.name}
-              </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-bold timeline-text-truncate" style={{ color: feature.color }} title={feature.name}>
+              {feature.name}
             </div>
-            <span className="text-xs text-[var(--text-tertiary)] font-mono flex-shrink-0">
-              {totalElapsed.toFixed(1)} gg
+          </div>
+        </div>
+
+        {/* Colonne Stimato/Pianificato */}
+        <div className="flex border-r border-[var(--border-primary)]">
+          <div className="px-3 py-3 text-center flex items-center justify-center" style={{ width: '70px', minWidth: '70px' }}>
+            {totalEstimated > 0 && (
+              <span className="text-xs font-mono font-semibold text-[var(--text-secondary)]">
+                {totalEstimated.toFixed(1)}d
+              </span>
+            )}
+          </div>
+          <div className="px-3 py-3 text-center border-l border-[var(--border-primary)] flex items-center justify-center" style={{ width: '70px', minWidth: '70px' }}>
+            <span className={`text-xs font-mono font-semibold ${
+              totalEstimated === 0
+                ? 'text-[var(--success)]'
+                : totalPlanned > totalEstimated
+                ? 'text-[var(--danger)]'
+                : totalPlanned < totalEstimated
+                ? 'text-[var(--warning)]'
+                : 'text-[var(--success)]'
+            }`}>
+              {totalPlanned.toFixed(1)}d
             </span>
           </div>
         </div>
@@ -169,9 +199,30 @@ export function GanttFeatureRow({
                   style={{ backgroundColor: role.roleColor }}
                 />
                 <span className="text-sm text-[var(--text-secondary)]">{role.roleName}</span>
-                <span className="text-xs text-[var(--text-tertiary)] font-mono ml-auto">
-                  {role.totalDays.toFixed(1)} gg
-                </span>
+              </div>
+
+              {/* Colonne Stimato/Pianificato per Ruolo */}
+              <div className="flex border-r border-[var(--border-primary)]">
+                <div className="px-3 py-2 text-center flex items-center justify-center" style={{ width: '70px', minWidth: '70px' }}>
+                  {getEstimatedForRole(role.roleName) > 0 && (
+                    <span className="text-xs font-mono text-[var(--text-secondary)]">
+                      {getEstimatedForRole(role.roleName).toFixed(1)}d
+                    </span>
+                  )}
+                </div>
+                <div className="px-3 py-2 text-center border-l border-[var(--border-primary)] flex items-center justify-center" style={{ width: '70px', minWidth: '70px' }}>
+                  <span className={`text-xs font-mono ${
+                    getEstimatedForRole(role.roleName) === 0
+                      ? 'text-[var(--success)]'
+                      : role.totalDays > getEstimatedForRole(role.roleName)
+                      ? 'text-[var(--danger)]'
+                      : role.totalDays < getEstimatedForRole(role.roleName)
+                      ? 'text-[var(--warning)]'
+                      : 'text-[var(--success)]'
+                  }`}>
+                    {role.totalDays.toFixed(1)}d
+                  </span>
+                </div>
               </div>
 
               {/* Role Gantt Bar */}
