@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Plus, Calendar, Users, Layers } from 'lucide-react'
+import { Plus, Calendar, Users, Layers, Download } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore'
 import { useTeam } from '@/hooks/useTeam'
 import { useSprints } from '@/hooks/useSprints'
@@ -9,6 +9,7 @@ import { useKTLO } from '@/hooks/useKTLO'
 import { useNRT } from '@/hooks/useNRT'
 import { useSettings } from '@/hooks/useSettings'
 import { generateWeekColumns, getSprintSpans } from '@/lib/capacity'
+import { exportTimelineToExcel } from '@/lib/excelExport'
 import { TimelineHeader } from '@/components/timeline/TimelineHeader'
 import { CapacityRecapRow } from '@/components/timeline/CapacityRecapRow'
 import { FeatureGroup } from '@/components/timeline/FeatureGroup'
@@ -254,6 +255,27 @@ export function TimelineView() {
               onExpandAll={expandAllTimeline}
               onCollapseAll={collapseAllTimeline}
             />
+
+            <button
+              onClick={() => {
+                exportTimelineToExcel({
+                  features: filteredFeatures,
+                  members: filteredMembers,
+                  featureMembers,
+                  weeks,
+                  allocations,
+                  ktloAllocations,
+                  nrtAllocations,
+                  timeOffs,
+                  sprints,
+                })
+              }}
+              className="btn btn-secondary flex items-center gap-2"
+              title="Export Timeline to Excel"
+            >
+              <Download size={16} />
+              Export Excel
+            </button>
 
             <TimelineFilters
               features={features}
