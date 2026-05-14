@@ -75,7 +75,51 @@ export function exportTimelineToExcel(data: ExportData) {
   const merges: XLSX.Range[] = []
   let currentRow = 0
 
-  // ============ HEADER ROW ============
+  // ============ SPRINT ROW ============
+  // Calcola sprint spans per merge cells
+  const sprintRow: string[] = ['Sprint', '']
+  const sprintSpans: Array<{ sprint: string; startCol: number; endCol: number }> = []
+
+  weeks.forEach((week, index) => {
+    const sprint = sprints.find((s) => {
+      const weekDate = new Date(week.weekStart)
+      const sprintStart = new Date(s.start_date)
+      const sprintEnd = new Date(s.end_date)
+      return weekDate >= sprintStart && weekDate <= sprintEnd
+    })
+
+    if (sprint) {
+      const existingSpan = sprintSpans.find((span) => span.sprint === sprint.name)
+      if (existingSpan) {
+        existingSpan.endCol = index + 2 // +2 perché ci sono 2 colonne fisse (Member, Role)
+      } else {
+        sprintSpans.push({
+          sprint: sprint.name,
+          startCol: index + 2,
+          endCol: index + 2,
+        })
+      }
+      sprintRow.push(sprint.name)
+    } else {
+      sprintRow.push('')
+    }
+  })
+
+  wsData.push(sprintRow)
+
+  // Merge celle sprint
+  sprintSpans.forEach((span) => {
+    if (span.endCol > span.startCol) {
+      merges.push({
+        s: { r: currentRow, c: span.startCol },
+        e: { r: currentRow, c: span.endCol },
+      })
+    }
+  })
+
+  currentRow++
+
+  // ============ WEEK HEADER ROW ============
   const headerRow = ['Member', 'Role', ...weeks.map((w) => w.label)]
   wsData.push(headerRow)
 
