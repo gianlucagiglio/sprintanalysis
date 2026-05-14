@@ -17,7 +17,7 @@ export function GanttHeader({ weeks, sprintSpans, gridWidth }: GanttHeaderProps)
           </span>
         </div>
 
-        {/* Colonne Stimato/Pianificato */}
+        {/* Colonne Stimato/Pianificato/% */}
         <div className="flex bg-[var(--bg-secondary)] border-r border-[var(--border-primary)]">
           <div className="px-3 py-3 text-center" style={{ width: '70px', minWidth: '70px' }}>
             <span className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">
@@ -27,6 +27,11 @@ export function GanttHeader({ weeks, sprintSpans, gridWidth }: GanttHeaderProps)
           <div className="px-3 py-3 text-center border-l border-[var(--border-primary)]" style={{ width: '70px', minWidth: '70px' }}>
             <span className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">
               Pianificato
+            </span>
+          </div>
+          <div className="px-3 py-3 text-center border-l border-[var(--border-primary)]" style={{ width: '50px', minWidth: '50px' }}>
+            <span className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">
+              %
             </span>
           </div>
         </div>
@@ -67,6 +72,7 @@ export function GanttHeader({ weeks, sprintSpans, gridWidth }: GanttHeaderProps)
         <div className="flex bg-[var(--bg-secondary)] border-r border-[var(--border-primary)]">
           <div className="px-3 py-2" style={{ width: '70px', minWidth: '70px' }}></div>
           <div className="px-3 py-2 border-l border-[var(--border-primary)]" style={{ width: '70px', minWidth: '70px' }}></div>
+          <div className="px-3 py-2 border-l border-[var(--border-primary)]" style={{ width: '50px', minWidth: '50px' }}></div>
         </div>
 
         <div className="flex bg-[var(--bg-primary)]" style={{ width: `${gridWidth}px`, minWidth: `${gridWidth}px` }}>

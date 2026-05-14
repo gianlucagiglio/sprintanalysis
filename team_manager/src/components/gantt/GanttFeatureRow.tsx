@@ -120,7 +120,7 @@ export function GanttFeatureRow({
           </div>
         </div>
 
-        {/* Colonne Stimato/Pianificato */}
+        {/* Colonne Stimato/Pianificato/% */}
         <div className="flex border-r border-[var(--border-primary)]">
           <div className="px-3 py-3 text-center flex items-center justify-center" style={{ width: '70px', minWidth: '70px' }}>
             {totalEstimated > 0 && (
@@ -141,6 +141,24 @@ export function GanttFeatureRow({
             }`}>
               {totalPlanned.toFixed(1)}d
             </span>
+          </div>
+          <div className="px-3 py-3 text-center border-l border-[var(--border-primary)] flex items-center justify-center" style={{ width: '50px', minWidth: '50px' }}>
+            {totalEstimated > 0 && (
+              <span className={`text-xs font-mono font-semibold ${
+                totalPlanned > totalEstimated
+                  ? 'text-[var(--danger)]'
+                  : totalPlanned < totalEstimated
+                  ? 'text-[var(--warning)]'
+                  : 'text-[var(--success)]'
+              }`}>
+                {totalPlanned === totalEstimated
+                  ? '0%'
+                  : `${totalPlanned > totalEstimated ? '+' : ''}${(
+                      ((totalPlanned - totalEstimated) / totalEstimated) *
+                      100
+                    ).toFixed(0)}%`}
+              </span>
+            )}
           </div>
         </div>
 
@@ -201,7 +219,7 @@ export function GanttFeatureRow({
                 <span className="text-sm text-[var(--text-secondary)]">{role.roleName}</span>
               </div>
 
-              {/* Colonne Stimato/Pianificato per Ruolo */}
+              {/* Colonne Stimato/Pianificato/% per Ruolo */}
               <div className="flex border-r border-[var(--border-primary)]">
                 <div className="px-3 py-2 text-center flex items-center justify-center" style={{ width: '70px', minWidth: '70px' }}>
                   {getEstimatedForRole(role.roleName) > 0 && (
@@ -222,6 +240,25 @@ export function GanttFeatureRow({
                   }`}>
                     {role.totalDays.toFixed(1)}d
                   </span>
+                </div>
+                <div className="px-3 py-2 text-center border-l border-[var(--border-primary)] flex items-center justify-center" style={{ width: '50px', minWidth: '50px' }}>
+                  {getEstimatedForRole(role.roleName) > 0 && (
+                    <span className={`text-xs font-mono ${
+                      role.totalDays > getEstimatedForRole(role.roleName)
+                        ? 'text-[var(--danger)]'
+                        : role.totalDays < getEstimatedForRole(role.roleName)
+                        ? 'text-[var(--warning)]'
+                        : 'text-[var(--success)]'
+                    }`}>
+                      {role.totalDays === getEstimatedForRole(role.roleName)
+                        ? '0%'
+                        : `${role.totalDays > getEstimatedForRole(role.roleName) ? '+' : ''}${(
+                            ((role.totalDays - getEstimatedForRole(role.roleName)) /
+                              getEstimatedForRole(role.roleName)) *
+                            100
+                          ).toFixed(0)}%`}
+                    </span>
+                  )}
                 </div>
               </div>
 
