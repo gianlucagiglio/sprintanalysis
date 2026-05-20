@@ -26,6 +26,44 @@ interface ChangelogEntry {
 
 const changelog: ChangelogEntry[] = [
   {
+    version: '1.12.0',
+    date: '2025-05-11',
+    type: 'feature',
+    changes: [
+      {
+        category: 'Super Admin',
+        icon: Shield,
+        items: [
+          'Funzionalità completa amministratore con pieni poteri',
+          'Visualizzazione di tutte le retrospettive nel sistema',
+          'Controlli host su qualsiasi board (chiudi, modifica, timer, step)',
+          'Badge dorato distintivo nella navbar',
+          'Email super admin: gianluca.giglio@gmail.com',
+        ],
+      },
+      {
+        category: 'Password Recovery',
+        icon: Users,
+        items: [
+          'Pagina "Password dimenticata" con invio email',
+          'Pagina reset password con validazione sicura',
+          'Link di reset temporaneo e sicuro',
+          'Validazione password (minimo 6 caratteri)',
+        ],
+      },
+      {
+        category: 'Actions Enhancement',
+        icon: Target,
+        items: [
+          'Campo Note multi-riga per dettagli e aggiornamenti azioni',
+          'Campo Resolution per documentare come è stata risolta',
+          'UI migliorata con textarea in modal modifica azione',
+          'Salvataggio automatico note e risoluzione',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.4.0',
     date: '2026-04-15',
     type: 'feature',
