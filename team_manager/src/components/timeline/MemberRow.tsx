@@ -16,10 +16,46 @@ interface MemberRowProps {
 }
 
 export function MemberRow({ member, feature, weeks, gridWidth, allocations, timeOffs, onAllocationChange }: MemberRowProps) {
-  const { allocations: allAllocations, features, ktloAllocations } = useAppStore()
+  const {
+    allocations: allAllocations,
+    features,
+    ktloAllocations,
+    selectedCells,
+    isSelecting,
+    selectionFeatureId,
+    startCellSelection,
+    addCellToSelection,
+  } = useAppStore()
 
   const getAllocation = (weekStart: string) => {
     return allocations.find((a) => a.member_id === member.id && a.feature_id === feature.id && a.week_start === weekStart)?.days || 0
+  }
+
+  const isCellSelected = (weekStart: string) => {
+    return selectedCells.some(
+      (c) => c.featureId === feature.id && c.memberId === member.id && c.weekStart === weekStart
+    )
+  }
+
+  const handleCellMouseDown = (weekStart: string, value: number) => {
+    startCellSelection(feature.id)
+    addCellToSelection({
+      featureId: feature.id,
+      memberId: member.id,
+      weekStart,
+      value,
+    })
+  }
+
+  const handleCellMouseEnter = (weekStart: string, value: number) => {
+    if (isSelecting && selectionFeatureId === feature.id) {
+      addCellToSelection({
+        featureId: feature.id,
+        memberId: member.id,
+        weekStart,
+        value,
+      })
+    }
   }
 
   return (
@@ -40,13 +76,21 @@ export function MemberRow({ member, feature, weeks, gridWidth, allocations, time
           const days = getAllocation(week.weekStart)
           const capacityInfo = getCapacityInfo(member, week.weekStart, allocations, timeOffs, ktloAllocations)
 
+          const isSelected = isCellSelected(week.weekStart)
+
           return (
             <div
               key={week.weekStart}
-              className={`border-r border-[var(--border-primary)] relative pointer-events-auto ${
+              className={`border-r relative pointer-events-auto ${
                 week.isCurrentWeek ? 'timeline-week-current' : ''
+              } ${
+                isSelected
+                  ? 'bg-[var(--accent-primary)]30 border-[var(--accent-primary)] border-2'
+                  : 'border-[var(--border-primary)]'
               }`}
               style={{ width: '72px', height: '32px' }}
+              onMouseDown={() => handleCellMouseDown(week.weekStart, days)}
+              onMouseEnter={() => handleCellMouseEnter(week.weekStart, days)}
             >
               <AllocationCell
                 value={days}

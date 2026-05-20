@@ -33,6 +33,8 @@ export function ActionEditModal({
   const [selectedAssignees, setSelectedAssignees] = useState<string[]>(action.assigned_to_multi || [])
   const [deadline, setDeadline] = useState(action.deadline || '')
   const [status, setStatus] = useState<Action['status']>(action.status)
+  const [notes, setNotes] = useState(action.notes || '')
+  const [resolution, setResolution] = useState(action.resolution || '')
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
@@ -40,6 +42,8 @@ export function ActionEditModal({
     setSelectedAssignees(action.assigned_to_multi || [])
     setDeadline(action.deadline || '')
     setStatus(action.status)
+    setNotes(action.notes || '')
+    setResolution(action.resolution || '')
   }, [action])
 
   const toggleAssignee = (userId: string) => {
@@ -61,6 +65,8 @@ export function ActionEditModal({
       assigned_to_multi: selectedAssignees,
       deadline: deadline || null,
       status,
+      notes: notes.trim() || null,
+      resolution: resolution.trim() || null,
     })
     setSaving(false)
     onClose()
@@ -167,6 +173,32 @@ export function ActionEditModal({
             <option value="in_progress">In corso</option>
             <option value="done">Completato</option>
           </select>
+        </div>
+
+        {/* Notes */}
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-retro-text-secondary">Note</label>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            disabled={!canEdit}
+            placeholder="Aggiungi note, dettagli, aggiornamenti..."
+            rows={3}
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-retro-text transition-all focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10 disabled:opacity-50 resize-none"
+          />
+        </div>
+
+        {/* Resolution */}
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-retro-text-secondary">Risoluzione</label>
+          <textarea
+            value={resolution}
+            onChange={(e) => setResolution(e.target.value)}
+            disabled={!canEdit}
+            placeholder="Come è stata risolta l'azione..."
+            rows={3}
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-retro-text transition-all focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10 disabled:opacity-50 resize-none"
+          />
         </div>
 
         {/* Buttons */}

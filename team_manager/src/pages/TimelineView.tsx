@@ -17,6 +17,7 @@ import { GlobalTimeOffRow } from '@/components/timeline/GlobalTimeOffRow'
 import { NRTRow } from '@/components/timeline/NRTRow'
 import { KTLORow } from '@/components/timeline/KTLORow'
 import { TimelineFilters } from '@/components/timeline/TimelineFilters'
+import { SelectionTooltip } from '@/components/timeline/SelectionTooltip'
 import { Modal } from '@/components/ui/Modal'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -39,6 +40,9 @@ export function TimelineView() {
     setCapacityRecapExpanded,
     expandAllTimeline,
     collapseAllTimeline,
+    selectedCells,
+    endCellSelection,
+    clearCellSelection,
   } = useAppStore()
   const { members, roles } = useTeam()
   const { sprints, features, createFeature, updateFeature, deleteFeature } = useSprints()
@@ -113,6 +117,28 @@ export function TimelineView() {
       }
     }
   }, [roles])
+
+  // Handle global mouseup to end selection
+  useEffect(() => {
+    const handleMouseUp = () => {
+      endCellSelection()
+    }
+
+    const handleMouseLeave = () => {
+      clearCellSelection()
+    }
+
+    window.addEventListener('mouseup', handleMouseUp)
+    document.addEventListener('mouseleave', handleMouseLeave)
+
+    return () => {
+      window.removeEventListener('mouseup', handleMouseUp)
+      document.removeEventListener('mouseleave', handleMouseLeave)
+    }
+  }, [endCellSelection, clearCellSelection])
+
+  // Calculate selection total
+  const selectionTotal = selectedCells.reduce((sum, cell) => sum + cell.value, 0)
 
   const handleFeatureSubmit = async (data: Omit<Feature, 'id' | 'created_at' | 'sprint'>) => {
     if (editingFeature) {
@@ -448,6 +474,11 @@ export function TimelineView() {
         confirmText="Delete"
         cancelText="Cancel"
       />
+
+      {/* Cell Selection Tooltip */}
+      {selectedCells.length > 0 && (
+        <SelectionTooltip totalValue={selectionTotal} cellCount={selectedCells.length} />
+      )}
     </div>
   )
 }

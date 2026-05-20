@@ -153,6 +153,11 @@ export interface AppStore {
   timeOffExpanded: boolean
   capacityRecapExpanded: boolean
 
+  // Cell Selection
+  selectedCells: Array<{ featureId: string; memberId: string; weekStart: string; value: number }>
+  isSelecting: boolean
+  selectionFeatureId: string | null
+
   // Setters
   setRoles: (roles: Role[]) => void
   setMembers: (members: TeamMember[]) => void
@@ -173,4 +178,8 @@ export interface AppStore {
   collapseAllTimeline: () => void
   expandAllGantt: () => void
   collapseAllGantt: () => void
+  startCellSelection: (featureId: string) => void
+  addCellToSelection: (cell: { featureId: string; memberId: string; weekStart: string; value: number }) => void
+  clearCellSelection: () => void
+  endCellSelection: () => void
 }

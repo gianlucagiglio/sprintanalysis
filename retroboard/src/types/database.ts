@@ -69,6 +69,8 @@ export type Action = {
   assigned_to_multi: string[]
   deadline: string | null
   status: 'todo' | 'in_progress' | 'done'
+  notes: string | null
+  resolution: string | null
   created_at: string
 }
 
