@@ -211,6 +211,92 @@ export const quizThemes: QuizTheme[] = [
     ],
   },
   {
+    id: 'sociologia',
+    label: 'Sociologia',
+    category: 'scienze-umane',
+    questions: [
+      {
+        question: 'Chi è considerato il padre della sociologia?',
+        choices: ['Karl Marx', 'Max Weber', 'Auguste Comte', 'Émile Durkheim'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Cosa studia la sociologia?',
+        choices: [
+          'I comportamenti individuali',
+          'La società e le relazioni sociali',
+          'L\'economia',
+          'La politica',
+        ],
+        correct_choice: 1,
+      },
+      {
+        question: 'Chi ha scritto "Il Capitale"?',
+        choices: ['Friedrich Engels', 'Karl Marx', 'Max Weber', 'Adam Smith'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'antropologia',
+    label: 'Antropologia',
+    category: 'scienze-umane',
+    questions: [
+      {
+        question: 'Cosa studia l\'antropologia culturale?',
+        choices: [
+          'Le ossa umane',
+          'Le culture e società umane',
+          'Gli animali',
+          'Le lingue antiche',
+        ],
+        correct_choice: 1,
+      },
+      {
+        question: 'Chi ha scritto "Tristi tropici"?',
+        choices: ['Claude Lévi-Strauss', 'Margaret Mead', 'Bronisław Malinowski', 'Franz Boas'],
+        correct_choice: 0,
+      },
+      {
+        question: 'Cosa significa "etnografia"?',
+        choices: [
+          'Studio dei gruppi etnici',
+          'Descrizione delle culture attraverso osservazione diretta',
+          'Studio delle lingue',
+          'Storia delle popolazioni',
+        ],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'diritto',
+    label: 'Diritto e Legge',
+    category: 'scienze-umane',
+    questions: [
+      {
+        question: 'Quanti articoli ha la Costituzione italiana?',
+        choices: ['119', '129', '139', '149'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Quale principio significa "presunto innocente fino a prova contraria"?',
+        choices: [
+          'Habeas corpus',
+          'Presunzione di innocenza',
+          'In dubio pro reo',
+          'Nemo tenetur',
+        ],
+        correct_choice: 1,
+      },
+      {
+        question: 'Come si chiama la pena massima in Italia?',
+        choices: ['30 anni', 'Ergastolo', 'Morte', 'Lavori forzati'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
     id: 'architettura',
     label: 'Architettura',
     category: 'arte-creativita',
@@ -483,6 +569,82 @@ export const quizThemes: QuizTheme[] = [
     ],
   },
   {
+    id: 'app-mobile',
+    label: 'App e Mobile',
+    category: 'gen-z-tech',
+    questions: [
+      {
+        question: 'Quale app ha inventato lo "swipe right/left"?',
+        choices: ['Instagram', 'Tinder', 'Snapchat', 'TikTok'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quale sistema operativo mobile ha la quota di mercato maggiore?',
+        choices: ['iOS', 'Android', 'Windows Phone', 'BlackBerry'],
+        correct_choice: 1,
+      },
+      {
+        question: 'In quale anno è stato lanciato l\'App Store di Apple?',
+        choices: ['2006', '2007', '2008', '2009'],
+        correct_choice: 2,
+      },
+    ],
+  },
+  {
+    id: 'cloud-saas',
+    label: 'Cloud e SaaS',
+    category: 'gen-z-tech',
+    questions: [
+      {
+        question: 'Cosa significa SaaS?',
+        choices: [
+          'Software as a Service',
+          'System as a Server',
+          'Security and Storage',
+          'Social as a Service',
+        ],
+        correct_choice: 0,
+      },
+      {
+        question: 'Quale azienda offre il servizio cloud AWS?',
+        choices: ['Google', 'Microsoft', 'Amazon', 'IBM'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Cosa significa "scalabilità" nel cloud?',
+        choices: [
+          'Ridurre i costi',
+          'Aumentare/diminuire risorse in base al bisogno',
+          'Migliorare la sicurezza',
+          'Velocizzare la rete',
+        ],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'gaming-tech',
+    label: 'Gaming e Console',
+    category: 'gen-z-tech',
+    questions: [
+      {
+        question: 'Quale console ha venduto di più nella storia?',
+        choices: ['PlayStation 2', 'Nintendo Switch', 'Xbox 360', 'PlayStation 4'],
+        correct_choice: 0,
+      },
+      {
+        question: 'In quale anno è uscita la prima PlayStation?',
+        choices: ['1992', '1994', '1996', '1998'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quale azienda produce la Xbox?',
+        choices: ['Sony', 'Nintendo', 'Microsoft', 'Sega'],
+        correct_choice: 2,
+      },
+    ],
+  },
+  {
     id: 'capitali',
     label: 'Capitali del mondo',
     category: 'cultura-geografia',
@@ -611,6 +773,72 @@ export const quizThemes: QuizTheme[] = [
         question: 'In quale paese è nata la birra Guinness?',
         choices: ['Scozia', 'Inghilterra', 'Irlanda', 'Galles'],
         correct_choice: 2,
+      },
+    ],
+  },
+  {
+    id: 'monumenti',
+    label: 'Monumenti famosi',
+    category: 'cultura-geografia',
+    questions: [
+      {
+        question: 'In quale città si trova la Torre Eiffel?',
+        choices: ['Londra', 'Roma', 'Parigi', 'Madrid'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Quale monumento si trova a Agra, in India?',
+        choices: ['Taj Mahal', 'Tempio d\'Oro', 'Gateway of India', 'Red Fort'],
+        correct_choice: 0,
+      },
+      {
+        question: 'Quanti gradini ha la Torre di Pisa?',
+        choices: ['251', '294', '312', '366'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'mari-oceani',
+    label: 'Mari e oceani',
+    category: 'cultura-geografia',
+    questions: [
+      {
+        question: 'Qual è l\'oceano più grande?',
+        choices: ['Atlantico', 'Pacifico', 'Indiano', 'Artico'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quale mare separa l\'Europa dall\'Africa?',
+        choices: ['Mar Rosso', 'Mar Mediterraneo', 'Mar Nero', 'Mar Caspio'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quale mare è il più salato?',
+        choices: ['Mar Morto', 'Mar Rosso', 'Mar Mediterraneo', 'Mar Baltico'],
+        correct_choice: 0,
+      },
+    ],
+  },
+  {
+    id: 'deserti-montagne',
+    label: 'Deserti e montagne',
+    category: 'cultura-geografia',
+    questions: [
+      {
+        question: 'Qual è il deserto più grande del mondo?',
+        choices: ['Sahara', 'Gobi', 'Antartico', 'Arabia'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Qual è la montagna più alta del mondo?',
+        choices: ['K2', 'Monte Everest', 'Kangchenjunga', 'Makalu'],
+        correct_choice: 1,
+      },
+      {
+        question: 'In quale catena montuosa si trova il Monte Bianco?',
+        choices: ['Pirenei', 'Alpi', 'Appennini', 'Carpazi'],
+        correct_choice: 1,
       },
     ],
   },
@@ -758,6 +986,72 @@ export const quizThemes: QuizTheme[] = [
         question: 'In quale anno è stato fondato YouTube?',
         choices: ['2003', '2005', '2007', '2009'],
         correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'k-pop',
+    label: 'K-Pop e cultura coreana',
+    category: 'entertainment-pop',
+    questions: [
+      {
+        question: 'Quale gruppo K-Pop ha avuto il maggior successo globale?',
+        choices: ['BLACKPINK', 'BTS', 'EXO', 'TWICE'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Cosa significa "K-Pop"?',
+        choices: ['Korean Popular', 'Korea Pop', 'Korean Pop', 'King Pop'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Quale canzone K-Pop ha raggiunto per prima 1 miliardo di visualizzazioni su YouTube?',
+        choices: ['Gangnam Style', 'Ddu-Du Ddu-Du', 'Dynamite', 'Boy With Luv'],
+        correct_choice: 0,
+      },
+    ],
+  },
+  {
+    id: 'reality-tv',
+    label: 'Reality Show',
+    category: 'entertainment-pop',
+    questions: [
+      {
+        question: 'Quale reality show italiano ha lanciato la carriera di molti VIP?',
+        choices: ['La Talpa', 'Grande Fratello', 'L\'Isola dei Famosi', 'MasterChef'],
+        correct_choice: 1,
+      },
+      {
+        question: 'In quale anno è andato in onda il primo Grande Fratello italiano?',
+        choices: ['1998', '2000', '2002', '2004'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Chi conduce X Factor Italia nel 2024?',
+        choices: ['Alessandro Cattelan', 'Giorgia', 'Ludovico Tersigni', 'Varia negli anni'],
+        correct_choice: 3,
+      },
+    ],
+  },
+  {
+    id: 'musica-trap',
+    label: 'Trap e Hip Hop italiano',
+    category: 'entertainment-pop',
+    questions: [
+      {
+        question: 'Chi è considerato il re della trap italiana?',
+        choices: ['Sfera Ebbasta', 'Ghali', 'Marracash', 'Gué Pequeno'],
+        correct_choice: 0,
+      },
+      {
+        question: 'In quale città è nata la scena trap italiana?',
+        choices: ['Roma', 'Milano', 'Napoli', 'Torino'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quale rapper italiano ha collaborato con Chris Brown?',
+        choices: ['Ghali', 'Capo Plaza', 'Sfera Ebbasta', 'Rkomi'],
+        correct_choice: 2,
       },
     ],
   },
@@ -1239,6 +1533,50 @@ export const quizThemes: QuizTheme[] = [
     ],
   },
   {
+    id: 'musica-classica',
+    label: 'Musica classica',
+    category: 'arte-creativita',
+    questions: [
+      {
+        question: 'Chi ha composto "Le quattro stagioni"?',
+        choices: ['Bach', 'Mozart', 'Vivaldi', 'Beethoven'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Quale compositore era sordo?',
+        choices: ['Mozart', 'Bach', 'Beethoven', 'Chopin'],
+        correct_choice: 2,
+      },
+      {
+        question: 'In quale città si trova il Teatro alla Scala?',
+        choices: ['Roma', 'Milano', 'Venezia', 'Napoli'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'danza',
+    label: 'Danza e balletto',
+    category: 'arte-creativita',
+    questions: [
+      {
+        question: 'Quale balletto classico ha come protagonista un cigno?',
+        choices: ['La Bella Addormentata', 'Il lago dei cigni', 'Lo Schiaccianoci', 'Giselle'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Chi ha composto la musica de "Lo Schiaccianoci"?',
+        choices: ['Čajkovskij', 'Prokofiev', 'Stravinskij', 'Rachmaninov'],
+        correct_choice: 0,
+      },
+      {
+        question: 'Quale danza è originaria dell\'Argentina?',
+        choices: ['Flamenco', 'Samba', 'Tango', 'Salsa'],
+        correct_choice: 2,
+      },
+    ],
+  },
+  {
     id: 'medicina',
     label: 'Medicina',
     category: 'scienza-natura',
@@ -1401,6 +1739,77 @@ export const quizThemes: QuizTheme[] = [
     ],
   },
   {
+    id: 'botanica',
+    label: 'Botanica e piante',
+    category: 'scienza-natura',
+    questions: [
+      {
+        question: 'Quale processo usano le piante per produrre energia dalla luce solare?',
+        choices: ['Respirazione', 'Fotosintesi', 'Ossidazione', 'Fermentazione'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quale parte della pianta assorbe acqua e nutrienti?',
+        choices: ['Foglie', 'Fiori', 'Radici', 'Fusto'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Quale albero può vivere più a lungo?',
+        choices: ['Quercia', 'Sequoia', 'Pino', 'Baobab'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'geologia',
+    label: 'Geologia e Terra',
+    category: 'scienza-natura',
+    questions: [
+      {
+        question: 'Quanti strati principali ha la Terra?',
+        choices: ['2', '3', '4', '5'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Come si chiama la teoria della deriva dei continenti?',
+        choices: [
+          'Tettonica a zolle',
+          'Deriva continentale',
+          'Pangea',
+          'Litosfera',
+        ],
+        correct_choice: 0,
+      },
+      {
+        question: 'Quale scala misura la magnitudo dei terremoti?',
+        choices: ['Scala Beaufort', 'Scala Richter', 'Scala Celsius', 'Scala Mercalli'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'zoologia',
+    label: 'Zoologia',
+    category: 'scienza-natura',
+    questions: [
+      {
+        question: 'Quale animale ha il cuore più grande?',
+        choices: ['Elefante', 'Balenottera azzurra', 'Giraffa', 'Ippopotamo'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quale animale può rigenerare parti del corpo?',
+        choices: ['Salamandra', 'Lucertola', 'Stella marina', 'Tutti e tre'],
+        correct_choice: 3,
+      },
+      {
+        question: 'Quale animale ha la vista più acuta?',
+        choices: ['Aquila', 'Falco', 'Gufo', 'Falco pellegrino'],
+        correct_choice: 0,
+      },
+    ],
+  },
+  {
     id: 'cinema-italiano-vintage',
     label: 'Cinema italiano anni \'60-\'80',
     category: 'cultura-italiana',
@@ -1529,6 +1938,82 @@ export const quizThemes: QuizTheme[] = [
         question: 'In quale anno è iniziata la TV a colori in Italia?',
         choices: ['1970', '1975', '1977', '1980'],
         correct_choice: 2,
+      },
+    ],
+  },
+  {
+    id: 'fantozzi',
+    label: 'Fantozzi',
+    category: 'cultura-italiana',
+    questions: [
+      {
+        question: 'Chi interpreta il ragionier Ugo Fantozzi?',
+        choices: ['Paolo Villaggio', 'Alberto Sordi', 'Renato Pozzetto', 'Carlo Verdone'],
+        correct_choice: 0,
+      },
+      {
+        question: 'Come si chiama il capo di Fantozzi?',
+        choices: ['Mega Direttore Conte Mascetti', 'Mega Direttore Duca Conte', 'Mega Direttore Galattico', 'Mega Direttore Generale'],
+        correct_choice: 2,
+      },
+      {
+        question: 'In quale anno è uscito il primo film di Fantozzi?',
+        choices: ['1973', '1975', '1977', '1980'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'cucina-italiana-regionale',
+    label: 'Specialità regionali italiane',
+    category: 'cultura-italiana',
+    questions: [
+      {
+        question: 'Di quale regione è tipica la cassata?',
+        choices: ['Campania', 'Sicilia', 'Sardegna', 'Calabria'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quale città è famosa per il panettone?',
+        choices: ['Torino', 'Venezia', 'Milano', 'Bologna'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Di quale regione è tipico il brodetto di pesce?',
+        choices: ['Liguria', 'Marche', 'Puglia', 'Calabria'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'proverbi-italiani',
+    label: 'Proverbi e modi di dire',
+    category: 'cultura-italiana',
+    questions: [
+      {
+        question: 'Come finisce il proverbio: "Chi dorme non piglia..."?',
+        choices: ['Sonno', 'Pesci', 'Freddo', 'Nulla'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Cosa significa "Piove sul bagnato"?',
+        choices: [
+          'Arrivano altre difficoltà a chi già ne ha',
+          'La pioggia bagna',
+          'Bisogna accettare il destino',
+          'Non si può cambiare il tempo',
+        ],
+        correct_choice: 0,
+      },
+      {
+        question: 'Come finisce: "Paese che vai..."?',
+        choices: [
+          'Lingua che trovi',
+          'Usanza che trovi',
+          'Gente che trovi',
+          'Cultura che trovi',
+        ],
+        correct_choice: 1,
       },
     ],
   },
@@ -1665,6 +2150,50 @@ export const quizThemes: QuizTheme[] = [
     ],
   },
   {
+    id: 'doctor-who',
+    label: 'Doctor Who',
+    category: 'nerd-geek',
+    questions: [
+      {
+        question: 'Come si chiama la macchina del tempo del Dottore?',
+        choices: ['TARDIS', 'DeLorean', 'Phone Box', 'Time Machine'],
+        correct_choice: 0,
+      },
+      {
+        question: 'Di quale pianeta è originario il Dottore?',
+        choices: ['Terra', 'Gallifrey', 'Skaro', 'Trenzalore'],
+        correct_choice: 1,
+      },
+      {
+        question: 'In quale anno è iniziata la serie classica?',
+        choices: ['1955', '1963', '1970', '1975'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'dc-comics',
+    label: 'DC Comics',
+    category: 'nerd-geek',
+    questions: [
+      {
+        question: 'Qual è il vero nome di Batman?',
+        choices: ['Clark Kent', 'Bruce Wayne', 'Barry Allen', 'Hal Jordan'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quale supereroe è più veloce?',
+        choices: ['Superman', 'Flash', 'Wonder Woman', 'Shazam'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Come si chiama la città di Batman?',
+        choices: ['Metropolis', 'Central City', 'Gotham City', 'Star City'],
+        correct_choice: 2,
+      },
+    ],
+  },
+  {
     id: 'guinness',
     label: 'Guinness dei primati',
     category: 'curiosita',
@@ -1771,6 +2300,55 @@ export const quizThemes: QuizTheme[] = [
         question: 'Quale frutto ha i semi all\'esterno?',
         choices: ['Fragola', 'Lampone', 'Melograno', 'Kiwi'],
         correct_choice: 0,
+      },
+    ],
+  },
+  {
+    id: 'spazio-cosmico',
+    label: 'Spazio e universo',
+    category: 'curiosita',
+    questions: [
+      {
+        question: 'Quanti pianeti ci sono nel sistema solare?',
+        choices: ['7', '8', '9', '10'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quale pianeta è chiamato "pianeta rosso"?',
+        choices: ['Venere', 'Marte', 'Giove', 'Saturno'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Cosa è un buco nero?',
+        choices: [
+          'Un pianeta oscuro',
+          'Una stella morta con gravità estrema',
+          'Un portale spaziale',
+          'Una nebulosa',
+        ],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'invenzioni',
+    label: 'Invenzioni e inventori',
+    category: 'curiosita',
+    questions: [
+      {
+        question: 'Chi ha inventato la lampadina?',
+        choices: ['Nikola Tesla', 'Thomas Edison', 'Alexander Bell', 'Benjamin Franklin'],
+        correct_choice: 1,
+      },
+      {
+        question: 'In quale anno è stato inventato Internet?',
+        choices: ['1969', '1979', '1989', '1999'],
+        correct_choice: 0,
+      },
+      {
+        question: 'Chi ha inventato il telefono?',
+        choices: ['Thomas Edison', 'Alexander Graham Bell', 'Guglielmo Marconi', 'Nikola Tesla'],
+        correct_choice: 1,
       },
     ],
   },
