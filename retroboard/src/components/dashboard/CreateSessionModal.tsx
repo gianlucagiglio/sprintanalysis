@@ -7,7 +7,7 @@ import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Plus } from 'lucide-react'
-import { quizThemes } from '@/data/quizThemes'
+import { quizThemes, quizCategories, type QuizCategory } from '@/data/quizThemes'
 import { canCreate } from '@/config/permissions'
 
 interface CreateSessionModalProps {
@@ -25,11 +25,24 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
   const [title, setTitle] = useState('')
   const [teamId, setTeamId] = useState<string>('')
   const [maxVotes, setMaxVotes] = useState(3)
-  const [quizTheme, setQuizTheme] = useState('tech')
+  const [quizCategory, setQuizCategory] = useState<QuizCategory>('gen-z-tech')
+  const [quizTheme, setQuizTheme] = useState('gen-z')
   const [loading, setLoading] = useState(false)
+
+  // Filter themes based on selected category
+  const filteredThemes = quizThemes.filter((t) => t.category === quizCategory)
   const user = useAuthStore((s) => s.user)
   const { teams } = useTeams()
   const navigate = useNavigate()
+
+  // Handle category change - reset theme to first of new category
+  const handleCategoryChange = (newCategory: QuizCategory) => {
+    setQuizCategory(newCategory)
+    const firstTheme = quizThemes.find((t) => t.category === newCategory)
+    if (firstTheme) {
+      setQuizTheme(firstTheme.id)
+    }
+  }
 
   const handleCreate = async (e: FormEvent) => {
     e.preventDefault()
@@ -118,6 +131,20 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
         )}
         <div className="space-y-1.5">
           <label className="block text-sm font-medium text-retro-text">
+            Categoria quiz
+          </label>
+          <select
+            value={quizCategory}
+            onChange={(e) => handleCategoryChange(e.target.value as QuizCategory)}
+            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-retro-text text-sm transition-all duration-200 focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10"
+          >
+            {Object.entries(quizCategories).map(([key, label]) => (
+              <option key={key} value={key}>{label}</option>
+            ))}
+          </select>
+        </div>
+        <div className="space-y-1.5">
+          <label className="block text-sm font-medium text-retro-text">
             Tema quiz
           </label>
           <select
@@ -125,10 +152,13 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
             onChange={(e) => setQuizTheme(e.target.value)}
             className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-retro-text text-sm transition-all duration-200 focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10"
           >
-            {quizThemes.map((t) => (
+            {filteredThemes.map((t) => (
               <option key={t.id} value={t.id}>{t.label}</option>
             ))}
           </select>
+          <p className="text-xs text-retro-text-secondary">
+            {filteredThemes.length} {filteredThemes.length === 1 ? 'tema disponibile' : 'temi disponibili'}
+          </p>
         </div>
         <div className="space-y-1.5">
           <label className="block text-sm font-medium text-retro-text">

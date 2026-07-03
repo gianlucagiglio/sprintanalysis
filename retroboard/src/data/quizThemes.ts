@@ -1,13 +1,40 @@
+export type QuizCategory =
+  | 'gen-z-tech'
+  | 'scienze-umane'
+  | 'cultura-geografia'
+  | 'entertainment-pop'
+  | 'sport-tempo-libero'
+  | 'arte-creativita'
+  | 'scienza-natura'
+  | 'cultura-italiana'
+  | 'nerd-geek'
+  | 'curiosita'
+
 export type QuizTheme = {
   id: string
   label: string
+  category: QuizCategory
   questions: { question: string; choices: string[]; correct_choice: number }[]
+}
+
+export const quizCategories: Record<QuizCategory, string> = {
+  'gen-z-tech': '🧑‍💻 Gen Z & Tech',
+  'scienze-umane': '🧠 Scienze Umane & Società',
+  'cultura-geografia': '🌍 Cultura & Geografia',
+  'entertainment-pop': '🎮 Entertainment & Pop',
+  'sport-tempo-libero': '🏃 Sport & Tempo Libero',
+  'arte-creativita': '🎨 Arte & Creatività',
+  'scienza-natura': '🔬 Scienza & Natura',
+  'cultura-italiana': '🎭 Cultura Italiana',
+  'nerd-geek': '🤓 Nerd & Geek',
+  'curiosita': '💡 Curiosità',
 }
 
 export const quizThemes: QuizTheme[] = [
   {
     id: 'gen-z',
     label: 'Gen Z e cultura digitale',
+    category: 'gen-z-tech',
     questions: [
       {
         question: 'Cosa significa "FOMO"?',
@@ -39,6 +66,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'astronomia',
     label: 'Astronomia e Spazio',
+    category: 'scienza-natura',
     questions: [
       {
         question: 'Quale pianeta del sistema solare è il più grande?',
@@ -60,6 +88,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'fumetti',
     label: 'Fumetti e supereroi',
+    category: 'arte-creativita',
     questions: [
       {
         question: 'Qual è il vero nome di Spider-Man?',
@@ -81,6 +110,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'formula1',
     label: 'Formula 1 e Motori',
+    category: 'sport-tempo-libero',
     questions: [
       {
         question: 'Quanti mondiali di F1 ha vinto Michael Schumacher?',
@@ -102,6 +132,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'economia',
     label: 'Economia e Finanza',
+    category: 'scienze-umane',
     questions: [
       {
         question: 'Cosa significa PIL?',
@@ -128,6 +159,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'psicologia',
     label: 'Psicologia',
+    category: 'scienze-umane',
     questions: [
       {
         question: 'Chi è considerato il padre della psicoanalisi?',
@@ -159,6 +191,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'filosofia',
     label: 'Filosofia',
+    category: 'scienze-umane',
     questions: [
       {
         question: 'Chi ha detto "Cogito ergo sum" (Penso dunque sono)?',
@@ -180,6 +213,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'architettura',
     label: 'Architettura',
+    category: 'arte-creativita',
     questions: [
       {
         question: 'Chi ha progettato la Sagrada Familia a Barcellona?',
@@ -201,6 +235,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'moda',
     label: 'Moda',
+    category: 'arte-creativita',
     questions: [
       {
         question: 'Quale stilista italiano ha fondato la casa di moda con le due "G" incrociate?',
@@ -222,6 +257,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'ai-ml',
     label: 'AI e Machine Learning',
+    category: 'gen-z-tech',
     questions: [
       {
         question: 'Cosa significa AI?',
@@ -253,6 +289,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'design-ux',
     label: 'Design e UX',
+    category: 'gen-z-tech',
     questions: [
       {
         question: 'Cosa significa UX?',
@@ -279,6 +316,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'ecologia',
     label: 'Ecologia e Ambiente',
+    category: 'scienza-natura',
     questions: [
       {
         question: 'Quale gas è il principale responsabile dell\'effetto serra?',
@@ -300,6 +338,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'calcio-italiano',
     label: 'Calcio italiano',
+    category: 'sport-tempo-libero',
     questions: [
       {
         question: 'Quale squadra italiana ha vinto più scudetti?',
@@ -321,6 +360,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'food-drink',
     label: 'Food & Drink mondiale',
+    category: 'cultura-geografia',
     questions: [
       {
         question: 'Da quale paese proviene il sushi?',
@@ -342,6 +382,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'social-media',
     label: 'Social Media',
+    category: 'gen-z-tech',
     questions: [
       {
         question: 'In quale anno è stato fondato Facebook?',
@@ -363,6 +404,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'teatro',
     label: 'Teatro',
+    category: 'arte-creativita',
     questions: [
       {
         question: 'Chi ha scritto "Romeo e Giulietta"?',
@@ -389,6 +431,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'strumenti',
     label: 'Strumenti musicali',
+    category: 'arte-creativita',
     questions: [
       {
         question: 'Quante corde ha un violino?',
@@ -410,6 +453,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'cybersecurity',
     label: 'Cybersecurity',
+    category: 'gen-z-tech',
     questions: [
       {
         question: 'Cosa significa "phishing"?',
@@ -441,6 +485,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'capitali',
     label: 'Capitali del mondo',
+    category: 'cultura-geografia',
     questions: [
       {
         question: 'Qual è la capitale del Kazakistan?',
@@ -462,6 +507,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'bandiere',
     label: 'Bandiere e simboli',
+    category: 'cultura-geografia',
     questions: [
       {
         question: 'Quale paese ha una bandiera con una foglia d\'acero?',
@@ -483,6 +529,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'unesco',
     label: 'Patrimoni UNESCO',
+    category: 'cultura-geografia',
     questions: [
       {
         question: 'In quale paese si trova Machu Picchu?',
@@ -504,6 +551,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'lingue',
     label: 'Lingue del mondo',
+    category: 'cultura-geografia',
     questions: [
       {
         question: 'Quante lingue ufficiali ha l\'India?',
@@ -525,6 +573,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'cucina-regionale',
     label: 'Cucina regionale italiana',
+    category: 'cultura-geografia',
     questions: [
       {
         question: 'Da quale regione proviene la pizza napoletana?',
@@ -546,6 +595,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'vini',
     label: 'Vini e bevande',
+    category: 'cultura-geografia',
     questions: [
       {
         question: 'Da quale uva si produce il Barolo?',
@@ -567,6 +617,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'anime',
     label: 'Anime e Manga',
+    category: 'entertainment-pop',
     questions: [
       {
         question: 'Chi è il protagonista di "Naruto"?',
@@ -588,6 +639,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'meme',
     label: 'Meme e Internet Culture',
+    category: 'entertainment-pop',
     questions: [
       {
         question: 'Quale animale è protagonista del meme "Doge"?',
@@ -614,6 +666,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'podcasting',
     label: 'Podcasting',
+    category: 'entertainment-pop',
     questions: [
       {
         question: 'Quale podcast italiano è il più ascoltato?',
@@ -640,6 +693,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'streaming',
     label: 'Streaming Wars',
+    category: 'entertainment-pop',
     questions: [
       {
         question: 'Quale è stata la prima serie originale Netflix?',
@@ -661,6 +715,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'esports',
     label: 'Gaming eSports',
+    category: 'entertainment-pop',
     questions: [
       {
         question: 'Quale gioco ha il torneo "The International"?',
@@ -682,6 +737,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'youtube',
     label: 'YouTube e Creator',
+    category: 'entertainment-pop',
     questions: [
       {
         question: 'Chi è lo YouTuber con più iscritti al mondo?',
@@ -708,6 +764,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'nba',
     label: 'NBA e Basket',
+    category: 'sport-tempo-libero',
     questions: [
       {
         question: 'Chi ha vinto più titoli NBA?',
@@ -729,6 +786,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'tennis',
     label: 'Tennis',
+    category: 'sport-tempo-libero',
     questions: [
       {
         question: 'Quanti tornei del Grande Slam ci sono in un anno?',
@@ -750,6 +808,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'motogp',
     label: 'MotoGP',
+    category: 'sport-tempo-libero',
     questions: [
       {
         question: 'Quanti mondiali MotoGP ha vinto Valentino Rossi?',
@@ -771,6 +830,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'rugby',
     label: 'Rugby',
+    category: 'sport-tempo-libero',
     questions: [
       {
         question: 'Quanti giocatori ci sono in una squadra di rugby?',
@@ -792,6 +852,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'olimpiadi',
     label: 'Olimpiadi',
+    category: 'sport-tempo-libero',
     questions: [
       {
         question: 'In quale città si sono tenute le prime Olimpiadi moderne?',
@@ -813,6 +874,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'sport-estremi',
     label: 'Sport estremi',
+    category: 'sport-tempo-libero',
     questions: [
       {
         question: 'Cosa significa "BASE" in BASE jumping?',
@@ -839,6 +901,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'fotografia',
     label: 'Fotografia',
+    category: 'arte-creativita',
     questions: [
       {
         question: 'Cosa indica il valore ISO in fotografia?',
@@ -865,6 +928,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'fumetti-italiani',
     label: 'Fumetti italiani',
+    category: 'arte-creativita',
     questions: [
       {
         question: 'Chi è l\'autore di Dylan Dog?',
@@ -886,6 +950,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'street-art',
     label: 'Street Art',
+    category: 'arte-creativita',
     questions: [
       {
         question: 'Quale città è considerata la capitale mondiale della street art?',
@@ -912,6 +977,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'cinema-italiano',
     label: 'Cinema italiano',
+    category: 'arte-creativita',
     questions: [
       {
         question: 'Chi ha diretto "La vita è bella"?',
@@ -933,6 +999,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'oscar',
     label: 'Oscar e premi',
+    category: 'arte-creativita',
     questions: [
       {
         question: 'Quale film ha vinto più Oscar nella storia?',
@@ -954,6 +1021,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'medicina',
     label: 'Medicina',
+    category: 'scienza-natura',
     questions: [
       {
         question: 'Quanti gruppi sanguigni esistono nel sistema ABO?',
@@ -975,6 +1043,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'dinosauri',
     label: 'Dinosauri',
+    category: 'scienza-natura',
     questions: [
       {
         question: 'Quale dinosauro aveva il collo più lungo?',
@@ -1001,6 +1070,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'fisica-quantistica',
     label: 'Fisica quantistica',
+    category: 'scienza-natura',
     questions: [
       {
         question: 'Chi ha formulato il principio di indeterminazione?',
@@ -1032,6 +1102,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'chimica-organica',
     label: 'Chimica organica',
+    category: 'scienza-natura',
     questions: [
       {
         question: 'Quale elemento è alla base della chimica organica?',
@@ -1058,6 +1129,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'biologia-marina',
     label: 'Biologia marina',
+    category: 'scienza-natura',
     questions: [
       {
         question: 'Quale animale marino ha tre cuori?',
@@ -1079,6 +1151,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'meteorologia',
     label: 'Meteorologia',
+    category: 'scienza-natura',
     questions: [
       {
         question: 'Cosa causa il vento?',
@@ -1110,6 +1183,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'cinema-italiano-vintage',
     label: 'Cinema italiano anni \'60-\'80',
+    category: 'cultura-italiana',
     questions: [
       {
         question: 'Chi ha diretto "8½"?',
@@ -1131,6 +1205,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'cantautori',
     label: 'Cantautori italiani',
+    category: 'cultura-italiana',
     questions: [
       {
         question: 'Chi ha scritto "La canzone del maggio"?',
@@ -1152,6 +1227,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'dialetti',
     label: 'Dialetti e modi di dire',
+    category: 'cultura-italiana',
     questions: [
       {
         question: 'Cosa significa "boh" in milanese?',
@@ -1173,6 +1249,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'storia-italia',
     label: 'Storia d\'Italia',
+    category: 'cultura-italiana',
     questions: [
       {
         question: 'In quale anno è nata la Repubblica Italiana?',
@@ -1194,6 +1271,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'sanremo',
     label: 'Sanremo',
+    category: 'cultura-italiana',
     questions: [
       {
         question: 'In quale anno è nato il Festival di Sanremo?',
@@ -1215,6 +1293,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'tv-italiana',
     label: 'TV italiana',
+    category: 'cultura-italiana',
     questions: [
       {
         question: 'Chi ha condotto "Lascia o raddoppia"?',
@@ -1236,6 +1315,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'star-wars',
     label: 'Star Wars Extended',
+    category: 'nerd-geek',
     questions: [
       {
         question: 'Come si chiama il pianeta natale di Luke Skywalker?',
@@ -1257,6 +1337,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'harry-potter',
     label: 'Harry Potter',
+    category: 'nerd-geek',
     questions: [
       {
         question: 'Quale casa di Hogwarts ha come animale il tasso?',
@@ -1278,6 +1359,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'lotr',
     label: 'Il Signore degli Anelli',
+    category: 'nerd-geek',
     questions: [
       {
         question: 'Come si chiama la spada di Aragorn?',
@@ -1299,6 +1381,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'mcu',
     label: 'Marvel Cinematic Universe',
+    category: 'nerd-geek',
     questions: [
       {
         question: 'Quale è stato il primo film del MCU?',
@@ -1320,6 +1403,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'dnd',
     label: 'D&D e Giochi di ruolo',
+    category: 'nerd-geek',
     questions: [
       {
         question: 'Quale dado si usa più spesso in D&D?',
@@ -1341,6 +1425,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'retro-computing',
     label: 'Retro Computing',
+    category: 'nerd-geek',
     questions: [
       {
         question: 'Quale computer Commodore fu il più venduto?',
@@ -1362,6 +1447,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'guinness',
     label: 'Guinness dei primati',
+    category: 'curiosita',
     questions: [
       {
         question: 'Qual è l\'uomo più alto della storia?',
@@ -1383,6 +1469,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'complotti',
     label: 'Complotti e leggende',
+    category: 'curiosita',
     questions: [
       {
         question: 'Quale teoria sostiene che la Terra sia piatta?',
@@ -1404,6 +1491,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'true-crime',
     label: 'True Crime',
+    category: 'curiosita',
     questions: [
       {
         question: 'Chi era lo Squartatore di Whitechapel?',
@@ -1425,6 +1513,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'paranormale',
     label: 'Paranormale e misteri',
+    category: 'curiosita',
     questions: [
       {
         question: 'Dove si trova il Triangolo delle Bermuda?',
@@ -1446,6 +1535,7 @@ export const quizThemes: QuizTheme[] = [
   {
     id: 'pub-trivia',
     label: 'Quiz da pub trivia',
+    category: 'curiosita',
     questions: [
       {
         question: 'Quale è l\'unico cibo che non va mai a male?',

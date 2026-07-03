@@ -17,7 +17,10 @@
       "Bash(code:*)",
       "Bash(dir:*)",
       "Bash(supabase --version:*)",
-      "Bash(npx supabase login:*)"
+      "Bash(npx supabase login:*)",
+      "Bash(node update-categories.js:*)",
+      "Bash(move:*)",
+      "Bash(ren:*)"
     ]
   }
 }
