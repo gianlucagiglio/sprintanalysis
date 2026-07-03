@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -15,6 +15,13 @@ export function QuizThemesPage() {
   const [selectedTheme, setSelectedTheme] = useState<{ id: string; label: string } | null>(null)
   const { usage } = useQuizThemeUsage()
   const navigate = useNavigate()
+
+  // Close modal if selected theme has no more sessions
+  useEffect(() => {
+    if (selectedTheme && (!usage[selectedTheme.id] || usage[selectedTheme.id].length === 0)) {
+      setSelectedTheme(null)
+    }
+  }, [usage, selectedTheme])
 
   const toggleCategory = (category: QuizCategory) => {
     setExpandedCategories((prev) => {
@@ -216,7 +223,7 @@ export function QuizThemesPage() {
       </div>
 
       {/* Usage Modal */}
-      {selectedTheme && (
+      {selectedTheme && usage[selectedTheme.id] && usage[selectedTheme.id].length > 0 && (
         <Modal
           open={!!selectedTheme}
           onClose={() => setSelectedTheme(null)}
@@ -235,7 +242,10 @@ export function QuizThemesPage() {
               {usage[selectedTheme.id]?.map((session) => (
                 <button
                   key={session.id}
-                  onClick={() => navigate(`/session/${session.id}`)}
+                  onClick={() => {
+                    // Verify session still exists before navigating
+                    navigate(`/session/${session.id}`)
+                  }}
                   className="w-full bg-white border border-retro-border rounded-xl p-4 hover:border-retro-primary hover:shadow-soft transition-all text-left group"
                 >
                   <div className="flex items-start justify-between gap-3">
