@@ -899,6 +899,226 @@ export const quizThemes: QuizTheme[] = [
     ],
   },
   {
+    id: 'pallavolo',
+    label: 'Pallavolo',
+    category: 'sport-tempo-libero',
+    questions: [
+      {
+        question: 'Quanti giocatori ci sono in campo per squadra nella pallavolo?',
+        choices: ['5', '6', '7', '8'],
+        correct_choice: 1,
+      },
+      {
+        question: 'A quanti punti si vince un set nella pallavolo?',
+        choices: ['21', '23', '25', '30'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Come si chiama il colpo d\'attacco più potente?',
+        choices: ['Schiacciata', 'Bagher', 'Palleggio', 'Muro'],
+        correct_choice: 0,
+      },
+    ],
+  },
+  {
+    id: 'ciclismo',
+    label: 'Ciclismo',
+    category: 'sport-tempo-libero',
+    questions: [
+      {
+        question: 'Quale corsa ciclistica è chiamata "La Grande Boucle"?',
+        choices: ['Giro d\'Italia', 'Tour de France', 'Vuelta a España', 'Parigi-Roubaix'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quale maglia si indossa per essere leader del Tour de France?',
+        choices: ['Maglia rosa', 'Maglia gialla', 'Maglia verde', 'Maglia bianca'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quanti km percorre circa il Tour de France?',
+        choices: ['1.500 km', '2.500 km', '3.500 km', '4.500 km'],
+        correct_choice: 2,
+      },
+    ],
+  },
+  {
+    id: 'atletica',
+    label: 'Atletica leggera',
+    category: 'sport-tempo-libero',
+    questions: [
+      {
+        question: 'Quanti metri è una maratona completa?',
+        choices: ['40.195 m', '41.195 m', '42.195 m', '43.195 m'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Quale atleta detiene il record mondiale dei 100 metri?',
+        choices: ['Carl Lewis', 'Usain Bolt', 'Asafa Powell', 'Justin Gatlin'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quante discipline comprende il decathlon?',
+        choices: ['8', '9', '10', '12'],
+        correct_choice: 2,
+      },
+    ],
+  },
+  {
+    id: 'nuoto',
+    label: 'Nuoto',
+    category: 'sport-tempo-libero',
+    questions: [
+      {
+        question: 'Quale stile di nuoto è il più veloce?',
+        choices: ['Rana', 'Dorso', 'Stile libero', 'Farfalla'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Quanto è lunga una piscina olimpica?',
+        choices: ['25 metri', '33 metri', '50 metri', '100 metri'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Chi è il nuotatore con più medaglie olimpiche?',
+        choices: ['Mark Spitz', 'Michael Phelps', 'Ryan Lochte', 'Ian Thorpe'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'sport-invernali',
+    label: 'Sci e sport invernali',
+    category: 'sport-tempo-libero',
+    questions: [
+      {
+        question: 'In quale sport invernale si usa una slitta velocissima su una pista di ghiaccio?',
+        choices: ['Skeleton', 'Bob', 'Slittino', 'Tutti e tre'],
+        correct_choice: 3,
+      },
+      {
+        question: 'Quale paese ha vinto più medaglie olimpiche invernali?',
+        choices: ['Norvegia', 'Russia', 'Stati Uniti', 'Canada'],
+        correct_choice: 0,
+      },
+      {
+        question: 'Come si chiama lo sci su terreni non preparati?',
+        choices: ['Sci freestyle', 'Sci alpino', 'Sci fuoripista (freeride)', 'Sci di fondo'],
+        correct_choice: 2,
+      },
+    ],
+  },
+  {
+    id: 'arti-marziali',
+    label: 'Boxe e arti marziali',
+    category: 'sport-tempo-libero',
+    questions: [
+      {
+        question: 'Quale pugile è soprannominato "The Greatest"?',
+        choices: ['Mike Tyson', 'Muhammad Ali', 'Floyd Mayweather', 'Rocky Marciano'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Da quale paese provengono le arti marziali miste (MMA)?',
+        choices: ['Giappone', 'Brasile', 'Stati Uniti', 'Thailandia'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Quale cintura è la più alta nel Judo?',
+        choices: ['Cintura nera', 'Cintura rossa', 'Cintura bianca-rossa', 'Cintura rossa e bianca'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'golf',
+    label: 'Golf',
+    category: 'sport-tempo-libero',
+    questions: [
+      {
+        question: 'Quante buche ha un campo da golf standard?',
+        choices: ['9', '12', '18', '24'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Come si chiama il colpo che manda la palla in buca con un solo tiro?',
+        choices: ['Birdie', 'Eagle', 'Albatros', 'Hole in one'],
+        correct_choice: 3,
+      },
+      {
+        question: 'Quale golfista ha vinto più tornei Major?',
+        choices: ['Tiger Woods', 'Jack Nicklaus', 'Arnold Palmer', 'Phil Mickelson'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
+    id: 'baseball',
+    label: 'Baseball',
+    category: 'sport-tempo-libero',
+    questions: [
+      {
+        question: 'Quanti inning ci sono in una partita di baseball?',
+        choices: ['7', '9', '11', '12'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Come si chiama la World Series del baseball americano?',
+        choices: ['Super Bowl', 'Stanley Cup', 'World Series', 'NBA Finals'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Quante basi ci sono in un campo da baseball?',
+        choices: ['2', '3', '4', '5'],
+        correct_choice: 2,
+      },
+    ],
+  },
+  {
+    id: 'cricket',
+    label: 'Cricket',
+    category: 'sport-tempo-libero',
+    questions: [
+      {
+        question: 'In quale paese è più popolare il cricket?',
+        choices: ['Stati Uniti', 'Canada', 'India', 'Brasile'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Quanti giocatori ci sono in una squadra di cricket?',
+        choices: ['9', '10', '11', '12'],
+        correct_choice: 2,
+      },
+      {
+        question: 'Come si chiama il torneo mondiale di cricket?',
+        choices: ['World Cup', 'Cricket Championship', 'Ashes', 'ICC World Cup'],
+        correct_choice: 3,
+      },
+    ],
+  },
+  {
+    id: 'scherma',
+    label: 'Scherma',
+    category: 'sport-tempo-libero',
+    questions: [
+      {
+        question: 'Quanti tipi di armi ci sono nella scherma olimpica?',
+        choices: ['2', '3', '4', '5'],
+        correct_choice: 1,
+      },
+      {
+        question: 'Quale arma della scherma può colpire solo di punta?',
+        choices: ['Fioretto', 'Sciabola', 'Spada', 'Tutte'],
+        correct_choice: 0,
+      },
+      {
+        question: 'Quale paese domina storicamente nella scherma?',
+        choices: ['Francia', 'Italia', 'Germania', 'Russia'],
+        correct_choice: 1,
+      },
+    ],
+  },
+  {
     id: 'fotografia',
     label: 'Fotografia',
     category: 'arte-creativita',
