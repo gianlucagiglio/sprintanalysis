@@ -11,6 +11,7 @@ import { SessionPage } from '@/pages/SessionPage'
 import { MetricsPage } from '@/pages/MetricsPage'
 import { LeaderboardPage } from '@/pages/LeaderboardPage'
 import { ActionsPage } from '@/pages/ActionsPage'
+import { QuizThemesPage } from '@/pages/QuizThemesPage'
 import { TeamsPage } from '@/pages/TeamsPage'
 import { TeamPage } from '@/pages/TeamPage'
 import { ChangelogPage } from '@/pages/ChangelogPage'
@@ -58,6 +59,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <ActionsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/quiz-temi"
+          element={
+            <ProtectedRoute>
+              <QuizThemesPage />
             </ProtectedRoute>
           }
         />
