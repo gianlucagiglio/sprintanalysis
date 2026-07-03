@@ -13,6 +13,8 @@ import { TrendKPIs } from '@/components/metrics/TrendKPIs'
 import { HappinessTrendLine } from '@/components/metrics/HappinessTrendLine'
 import { CommentSentimentChart } from '@/components/metrics/CommentSentimentChart'
 import { SentimentDelta } from '@/components/metrics/SentimentDelta'
+import { TeamMoodChart } from '@/components/metrics/TeamMoodChart'
+import { TeamMoodOverview } from '@/components/metrics/TeamMoodOverview'
 import { useGlobalMoods } from '@/hooks/useGlobalMoods'
 import { useMetrics } from '@/hooks/useMetrics'
 import {
@@ -38,7 +40,7 @@ export function TeamPage() {
   const [loading, setLoading] = useState(true)
 
   // Team-scoped metrics
-  const { sessionMoods, loading: moodsLoading } = useGlobalMoods(id)
+  const { sessionMoods, sessionTeamMoods, globalCounts, globalTeamMoodCounts, loading: moodsLoading } = useGlobalMoods(id)
   const { commentSentiments, happinessData, trendKPIs, sentimentDeltas, loading: metricsLoading } = useMetrics(id)
 
   // Invite link copy state
@@ -336,6 +338,20 @@ export function TeamPage() {
               <CommentSentimentChart data={commentSentiments} />
               <SentimentDelta data={sentimentDeltas} />
             </div>
+
+            {/* Collaborazione Team */}
+            {sessionTeamMoods.some(s => s.total > 0) && (
+              <div className="space-y-6 mt-6">
+                <h3 className="text-lg font-semibold text-retro-text flex items-center gap-2">
+                  <Users size={18} className="text-emerald-500" />
+                  Collaborazione Team
+                </h3>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <TeamMoodChart sessionTeamMoods={sessionTeamMoods} />
+                </div>
+                <TeamMoodOverview sessionTeamMoods={sessionTeamMoods} globalTeamMoodCounts={globalTeamMoodCounts} />
+              </div>
+            )}
           </>
         )}
 
