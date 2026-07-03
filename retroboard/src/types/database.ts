@@ -12,6 +12,7 @@ export type Session = {
   title: string
   organizer_id: string
   team_id: string | null
+  quiz_theme_id: string | null
   current_step: number
   retro_phase: 'comments' | 'voting' | 'grouping' | 'brainstorming' | 'action_plan'
   retro_revealed: boolean

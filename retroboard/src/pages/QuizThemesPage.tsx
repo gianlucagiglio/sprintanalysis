@@ -2,13 +2,19 @@ import { useState } from 'react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { Modal } from '@/components/ui/Modal'
 import { quizThemes, quizCategories, type QuizCategory } from '@/data/quizThemes'
-import { BookOpen, Layers, ChevronDown, ChevronUp } from 'lucide-react'
+import { useQuizThemeUsage } from '@/hooks/useQuizThemeUsage'
+import { BookOpen, Layers, ChevronDown, ChevronUp, CheckCircle2, ExternalLink, Calendar } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 export function QuizThemesPage() {
   const [expandedCategories, setExpandedCategories] = useState<Set<QuizCategory>>(
     new Set(Object.keys(quizCategories) as QuizCategory[])
   )
+  const [selectedTheme, setSelectedTheme] = useState<{ id: string; label: string } | null>(null)
+  const { usage } = useQuizThemeUsage()
+  const navigate = useNavigate()
 
   const toggleCategory = (category: QuizCategory) => {
     setExpandedCategories((prev) => {
@@ -123,25 +129,43 @@ export function QuizThemesPage() {
                 {isExpanded && (
                   <div className="border-t border-retro-border bg-slate-50/50 px-5 py-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {themes.map((theme) => (
-                        <div
-                          key={theme.id}
-                          className="bg-white rounded-xl border border-retro-border p-4 hover:shadow-soft transition-all duration-200 hover:border-retro-primary/30"
-                        >
-                          <div className="flex items-start justify-between gap-2 mb-2">
-                            <h4 className="font-medium text-retro-text text-sm flex-1">
-                              {theme.label}
-                            </h4>
-                            <Badge className="bg-retro-primary/10 text-retro-primary text-xs px-2 py-0.5 shrink-0">
-                              {theme.questions.length}
-                            </Badge>
+                      {themes.map((theme) => {
+                        const usageCount = usage[theme.id]?.length || 0
+                        const isUsed = usageCount > 0
+
+                        return (
+                          <div
+                            key={theme.id}
+                            onClick={() => isUsed && setSelectedTheme({ id: theme.id, label: theme.label })}
+                            className={`bg-white rounded-xl p-4 hover:shadow-soft transition-all duration-200 ${
+                              isUsed
+                                ? 'border-2 border-emerald-400 hover:border-emerald-500 cursor-pointer'
+                                : 'border border-retro-border hover:border-slate-300'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <h4 className="font-medium text-retro-text text-sm flex-1">
+                                {theme.label}
+                              </h4>
+                              <Badge className="bg-retro-primary/10 text-retro-primary text-xs px-2 py-0.5 shrink-0">
+                                {theme.questions.length}
+                              </Badge>
+                            </div>
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2 text-xs text-retro-text-secondary">
+                                <BookOpen size={12} />
+                                <span>{theme.questions.length} domande</span>
+                              </div>
+                              {isUsed && (
+                                <div className="flex items-center gap-1 text-xs text-emerald-600 font-medium">
+                                  <CheckCircle2 size={12} />
+                                  <span>{usageCount}x</span>
+                                </div>
+                              )}
+                            </div>
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-retro-text-secondary">
-                            <BookOpen size={12} />
-                            <span>{theme.questions.length} domande</span>
-                          </div>
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </div>
                 )}
@@ -190,6 +214,57 @@ export function QuizThemesPage() {
           </div>
         </Card>
       </div>
+
+      {/* Usage Modal */}
+      {selectedTheme && (
+        <Modal
+          open={!!selectedTheme}
+          onClose={() => setSelectedTheme(null)}
+          title={`📊 ${selectedTheme.label}`}
+        >
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-sm text-retro-text-secondary">
+              <CheckCircle2 size={16} className="text-emerald-600" />
+              <span>
+                Usato in <strong>{usage[selectedTheme.id]?.length || 0}</strong>{' '}
+                {usage[selectedTheme.id]?.length === 1 ? 'retrospettiva' : 'retrospettive'}
+              </span>
+            </div>
+
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {usage[selectedTheme.id]?.map((session) => (
+                <button
+                  key={session.id}
+                  onClick={() => navigate(`/session/${session.id}`)}
+                  className="w-full bg-white border border-retro-border rounded-xl p-4 hover:border-retro-primary hover:shadow-soft transition-all text-left group"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-retro-text mb-1 group-hover:text-retro-primary transition-colors truncate">
+                        {session.title}
+                      </h4>
+                      <div className="flex items-center gap-2 text-xs text-retro-text-secondary">
+                        <Calendar size={12} />
+                        <span>
+                          {new Date(session.created_at).toLocaleDateString('it-IT', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric',
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                    <ExternalLink
+                      size={16}
+                      className="text-retro-text-secondary group-hover:text-retro-primary transition-colors shrink-0"
+                    />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </Modal>
+      )}
     </AppLayout>
   )
 }

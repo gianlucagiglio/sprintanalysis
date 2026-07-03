@@ -57,6 +57,7 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
           organizer_id: user.id,
           max_participants: 20,
           max_votes: maxVotes,
+          quiz_theme_id: quizTheme,
           ...(teamId ? { team_id: teamId } : {}),
         })
         .select()
