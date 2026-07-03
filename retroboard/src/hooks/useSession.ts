@@ -146,10 +146,10 @@ export function useSession(sessionId: string | undefined) {
     const nextStep = Math.min(session.current_step + 1, 4)
     const prevStep = session.current_step
     const prevPhase = session.retro_phase
-    updateSession({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, quiz_current_index: -1, phase_timer_duration: 0, phase_timer_started_at: null })
+    updateSession({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, mood_phase: 'personal', quiz_current_index: -1, phase_timer_duration: 0, phase_timer_started_at: null })
     const { error } = await supabase
       .from('sessions')
-      .update({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, quiz_current_index: -1, phase_timer_duration: 0, phase_timer_started_at: null })
+      .update({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, mood_phase: 'personal', quiz_current_index: -1, phase_timer_duration: 0, phase_timer_started_at: null })
       .eq('id', session.id)
     if (error) {
       console.error('advanceStep failed:', error)
@@ -241,10 +241,14 @@ export function useSession(sessionId: string | undefined) {
     if (!session || !canModerate()) return
     if (step < 1 || step > 4 || step >= session.current_step) return
     const prevStep = session.current_step
-    updateSession({ current_step: step })
+    const updates: Partial<Session> = { current_step: step }
+    if (step === 1) {
+      updates.mood_phase = 'personal'
+    }
+    updateSession(updates)
     const { error } = await supabase
       .from('sessions')
-      .update({ current_step: step })
+      .update(updates)
       .eq('id', session.id)
     if (error) {
       console.error('goToStep failed:', error)
@@ -278,6 +282,20 @@ export function useSession(sessionId: string | undefined) {
     }
   }
 
+  const setMoodPhase = async (phase: Session['mood_phase']) => {
+    if (!session || !canModerate()) return
+    const prevPhase = session.mood_phase
+    updateSession({ mood_phase: phase })
+    const { error } = await supabase
+      .from('sessions')
+      .update({ mood_phase: phase })
+      .eq('id', session.id)
+    if (error) {
+      console.error('setMoodPhase failed:', error)
+      updateSession({ mood_phase: prevPhase })
+    }
+  }
+
   const closeSession = async () => {
     if (!session || !canModerate()) return
     updateSession({ current_step: 5 })
@@ -301,6 +319,7 @@ export function useSession(sessionId: string | undefined) {
     advanceQuiz,
     resetQuizIndex,
     setRetroPhase,
+    setMoodPhase,
     revealRetro,
     markDone,
     resetDone,

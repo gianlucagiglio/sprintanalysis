@@ -16,6 +16,7 @@ export type Session = {
   current_step: number
   retro_phase: 'comments' | 'voting' | 'grouping' | 'brainstorming' | 'action_plan'
   retro_revealed: boolean
+  mood_phase: 'personal' | 'team'
   quiz_current_index: number
   max_participants: number
   max_votes: number
@@ -118,11 +119,19 @@ export type MoodVote = {
   created_at: string
 }
 
+export type TeamMoodVote = {
+  id: string
+  session_id: string
+  user_id: string
+  mood: 'ottima' | 'buona' | 'sufficiente' | 'scarsa'
+  created_at: string
+}
+
 export type Database = {
   public: {
     Tables: {
       profiles: { Row: Profile; Insert: Omit<Profile, 'created_at'>; Update: Partial<Profile> }
-      sessions: { Row: Session; Insert: Omit<Session, 'id' | 'created_at' | 'current_step' | 'retro_phase' | 'retro_revealed' | 'max_votes' | 'phase_timer_duration' | 'phase_timer_started_at'>  & { max_votes?: number }; Update: Partial<Session> }
+      sessions: { Row: Session; Insert: Omit<Session, 'id' | 'created_at' | 'current_step' | 'retro_phase' | 'retro_revealed' | 'mood_phase' | 'max_votes' | 'phase_timer_duration' | 'phase_timer_started_at'>  & { max_votes?: number }; Update: Partial<Session> }
       session_participants: { Row: SessionParticipant; Insert: Omit<SessionParticipant, 'id' | 'joined_at' | 'is_done' | 'can_group'>; Update: Partial<SessionParticipant> }
       sections: { Row: Section; Insert: Omit<Section, 'id'>; Update: Partial<Section> }
       comments: { Row: Comment; Insert: Omit<Comment, 'id' | 'created_at'>; Update: Partial<Comment> }
@@ -131,6 +140,7 @@ export type Database = {
       quiz_questions: { Row: QuizQuestion; Insert: Omit<QuizQuestion, 'id'>; Update: Partial<QuizQuestion> }
       quiz_answers: { Row: QuizAnswer; Insert: Omit<QuizAnswer, 'id' | 'points'>; Update: Partial<QuizAnswer> }
       mood_votes: { Row: MoodVote; Insert: Omit<MoodVote, 'id' | 'created_at'>; Update: Partial<MoodVote> }
+      team_mood_votes: { Row: TeamMoodVote; Insert: Omit<TeamMoodVote, 'id' | 'created_at'>; Update: Partial<TeamMoodVote> }
       teams: { Row: Team; Insert: Omit<Team, 'id' | 'invite_code' | 'created_at'>; Update: Partial<Team> }
       team_members: { Row: TeamMember; Insert: Omit<TeamMember, 'id' | 'joined_at'>; Update: Partial<TeamMember> }
     }

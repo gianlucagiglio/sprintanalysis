@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
-import type { MoodVote } from '@/types/database'
+import type { MoodVote, TeamMoodVote } from '@/types/database'
 
 export type SessionMoodData = {
   sessionId: string
@@ -15,9 +15,23 @@ export type SessionMoodData = {
   dominant: 'glad' | 'sad' | 'mad' | 'custom'
 }
 
+export type SessionTeamMoodData = {
+  sessionId: string
+  sessionTitle: string
+  sessionDate: string
+  ottima: number
+  buona: number
+  sufficiente: number
+  scarsa: number
+  total: number
+  dominant: 'ottima' | 'buona' | 'sufficiente' | 'scarsa'
+}
+
 export function useGlobalMoods(teamId?: string) {
   const [sessionMoods, setSessionMoods] = useState<SessionMoodData[]>([])
+  const [sessionTeamMoods, setSessionTeamMoods] = useState<SessionTeamMoodData[]>([])
   const [allMoodVotes, setAllMoodVotes] = useState<MoodVote[]>([])
+  const [allTeamMoodVotes, setAllTeamMoodVotes] = useState<TeamMoodVote[]>([])
   const [loading, setLoading] = useState(true)
   const user = useAuthStore((s) => s.user)
 
@@ -44,7 +58,7 @@ export function useGlobalMoods(teamId?: string) {
       sessionIds = participations.map((p) => p.session_id)
     }
 
-    const [sessionsRes, moodsRes] = await Promise.all([
+    const [sessionsRes, moodsRes, teamMoodsRes] = await Promise.all([
       supabase
         .from('sessions')
         .select('id, title, created_at')
@@ -54,11 +68,17 @@ export function useGlobalMoods(teamId?: string) {
         .from('mood_votes')
         .select('*')
         .in('session_id', sessionIds),
+      supabase
+        .from('team_mood_votes')
+        .select('*')
+        .in('session_id', sessionIds),
     ])
 
     const sessions = sessionsRes.data || []
     const moods = moodsRes.data || []
+    const teamMoods = teamMoodsRes.data || []
     setAllMoodVotes(moods)
+    setAllTeamMoodVotes(teamMoods)
 
     const grouped = sessions.map((session) => {
       const sessionMoods = moods.filter((m) => m.session_id === session.id)
@@ -74,7 +94,22 @@ export function useGlobalMoods(teamId?: string) {
       return { sessionId: session.id, sessionTitle: session.title, sessionDate: session.created_at, ...counts, total, dominant }
     })
 
+    const groupedTeam = sessions.map((session) => {
+      const sessionTeamMoods = teamMoods.filter((m) => m.session_id === session.id)
+      const counts = {
+        ottima: sessionTeamMoods.filter((m) => m.mood === 'ottima').length,
+        buona: sessionTeamMoods.filter((m) => m.mood === 'buona').length,
+        sufficiente: sessionTeamMoods.filter((m) => m.mood === 'sufficiente').length,
+        scarsa: sessionTeamMoods.filter((m) => m.mood === 'scarsa').length,
+      }
+      const total = sessionTeamMoods.length
+      const dominant = (Object.entries(counts) as [SessionTeamMoodData['dominant'], number][])
+        .sort((a, b) => b[1] - a[1])[0]?.[0] || 'ottima'
+      return { sessionId: session.id, sessionTitle: session.title, sessionDate: session.created_at, ...counts, total, dominant }
+    })
+
     setSessionMoods(grouped)
+    setSessionTeamMoods(groupedTeam)
     setLoading(false)
   }, [user, teamId])
 
@@ -87,5 +122,12 @@ export function useGlobalMoods(teamId?: string) {
     custom: allMoodVotes.filter((m) => m.mood === 'custom').length,
   }
 
-  return { sessionMoods, allMoodVotes, globalCounts, loading }
+  const globalTeamMoodCounts = {
+    ottima: allTeamMoodVotes.filter((m) => m.mood === 'ottima').length,
+    buona: allTeamMoodVotes.filter((m) => m.mood === 'buona').length,
+    sufficiente: allTeamMoodVotes.filter((m) => m.mood === 'sufficiente').length,
+    scarsa: allTeamMoodVotes.filter((m) => m.mood === 'scarsa').length,
+  }
+
+  return { sessionMoods, sessionTeamMoods, allMoodVotes, allTeamMoodVotes, globalCounts, globalTeamMoodCounts, loading }
 }

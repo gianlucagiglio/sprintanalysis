@@ -3,6 +3,7 @@ import { useComments } from '@/hooks/useComments'
 import { useVotes } from '@/hooks/useVotes'
 import { useActions } from '@/hooks/useActions'
 import { useMood } from '@/hooks/useMood'
+import { useTeamMood } from '@/hooks/useTeamMood'
 import { useQuiz } from '@/hooks/useQuiz'
 import { useSessionStore } from '@/stores/sessionStore'
 import { Card } from '@/components/ui/Card'
@@ -67,9 +68,11 @@ export function ClosedSessionView({ sessionId, sessionTitle }: ClosedSessionView
   const { getVoteCount } = useVotes(commentIds, sessionId)
   const { actions } = useActions(sessionId)
   const { moodCounts } = useMood(sessionId)
+  const { teamMoodCounts } = useTeamMood(sessionId)
   const { questions, getLeaderboard } = useQuiz(sessionId)
 
   const moodTotal = Object.values(moodCounts).reduce((a, b) => a + b, 0)
+  const teamMoodTotal = Object.values(teamMoodCounts).reduce((a, b) => a + b, 0)
   const leaderboard = getLeaderboard()
 
   const parentComments = comments.filter((c) => !c.group_id)
@@ -194,6 +197,43 @@ export function ClosedSessionView({ sessionId, sessionTitle }: ClosedSessionView
                       <div
                         className={`h-full rounded-full ${item.bg.replace('50', '400')}`}
                         style={{ width: `${percent}%`, backgroundColor: item.color.includes('emerald') ? '#10b981' : item.color.includes('amber') ? '#f59e0b' : item.color.includes('rose') ? '#ef4444' : '#6366f1' }}
+                      />
+                    </div>
+                  )}
+                </Card>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ── Collaborazione Team ── */}
+      {teamMoodTotal > 0 && (
+        <div>
+          <h2 className="text-lg font-bold text-retro-text mb-4 flex items-center gap-2">
+            <Users size={18} className="text-emerald-500" />
+            Collaborazione Team
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { key: 'ottima', label: 'Ottima', emoji: '🤝💚', count: teamMoodCounts.ottima, bg: 'bg-emerald-50', ring: 'ring-emerald-200', barColor: '#10b981' },
+              { key: 'buona', label: 'Buona', emoji: '🤝💙', count: teamMoodCounts.buona, bg: 'bg-sky-50', ring: 'ring-sky-200', barColor: '#0ea5e9' },
+              { key: 'sufficiente', label: 'Sufficiente', emoji: '🤝⚠️', count: teamMoodCounts.sufficiente, bg: 'bg-amber-50', ring: 'ring-amber-200', barColor: '#f59e0b' },
+              { key: 'scarsa', label: 'Scarsa', emoji: '🤝❌', count: teamMoodCounts.scarsa, bg: 'bg-red-50', ring: 'ring-red-200', barColor: '#ef4444' },
+            ].map((item) => {
+              const percent = teamMoodTotal > 0 ? Math.round((item.count / teamMoodTotal) * 100) : 0
+              return (
+                <Card key={item.key} className={`!p-4 !rounded-2xl text-center ${item.count > 0 ? `ring-1 ${item.ring}` : ''}`}>
+                  <div className={`w-12 h-12 rounded-full ${item.bg} flex items-center justify-center mx-auto mb-2 text-2xl`}>
+                    {item.emoji}
+                  </div>
+                  <p className="text-2xl font-bold text-retro-text">{item.count}</p>
+                  <p className="text-xs text-retro-text-secondary">{item.label}</p>
+                  {item.count > 0 && (
+                    <div className="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: `${percent}%`, backgroundColor: item.barColor }}
                       />
                     </div>
                   )}
