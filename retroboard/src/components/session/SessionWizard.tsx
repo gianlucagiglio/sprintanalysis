@@ -20,7 +20,6 @@ import {
   Share2,
   ArrowRight,
   LogOut,
-  Eye,
   PartyPopper,
   Users,
   Check,
@@ -50,7 +49,7 @@ const moodPhaseLabels: Record<string, string> = {
 const moodPhaseOrder = ['personal', 'team'] as const
 
 export function SessionWizard({ sessionId }: SessionWizardProps) {
-  const { session, isOrganizer, advanceStep, goToStep, setRetroPhase, setMoodPhase, revealRetro, markDone, resetDone, closeSession, startPhaseTimer, stopPhaseTimer } =
+  const { session, isOrganizer, advanceStep, goToStep, setRetroPhase, setMoodPhase, markDone, resetDone, closeSession, startPhaseTimer, stopPhaseTimer } =
     useSession(sessionId)
   const { isDone, doneCount, totalParticipants, allDone, participants } = useParticipants()
   const [copied, setCopied] = useState(false)
