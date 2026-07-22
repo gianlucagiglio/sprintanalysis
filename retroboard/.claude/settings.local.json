@@ -21,7 +21,11 @@
       "Bash(node update-categories.js:*)",
       "Bash(move:*)",
       "Bash(ren:*)",
-      "Bash(timeout 5 tail:*)"
+      "Bash(timeout 5 tail:*)",
+      "Bash(git add:*)",
+      "Bash(git restore:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }
