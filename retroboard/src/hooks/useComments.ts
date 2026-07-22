@@ -52,12 +52,7 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
     return () => { supabase.removeChannel(channel) }
   }, [sessionId, sectionIds, fetchComments])
 
-  // Polling fallback
-  useEffect(() => {
-    if (!sectionIds.length) return
-    const interval = setInterval(fetchComments, 3000)
-    return () => clearInterval(interval)
-  }, [sectionIds, fetchComments])
+  // Realtime subscription provides updates - polling removed to reduce DB load
 
   const addComment = async (sectionId: string, text: string) => {
     if (!user) return

@@ -44,12 +44,7 @@ export function useMood(sessionId: string | undefined) {
     return () => { supabase.removeChannel(channel) }
   }, [sessionId, fetchMoodVotes])
 
-  // Polling fallback
-  useEffect(() => {
-    if (!sessionId) return
-    const interval = setInterval(fetchMoodVotes, 3000)
-    return () => clearInterval(interval)
-  }, [sessionId, fetchMoodVotes])
+  // Realtime subscription provides updates - polling removed
 
   const submitMood = async (mood: MoodVote['mood'], customLabel?: string) => {
     if (!sessionId || !user) return

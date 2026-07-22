@@ -15,10 +15,24 @@ type AuthState = {
 }
 
 let _initialized = false
+let _authSubscription: { data: { subscription: { unsubscribe: () => void } } } | null = null
+let _visibilityHandler: (() => Promise<void>) | null = null
 
 // Export reset function for logout
 export const resetAuthInitialization = () => {
   _initialized = false
+
+  // Cleanup auth subscription
+  if (_authSubscription) {
+    _authSubscription.data.subscription.unsubscribe()
+    _authSubscription = null
+  }
+
+  // Cleanup visibility listener
+  if (_visibilityHandler) {
+    document.removeEventListener('visibilitychange', _visibilityHandler)
+    _visibilityHandler = null
+  }
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -47,7 +61,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ loading: false })
     }
 
-    supabase.auth.onAuthStateChange(async (event, session) => {
+    _authSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
       // Skip profile fetch during password recovery to avoid race conditions
       if (event === 'PASSWORD_RECOVERY') {
         return
@@ -75,7 +89,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     })
 
     // Proactively refresh token when tab regains focus
-    document.addEventListener('visibilitychange', async () => {
+    _visibilityHandler = async () => {
       if (document.visibilityState !== 'visible') return
       const { data: { session } } = await supabase.auth.refreshSession()
       if (session?.user) {
@@ -89,7 +103,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           if (profile) set({ user: profile })
         }
       }
-    })
+    }
+    document.addEventListener('visibilitychange', _visibilityHandler)
   },
 
   signUp: async (email, password, name) => {

@@ -40,12 +40,7 @@ export function useActions(sessionId: string | undefined) {
     return () => { supabase.removeChannel(channel) }
   }, [sessionId, fetchActions])
 
-  // Polling fallback
-  useEffect(() => {
-    if (!sessionId) return
-    const interval = setInterval(fetchActions, 3000)
-    return () => clearInterval(interval)
-  }, [sessionId, fetchActions])
+  // Realtime subscription provides updates - polling removed
 
   const addAction = async (text: string, assignedTo: string[], deadline?: string, commentId?: string) => {
     if (!sessionId) return

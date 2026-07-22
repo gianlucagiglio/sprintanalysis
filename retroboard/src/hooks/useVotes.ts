@@ -58,12 +58,7 @@ export function useVotes(commentIds: string[], sessionId: string | undefined, ma
     return () => { supabase.removeChannel(channel) }
   }, [sessionId, commentIds, fetchVotes])
 
-  // Polling fallback
-  useEffect(() => {
-    if (!commentIds.length) return
-    const interval = setInterval(fetchVotes, 3000)
-    return () => clearInterval(interval)
-  }, [commentIds, fetchVotes])
+  // Realtime subscription provides updates - polling removed
 
   const userVotes = votes.filter((v) => v.user_id === user?.id)
   const userVoteCount = userVotes.length

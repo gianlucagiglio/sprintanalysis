@@ -80,12 +80,7 @@ export function useGlobalActions() {
     fetchGlobalActions()
   }, [fetchGlobalActions])
 
-  // Polling to stay in sync with session-scoped changes
-  useEffect(() => {
-    if (!user) return
-    const interval = setInterval(fetchGlobalActions, 3000)
-    return () => clearInterval(interval)
-  }, [user, fetchGlobalActions])
+  // Realtime provides updates - polling removed to reduce DB load
 
   const updateActionStatus = async (actionId: string, status: Action['status']) => {
     await supabase.from('actions').update({ status }).eq('id', actionId)
