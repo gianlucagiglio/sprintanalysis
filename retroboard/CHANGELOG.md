@@ -22,6 +22,11 @@ All notable changes to RetroBoard will be documented in this file.
   - Corretto uso di `assigned_to_multi` invece di `assigned_to`
   - Risolto errore "forEach is not a function" nel filtro persone
 
+- **Badge Tooltip**: Fix testi troncati nei tooltip badge bloccati
+  - Larghezza massima aumentata da 150px a 320px
+  - Testo può ora andare a capo per descrizioni lunghe
+  - Padding aumentato per migliore leggibilità
+
 ### 🛠️ Database Scripts
 - **Quiz Leaderboard Reset**: Script SQL per reset hall of fame quiz
   - `reset-quiz-leaderboard.sql`: Cancella tutte le risposte quiz

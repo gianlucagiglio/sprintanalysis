@@ -82,6 +82,10 @@ export function ClosedSessionView({ sessionId, sessionTitle }: ClosedSessionView
   const getName = (userId: string) =>
     participants.find((p) => p.user_id === userId)?.profiles?.name || 'Utente'
 
+  // Get actions linked to a comment
+  const getCommentActions = (commentId: string) =>
+    actions.filter((a) => a.comment_id === commentId)
+
   const moodItems = [
     { key: 'glad', label: 'Contento', count: moodCounts.glad, icon: Smile, color: 'text-emerald-500', bg: 'bg-emerald-50', ring: 'ring-emerald-200' },
     { key: 'sad', label: 'Triste', count: moodCounts.sad, icon: Frown, color: 'text-amber-500', bg: 'bg-amber-50', ring: 'ring-amber-200' },
@@ -324,6 +328,7 @@ export function ClosedSessionView({ sessionId, sessionTitle }: ClosedSessionView
                   {sectionComments.map((comment) => {
                     const votes = getVoteCount(comment.id) || 0
                     const children = grouped(comment.id)
+                    const commentActions = getCommentActions(comment.id)
                     return (
                       <Card key={comment.id} className="!p-3 !rounded-xl">
                         <div className="flex items-start gap-2">
@@ -334,6 +339,47 @@ export function ClosedSessionView({ sessionId, sessionTitle }: ClosedSessionView
                                 {children.map((g) => (
                                   <p key={g.id} className="text-xs text-retro-text-secondary">{g.text}</p>
                                 ))}
+                              </div>
+                            )}
+                            {/* Linked Actions */}
+                            {commentActions.length > 0 && (
+                              <div className="mt-2.5 space-y-1.5">
+                                {commentActions.map((action) => {
+                                  const assigneeNames = (action.assigned_to_multi || [])
+                                    .map((id) => getName(id))
+                                  return (
+                                    <div
+                                      key={action.id}
+                                      className="bg-amber-50/80 border border-amber-200/60 rounded-lg p-2 text-xs"
+                                    >
+                                      <div className="flex items-start gap-1.5">
+                                        <Zap size={12} className="text-amber-600 mt-0.5 shrink-0" />
+                                        <div className="flex-1 min-w-0">
+                                          <p className="text-retro-text font-medium leading-snug">{action.text}</p>
+                                          <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                            {assigneeNames.length > 0 && (
+                                              <span className="text-[10px] text-retro-text-secondary">
+                                                👤 {assigneeNames.join(', ')}
+                                              </span>
+                                            )}
+                                            {action.deadline && (
+                                              <span className="text-[10px] text-retro-text-secondary">
+                                                📅 {new Date(action.deadline).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })}
+                                              </span>
+                                            )}
+                                            <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${
+                                              action.status === 'done' ? 'bg-emerald-100 text-emerald-700' :
+                                              action.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
+                                              'bg-slate-100 text-slate-600'
+                                            }`}>
+                                              {statusLabels[action.status]}
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )
+                                })}
                               </div>
                             )}
                           </div>
