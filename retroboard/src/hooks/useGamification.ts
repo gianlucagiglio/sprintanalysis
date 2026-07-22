@@ -28,6 +28,9 @@ export function useGamification(teamId?: string | null) {
 
     const { data, error } = await query.maybeSingle()
 
+    // DEBUG LOG
+    console.log('🔍 [DEBUG] fetchUserPoints query result:', { data, error, teamId })
+
     if (error) {
       console.error('fetchUserPoints failed:', error)
       setLoading(false)
@@ -35,6 +38,7 @@ export function useGamification(teamId?: string | null) {
     }
 
     if (data) {
+      console.log('✅ [DEBUG] Setting userPoints from DB:', data)
       setUserPoints(data)
     } else {
       // Initialize with 0 points (display only, not saved to DB)

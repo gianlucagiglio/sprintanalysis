@@ -2,6 +2,34 @@
 
 All notable changes to RetroBoard will be documented in this file.
 
+## [1.15.0] - 2026-07-22
+
+### ✨ Added
+- **Actions Page - Filtro Persona**: Nuova funzionalità filtro per assegnatario
+  - Dropdown "Filtra per: Tutte le persone" nella vista Kanban
+  - Filtra azioni in tempo reale per persona assegnata
+  - Bottone "Rimuovi filtro" per reset rapido
+  - Statistiche (Todo, In corso, Completate) aggiornate dinamicamente con filtro
+
+### 🗑️ Removed
+- **Actions Page - Vista Gantt**: Rimossa vista Gantt chart
+  - Eliminato toggle Kanban/Gantt
+  - Vista Kanban ora è l'unica modalità di visualizzazione
+  - Focus su semplicità e usabilità
+
+### 🐛 Fixed
+- **Actions Page**: Fix bug campo `assigned_to_multi`
+  - Corretto uso di `assigned_to_multi` invece di `assigned_to`
+  - Risolto errore "forEach is not a function" nel filtro persone
+
+### 🛠️ Database Scripts
+- **Quiz Leaderboard Reset**: Script SQL per reset hall of fame quiz
+  - `reset-quiz-leaderboard.sql`: Cancella tutte le risposte quiz
+  - Mantiene le domande per riutilizzo futuro
+  - Query di verifica post-reset incluse
+
+---
+
 ## [1.14.0] - 2026-07-03
 
 ### ✨ Added

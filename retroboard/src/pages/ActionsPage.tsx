@@ -22,8 +22,6 @@ import {
   Calendar,
   FolderOpen,
   ListTodo,
-  LayoutGrid,
-  GanttChart,
   User,
   CircleDashed,
   Loader2 as Spinner,
@@ -33,9 +31,10 @@ import {
   Clock,
   AlertTriangle,
   Pencil,
+  Filter,
+  X,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { GanttView } from '@/components/kanban/GanttChart'
 import type { Action } from '@/types/database'
 
 const columns: {
@@ -231,10 +230,10 @@ function GlobalKanbanColumn({
 }
 
 export function ActionsPage() {
-  const [viewMode, setViewMode] = useState<'kanban' | 'gantt'>('kanban')
   const { actions, loading, updateActionStatus, updateAction, deleteAction } = useGlobalActions()
   const [editingAction, setEditingAction] = useState<ActionWithSession | null>(null)
   const [sessionParticipants, setSessionParticipants] = useState<{ user_id: string; name: string }[]>([])
+  const [selectedPerson, setSelectedPerson] = useState<string | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -265,13 +264,37 @@ export function ActionsPage() {
     loadParticipants()
   }, [editingAction])
 
-  const stats = useMemo(() => {
-    const todo = actions.filter((a) => a.status === 'todo').length
-    const inProgress = actions.filter((a) => a.status === 'in_progress').length
-    const done = actions.filter((a) => a.status === 'done').length
-    const overdueCount = actions.filter(isOverdue).length
-    return { todo, inProgress, done, overdueCount, total: actions.length }
+  // Get unique assignees for filter
+  const allAssignees = useMemo(() => {
+    const assigneeMap = new Map<string, string>()
+    actions.forEach((action) => {
+      const assignedIds = (action as any).assigned_to_multi || []
+      assignedIds.forEach((userId: string, index: number) => {
+        const name = action.assigneeNames[index]
+        if (userId && name) {
+          assigneeMap.set(userId, name)
+        }
+      })
+    })
+    return Array.from(assigneeMap.entries()).map(([id, name]) => ({ id, name }))
   }, [actions])
+
+  // Filter actions by selected person
+  const filteredActions = useMemo(() => {
+    if (!selectedPerson) return actions
+    return actions.filter((action) => {
+      const assignedIds = (action as any).assigned_to_multi || []
+      return assignedIds.includes(selectedPerson)
+    })
+  }, [actions, selectedPerson])
+
+  const stats = useMemo(() => {
+    const todo = filteredActions.filter((a) => a.status === 'todo').length
+    const inProgress = filteredActions.filter((a) => a.status === 'in_progress').length
+    const done = filteredActions.filter((a) => a.status === 'done').length
+    const overdueCount = filteredActions.filter(isOverdue).length
+    return { todo, inProgress, done, overdueCount, total: filteredActions.length }
+  }, [filteredActions])
 
   // Use all session participants, not just assigned ones
   const modalParticipants = sessionParticipants
@@ -375,50 +398,55 @@ export function ActionsPage() {
               </div>
             )}
 
-            {/* ── View Toggle ── */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 bg-slate-100 rounded-xl p-1">
-                {([
-                  { key: 'kanban' as const, label: 'Kanban', icon: LayoutGrid },
-                  { key: 'gantt' as const, label: 'Gantt', icon: GanttChart },
-                ]).map((tab) => {
-                  const Icon = tab.icon
-                  const isActive = viewMode === tab.key
-                  return (
-                    <button
-                      key={tab.key}
-                      onClick={() => setViewMode(tab.key)}
-                      className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                        isActive
-                          ? 'bg-white shadow-soft text-retro-text'
-                          : 'text-retro-text-secondary hover:text-retro-text'
-                      }`}
-                    >
-                      <Icon size={14} />
-                      {tab.label}
-                    </button>
-                  )
-                })}
+            {/* ── Filters ── */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Filter size={16} className="text-retro-text-secondary" />
+                <span className="text-sm font-medium text-retro-text">Filtra per:</span>
               </div>
+
+              <div className="relative">
+                <select
+                  value={selectedPerson || ''}
+                  onChange={(e) => setSelectedPerson(e.target.value || null)}
+                  className="appearance-none bg-white border border-slate-200 rounded-xl px-4 py-2 pr-10 text-sm font-medium text-retro-text hover:border-retro-primary/30 focus:border-retro-primary focus:ring-2 focus:ring-retro-primary/20 transition-all"
+                >
+                  <option value="">Tutte le persone</option>
+                  {allAssignees.map((assignee) => (
+                    <option key={assignee.id} value={assignee.id}>
+                      {assignee.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <User size={14} className="text-slate-400" />
+                </div>
+              </div>
+
+              {selectedPerson && (
+                <button
+                  onClick={() => setSelectedPerson(null)}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-slate-100 text-retro-text hover:bg-slate-200 transition-colors"
+                >
+                  <X size={14} />
+                  Rimuovi filtro
+                </button>
+              )}
             </div>
 
-            {/* ── Content ── */}
-            {viewMode === 'kanban' ? (
-              <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {columns.map((col) => (
-                    <GlobalKanbanColumn
-                      key={col.id}
-                      column={col}
-                      actions={actions.filter((a) => a.status === col.id)}
-                      onEdit={handleEdit}
-                    />
-                  ))}
-                </div>
-              </DndContext>
-            ) : (
-              <GanttView actions={actions} />
-            )}
+            {/* ── Kanban Board ── */}
+            <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {columns.map((col) => (
+                  <GlobalKanbanColumn
+                    key={col.id}
+                    column={col}
+                    actions={filteredActions.filter((a) => a.status === col.id)}
+                    onEdit={handleEdit}
+                  />
+                ))}
+              </div>
+            </DndContext>
           </>
         )}
 
