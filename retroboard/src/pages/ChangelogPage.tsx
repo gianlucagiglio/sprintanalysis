@@ -26,6 +26,47 @@ interface ChangelogEntry {
 
 const changelog: ChangelogEntry[] = [
   {
+    version: '1.14.0',
+    date: '2026-07-03',
+    type: 'feature',
+    changes: [
+      {
+        category: 'Team Mood Collaboration',
+        icon: Users,
+        items: [
+          'Nuova fase mood collaborazione team dopo mood personale',
+          '4 livelli: Ottima 🤝💚, Buona 🤝💙, Sufficiente 🤝⚠️, Scarsa 🤝❌',
+          'Tabella team_mood_votes con RLS policies',
+          'Navigazione sotto-fasi in SessionWizard (come retro_phase)',
+          'Grafico a torta TeamMoodTrend per visualizzazione dati',
+          'Visualizzazione in ClosedSessionView e supporto trend storici',
+        ],
+      },
+      {
+        category: 'Actions Management',
+        icon: Target,
+        items: [
+          'Modifica assegnatari azioni esistenti in fase Brainstorming',
+          'Click su azioni per aprire modal di edit completo',
+          'Visualizzazione azioni sotto ogni commento con icona edit',
+          'Permessi: organizzatore + assegnatari possono modificare',
+          'Fix caricamento partecipanti in Actions Page',
+          'Dropdown "Aggiungi assegnatario" ora funziona correttamente',
+        ],
+      },
+      {
+        category: 'UI/UX Improvements',
+        icon: Palette,
+        items: [
+          'Fix conteggio badge in profilo (ora mostra numero reale)',
+          'Rimosso badge duplicato nella pagina temi quiz',
+          'Messaggi chiari per gestione assegnatari (vuoto/tutti assegnati)',
+          'Azioni in box arancione cliccabili in Brainstorming',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.12.0',
     date: '2025-05-11',
     type: 'feature',
