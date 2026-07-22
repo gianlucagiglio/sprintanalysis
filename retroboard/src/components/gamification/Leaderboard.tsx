@@ -40,9 +40,6 @@ export function Leaderboard({ teamId, limit = 10 }: LeaderboardProps) {
 
     const { data, error } = await query
 
-    // DEBUG LOG
-    console.log('🏆 [DEBUG] Leaderboard query result:', { data, error, teamId })
-
     if (error) {
       console.error('fetchLeaderboard failed:', error)
       setLoading(false)
@@ -50,7 +47,6 @@ export function Leaderboard({ teamId, limit = 10 }: LeaderboardProps) {
     }
 
     if (data) {
-      console.log('✅ [DEBUG] Leaderboard entries:', data)
       setEntries(
         data.map((entry) => ({
           ...entry,

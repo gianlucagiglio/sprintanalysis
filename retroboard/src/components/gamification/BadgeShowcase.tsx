@@ -109,7 +109,7 @@ export function BadgeShowcase({ compact = false, limit }: BadgeShowcaseProps) {
                     {badge.is_secret ? '🔒' : badge.icon}
                   </div>
                   {!badge.is_secret && (
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-900 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 max-w-[150px] text-center">
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-900 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 max-w-xs text-center">
                       {badge.description}
                     </div>
                   )}

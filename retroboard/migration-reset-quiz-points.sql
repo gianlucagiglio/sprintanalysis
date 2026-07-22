@@ -47,11 +47,11 @@ COMMIT;
 -- VERIFICA POST-RESET
 -- ================================================================
 -- Verifica che non ci siano più transazioni quiz:
--- SELECT COUNT(*) FROM point_transactions WHERE action_type = 'quiz_win';  -- Deve essere 0
+ SELECT COUNT(*) FROM point_transactions WHERE action_type = 'quiz_win';  -- Deve essere 0
 --
 -- Controlla i nuovi totali punti:
--- SELECT u.name, up.points, up.level
--- FROM user_points up
--- JOIN profiles u ON u.id = up.user_id
--- ORDER BY up.points DESC;
+ SELECT u.name, up.points, up.level
+ FROM user_points up
+ JOIN profiles u ON u.user_id = up.user_id
+ ORDER BY up.points DESC;
 -- ================================================================
