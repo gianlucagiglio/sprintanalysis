@@ -16,6 +16,11 @@ type AuthState = {
 
 let _initialized = false
 
+// Export reset function for logout
+export const resetAuthInitialization = () => {
+  _initialized = false
+}
+
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   loading: true,
@@ -51,7 +56,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (session?.user) {
         // Only update store if user actually changed (avoid cascading re-renders)
         const currentUser = get().user
-        if (currentUser?.id === session.user.id) return
+        // Skip update only if we already have this user loaded
+        if (currentUser?.id === session.user.id && currentUser !== null) return
         const { data: profile } = await supabase
           .from('profiles')
           .select('*')
@@ -135,12 +141,37 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signOut: async () => {
+    console.log('[Auth] Starting logout...')
     set({ user: null })
+
+    // Clear session storage
+    sessionStorage.clear()
+    localStorage.clear()
+
+    // Close all Supabase realtime channels to prevent locks
+    try {
+      const channels = supabase.getChannels()
+      console.log('[Auth] Closing', channels.length, 'channels before logout')
+      for (const channel of channels) {
+        await supabase.removeChannel(channel)
+      }
+    } catch (e) {
+      console.error('Error closing channels:', e)
+    }
+
+    // Reset auth initialization flag
+    resetAuthInitialization()
+
     try {
       await supabase.auth.signOut({ scope: 'local' })
+      console.log('[Auth] Logout complete')
     } catch (e) {
       console.error('supabase signOut error:', e)
     }
+
+    // Force reload to clean all state
+    console.log('[Auth] Reloading page to clean state...')
+    window.location.href = '/login'
   },
 
   requestPasswordReset: async (email: string) => {

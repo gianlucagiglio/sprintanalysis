@@ -1,9 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useAuthStore } from '@/stores/authStore'
+import { useSessionStore } from '@/stores/sessionStore'
+import { useGamification } from './useGamification'
 import type { Action } from '@/types/database'
 
 export function useActions(sessionId: string | undefined) {
   const [actions, setActions] = useState<Action[]>([])
+  const user = useAuthStore((s) => s.user)
+  const session = useSessionStore((s) => s.session)
+  const { awardPoints } = useGamification(session?.team_id)
 
   const fetchActions = useCallback(async () => {
     if (!sessionId) return
@@ -52,13 +58,37 @@ export function useActions(sessionId: string | undefined) {
       comment_id: commentId || null,
     })
     if (error) console.error('addAction failed:', error)
-    else await fetchActions()
+    else {
+      await fetchActions()
+      // Award points for creating action
+      await awardPoints('action_create', sessionId)
+    }
   }
 
   const updateActionStatus = async (actionId: string, status: Action['status']) => {
+    if (!user) return
+
+    // Get action before update to check if status changed
+    const action = actions.find((a) => a.id === actionId)
+    const wasCompleted = action?.status === 'done'
+    const isNowCompleted = status === 'done'
+
     const { error } = await supabase.from('actions').update({ status }).eq('id', actionId)
     if (error) console.error('updateActionStatus failed:', error)
-    else await fetchActions()
+    else {
+      await fetchActions()
+
+      // Award points if action was just completed (and user is assigned)
+      if (!wasCompleted && isNowCompleted && action) {
+        const isAssigned =
+          action.assigned_to === user.id ||
+          action.assigned_to_multi?.includes(user.id)
+
+        if (isAssigned && sessionId) {
+          await awardPoints('action_complete', sessionId, actionId)
+        }
+      }
+    }
   }
 
   const updateAction = async (actionId: string, updates: Partial<Action>) => {

@@ -100,14 +100,14 @@ export function ActionEditModal({
         </div>
 
         {/* Multi-select assignees */}
-        <div className="space-y-1">
+        <div className="space-y-2">
           <div className="flex items-center gap-1 text-xs font-medium text-retro-text-secondary">
             <User size={11} /> Assegnatari
           </div>
 
           {/* Selected chips */}
           {selectedNames.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-2">
+            <div className="flex flex-wrap gap-1.5">
               {selectedNames.map((p) => (
                 <span
                   key={p.user_id}
@@ -127,22 +127,41 @@ export function ActionEditModal({
             </div>
           )}
 
+          {/* No assignees message */}
+          {selectedNames.length === 0 && canEdit && (
+            <p className="text-xs text-retro-text-secondary italic">
+              Nessun assegnatario selezionato
+            </p>
+          )}
+
           {/* Dropdown to add */}
-          {canEdit && unselected.length > 0 && (
-            <select
-              value=""
-              onChange={(e) => {
-                if (e.target.value) toggleAssignee(e.target.value)
-              }}
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-retro-text transition-all focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10"
-            >
-              <option value="">Aggiungi assegnatario...</option>
-              {unselected.map((p) => (
-                <option key={p.user_id} value={p.user_id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
+          {canEdit && (
+            unselected.length > 0 ? (
+              <select
+                value=""
+                onChange={(e) => {
+                  if (e.target.value) toggleAssignee(e.target.value)
+                }}
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-retro-text transition-all focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10"
+              >
+                <option value="">Aggiungi assegnatario...</option>
+                {unselected.map((p) => (
+                  <option key={p.user_id} value={p.user_id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <p className="text-xs text-retro-text-secondary italic">
+                Tutti i partecipanti sono già assegnati
+              </p>
+            )
+          )}
+
+          {!canEdit && selectedNames.length === 0 && (
+            <p className="text-xs text-retro-text-secondary italic">
+              Nessun assegnatario
+            </p>
           )}
         </div>
 

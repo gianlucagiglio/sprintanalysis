@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS team_mood_votes (
   UNIQUE(session_id, user_id)
 );
 
+
 -- RLS policies (stesso pattern di mood_votes)
 ALTER TABLE team_mood_votes ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Participants can view team mood votes" ON team_mood_votes

@@ -1,12 +1,16 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
+import { useSessionStore } from '@/stores/sessionStore'
+import { useGamification } from './useGamification'
 import type { Vote } from '@/types/database'
 
 export function useVotes(commentIds: string[], sessionId: string | undefined, maxVotes: number = 3) {
   const [votes, setVotes] = useState<Vote[]>([])
   const [voterProfiles, setVoterProfiles] = useState<Map<string, string>>(new Map())
   const user = useAuthStore((s) => s.user)
+  const session = useSessionStore((s) => s.session)
+  const { awardPoints } = useGamification(session?.team_id)
 
   const fetchVotes = useCallback(async () => {
     if (!commentIds.length) return
@@ -88,6 +92,10 @@ export function useVotes(commentIds: string[], sessionId: string | undefined, ma
         console.error('castVote failed:', error)
       } else {
         await fetchVotes()
+        // Award points for voting
+        if (sessionId) {
+          await awardPoints('vote', sessionId)
+        }
       }
     }
   }

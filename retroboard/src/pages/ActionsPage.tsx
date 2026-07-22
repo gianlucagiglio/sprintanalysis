@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 import {
   DndContext,
   closestCorners,
@@ -233,10 +234,36 @@ export function ActionsPage() {
   const [viewMode, setViewMode] = useState<'kanban' | 'gantt'>('kanban')
   const { actions, loading, updateActionStatus, updateAction, deleteAction } = useGlobalActions()
   const [editingAction, setEditingAction] = useState<ActionWithSession | null>(null)
+  const [sessionParticipants, setSessionParticipants] = useState<{ user_id: string; name: string }[]>([])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   )
+
+  // Load session participants when editing an action
+  useEffect(() => {
+    if (!editingAction) {
+      setSessionParticipants([])
+      return
+    }
+
+    const loadParticipants = async () => {
+      const { data } = await supabase
+        .from('session_participants')
+        .select('user_id, profiles(name)')
+        .eq('session_id', editingAction.session_id)
+
+      if (data) {
+        const participants = data.map((p: any) => ({
+          user_id: p.user_id,
+          name: p.profiles?.name || 'Utente',
+        }))
+        setSessionParticipants(participants)
+      }
+    }
+
+    loadParticipants()
+  }, [editingAction])
 
   const stats = useMemo(() => {
     const todo = actions.filter((a) => a.status === 'todo').length
@@ -246,13 +273,8 @@ export function ActionsPage() {
     return { todo, inProgress, done, overdueCount, total: actions.length }
   }, [actions])
 
-  // Build a participant list from all assigneeNames across actions
-  const modalParticipants = useMemo(() => {
-    if (!editingAction) return []
-    const multi = editingAction.assigned_to_multi || []
-    const names = editingAction.assigneeNames || []
-    return multi.map((id, i) => ({ user_id: id, name: names[i] || 'Utente' }))
-  }, [editingAction])
+  // Use all session participants, not just assigned ones
+  const modalParticipants = sessionParticipants
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event

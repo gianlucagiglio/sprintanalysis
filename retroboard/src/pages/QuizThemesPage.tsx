@@ -150,13 +150,10 @@ export function QuizThemesPage() {
                                 : 'border border-retro-border hover:border-slate-300'
                             }`}
                           >
-                            <div className="flex items-start justify-between gap-2 mb-2">
-                              <h4 className="font-medium text-retro-text text-sm flex-1">
+                            <div className="mb-2">
+                              <h4 className="font-medium text-retro-text text-sm">
                                 {theme.label}
                               </h4>
-                              <Badge className="bg-retro-primary/10 text-retro-primary text-xs px-2 py-0.5 shrink-0">
-                                {theme.questions.length}
-                              </Badge>
                             </div>
                             <div className="flex items-center justify-between gap-2">
                               <div className="flex items-center gap-2 text-xs text-retro-text-secondary">

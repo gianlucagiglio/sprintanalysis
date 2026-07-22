@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
+import { useSessionStore } from '@/stores/sessionStore'
+import { useGamification } from './useGamification'
 import type { Comment, Section } from '@/types/database'
 
 function sentimentFromSortOrder(sortOrder: number): Comment['sentiment'] {
@@ -12,6 +14,8 @@ function sentimentFromSortOrder(sortOrder: number): Comment['sentiment'] {
 export function useComments(sessionId: string | undefined, sections: Section[]) {
   const [comments, setComments] = useState<Comment[]>([])
   const user = useAuthStore((s) => s.user)
+  const session = useSessionStore((s) => s.session)
+  const { awardPoints } = useGamification(session?.team_id)
 
   const sectionIds = useMemo(() => sections.map((s) => s.id), [sections])
 
@@ -67,7 +71,13 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
       sentiment,
     })
     if (error) console.error('addComment failed:', error)
-    else await fetchComments()
+    else {
+      await fetchComments()
+      // Award points for adding comment
+      if (sessionId) {
+        await awardPoints('comment', sessionId)
+      }
+    }
   }
 
   const addReply = async (parentComment: Comment, text: string) => {

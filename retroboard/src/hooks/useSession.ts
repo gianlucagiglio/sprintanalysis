@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase'
 import { useSessionStore } from '@/stores/sessionStore'
 import { useAuthStore } from '@/stores/authStore'
 import type { Session } from '@/types/database'
+import { useGamification } from './useGamification'
 
 export function useSession(sessionId: string | undefined) {
   const { session, setSession, setParticipants, setSections, updateSession } = useSessionStore()
@@ -14,6 +15,8 @@ export function useSession(sessionId: string | undefined) {
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null)
   const joinedRef = useRef(false)
   const [ready, setReady] = useState(false)
+  const { awardPoints } = useGamification(session?.team_id)
+  const participateAwardedRef = useRef(false)
 
   const fetchSession = useCallback(async () => {
     if (!sessionId) return
@@ -72,6 +75,12 @@ export function useSession(sessionId: string | undefined) {
         if (error) {
           console.error('Failed to join session:', error)
           return
+        }
+
+        // Award participation points (only for new participants)
+        if (!participateAwardedRef.current) {
+          await awardPoints('participate', sessionId)
+          participateAwardedRef.current = true
         }
       }
 

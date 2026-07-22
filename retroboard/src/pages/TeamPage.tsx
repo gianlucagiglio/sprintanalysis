@@ -18,7 +18,7 @@ import { TeamMoodOverview } from '@/components/metrics/TeamMoodOverview'
 import { useGlobalMoods } from '@/hooks/useGlobalMoods'
 import { useMetrics } from '@/hooks/useMetrics'
 import {
-  Crown, Shield, User, Copy, Check, Search, UserPlus, Trash2, ArrowLeft, X, Calendar, CheckCircle2, LogOut,
+  Crown, Shield, User, Users, Copy, Check, Search, UserPlus, Trash2, ArrowLeft, X, Calendar, CheckCircle2, LogOut,
 } from 'lucide-react'
 
 type MemberWithProfile = TeamMember & { profiles: Profile }
@@ -40,7 +40,7 @@ export function TeamPage() {
   const [loading, setLoading] = useState(true)
 
   // Team-scoped metrics
-  const { sessionMoods, sessionTeamMoods, globalCounts, globalTeamMoodCounts, loading: moodsLoading } = useGlobalMoods(id)
+  const { sessionMoods, sessionTeamMoods, globalTeamMoodCounts, loading: moodsLoading } = useGlobalMoods(id)
   const { commentSentiments, happinessData, trendKPIs, sentimentDeltas, loading: metricsLoading } = useMetrics(id)
 
   // Invite link copy state

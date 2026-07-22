@@ -1,11 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
+import { useSessionStore } from '@/stores/sessionStore'
+import { useGamification } from './useGamification'
 import type { TeamMoodVote } from '@/types/database'
 
 export function useTeamMood(sessionId: string | undefined) {
   const [teamMoodVotes, setTeamMoodVotes] = useState<TeamMoodVote[]>([])
   const user = useAuthStore((s) => s.user)
+  const session = useSessionStore((s) => s.session)
+  const { awardPoints } = useGamification(session?.team_id)
 
   const fetchTeamMoodVotes = useCallback(async () => {
     if (!sessionId) return
@@ -49,6 +53,10 @@ export function useTeamMood(sessionId: string | undefined) {
 
   const submitTeamMood = async (mood: TeamMoodVote['mood']) => {
     if (!sessionId || !user) return
+
+    // Check if already voted
+    const alreadyVoted = teamMoodVotes.some((m) => m.user_id === user.id)
+
     const { error } = await supabase.from('team_mood_votes').upsert(
       {
         session_id: sessionId,
@@ -61,6 +69,10 @@ export function useTeamMood(sessionId: string | undefined) {
       console.error('submitTeamMood failed:', error)
     } else {
       await fetchTeamMoodVotes()
+      // Award points only for first vote (not for changing vote)
+      if (!alreadyVoted) {
+        await awardPoints('mood_vote', sessionId)
+      }
     }
   }
 

@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
+import { useSessionStore } from '@/stores/sessionStore'
+import { useGamification } from './useGamification'
 import type { QuizQuestion, QuizAnswer } from '@/types/database'
 
 export function useQuiz(sessionId: string | undefined) {
@@ -8,6 +10,8 @@ export function useQuiz(sessionId: string | undefined) {
   const [answers, setAnswers] = useState<QuizAnswer[]>([])
   const [loading, setLoading] = useState(true)
   const user = useAuthStore((s) => s.user)
+  const session = useSessionStore((s) => s.session)
+  const { awardPoints } = useGamification(session?.team_id)
   const questionIdsRef = useRef<string[]>([])
 
   const fetchQuestions = useCallback(async () => {
@@ -77,9 +81,13 @@ export function useQuiz(sessionId: string | undefined) {
   }, [sessionId, fetchQuestions, fetchAnswers])
 
   const submitAnswer = async (questionId: string, choice: number, timeTaken: number) => {
-    if (!user) return
+    if (!user || !sessionId) return
     // Guard: prevent double submit (DB has UNIQUE constraint too)
     if (answers.some((a) => a.question_id === questionId && a.user_id === user.id)) return
+
+    // Check if answer is correct
+    const question = questions.find((q) => q.id === questionId)
+    const isCorrect = question && choice === question.correct_choice
 
     const { error } = await supabase.from('quiz_answers').insert({
       question_id: questionId,
@@ -91,6 +99,10 @@ export function useQuiz(sessionId: string | undefined) {
       console.error('submitAnswer failed:', error)
     } else {
       await fetchAnswers()
+      // Award gamification points if correct
+      if (isCorrect) {
+        await awardPoints('quiz_correct', sessionId)
+      }
     }
   }
 

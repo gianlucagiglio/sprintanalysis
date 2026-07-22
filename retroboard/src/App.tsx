@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
+import { BadgeUnlockedToast } from '@/components/gamification/BadgeUnlockedToast'
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
@@ -9,6 +10,7 @@ import { ResetPasswordPage } from '@/pages/ResetPasswordPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { SessionPage } from '@/pages/SessionPage'
 import { MetricsPage } from '@/pages/MetricsPage'
+import { ProfilePage } from '@/pages/ProfilePage'
 import { LeaderboardPage } from '@/pages/LeaderboardPage'
 import { ActionsPage } from '@/pages/ActionsPage'
 import { QuizThemesPage } from '@/pages/QuizThemesPage'
@@ -25,6 +27,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <BadgeUnlockedToast />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -83,6 +86,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <TeamPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profilo"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />

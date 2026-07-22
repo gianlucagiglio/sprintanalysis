@@ -20,7 +20,8 @@
       "Bash(npx supabase login:*)",
       "Bash(node update-categories.js:*)",
       "Bash(move:*)",
-      "Bash(ren:*)"
+      "Bash(ren:*)",
+      "Bash(timeout 5 tail:*)"
     ]
   }
 }

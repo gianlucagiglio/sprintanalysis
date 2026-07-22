@@ -1,13 +1,15 @@
 import { useAuthStore } from '@/stores/authStore'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
-import { LayoutDashboard, LogOut, BarChart3, ListTodo, UsersRound, Trophy, Sparkles, BookOpen } from 'lucide-react'
+import { PointsWidget } from '@/components/gamification/PointsWidget'
+import { LayoutDashboard, LogOut, BarChart3, ListTodo, UsersRound, Trophy, Sparkles, BookOpen, User } from 'lucide-react'
 import packageJson from '../../../package.json'
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: BarChart3 },
   { path: '/retrospettive', label: 'Retro', icon: LayoutDashboard },
   { path: '/teams', label: 'Team', icon: UsersRound },
+  { path: '/profilo', label: 'Profilo', icon: User },
   { path: '/leaderboard', label: 'Classifica', icon: Trophy },
   { path: '/actions', label: 'Azioni', icon: ListTodo },
   { path: '/quiz-temi', label: 'Quiz', icon: BookOpen },
@@ -80,6 +82,9 @@ export function Navbar() {
         </div>
         {user && (
           <div className="flex items-center gap-2 md:gap-3">
+            <div className="hidden md:block">
+              <PointsWidget compact />
+            </div>
             <div className="flex items-center gap-2">
               <div className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-white text-xs md:text-sm font-semibold ${
                 isSuper ? 'bg-gradient-to-br from-amber-400 to-orange-500 ring-2 ring-amber-300' : 'bg-gradient-to-br from-retro-primary to-violet-500'

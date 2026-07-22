@@ -3,11 +3,13 @@ import { useComments } from '@/hooks/useComments'
 import { useVotes } from '@/hooks/useVotes'
 import { useActions } from '@/hooks/useActions'
 import { useSessionStore } from '@/stores/sessionStore'
+import { useAuthStore } from '@/stores/authStore'
 import { GroupingPhase } from './GroupingPhase'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Modal } from '@/components/ui/Modal'
+import { ActionEditModal } from '@/components/kanban/ActionEditModal'
 import {
   Heart,
   MessageSquare,
@@ -24,9 +26,10 @@ import {
   Calendar,
   Layers,
   X,
+  Edit,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import type { Comment } from '@/types/database'
+import type { Comment, Action } from '@/types/database'
 
 interface BrainstormingPhaseProps {
   sessionId: string
@@ -75,21 +78,26 @@ const COLUMNS: {
 export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
   const sections = useSessionStore((s) => s.sections)
   const participants = useSessionStore((s) => s.participants)
+  const session = useSessionStore((s) => s.session)
+  const user = useAuthStore((s) => s.user)
   const { comments, addReply, updateDiscussionStatus } = useComments(sessionId, sections)
   const commentIds = useMemo(() => comments.map((c) => c.id), [comments])
   const { getVoteCount, getVoterNames } = useVotes(commentIds, sessionId)
-  const { actions, addAction } = useActions(sessionId)
+  const { actions, addAction, updateAction, deleteAction } = useActions(sessionId)
 
   const [clusteringView, setClusteringView] = useState(false)
   const [replyingTo, setReplyingTo] = useState<string | null>(null)
   const [replyText, setReplyText] = useState('')
   const [collapsedColumns, setCollapsedColumns] = useState<Set<DiscussionStatus>>(new Set())
 
-  // Modal state
+  // Modal state for creating action
   const [modalComment, setModalComment] = useState<Comment | null>(null)
   const [actionText, setActionText] = useState('')
   const [actionAssignees, setActionAssignees] = useState<string[]>([])
   const [actionDeadline, setActionDeadline] = useState('')
+
+  // Modal state for editing action
+  const [editingAction, setEditingAction] = useState<Action | null>(null)
 
   const parentComments = comments.filter((c) => !c.group_id)
   const getChildren = (parentId: string) => comments.filter((c) => c.group_id === parentId)
@@ -100,9 +108,27 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
   const getSectionName = (sectionId: string) =>
     sections.find((s) => s.id === sectionId)?.name || ''
 
-  // Count actions linked to a comment
-  const getActionCount = (commentId: string) =>
-    actions.filter((a) => a.comment_id === commentId).length
+  // Get actions linked to a comment
+  const getCommentActions = (commentId: string) =>
+    actions.filter((a) => a.comment_id === commentId)
+
+  const modalParticipants = participants.map((p) => ({
+    user_id: p.user_id,
+    name: p.profiles?.name || 'Utente',
+  }))
+
+  const isOrganizer = session?.organizer_id === user?.id
+
+  const canEditAction = (action: Action) => {
+    if (isOrganizer) return true
+    if (user && (action.assigned_to_multi || []).includes(user.id)) return true
+    return false
+  }
+
+  const canDeleteAction = (_action: Action) => {
+    if (isOrganizer) return true
+    return false
+  }
 
   const handleReply = async (parentId: string) => {
     if (!replyText.trim()) return
@@ -161,7 +187,7 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
     const children = getChildren(comment.id)
     const votes = getVoteCount(comment.id)
     const col = COLUMNS[colIndex]
-    const actionCount = getActionCount(comment.id)
+    const commentActions = getCommentActions(comment.id)
 
     return (
       <motion.div
@@ -226,6 +252,42 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
             </div>
           )}
 
+          {/* Existing actions */}
+          {commentActions.length > 0 && (
+            <div className="mt-3 space-y-2">
+              {commentActions.map((action) => {
+                const assignedNames = (action.assigned_to_multi || [])
+                  .map((id) => getAuthorName(id))
+                  .join(', ')
+                return (
+                  <button
+                    key={action.id}
+                    onClick={() => setEditingAction(action)}
+                    className="w-full text-left bg-amber-50 border border-amber-200 rounded-lg p-2.5 hover:bg-amber-100 transition-colors group"
+                  >
+                    <div className="flex items-start gap-2">
+                      <Zap size={14} className="text-amber-600 mt-0.5 shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-retro-text font-medium">{action.text}</p>
+                        {assignedNames && (
+                          <p className="text-xs text-retro-text-secondary mt-1">
+                            👤 {assignedNames}
+                          </p>
+                        )}
+                        {action.deadline && (
+                          <p className="text-xs text-retro-text-secondary mt-0.5">
+                            📅 {new Date(action.deadline).toLocaleDateString('it-IT')}
+                          </p>
+                        )}
+                      </div>
+                      <Edit size={12} className="text-amber-600 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 mt-1" />
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+          )}
+
           {/* Actions bar */}
           <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
             {/* Reply */}
@@ -267,9 +329,9 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
                 >
                   <Zap size={12} />
                   Crea azione
-                  {actionCount > 0 && (
+                  {commentActions.length > 0 && (
                     <span className="bg-amber-100 text-amber-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                      {actionCount}
+                      {commentActions.length}
                     </span>
                   )}
                 </button>
@@ -501,6 +563,19 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
           </div>
         )}
       </Modal>
+
+      {/* Action edit modal */}
+      {editingAction && (
+        <ActionEditModal
+          action={editingAction}
+          participants={modalParticipants}
+          canEdit={canEditAction(editingAction)}
+          canDelete={canDeleteAction(editingAction)}
+          onSave={updateAction}
+          onDelete={deleteAction}
+          onClose={() => setEditingAction(null)}
+        />
+      )}
     </>
   )
 }

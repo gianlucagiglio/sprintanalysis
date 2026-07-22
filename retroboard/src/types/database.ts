@@ -74,6 +74,7 @@ export type Action = {
   notes: string | null
   resolution: string | null
   created_at: string
+  updated_at: string
 }
 
 export type QuizQuestion = {
@@ -127,6 +128,48 @@ export type TeamMoodVote = {
   created_at: string
 }
 
+export type UserPoints = {
+  id: string
+  user_id: string
+  team_id: string | null
+  points: number
+  level: number
+  created_at: string
+  updated_at: string
+}
+
+export type PointTransaction = {
+  id: string
+  user_id: string
+  session_id: string | null
+  action_id: string | null
+  action_type: string
+  points: number
+  description: string | null
+  metadata: Record<string, any> | null
+  created_at: string
+}
+
+export type BadgeDefinition = {
+  code: string
+  name: string
+  description: string
+  icon: string
+  category: string
+  criteria: Record<string, any>
+  sort_order: number
+  is_secret: boolean
+  created_at: string
+}
+
+export type UserBadge = {
+  id: string
+  user_id: string
+  badge_code: string
+  unlocked_at: string
+  seen: boolean
+}
+
 export type Database = {
   public: {
     Tables: {
@@ -143,6 +186,10 @@ export type Database = {
       team_mood_votes: { Row: TeamMoodVote; Insert: Omit<TeamMoodVote, 'id' | 'created_at'>; Update: Partial<TeamMoodVote> }
       teams: { Row: Team; Insert: Omit<Team, 'id' | 'invite_code' | 'created_at'>; Update: Partial<Team> }
       team_members: { Row: TeamMember; Insert: Omit<TeamMember, 'id' | 'joined_at'>; Update: Partial<TeamMember> }
+      user_points: { Row: UserPoints; Insert: Omit<UserPoints, 'id' | 'created_at' | 'updated_at'>; Update: Partial<UserPoints> }
+      point_transactions: { Row: PointTransaction; Insert: Omit<PointTransaction, 'id' | 'created_at'>; Update: Partial<PointTransaction> }
+      badge_definitions: { Row: BadgeDefinition; Insert: Omit<BadgeDefinition, 'created_at'>; Update: Partial<BadgeDefinition> }
+      user_badges: { Row: UserBadge; Insert: Omit<UserBadge, 'id' | 'unlocked_at' | 'seen'>; Update: Partial<UserBadge> }
     }
   }
 }

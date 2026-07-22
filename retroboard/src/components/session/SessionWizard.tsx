@@ -193,7 +193,7 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
 
       {/* Retro sub-phase indicator */}
       {currentStep === 3 && (
-        <div className="flex items-center gap-1.5 md:gap-2 overflow-x-auto pb-1 scrollbar-thin">
+        <div className="flex items-center gap-1.5 md:gap-2 overflow-x-hidden pb-1">
           {retroPhaseOrder.map((phase, i) => (
             <div key={phase} className="flex items-center shrink-0">
               <Badge variant={session.retro_phase === phase ? 'primary' : 'default'} className="text-[10px] md:text-xs whitespace-nowrap">
@@ -368,11 +368,6 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
             {currentStep === 4 && (
               <Button size="sm" variant="ghost" onClick={() => goToStep(3)}>
                 <ChevronLeft size={14} /> Torna alla retro
-              </Button>
-            )}
-            {currentStep === 3 && (session.retro_phase === 'comments' || session.retro_phase === 'grouping') && !session.retro_revealed && (
-              <Button size="sm" variant="secondary" onClick={revealRetro}>
-                <Eye size={14} /> Mostra risultati
               </Button>
             )}
             {currentStep === 1 && session.mood_phase !== 'team' && (
