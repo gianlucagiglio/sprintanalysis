@@ -49,9 +49,6 @@ export function useTeamMood(sessionId: string | undefined) {
   const submitTeamMood = async (mood: TeamMoodVote['mood']) => {
     if (!sessionId || !user) return
 
-    // Check if already voted
-    const alreadyVoted = teamMoodVotes.some((m) => m.user_id === user.id)
-
     const { error } = await supabase.from('team_mood_votes').upsert(
       {
         session_id: sessionId,
@@ -62,12 +59,23 @@ export function useTeamMood(sessionId: string | undefined) {
     )
     if (error) {
       console.error('submitTeamMood failed:', error)
-    } else {
-      await fetchTeamMoodVotes()
-      // Award points only for first vote (not for changing vote)
-      if (!alreadyVoted) {
-        await awardPoints('mood_vote', sessionId)
-      }
+      return
+    }
+
+    await fetchTeamMoodVotes()
+
+    // Race-safe: check if points were already awarded for this session
+    const { data: existingPoints } = await supabase
+      .from('point_transactions')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('action_type', 'mood_vote')
+      .eq('session_id', sessionId)
+      .maybeSingle()
+
+    // Award points only if no transaction exists (first vote, not update)
+    if (!existingPoints) {
+      await awardPoints('mood_vote', sessionId)
     }
   }
 

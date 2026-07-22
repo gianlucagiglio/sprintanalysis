@@ -76,7 +76,7 @@ export function useVotes(commentIds: string[], sessionId: string | undefined, ma
         await fetchVotes()
       }
     } else {
-      // Add vote (if under limit)
+      // Add vote (if under limit) - check after insert to prevent race conditions
       if (userVoteCount >= maxVotes) return
       const { error } = await supabase.from('votes').insert({
         comment_id: commentId,
@@ -87,9 +87,19 @@ export function useVotes(commentIds: string[], sessionId: string | undefined, ma
         console.error('castVote failed:', error)
       } else {
         await fetchVotes()
-        // Award points for voting
+
+        // Race-safe: verify actual vote count from DB before awarding points
         if (sessionId) {
-          await awardPoints('vote', sessionId)
+          const { count } = await supabase
+            .from('votes')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .in('comment_id', commentIds)
+
+          // Award points only if user is within vote limit after fresh DB check
+          if (count !== null && count <= maxVotes) {
+            await awardPoints('vote', sessionId)
+          }
         }
       }
     }

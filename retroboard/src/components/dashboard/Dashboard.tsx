@@ -48,15 +48,23 @@ export function Dashboard() {
       if (sessError) return
 
       if (sessionsData) {
-        const withCounts = await Promise.all(
-          sessionsData.map(async (s) => {
-            const { count } = await supabase
-              .from('session_participants')
-              .select('*', { count: 'exact', head: true })
-              .eq('session_id', s.id)
-            return { ...s, participant_count: count || 0 }
-          })
-        )
+        // Fetch all participant counts in ONE query (fix N+1)
+        const sessionIds = sessionsData.map(s => s.id)
+        const { data: participants } = await supabase
+          .from('session_participants')
+          .select('session_id')
+          .in('session_id', sessionIds)
+
+        // Build count map
+        const countMap: Record<string, number> = {}
+        participants?.forEach(p => {
+          countMap[p.session_id] = (countMap[p.session_id] || 0) + 1
+        })
+
+        const withCounts = sessionsData.map(s => ({
+          ...s,
+          participant_count: countMap[s.id] || 0
+        }))
         setSessions(withCounts)
       }
       setLoading(false)
@@ -107,15 +115,23 @@ export function Dashboard() {
     if (sessError) return // Don't clear sessions on transient error
 
     if (sessionsData) {
-      const withCounts = await Promise.all(
-        sessionsData.map(async (s) => {
-          const { count } = await supabase
-            .from('session_participants')
-            .select('*', { count: 'exact', head: true })
-            .eq('session_id', s.id)
-          return { ...s, participant_count: count || 0 }
-        })
-      )
+      // Fetch all participant counts in ONE query (fix N+1)
+      const sessionIds = sessionsData.map(s => s.id)
+      const { data: participants } = await supabase
+        .from('session_participants')
+        .select('session_id')
+        .in('session_id', sessionIds)
+
+      // Build count map
+      const countMap: Record<string, number> = {}
+      participants?.forEach(p => {
+        countMap[p.session_id] = (countMap[p.session_id] || 0) + 1
+      })
+
+      const withCounts = sessionsData.map(s => ({
+        ...s,
+        participant_count: countMap[s.id] || 0
+      }))
       setSessions(withCounts)
     }
     setLoading(false)

@@ -50,7 +50,9 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
         if (status === 'CHANNEL_ERROR') console.error('comments channel error:', err)
       })
     return () => { supabase.removeChannel(channel) }
-  }, [sessionId, sectionIds, fetchComments])
+    // fetchComments is captured in closure - no need in deps to avoid infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId, sectionIds])
 
   // Realtime subscription provides updates - polling removed to reduce DB load
 
