@@ -2,6 +2,62 @@
 
 All notable changes to RetroBoard will be documented in this file.
 
+## [1.14.0] - 2026-07-03
+
+### ✨ Added
+- **Team Mood Collaboration**: Nuova fase mood collaborazione team nello step 1
+  - Sotto-fase "Team" dopo il mood personale
+  - 4 opzioni: Ottima 🤝💚, Buona 🤝💙, Sufficiente 🤝⚠️, Scarsa 🤝❌
+  - Tabella `team_mood_votes` con RLS policies
+  - Colonna `mood_phase` su sessioni (`personal` | `team`)
+  - Componente `TeamMoodVoting` con UI a griglia 2x2
+  - Componente `TeamMoodTrend` con grafico a torta
+  - Navigazione sotto-fasi in `SessionWizard` (come retro_phase)
+  - Hook `useTeamMood` per gestione voti team
+  - Visualizzazione dati team mood in `ClosedSessionView`
+  - Supporto in `useGlobalMoods` per trend storici
+
+- **Actions Management Enhancement**: Gestione assegnatari migliorata
+  - Modifica assegnatari azioni esistenti in fase Brainstorming
+  - Click su azioni per aprire modal di edit con `ActionEditModal`
+  - Visualizzazione azioni sotto ogni commento con icona edit
+  - Permessi: organizzatore + assegnatari possono modificare
+
+### 🐛 Fixed
+- **Actions Page**: Fix caricamento partecipanti per modifica assegnatari
+  - Carica tutti i partecipanti della sessione (non solo assegnatari esistenti)
+  - Dropdown "Aggiungi assegnatario..." ora funziona correttamente
+  - useEffect che fetcha partecipanti quando si apre modal edit
+
+- **Profile Page**: Fix conteggio badge in statistiche veloci
+  - Usa `useBadges()` invece di valore hardcodato "0"
+  - Mostra numero reale di badge sbloccati
+
+- **Quiz Themes**: Rimosso badge duplicato con numero domande
+  - Elimina ridondanza icona + numero nella card tema
+  - Info domande mostrata una sola volta con icona BookOpen
+
+- **TypeScript Build**: Fix errori compilazione
+  - Rimosso import inutilizzato `Eye` da SessionWizard
+  - Rimossa variabile inutilizzata `revealRetro`
+
+### 🔧 Changed
+- `ActionEditModal`: UI migliorata per gestione assegnatari
+  - Messaggio "Nessun assegnatario selezionato" quando vuoto
+  - Messaggio "Tutti i partecipanti sono già assegnati" se full
+  - Dropdown sempre visibile quando `canEdit=true`
+
+- `BrainstormingPhase`: Integrazione completa edit azioni
+  - Import `ActionEditModal` e `useAuthStore`
+  - Stato `editingAction` per modal
+  - Funzioni `canEditAction` e `canDeleteAction`
+  - Azioni mostrate in box arancione cliccabili
+
+### 📊 Database Migrations
+- `migration-team-mood.sql`: Tabella team_mood_votes + colonna mood_phase
+
+---
+
 ## [1.12.0] - 2025-05-11
 
 ### ✨ Added
