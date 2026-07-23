@@ -12,9 +12,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<Variant, string> = {
   primary: 'bg-gradient-to-r from-retro-primary to-indigo-500 text-white shadow-primary hover:shadow-primary hover:scale-105 active:scale-98',
-  secondary: 'bg-white text-retro-text border border-retro-border hover:bg-retro-sidebar hover:border-retro-border-strong hover:scale-102',
+  secondary: 'bg-white text-retro-text border border-retro-border hover:bg-retro-sidebar hover:border-retro-border-strong hover:scale-102 active:scale-98',
   danger: 'bg-retro-mad text-white hover:bg-red-600 shadow-mad hover:shadow-mad hover:scale-105 active:scale-98',
-  ghost: 'text-retro-text-secondary hover:bg-retro-sidebar hover:text-retro-text hover:scale-102',
+  ghost: 'text-retro-text-secondary hover:bg-retro-sidebar hover:text-retro-text hover:scale-102 active:scale-98',
   success: 'bg-gradient-to-r from-retro-glad to-emerald-400 text-white shadow-glad hover:shadow-glad hover:scale-105 active:scale-98',
 }
 

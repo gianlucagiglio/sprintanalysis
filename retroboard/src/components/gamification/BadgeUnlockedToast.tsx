@@ -35,11 +35,11 @@ export function BadgeUnlockedToast() {
   return createPortal(
     <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0, y: -50, scale: 0.9 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: -50, scale: 0.9 }}
+        initial={{ opacity: 0, x: 100, scale: 0.9 }}
+        animate={{ opacity: 1, x: 0, scale: 1 }}
+        exit={{ opacity: 0, x: 100, scale: 0.9 }}
         transition={{ type: 'spring', duration: 0.6 }}
-        className="fixed top-4 left-1/2 -translate-x-1/2 z-[200] w-full max-w-md px-4"
+        className="fixed top-4 right-4 z-[200] w-full max-w-md px-4"
       >
         <div className="relative bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl shadow-2xl p-6 text-white overflow-hidden animate-pulse-glow">
           {/* Background decoration */}

@@ -19,7 +19,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           className={`w-full rounded-xl border bg-white px-4 py-2.5 text-sm
             text-retro-text-DEFAULT placeholder:text-retro-text-tertiary
             transition-all duration-200 ease-out
-            focus:outline-none
+            focus:outline-none focus:shadow-soft
             ${error
               ? 'border-retro-mad pr-10 focus:ring-4 focus:ring-retro-mad/20 focus:border-retro-mad'
               : 'border-retro-border focus:border-retro-primary-600 focus:ring-4 focus:ring-retro-primary-100'
