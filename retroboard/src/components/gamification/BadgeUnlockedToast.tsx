@@ -38,44 +38,46 @@ export function BadgeUnlockedToast() {
         initial={{ opacity: 0, x: 100, scale: 0.9 }}
         animate={{ opacity: 1, x: 0, scale: 1 }}
         exit={{ opacity: 0, x: 100, scale: 0.9 }}
-        transition={{ type: 'spring', duration: 0.6 }}
+        transition={{ type: 'spring', duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
         className="fixed top-4 right-4 z-[200] w-full max-w-md px-4"
       >
-        <div className="relative bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl shadow-2xl p-6 text-white overflow-hidden animate-pulse-glow">
-          {/* Background decoration */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent_70%)]" />
-
-          {/* Close button */}
+        <div
+          className="relative bg-glass-vibrant-purple rounded-3xl p-8 text-white overflow-hidden border-4 border-white vibrant-block"
+          style={{ boxShadow: 'var(--block-shadow)' }}
+        >
+          {/* Close button - Vibrant Style */}
           <button
             onClick={handleDismiss}
-            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors z-10"
+            className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-white/30 hover:bg-white/50 flex items-center justify-center transition-all hover:scale-105 border-2 border-white/40 z-10"
+            style={{ transition: 'var(--transition-vibrant)' }}
           >
-            <X size={16} />
+            <X size={18} />
           </button>
 
-          {/* Content */}
+          {/* Content - Vibrant Block Layout */}
           <div className="relative">
-            <div className="flex items-center gap-2 mb-2">
-              <Sparkles size={20} className="text-yellow-300" />
-              <p className="text-sm font-semibold uppercase tracking-wide">
+            <div className="flex items-center gap-3 mb-6">
+              <Sparkles size={24} className="text-glass-vibrant-yellow animate-bounce-gentle" />
+              <p className="text-base font-display font-bold uppercase tracking-wide">
                 Badge Sbloccato!
               </p>
+              <Sparkles size={24} className="text-glass-vibrant-yellow animate-bounce-gentle" />
             </div>
 
-            <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-center gap-6 mb-8">
               <motion.div
                 initial={{ rotate: -180, scale: 0 }}
                 animate={{ rotate: 0, scale: 1 }}
-                transition={{ delay: 0.2, type: 'spring', duration: 0.8 }}
-                className="text-6xl"
+                transition={{ delay: 0.2, type: 'spring', duration: 0.8, ease: [0.34, 1.56, 0.64, 1] }}
+                className="text-8xl vibrant-bounce flex-shrink-0"
               >
                 {currentBadge.badge.icon}
               </motion.div>
-              <div>
-                <h3 className="text-2xl font-bold mb-1">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-2xl font-display font-bold mb-2 leading-tight">
                   {currentBadge.badge.name}
                 </h3>
-                <p className="text-sm text-white/80">
+                <p className="text-sm font-heading font-medium text-white/90 leading-relaxed">
                   {currentBadge.badge.description}
                 </p>
               </div>
@@ -85,13 +87,14 @@ export function BadgeUnlockedToast() {
               onClick={handleDismiss}
               variant="secondary"
               size="sm"
-              className="w-full !bg-white !text-indigo-600 hover:!bg-white/90"
+              className="w-full !bg-white !text-glass-vibrant-purple hover:!bg-white/90 !py-3 !text-base font-heading font-bold !rounded-2xl hover:scale-105"
+              style={{ transition: 'var(--transition-vibrant)' }}
             >
               Fantastico!
             </Button>
           </div>
 
-          {/* Confetti effect */}
+          {/* Enhanced Confetti effect with vibrant colors */}
           <div className="absolute inset-0 pointer-events-none">
             {[...Array(20)].map((_, i) => (
               <motion.div
@@ -103,10 +106,10 @@ export function BadgeUnlockedToast() {
                   x: `${Math.random() * 200 - 50}%`,
                   rotate: Math.random() * 360,
                 }}
-                transition={{ duration: 1, delay: Math.random() * 0.3 }}
-                className="absolute top-1/2 left-1/2 w-2 h-2 rounded-full"
+                transition={{ duration: 1, delay: Math.random() * 0.3, ease: [0.34, 1.56, 0.64, 1] }}
+                className="absolute top-1/2 left-1/2 w-3 h-3 rounded-full"
                 style={{
-                  backgroundColor: ['#fbbf24', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'][
+                  backgroundColor: ['#F59E0B', '#10B981', '#EF4444', '#2563EB', '#8B5CF6'][
                     Math.floor(Math.random() * 5)
                   ],
                 }}

@@ -125,33 +125,47 @@ export function LeaderboardPage() {
               })}
             </div>
 
-            {/* ── Podium ── */}
+            {/* ── Podium - Vibrant Blocks Style ── */}
             {podium.length >= 3 && (
               <div>
-                <h2 className="text-lg font-bold text-retro-text mb-5 flex items-center gap-2">
-                  <Crown size={18} className="text-yellow-500" />
+                <h2 className="text-xl font-display font-bold text-retro-text mb-8 flex items-center gap-3">
+                  <Crown size={24} className="text-glass-vibrant-yellow" />
                   Podio
                 </h2>
-                <div className="flex items-end justify-center gap-3 md:gap-4">
+                <div className="flex items-end justify-center gap-4 md:gap-6">
                   {podiumDisplay.map((entry, displayIdx) => {
                     // Map display index back to actual rank: [2nd, 1st, 3rd] → [1, 0, 2]
                     const actualRank = displayIdx === 0 ? 1 : displayIdx === 1 ? 0 : 2
+                    const vibrantColors = [
+                      'bg-gradient-to-br from-yellow-400 to-amber-500',  // gold
+                      'bg-gradient-to-br from-slate-300 to-slate-400',   // silver
+                      'bg-gradient-to-br from-amber-500 to-orange-600',  // bronze
+                    ]
                     return (
-                      <div key={entry.userId} className="flex flex-col items-center flex-1 max-w-[160px]">
-                        {/* Avatar */}
-                        <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br ${podiumGradients[actualRank]} flex items-center justify-center text-white text-lg md:text-xl font-bold shadow-lg mb-2 ${actualRank === 0 ? 'ring-4 ring-yellow-200 scale-110' : ''}`}>
+                      <div
+                        key={entry.userId}
+                        className="flex flex-col items-center flex-1 max-w-[180px] vibrant-block"
+                        style={{ transition: 'var(--transition-vibrant)' }}
+                      >
+                        {/* Avatar - Vibrant Style */}
+                        <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl ${vibrantColors[actualRank]} flex items-center justify-center text-white text-xl md:text-2xl font-display font-bold shadow-lg mb-3 border-4 border-white ${actualRank === 0 ? 'ring-4 ring-yellow-300 scale-110' : ''}`}>
                           {entry.name.charAt(0).toUpperCase()}
                         </div>
-                        <p className={`text-sm font-semibold text-retro-text text-center truncate w-full ${actualRank === 0 ? 'text-base' : ''}`}>
+                        <p className={`text-base font-display font-bold text-retro-text text-center truncate w-full mb-1 ${actualRank === 0 ? 'text-xl' : ''}`}>
                           {entry.name}
                         </p>
-                        <p className="text-xs font-bold font-mono text-retro-primary">{entry.totalPoints} pt</p>
-                        {/* Podium block */}
-                        <div className={`w-full ${podiumHeights[actualRank]} ${podiumBg[actualRank]} rounded-t-2xl mt-2 flex items-start justify-center pt-3`}>
+                        <p className="text-sm font-mono font-bold text-white bg-retro-primary px-3 py-1 rounded-xl mb-3">
+                          {entry.totalPoints} pt
+                        </p>
+                        {/* Podium block - Geometric & Bold */}
+                        <div
+                          className={`w-full ${podiumHeights[actualRank]} ${vibrantColors[actualRank]} rounded-t-3xl mt-2 flex items-start justify-center pt-4 border-4 border-white shadow-lg`}
+                          style={{ boxShadow: 'var(--block-shadow)' }}
+                        >
                           {actualRank === 0 ? (
-                            <Trophy size={24} className="text-yellow-500" />
+                            <Trophy size={32} className="text-white drop-shadow-lg" />
                           ) : (
-                            <Medal size={20} className={actualRank === 1 ? 'text-slate-400' : 'text-amber-600'} />
+                            <Medal size={24} className="text-white drop-shadow-lg" />
                           )}
                         </div>
                       </div>
