@@ -7,10 +7,10 @@ import { CreateSessionModal } from './CreateSessionModal'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card } from '@/components/ui/Card'
+import { SessionCardSkeleton } from '@/components/ui/Skeleton'
 import {
   Plus,
   Link as LinkIcon,
-  Loader2,
   LayoutGrid,
   Play,
   CheckCircle2,
@@ -307,8 +307,11 @@ export function Dashboard() {
 
       {/* ── Content ── */}
       {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="animate-spin text-retro-primary" size={32} />
+        <div className="grid gap-3 sm:grid-cols-2">
+          <SessionCardSkeleton />
+          <SessionCardSkeleton />
+          <SessionCardSkeleton />
+          <SessionCardSkeleton />
         </div>
       ) : sessions.length === 0 ? (
         <Card className="!rounded-2xl text-center !py-16">
