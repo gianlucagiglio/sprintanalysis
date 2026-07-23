@@ -96,7 +96,7 @@ export function Sidebar() {
       {/* Mobile: floating pill button */}
       <button
         onClick={() => setOpen(true)}
-        className="md:hidden fixed bottom-16 right-3 z-30 bg-white shadow-card border border-retro-border rounded-full px-3 py-2 flex items-center gap-1.5"
+        className="md:hidden fixed bottom-16 right-3 z-30 glass-card rounded-full px-3 py-2 flex items-center gap-1.5"
       >
         <Users size={14} className="text-retro-primary" />
         <span className="text-xs font-semibold text-retro-text">{doneCount}/{totalParticipants}</span>
@@ -105,8 +105,8 @@ export function Sidebar() {
       {/* Mobile: slide-over drawer */}
       {open && (
         <div className="md:hidden fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/30" onClick={() => setOpen(false)} />
-          <aside className="absolute right-0 top-0 h-full w-64 bg-retro-sidebar border-l border-retro-border p-4 overflow-y-auto shadow-xl">
+          <div className="absolute inset-0 bg-black/50 glass-backdrop" onClick={() => setOpen(false)} />
+          <aside className="absolute right-0 top-0 h-full w-64 glass-card border-l p-4 overflow-y-auto shadow-xl">
             <button
               onClick={() => setOpen(false)}
               className="absolute top-3 right-3 p-1 rounded-lg hover:bg-retro-border/30 text-retro-text-secondary"
@@ -119,7 +119,7 @@ export function Sidebar() {
       )}
 
       {/* Desktop: fixed sidebar */}
-      <aside className="hidden md:block w-60 bg-retro-sidebar border-r border-retro-border p-4 overflow-y-auto scrollbar-thin">
+      <aside className="hidden md:block w-60 glass-card border-r p-4 overflow-y-auto scrollbar-thin">
         {sidebarContent}
       </aside>
     </>

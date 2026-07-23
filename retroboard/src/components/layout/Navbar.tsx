@@ -33,15 +33,15 @@ export function Navbar() {
   return (
     <>
       {/* Desktop top navbar */}
-      <nav className="h-14 md:h-16 border-b border-slate-200/60 bg-white/80 backdrop-blur-lg flex items-center justify-between px-3 md:px-6 sticky top-0 z-40">
+      <nav className="h-14 md:h-16 border-b border-white/20 bg-white/70 backdrop-blur-md flex items-center justify-between px-3 md:px-6 sticky top-0 z-40">
         <div className="flex items-center gap-4 md:gap-8">
           <div className="flex items-center gap-1.5 md:gap-2">
             <button
               onClick={() => navigate('/dashboard')}
-              className="flex items-center gap-1.5 md:gap-2 font-bold text-base md:text-lg"
+              className="flex items-center gap-1.5 md:gap-2 font-heading font-bold text-base md:text-lg"
             >
               <span className="text-lg md:text-xl">🔄</span>
-              <span className="bg-gradient-to-r from-retro-primary to-violet-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-glass-primary to-glass-primary-light bg-clip-text text-transparent">
                 RetroBoard
               </span>
             </button>
@@ -109,7 +109,7 @@ export function Navbar() {
 
       {/* Mobile bottom tab bar */}
       {user && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-lg border-t border-slate-200/60 flex justify-around items-center h-14 safe-area-pb">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/70 backdrop-blur-md border-t border-white/20 flex justify-around items-center h-14 safe-area-pb">
           {navItems.map(({ path, label, icon: Icon }) => {
             const isActive = location.pathname === path || location.pathname.startsWith(path.replace(/s$/, '/'))
             return (
