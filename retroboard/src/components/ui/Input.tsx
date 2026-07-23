@@ -11,15 +11,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, helper, className = '', ...props }, ref) => (
     <div className="space-y-1.5">
       {label && (
-        <label className="block text-sm font-medium text-retro-text-DEFAULT">{label}</label>
+        <label className="block text-sm font-medium text-retro-text">{label}</label>
       )}
       <div className="relative">
         <input
           ref={ref}
-          className={`w-full rounded-xl border bg-white/70 backdrop-blur-sm px-4 py-2.5 text-sm
-            text-retro-text-DEFAULT placeholder:text-retro-text-tertiary
+          className={`w-full rounded-xl border bg-white/70 backdrop-blur-sm px-4 py-2.5 text-sm min-h-[44px]
+            text-retro-text placeholder:text-retro-text-tertiary
             transition-all duration-200 ease-out
             focus:outline-none focus:shadow-soft focus:bg-white/90
+            disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-white/50
             ${error
               ? 'border-glass-vibrant-mad pr-10 focus:ring-4 focus:ring-glass-vibrant-mad/20 focus:border-glass-vibrant-mad'
               : 'border-white/40 focus:border-glass-primary focus:ring-4 focus:ring-glass-primary/10'

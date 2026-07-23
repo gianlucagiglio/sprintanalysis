@@ -71,7 +71,7 @@ export function PointsWidget({ teamId, compact = false }: PointsWidgetProps) {
               <p className="text-4xl font-display font-bold text-white tracking-tight">
                 Livello {userPoints.level}
               </p>
-              <p className="text-sm font-heading font-semibold text-white/90">
+              <p className="text-sm font-heading font-semibold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
                 <span className={`font-mono ${showGlow ? 'vibrant-bounce' : ''}`}>
                   {userPoints.points.toLocaleString()}
                 </span> punti
@@ -82,7 +82,8 @@ export function PointsWidget({ teamId, compact = false }: PointsWidgetProps) {
         <div className="flex items-center gap-3">
           <button
             onClick={refetch}
-            className="p-3 rounded-xl bg-white/30 hover:bg-white/50 text-white transition-all hover:scale-105 border-2 border-white/40"
+            aria-label="Ricarica punti"
+            className="p-3 rounded-xl bg-white/30 hover:bg-white/50 text-white transition-all hover:scale-105 border-2 border-white/40 min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             title="Ricarica punti"
             style={{ transition: 'var(--transition-vibrant)' }}
           >

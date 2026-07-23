@@ -41,7 +41,7 @@ export function Navbar() {
               className="flex items-center gap-1.5 md:gap-2 font-heading font-bold text-base md:text-lg"
             >
               <span className="text-lg md:text-xl">🔄</span>
-              <span className="bg-gradient-to-r from-glass-primary to-glass-primary-light bg-clip-text text-transparent">
+              <span className="text-glass-primary">
                 RetroBoard
               </span>
             </button>
@@ -64,6 +64,7 @@ export function Navbar() {
                     key={path}
                     onClick={() => navigate(path)}
                     className={`relative flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200
+                      focus:outline-none focus-visible:ring-2 focus-visible:ring-glass-primary/50 focus-visible:ring-offset-2
                       ${isActive
                         ? 'bg-retro-primary/10 text-retro-primary font-semibold'
                         : 'text-retro-text-secondary hover:text-retro-text hover:bg-slate-100'

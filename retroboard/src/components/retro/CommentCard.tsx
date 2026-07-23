@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Card } from '@/components/ui/Card'
-import { GripVertical, Heart, X, Pencil, Trash2 } from 'lucide-react'
+import { Badge } from '@/components/ui/Badge'
+import { GripVertical, Heart, X, Pencil, Trash2, Sparkles } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { Comment } from '@/types/database'
 
@@ -81,6 +82,10 @@ export function CommentCard({
 
   const hasChildren = (groupCount ?? 0) > 0
 
+  // Check if comment is new (created in last 60 seconds)
+  const isNew = comment.created_at &&
+    (Date.now() - new Date(comment.created_at).getTime()) < 60000
+
   return (
     <motion.div
       ref={setNodeRef}
@@ -89,10 +94,12 @@ export function CommentCard({
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
     >
-      <Card className={`!p-3 !rounded-2xl transition-all duration-200 group/card
-        ${isDragging ? 'shadow-float rotate-1' : 'shadow-card'}
-        ${isOver ? 'ring-2 ring-retro-primary/40 bg-retro-primary/5' : ''}
-        ${hasChildren ? 'border-l-[3px] border-l-retro-primary' : ''}
+      <Card className={`!p-3 !rounded-2xl transition-all duration-300 group/card
+        hover:scale-102 hover:shadow-card-hover hover:-translate-y-0.5 cursor-default
+        ${isDragging ? 'shadow-float rotate-1 scale-105' : 'shadow-card'}
+        ${isOver ? 'ring-2 ring-indigo-400/50 bg-indigo-50/50 scale-102' : ''}
+        ${hasChildren ? 'border-l-4 border-l-indigo-500 shadow-md' : ''}
+        ${votingMode && hasVoted ? 'ring-2 ring-rose-400/30 bg-rose-50/30' : ''}
       `}>
         <div className="flex items-start gap-2">
           {isDraggable && (
@@ -105,7 +112,13 @@ export function CommentCard({
             </button>
           )}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              {isNew && !isEditing && (
+                <Badge variant="primary" className="!text-[9px] !px-1.5 !py-0.5 !rounded-md animate-pulse">
+                  <Sparkles size={8} className="mr-0.5" />
+                  NUOVO
+                </Badge>
+              )}
               {isEditing ? (
                 <input
                   ref={inputRef}

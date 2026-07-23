@@ -35,13 +35,14 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="relative z-10 w-full max-w-md glass-card rounded-2xl shadow-float"
+            className="relative z-10 w-full max-w-md mx-4 glass-card rounded-2xl shadow-float"
           >
             <div className="flex items-center justify-between p-5 border-b border-white/20">
               <h2 className="text-lg font-heading font-semibold text-retro-text">{title}</h2>
               <button
                 onClick={onClose}
-                className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-white/50 text-retro-text-secondary transition-colors duration-200"
+                aria-label="Chiudi finestra"
+                className="flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full hover:bg-white/50 text-retro-text-secondary transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-glass-primary/50"
               >
                 <X size={18} />
               </button>

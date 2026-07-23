@@ -3,7 +3,7 @@ import { useVotes } from '@/hooks/useVotes'
 import { CommentCard } from './CommentCard'
 import { useSessionStore } from '@/stores/sessionStore'
 import { useMemo } from 'react'
-import { Heart, EyeOff } from 'lucide-react'
+import { Heart, EyeOff, Vote } from 'lucide-react'
 
 interface VotingPhaseProps {
   sessionId: string
@@ -63,33 +63,47 @@ export function VotingPhase({ sessionId }: VotingPhaseProps) {
         )}
       </div>
 
-      {sections.map((section, idx) => {
-        const sectionComments = parentComments.filter((c) => c.section_id === section.id)
-        if (!sectionComments.length) return null
-        return (
-          <div key={section.id}>
-            <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold mb-3 ${sectionPills[idx % sectionPills.length]}`}>
-              {section.name}
-            </span>
-            <div className="space-y-2">
-              {sectionComments.map((comment) => (
-                <CommentCard
-                  key={comment.id}
-                  comment={comment}
-                  votingMode
-                  hasVoted={hasUserVoted(comment.id)}
-                  voteCount={revealed ? getVoteCount(comment.id) : (hasUserVoted(comment.id) ? 1 : 0)}
-                  canVote={remainingVotes > 0}
-                  onToggleVote={() => toggleVote(comment.id)}
-                  voterNames={revealed ? getVoterNames(comment.id) : []}
-                  grouped={getGrouped(comment.id)}
-                  groupCount={getGrouped(comment.id).length}
-                />
-              ))}
-            </div>
+      {parentComments.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-rose-100 to-pink-100 flex items-center justify-center mb-4 shadow-sm">
+            <Vote size={32} className="text-rose-500" />
           </div>
-        )
-      })}
+          <h3 className="text-lg font-heading font-semibold text-slate-800 mb-2">
+            Nessun commento da votare
+          </h3>
+          <p className="text-sm text-slate-600 max-w-md">
+            Non ci sono ancora commenti nelle sezioni. Torna alla fase precedente per aggiungere idee!
+          </p>
+        </div>
+      ) : (
+        sections.map((section, idx) => {
+          const sectionComments = parentComments.filter((c) => c.section_id === section.id)
+          if (!sectionComments.length) return null
+          return (
+            <div key={section.id}>
+              <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold mb-3 ${sectionPills[idx % sectionPills.length]}`}>
+                {section.name}
+              </span>
+              <div className="space-y-2">
+                {sectionComments.map((comment) => (
+                  <CommentCard
+                    key={comment.id}
+                    comment={comment}
+                    votingMode
+                    hasVoted={hasUserVoted(comment.id)}
+                    voteCount={revealed ? getVoteCount(comment.id) : (hasUserVoted(comment.id) ? 1 : 0)}
+                    canVote={remainingVotes > 0}
+                    onToggleVote={() => toggleVote(comment.id)}
+                    voterNames={revealed ? getVoterNames(comment.id) : []}
+                    grouped={getGrouped(comment.id)}
+                    groupCount={getGrouped(comment.id).length}
+                  />
+                ))}
+              </div>
+            </div>
+          )
+        })
+      )}
     </div>
   )
 }

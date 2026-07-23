@@ -222,18 +222,29 @@ export function PhaseTimer({ isOrganizer, timerDuration, timerStartedAt, onStart
                           </div>
                         </div>
 
-                        {/* Stop button for organizer */}
+                        {/* Extend +5min and Stop buttons for organizer */}
                         {isOrganizer && (
-                          <motion.button
-                            onClick={onStop}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium bg-gradient-to-br from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700 shadow-lg shadow-red-200 hover:shadow-xl hover:shadow-red-300 transition-all duration-200"
-                          >
-                            <Square size={14} strokeWidth={2.5} fill="currentColor" />
-                            <span className="text-sm font-semibold hidden sm:inline">Stop Timer</span>
-                            <span className="text-sm font-semibold sm:hidden">Stop</span>
-                          </motion.button>
+                          <div className="flex items-center gap-2">
+                            <motion.button
+                              onClick={() => onStart(timerDuration + 300)}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg font-medium bg-gradient-to-br from-emerald-500 to-teal-600 text-white hover:from-emerald-600 hover:to-teal-700 shadow-lg shadow-emerald-200 hover:shadow-xl hover:shadow-emerald-300 transition-all duration-200"
+                              title="Aggiungi 5 minuti"
+                            >
+                              <span className="text-sm font-bold">+5</span>
+                              <Clock size={14} strokeWidth={2.5} />
+                            </motion.button>
+                            <motion.button
+                              onClick={onStop}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium bg-gradient-to-br from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700 shadow-lg shadow-red-200 hover:shadow-xl hover:shadow-red-300 transition-all duration-200"
+                            >
+                              <Square size={14} strokeWidth={2.5} fill="currentColor" />
+                              <span className="text-sm font-semibold hidden sm:inline">Stop</span>
+                            </motion.button>
+                          </div>
                         )}
                       </div>
                     </div>

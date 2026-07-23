@@ -6,16 +6,16 @@ import { useAuthStore } from '@/stores/authStore'
 import { CommentCard } from './CommentCard'
 import { CommentInput } from './CommentInput'
 import { Card } from '@/components/ui/Card'
-import { EyeOff } from 'lucide-react'
+import { EyeOff, Lightbulb, MessageSquarePlus } from 'lucide-react'
 
 interface RetroBoardProps {
   sessionId: string
 }
 
 const sectionStyles = [
-  { border: 'border-l-emerald-400', bg: 'bg-emerald-50/50', pill: 'bg-emerald-100 text-emerald-700' },
-  { border: 'border-l-rose-400', bg: 'bg-rose-50/50', pill: 'bg-rose-100 text-rose-700' },
-  { border: 'border-l-sky-400', bg: 'bg-sky-50/50', pill: 'bg-sky-100 text-sky-700' },
+  { border: 'border-l-emerald-500', bg: 'bg-gradient-to-br from-emerald-50 to-teal-50', pill: 'bg-emerald-500 text-white shadow-sm' },
+  { border: 'border-l-rose-500', bg: 'bg-gradient-to-br from-rose-50 to-pink-50', pill: 'bg-rose-500 text-white shadow-sm' },
+  { border: 'border-l-sky-500', bg: 'bg-gradient-to-br from-sky-50 to-blue-50', pill: 'bg-sky-500 text-white shadow-sm' },
 ]
 
 export function RetroBoard({ sessionId }: RetroBoardProps) {
@@ -60,16 +60,36 @@ export function RetroBoard({ sessionId }: RetroBoardProps) {
                 {section.name}
               </span>
               <div className="space-y-2 mb-3">
-                {sectionComments.map((comment) => (
-                  <CommentCard
-                    key={comment.id}
-                    comment={comment}
-                    voteCount={getVoteCount(comment.id)}
-                    isOwn={comment.user_id === user?.id}
-                    onEdit={editComment}
-                    onDelete={deleteComment}
-                  />
-                ))}
+                {sectionComments.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
+                    <div className="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center mb-3 shadow-sm">
+                      {i === 0 ? (
+                        <Lightbulb size={24} className="text-emerald-500" />
+                      ) : i === 1 ? (
+                        <MessageSquarePlus size={24} className="text-rose-500" />
+                      ) : (
+                        <Lightbulb size={24} className="text-sky-500" />
+                      )}
+                    </div>
+                    <p className="text-sm font-medium text-slate-600 mb-1">
+                      {i === 0 ? 'Ancora nessuna idea positiva' : i === 1 ? 'Nessun problema condiviso' : 'Nessun suggerimento'}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      Sii il primo ad aggiungere un commento!
+                    </p>
+                  </div>
+                ) : (
+                  sectionComments.map((comment) => (
+                    <CommentCard
+                      key={comment.id}
+                      comment={comment}
+                      voteCount={getVoteCount(comment.id)}
+                      isOwn={comment.user_id === user?.id}
+                      onEdit={editComment}
+                      onDelete={deleteComment}
+                    />
+                  ))
+                )}
               </div>
               <CommentInput
                 onSubmit={(text) => addComment(section.id, text)}

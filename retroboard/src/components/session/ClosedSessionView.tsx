@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useComments } from '@/hooks/useComments'
 import { useVotes } from '@/hooks/useVotes'
 import { useActions } from '@/hooks/useActions'
@@ -8,6 +8,7 @@ import { useQuiz } from '@/hooks/useQuiz'
 import { useSessionStore } from '@/stores/sessionStore'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { motion } from 'framer-motion'
 import {
   Heart,
   User,
@@ -23,6 +24,7 @@ import {
   Angry,
   Sparkles,
   Crown,
+  PartyPopper,
 } from 'lucide-react'
 import type { Action } from '@/types/database'
 
@@ -70,6 +72,7 @@ export function ClosedSessionView({ sessionId, sessionTitle }: ClosedSessionView
   const { moodCounts } = useMood(sessionId)
   const { teamMoodCounts } = useTeamMood(sessionId)
   const { questions, getLeaderboard } = useQuiz(sessionId)
+  const [applause, setApplause] = useState<Record<string, number>>({})
 
   const moodTotal = Object.values(moodCounts).reduce((a, b) => a + b, 0)
   const teamMoodTotal = Object.values(teamMoodCounts).reduce((a, b) => a + b, 0)
@@ -93,17 +96,67 @@ export function ClosedSessionView({ sessionId, sessionTitle }: ClosedSessionView
     { key: 'custom', label: 'Altro', count: moodCounts.custom, icon: Sparkles, color: 'text-indigo-500', bg: 'bg-indigo-50', ring: 'ring-indigo-200' },
   ]
 
+  const handleApplause = (userId: string) => {
+    setApplause(prev => ({ ...prev, [userId]: (prev[userId] || 0) + 1 }))
+  }
+
   return (
     <div className="max-w-4xl mx-auto space-y-10">
 
-      {/* ── Hero Header ── */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-8 md:p-10 text-white">
+      {/* ── Hero Header with Confetti ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-8 md:p-10 text-white"
+      >
+        {/* Animated confetti background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[...Array(30)].map((_, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 1, y: -20, x: `${Math.random() * 100}%` }}
+              animate={{
+                opacity: [1, 1, 0],
+                y: ['0%', '120%'],
+                rotate: Math.random() * 720 - 360,
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                delay: Math.random() * 0.5,
+                ease: 'easeOut',
+              }}
+              className="absolute w-3 h-3 rounded-full"
+              style={{
+                backgroundColor: ['#FCD34D', '#34D399', '#60A5FA', '#F472B6', '#A78BFA', '#FFFFFF'][
+                  Math.floor(Math.random() * 6)
+                ],
+              }}
+            />
+          ))}
+        </div>
+
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent_70%)]" />
         <div className="relative">
-          <Badge className="!bg-white/20 !text-white !backdrop-blur-sm mb-4">
-            Retrospettiva completata
-          </Badge>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">{sessionTitle}</h1>
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="flex items-center gap-2 mb-4"
+          >
+            <PartyPopper size={24} className="animate-bounce" />
+            <Badge className="!bg-white/20 !text-white !backdrop-blur-sm">
+              Retrospettiva completata
+            </Badge>
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="text-2xl md:text-3xl font-display font-bold mb-2"
+          >
+            🎉 {sessionTitle}
+          </motion.h1>
           {organizer && (
             <p className="text-white/70 text-sm">
               Organizzata da {organizer.profiles?.name || 'Utente'}
@@ -131,25 +184,48 @@ export function ClosedSessionView({ sessionId, sessionTitle }: ClosedSessionView
             <span className="text-white/60 text-sm">{participants.length} partecipanti</span>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* ── Stats Row ── */}
+      {/* ── Stats Row with Stagger Animation ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
           { label: 'Partecipanti', value: participants.length, icon: Users, color: 'text-indigo-500', bg: 'bg-indigo-50' },
           { label: 'Commenti', value: parentComments.length, icon: MessageSquare, color: 'text-emerald-500', bg: 'bg-emerald-50' },
           { label: 'Voti totali', value: totalVotes, icon: ThumbsUp, color: 'text-rose-500', bg: 'bg-rose-50' },
           { label: 'Azioni', value: actions.length, icon: Zap, color: 'text-amber-500', bg: 'bg-amber-50' },
-        ].map((stat) => {
+        ].map((stat, i) => {
           const Icon = stat.icon
           return (
-            <Card key={stat.label} className="!p-4 !rounded-2xl text-center">
-              <div className={`w-10 h-10 rounded-xl ${stat.bg} flex items-center justify-center mx-auto mb-2`}>
-                <Icon size={20} className={stat.color} />
-              </div>
-              <p className="text-2xl font-bold text-retro-text">{stat.value}</p>
-              <p className="text-xs text-retro-text-secondary mt-0.5">{stat.label}</p>
-            </Card>
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                delay: 0.5 + i * 0.1,
+                duration: 0.4,
+                ease: [0.34, 1.56, 0.64, 1]
+              }}
+            >
+              <Card className="!p-4 !rounded-2xl text-center hover:scale-105 transition-transform duration-200">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.7 + i * 0.1, type: 'spring', stiffness: 200 }}
+                  className={`w-10 h-10 rounded-xl ${stat.bg} flex items-center justify-center mx-auto mb-2`}
+                >
+                  <Icon size={20} className={stat.color} />
+                </motion.div>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8 + i * 0.1 }}
+                  className="text-2xl font-bold text-retro-text"
+                >
+                  {stat.value}
+                </motion.p>
+                <p className="text-xs text-retro-text-secondary mt-0.5">{stat.label}</p>
+              </Card>
+            </motion.div>
           )
         })}
       </div>
@@ -162,18 +238,34 @@ export function ClosedSessionView({ sessionId, sessionTitle }: ClosedSessionView
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
           {participants.map((p, i) => (
-            <Card key={p.user_id} className="!p-4 !rounded-2xl text-center">
-              <div className={`w-12 h-12 rounded-full ${avatarColors[i % avatarColors.length]} flex items-center justify-center mx-auto mb-2 text-lg font-bold`}>
-                {(p.profiles?.name || 'U').charAt(0).toUpperCase()}
-              </div>
-              <p className="text-sm font-semibold text-retro-text truncate">{p.profiles?.name || 'Utente'}</p>
-              {p.role === 'organizer' && (
-                <div className="flex items-center justify-center gap-1 mt-1">
-                  <Crown size={10} className="text-amber-500" />
-                  <span className="text-[10px] font-medium text-amber-600">Organizzatore</span>
+            <motion.div
+              key={p.user_id}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.2 + i * 0.05, duration: 0.3 }}
+            >
+              <Card className="!p-4 !rounded-2xl text-center group hover:scale-105 transition-all duration-200 relative">
+                <div className={`w-12 h-12 rounded-full ${avatarColors[i % avatarColors.length]} flex items-center justify-center mx-auto mb-2 text-lg font-bold`}>
+                  {(p.profiles?.name || 'U').charAt(0).toUpperCase()}
                 </div>
-              )}
-            </Card>
+                <p className="text-sm font-semibold text-retro-text truncate">{p.profiles?.name || 'Utente'}</p>
+                {p.role === 'organizer' && (
+                  <div className="flex items-center justify-center gap-1 mt-1">
+                    <Crown size={10} className="text-amber-500" />
+                    <span className="text-[10px] font-medium text-amber-600">Organizzatore</span>
+                  </div>
+                )}
+
+                {/* Applause button */}
+                <button
+                  onClick={() => handleApplause(p.user_id)}
+                  className="mt-2 w-full py-1.5 rounded-lg bg-gradient-to-r from-amber-100 to-orange-100 hover:from-amber-200 hover:to-orange-200 text-amber-700 text-xs font-medium transition-all hover:scale-105 flex items-center justify-center gap-1"
+                >
+                  <span>👏</span>
+                  <span>{applause[p.user_id] || 0}</span>
+                </button>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </div>
