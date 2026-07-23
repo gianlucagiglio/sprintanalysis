@@ -2,6 +2,18 @@
 @import '@fontsource/jetbrains-mono/400.css';
 @import '@fontsource/jetbrains-mono/600.css';
 
+/* === NEW: Glassmorphism Fonts === */
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+@import '@fontsource/open-sans/400.css';
+@import '@fontsource/open-sans/500.css';
+@import '@fontsource/open-sans/600.css';
+
+/* === NEW: Vibrant Blocks Font === */
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -233,4 +245,80 @@ body {
 
 .animate-scale-in {
   animation: scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ========================================
+   PHASE 1: GLASS & PLAY DESIGN SYSTEM
+   Hybrid: Glassmorphism (Core) + Vibrant Blocks (Gamification)
+   ======================================== */
+
+:root {
+  /* === SHARED BASE COLORS === */
+  --color-primary: #2563EB;
+  --color-primary-light: #3B82F6;
+  --color-cta: #F97316;
+  --color-bg: #F8FAFC;
+  --color-text: #1E293B;
+  --color-text-secondary: #64748B;
+
+  /* === GLASSMORPHISM TOKENS === */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-bg-hover: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --backdrop-blur: 10px;
+  --backdrop-blur-strong: 20px;
+  --transition-glass: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* === VIBRANT BLOCKS TOKENS === */
+  --vibrant-glad: #10B981;
+  --vibrant-mad: #EF4444;
+  --vibrant-purple: #8B5CF6;
+  --vibrant-yellow: #F59E0B;
+  --vibrant-blue: #2563EB;
+  --block-gap: 48px;
+  --block-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  --transition-vibrant: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* === GLASSMORPHISM UTILITIES === */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--backdrop-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: var(--transition-glass);
+}
+
+.glass-card:hover {
+  background: var(--glass-bg-hover);
+}
+
+.glass-backdrop {
+  backdrop-filter: blur(var(--backdrop-blur-strong));
+  -webkit-backdrop-filter: blur(var(--backdrop-blur-strong));
+}
+
+/* === VIBRANT BLOCKS UTILITIES === */
+.vibrant-block {
+  transition: var(--transition-vibrant);
+  box-shadow: var(--block-shadow);
+}
+
+.vibrant-block:hover {
+  transform: scale(1.05);
+}
+
+.vibrant-bounce {
+  animation: bounce-vibrant 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes bounce-vibrant {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }

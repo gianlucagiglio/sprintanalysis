@@ -57,7 +57,23 @@ export default {
           },
 
           sidebar: '#F1F5F9',
-        }
+        },
+
+        // === GLASS & PLAY DESIGN SYSTEM ===
+        glass: {
+          primary: {
+            DEFAULT: '#2563EB',
+            light: '#3B82F6',
+          },
+          cta: '#F97316',
+          vibrant: {
+            glad: '#10B981',
+            mad: '#EF4444',
+            purple: '#8B5CF6',
+            yellow: '#F59E0B',
+            blue: '#2563EB',
+          },
+        },
       },
       boxShadow: {
         'soft': '0 1px 2px 0 rgb(0 0 0 / 0.05), 0 1px 3px 0 rgb(0 0 0 / 0.08)',
@@ -72,7 +88,9 @@ export default {
         '2xl': '16px',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Open Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['Poppins', 'sans-serif'],
+        display: ['Righteous', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
     },

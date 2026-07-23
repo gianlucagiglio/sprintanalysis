@@ -31,7 +31,16 @@
       "Bash(winget install:*)",
       "Bash(for file in ActionsPage.tsx LeaderboardPage.tsx MetricsPage.tsx ProfilePage.tsx QuizThemesPage.tsx TeamPage.tsx TeamsPage.tsx ChangelogPage.tsx)",
       "Bash(do grep -n \"text-2xl.*font-bold\" \"$file\")",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(python3:*)",
+      "Bash(where:*)",
+      "Bash(\"C:\\\\Users\\\\Gianluca\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\python.exe\" scripts/search.py \"team collaboration productivity gamification agile retrospective saas\" --design-system -p \"RetroBoard\" -f markdown)",
+      "Bash(\"C:\\\\Program Files\\\\Python312\\\\python.exe\" --version)",
+      "Bash(\"$LOCALAPPDATA/Programs/Python/Python312/python.exe\" scripts/search.py \"team collaboration productivity gamification agile retrospective saas\" --design-system -p \"RetroBoard\" -f markdown)",
+      "Bash(\"$LOCALAPPDATA/Programs/Python/Python312/python.exe\" scripts/search.py \"modern gradient saas professional team\" --design-system -p \"RetroBoard Alt 1\" -f markdown)",
+      "Bash(\"$LOCALAPPDATA/Programs/Python/Python312/python.exe\" scripts/search.py \"vibrant gamification energetic team engagement\" --design-system -p \"RetroBoard Alt 2\" -f markdown)",
+      "Bash(\"$LOCALAPPDATA/Programs/Python/Python312/python.exe\" scripts/search.py \"soft depth modern saas productivity collaborative\" --design-system -p \"RetroBoard Alt 3\" -f markdown)",
+      "Bash(\"$LOCALAPPDATA/Programs/Python/Python312/python.exe\" scripts/search.py \"gradient premium elevated sophisticated team\" --design-system -p \"RetroBoard Alt 4\" -f markdown)"
     ]
   }
 }
