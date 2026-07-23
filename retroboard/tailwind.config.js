@@ -8,30 +8,65 @@ export default {
     extend: {
       colors: {
         retro: {
-          bg: '#F8FAFC',
-          'bg-warm': '#FEFCE8',
+          // === BACKGROUNDS ===
+          bg: '#F9FAFB',
+          'bg-warm': '#FFFBF5',
           card: '#FFFFFF',
-          primary: '#6366F1',
-          'primary-hover': '#4F46E5',
+          surface: '#F3F4F6',
+
+          // === PRIMARY BRAND (Deep Indigo with personality) ===
+          primary: {
+            50: '#EEF2FF',
+            100: '#E0E7FF',
+            400: '#818CF8',
+            DEFAULT: '#6366F1',
+            500: '#6366F1',
+            600: '#4F46E5',
+            700: '#4338CA',
+          },
           'primary-light': '#EEF2FF',
-          glad: '#10B981',
-          'glad-light': '#ECFDF5',
-          sad: '#F59E0B',
-          'sad-light': '#FFFBEB',
-          mad: '#EF4444',
-          'mad-light': '#FEF2F2',
-          text: '#0F172A',
-          'text-secondary': '#64748B',
-          border: '#E2E8F0',
+          'primary-hover': '#4F46E5',
+
+          // === MOOD STATES (più sofisticati) ===
+          glad: {
+            DEFAULT: '#059669',
+            light: '#ECFDF5',
+            glow: '#10B981',
+          },
+          sad: {
+            DEFAULT: '#D97706',
+            light: '#FFFBEB',
+            glow: '#F59E0B',
+          },
+          mad: {
+            DEFAULT: '#DC2626',
+            light: '#FEF2F2',
+            glow: '#EF4444',
+          },
+
+          // === NEUTRALS (improved hierarchy) ===
+          text: {
+            DEFAULT: '#111827',
+            secondary: '#6B7280',
+            tertiary: '#9CA3AF',
+          },
+
+          border: {
+            DEFAULT: '#E5E7EB',
+            strong: '#D1D5DB',
+          },
+
           sidebar: '#F1F5F9',
-          surface: '#F8FAFC',
         }
       },
       boxShadow: {
-        'soft': '0 1px 2px 0 rgb(0 0 0 / 0.03), 0 1px 3px 0 rgb(0 0 0 / 0.06)',
-        'card': '0 1px 3px 0 rgb(0 0 0 / 0.04), 0 2px 8px 0 rgb(0 0 0 / 0.04)',
-        'card-hover': '0 4px 12px 0 rgb(0 0 0 / 0.08), 0 1px 3px 0 rgb(0 0 0 / 0.04)',
-        'float': '0 8px 24px 0 rgb(0 0 0 / 0.12)',
+        'soft': '0 1px 2px 0 rgb(0 0 0 / 0.05), 0 1px 3px 0 rgb(0 0 0 / 0.08)',
+        'card': '0 2px 4px 0 rgb(0 0 0 / 0.06), 0 4px 12px 0 rgb(0 0 0 / 0.08)',
+        'card-hover': '0 8px 16px 0 rgb(0 0 0 / 0.12), 0 2px 6px 0 rgb(0 0 0 / 0.08)',
+        'float': '0 12px 32px 0 rgb(0 0 0 / 0.16)',
+        'primary': '0 4px 16px 0 rgb(99 102 241 / 0.4)',
+        'glad': '0 4px 12px 0 rgb(5 150 105 / 0.3)',
+        'mad': '0 4px 12px 0 rgb(220 38 38 / 0.3)',
       },
       borderRadius: {
         '2xl': '16px',
