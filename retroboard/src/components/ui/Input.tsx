@@ -16,13 +16,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <div className="relative">
         <input
           ref={ref}
-          className={`w-full rounded-xl border bg-white px-4 py-2.5 text-sm
+          className={`w-full rounded-xl border bg-white/70 backdrop-blur-sm px-4 py-2.5 text-sm
             text-retro-text-DEFAULT placeholder:text-retro-text-tertiary
             transition-all duration-200 ease-out
-            focus:outline-none focus:shadow-soft
+            focus:outline-none focus:shadow-soft focus:bg-white/90
             ${error
-              ? 'border-retro-mad pr-10 focus:ring-4 focus:ring-retro-mad/20 focus:border-retro-mad'
-              : 'border-retro-border focus:border-retro-primary-600 focus:ring-4 focus:ring-retro-primary-100'
+              ? 'border-glass-vibrant-mad pr-10 focus:ring-4 focus:ring-glass-vibrant-mad/20 focus:border-glass-vibrant-mad'
+              : 'border-white/40 focus:border-glass-primary focus:ring-4 focus:ring-glass-primary/10'
             } ${className}`}
           {...props}
         />

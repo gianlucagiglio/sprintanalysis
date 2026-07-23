@@ -121,7 +121,7 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
             <select
               value={teamId}
               onChange={(e) => setTeamId(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-retro-text text-sm transition-all duration-200 focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10"
+              className="w-full px-4 py-2.5 rounded-xl border border-white/40 bg-white/70 backdrop-blur-sm text-retro-text text-sm transition-all duration-200 focus:outline-none focus:border-glass-primary focus:ring-4 focus:ring-glass-primary/10 focus:bg-white/90"
             >
               <option value="">Nessun team</option>
               {teams.map((t) => (
@@ -137,7 +137,7 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
           <select
             value={quizCategory}
             onChange={(e) => handleCategoryChange(e.target.value as QuizCategory)}
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-retro-text text-sm transition-all duration-200 focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10"
+            className="w-full px-4 py-2.5 rounded-xl border border-white/40 bg-white/70 backdrop-blur-sm text-retro-text text-sm transition-all duration-200 focus:outline-none focus:border-glass-primary focus:ring-4 focus:ring-glass-primary/10 focus:bg-white/90"
           >
             {Object.entries(quizCategories).map(([key, label]) => (
               <option key={key} value={key}>{label}</option>
@@ -151,7 +151,7 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
           <select
             value={quizTheme}
             onChange={(e) => setQuizTheme(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-retro-text text-sm transition-all duration-200 focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10"
+            className="w-full px-4 py-2.5 rounded-xl border border-white/40 bg-white/70 backdrop-blur-sm text-retro-text text-sm transition-all duration-200 focus:outline-none focus:border-glass-primary focus:ring-4 focus:ring-glass-primary/10 focus:bg-white/90"
           >
             {filteredThemes.map((t) => (
               <option key={t.id} value={t.id}>{t.label}</option>
@@ -172,7 +172,7 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
             step={1}
             value={maxVotes}
             onChange={(e) => setMaxVotes(Math.min(20, Math.max(0, parseInt(e.target.value) || 0)))}
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-retro-text text-sm transition-all duration-200 focus:outline-none focus:border-retro-primary focus:ring-4 focus:ring-retro-primary/10"
+            className="w-full px-4 py-2.5 rounded-xl border border-white/40 bg-white/70 backdrop-blur-sm text-retro-text text-sm transition-all duration-200 focus:outline-none focus:border-glass-primary focus:ring-4 focus:ring-glass-primary/10 focus:bg-white/90"
           />
           <p className="text-xs text-retro-text-secondary">
             {maxVotes === 0 ? 'Votazione disabilitata' : `Ogni partecipante potrà esprimere ${maxVotes} voti`}
