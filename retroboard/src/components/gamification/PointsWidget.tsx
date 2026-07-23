@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Trophy, TrendingUp, RefreshCw } from 'lucide-react'
@@ -12,6 +13,16 @@ interface PointsWidgetProps {
 
 export function PointsWidget({ teamId, compact = false }: PointsWidgetProps) {
   const { userPoints, loading, refetch } = useGamification(teamId)
+  const [showGlow, setShowGlow] = useState(false)
+
+  // Flash glow when points increase
+  useEffect(() => {
+    if (userPoints && userPoints.points > 0) {
+      setShowGlow(true)
+      const timer = setTimeout(() => setShowGlow(false), 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [userPoints?.points])
 
   if (loading) {
     return (
@@ -38,7 +49,7 @@ export function PointsWidget({ teamId, compact = false }: PointsWidgetProps) {
           Lv{userPoints.level}
         </span>
         <span className="text-xs text-amber-600">•</span>
-        <span className="text-xs font-semibold font-mono text-amber-700">
+        <span className={`text-xs font-semibold font-mono text-amber-700 ${showGlow ? 'animate-pulse-glow' : ''}`}>
           {userPoints.points} pt
         </span>
       </div>
@@ -58,7 +69,9 @@ export function PointsWidget({ teamId, compact = false }: PointsWidgetProps) {
                 Livello {userPoints.level}
               </p>
               <p className="text-xs text-amber-600">
-                <span className="font-mono">{userPoints.points.toLocaleString()}</span> punti
+                <span className={`font-mono ${showGlow ? 'animate-pulse-glow' : ''}`}>
+                  {userPoints.points.toLocaleString()}
+                </span> punti
               </p>
             </div>
           </div>

@@ -92,7 +92,7 @@ export function BadgeUnlockModal() {
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: 'spring', duration: 0.5, delay: 0.3 }}
-                  className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gradient-to-br from-amber-100 to-yellow-100 border-4 border-amber-300 shadow-lg mb-6"
+                  className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gradient-to-br from-amber-100 to-yellow-100 border-4 border-amber-300 shadow-lg mb-6 animate-pulse-glow"
                 >
                   <span className="text-6xl">{currentBadge.badge.icon}</span>
                 </motion.div>
