@@ -2,6 +2,90 @@
 
 All notable changes to RetroBoard will be documented in this file.
 
+## [1.16.0] - 2026-07-23
+
+### 🐛 Bug Fixes - Critical Performance & Stability
+
+**Memory Leaks & Resource Management**:
+- **authStore**: Fix memory leak da event listeners mai rimossi
+  - Aggiunto `resetAuthInitialization()` per cleanup subscription auth
+  - Aggiunto cleanup per listener `visibilitychange` del document
+  - Previene accumulo di listener multipli su reload/HMR
+
+- **useQuizThemeUsage**: Fix channel Realtime zombie
+  - Aggiunto `supabase.removeChannel(channel)` mancante
+  - Previene accumulo di channel non chiusi
+
+**Performance - Polling Ridondante Rimosso**:
+- Rimosso polling ogni 3 secondi da 6 hooks (mantiene solo Realtime)
+  - `useComments`: rimosso `setInterval(fetchComments, 3000)`
+  - `useVotes`: rimosso polling ridondante
+  - `useActions`: rimosso polling ridondante
+  - `useMood`: rimosso polling ridondante
+  - `useTeamMood`: rimosso polling ridondante
+  - `useGlobalActions`: rimosso polling ridondante
+- **Impatto**: Riduzione ~200+ query/minuto → 0 polling (solo Realtime push)
+
+**Database Query Optimization**:
+- **Dashboard**: Fix N+1 query pattern su participant counts
+  - Prima: 1 query per sessione per contare partecipanti (1+N queries)
+  - Dopo: 2 query totali indipendentemente dal numero di sessioni
+  - Implementato batch fetch con `.in()` e count map
+  - Fix applicato sia per super admin che utenti normali
+
+**Realtime Subscriptions**:
+- **useComments**: Fix infinite loop da `fetchComments` in dependency array
+  - Rimosso `fetchComments` dalle deps del subscription useEffect
+  - Aggiunto commento esplicativo + eslint-disable
+  - Previene loop: sections change → fetchComments recreated → subscription recreated
+
+**Race Conditions - Points Duplication Prevention**:
+- **useVotes**: Fix doppi punti su doppio click voto
+  - Aggiunto controllo race-safe: query fresca DB per count voti DOPO insert
+  - Punti assegnati solo se count reale ≤ maxVotes dopo verifica DB
+
+- **useMood**: Fix doppi punti su doppio click mood personale
+  - Rimosso check su stato locale (race-prone)
+  - Aggiunto check su `point_transactions` DOPO upsert
+  - Punti assegnati solo se nessuna transazione esistente
+
+- **useTeamMood**: Fix doppi punti su doppio click mood team
+  - Stesso pattern di useMood per prevenire race conditions
+  - Verifica `point_transactions` post-operazione invece di pre-operazione
+
+### 🔒 Security Enhancements
+
+- **RLS Policies Gamification**: Aggiunte policies mancanti su tabelle sensibili
+  - Migration `017_rls_gamification.sql`
+  - `user_points`: policies per visualizzazione propri punti + punti team
+  - `point_transactions`: policy per visualizzazione proprie transazioni
+  - `user_badges`: policies per visualizzazione propri badge + badge team
+  - `badge_definitions`: policy read-only per tutti (già ok)
+  - Tutte le tabelle ora protette da RLS (precedentemente esposte)
+
+### 📚 Documentation
+
+- **CLAUDE.md**: Aggiunto file di documentazione architetturale completo
+  - Overview progetto e stack tecnologico
+  - Comandi sviluppo e setup environment
+  - Architettura backend (Supabase, RLS, Realtime)
+  - State management patterns (Zustand)
+  - Custom hooks patterns e best practices
+  - Session workflow (steps 0-5, fasi)
+  - Sistema gamification (punti, badge, leaderboard)
+  - Patterns critici: race condition prevention, memory leaks, N+1 queries
+  - Database migrations patterns
+  - Troubleshooting guide
+
+### 🔧 Technical Debt Reduction
+
+- Eliminati ~200 query ridondanti al minuto (polling removal)
+- Ridotte query dashboard da O(N) a O(1) rispetto al numero di sessioni
+- Chiusi 7 task critici identificati da swarm analysis
+- Implementato pattern race-safe per tutte le operazioni di point awarding
+
+---
+
 ## [1.15.0] - 2026-07-22
 
 ### ✨ Added
