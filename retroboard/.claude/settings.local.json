@@ -26,7 +26,12 @@
       "Bash(git restore:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(npx impeccable:*)"
+      "Bash(npx impeccable:*)",
+      "Bash(python scripts/search.py:*)",
+      "Bash(winget install:*)",
+      "Bash(for file in ActionsPage.tsx LeaderboardPage.tsx MetricsPage.tsx ProfilePage.tsx QuizThemesPage.tsx TeamPage.tsx TeamsPage.tsx ChangelogPage.tsx)",
+      "Bash(do grep -n \"text-2xl.*font-bold\" \"$file\")",
+      "Bash(done)"
     ]
   }
 }

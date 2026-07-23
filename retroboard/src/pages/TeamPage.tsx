@@ -185,7 +185,7 @@ export function TeamPage() {
             >
               <ArrowLeft size={20} />
             </button>
-            <h1 className="text-2xl font-bold text-retro-text">{team.name}</h1>
+            <h1 className="text-2xl font-bold tracking-display text-retro-text">{team.name}</h1>
             {myRole && (
               <Badge variant="primary">{roleLabels[myRole]}</Badge>
             )}

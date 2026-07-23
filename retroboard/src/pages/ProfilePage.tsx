@@ -16,7 +16,7 @@ export function ProfilePage() {
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold text-retro-text flex items-center gap-2">
+          <h1 className="text-2xl font-bold tracking-display text-retro-text flex items-center gap-2">
             <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
               <User size={20} className="text-white" />
             </span>
@@ -60,7 +60,7 @@ export function ProfilePage() {
                         </p>
                       </div>
                     </div>
-                    <span className="text-sm font-bold text-emerald-600">
+                    <span className="text-sm font-bold font-mono text-emerald-600">
                       +{transaction.points}
                     </span>
                   </div>
@@ -128,7 +128,7 @@ function StatCard({ icon, label, value, color }: StatCardProps) {
         {icon}
         <p className="text-xs text-retro-text-secondary font-medium">{label}</p>
       </div>
-      <p className="text-2xl font-bold text-retro-text">{value}</p>
+      <p className="text-2xl font-bold font-mono text-retro-text">{value}</p>
     </div>
   )
 }

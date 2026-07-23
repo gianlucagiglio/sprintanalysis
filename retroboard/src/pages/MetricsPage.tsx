@@ -24,7 +24,7 @@ export function MetricsPage() {
     <AppLayout>
       <div className="max-w-5xl mx-auto space-y-8">
         <div>
-          <h1 className="text-2xl font-bold text-retro-text flex items-center gap-2">
+          <h1 className="text-2xl font-bold tracking-display text-retro-text flex items-center gap-2">
             <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-retro-primary to-violet-500 flex items-center justify-center">
               <BarChart3 size={20} className="text-white" />
             </span>

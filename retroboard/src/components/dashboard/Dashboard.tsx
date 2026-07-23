@@ -240,7 +240,7 @@ export function Dashboard() {
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold text-retro-text">
+          <h1 className="text-xl md:text-2xl font-bold tracking-display text-retro-text">
             {isSuperAdmin() ? 'Tutte le retrospettive' : 'Le tue retrospettive'}
           </h1>
           <p className="text-sm text-retro-text-secondary mt-1">
@@ -318,7 +318,7 @@ export function Dashboard() {
           <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-retro-primary-400 to-indigo-600 flex items-center justify-center mx-auto mb-6 shadow-primary animate-pulse-glow">
             <FolderOpen size={36} className="text-white" />
           </div>
-          <p className="text-xl font-bold text-retro-text-DEFAULT mb-2">
+          <p className="text-xl font-bold tracking-display text-retro-text-DEFAULT mb-2">
             Nessuna retrospettiva trovata
           </p>
           <p className="text-sm text-retro-text-secondary mb-8 max-w-sm mx-auto">

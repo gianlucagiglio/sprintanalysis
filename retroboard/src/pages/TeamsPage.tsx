@@ -55,7 +55,7 @@ export function TeamsPage() {
     <AppLayout>
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-retro-text">I miei Team</h1>
+          <h1 className="text-2xl font-bold tracking-display text-retro-text">I miei Team</h1>
           {canCreate(user?.email) && (
             <Button onClick={() => setShowCreate(true)}>
               <Plus size={16} />

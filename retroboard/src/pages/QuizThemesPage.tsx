@@ -57,7 +57,7 @@ export function QuizThemesPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-retro-text mb-2">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-display text-retro-text mb-2">
               📚 Temi Quiz
             </h1>
             <p className="text-sm text-retro-text-secondary">

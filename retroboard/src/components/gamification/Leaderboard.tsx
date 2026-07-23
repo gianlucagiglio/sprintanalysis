@@ -88,7 +88,7 @@ export function Leaderboard({ teamId, limit = 10 }: LeaderboardProps) {
     if (rank === 1) return <Crown size={20} className="text-yellow-500" />
     if (rank === 2) return <Medal size={18} className="text-gray-400" />
     if (rank === 3) return <Medal size={18} className="text-amber-600" />
-    return <span className="text-sm font-bold text-retro-text-secondary">{rank}</span>
+    return <span className="text-sm font-bold font-mono text-retro-text-secondary">{rank}</span>
   }
 
   const getRankColor = (rank: number) => {
@@ -128,13 +128,13 @@ export function Leaderboard({ teamId, limit = 10 }: LeaderboardProps) {
                   {entry.profile?.name || 'Utente'}
                 </p>
                 <p className="text-xs text-retro-text-secondary">
-                  Livello {entry.level}
+                  Livello <span className="font-mono">{entry.level}</span>
                 </p>
               </div>
 
               <Badge
                 variant={isTopThree ? 'primary' : 'default'}
-                className={isTopThree ? '!bg-white !text-retro-text !border-current' : ''}
+                className={`${isTopThree ? '!bg-white !text-retro-text !border-current' : ''} !font-mono`}
               >
                 <Trophy size={12} className="mr-1" />
                 {entry.points.toLocaleString()}

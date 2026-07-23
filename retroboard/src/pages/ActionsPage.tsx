@@ -338,7 +338,7 @@ export function ActionsPage() {
             <Badge className="!bg-white/20 !text-white !backdrop-blur-sm mb-4">
               Azioni Globali
             </Badge>
-            <h1 className="text-2xl md:text-3xl font-bold mb-1">Piano d'azione</h1>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-display mb-1">Piano d'azione</h1>
             <p className="text-white/70 text-sm">
               Tutte le azioni da tutte le retrospettive in un unico posto
             </p>

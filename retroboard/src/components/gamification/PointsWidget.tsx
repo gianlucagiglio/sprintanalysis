@@ -34,11 +34,11 @@ export function PointsWidget({ teamId, compact = false }: PointsWidgetProps) {
     return (
       <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-full border border-amber-200">
         <Trophy size={14} className="text-amber-600" />
-        <span className="text-xs font-bold text-amber-900">
+        <span className="text-xs font-bold font-mono text-amber-900">
           Lv{userPoints.level}
         </span>
         <span className="text-xs text-amber-600">•</span>
-        <span className="text-xs font-semibold text-amber-700">
+        <span className="text-xs font-semibold font-mono text-amber-700">
           {userPoints.points} pt
         </span>
       </div>
@@ -54,11 +54,11 @@ export function PointsWidget({ teamId, compact = false }: PointsWidgetProps) {
               <Trophy size={20} className="text-white" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-amber-900">
+              <p className="text-2xl font-bold font-mono text-amber-900">
                 Livello {userPoints.level}
               </p>
               <p className="text-xs text-amber-600">
-                {userPoints.points.toLocaleString()} punti
+                <span className="font-mono">{userPoints.points.toLocaleString()}</span> punti
               </p>
             </div>
           </div>
@@ -71,7 +71,7 @@ export function PointsWidget({ teamId, compact = false }: PointsWidgetProps) {
           >
             <RefreshCw size={16} />
           </button>
-          <Badge variant="default" className="!bg-amber-100 !text-amber-700 !border-amber-300">
+          <Badge variant="default" className="!bg-amber-100 !text-amber-700 !border-amber-300 !font-mono">
             <TrendingUp size={12} className="mr-1" />
             {pointsToNext} per Lv{userPoints.level + 1}
           </Badge>
@@ -84,7 +84,7 @@ export function PointsWidget({ teamId, compact = false }: PointsWidgetProps) {
           <span className="text-amber-600 font-medium">
             Progresso livello
           </span>
-          <span className="text-amber-900 font-bold">{progress}%</span>
+          <span className="text-amber-900 font-bold font-mono">{progress}%</span>
         </div>
         <div className="h-3 bg-amber-100 rounded-full overflow-hidden shadow-inner">
           <motion.div

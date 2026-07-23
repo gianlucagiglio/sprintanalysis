@@ -62,7 +62,7 @@ export function LeaderboardPage() {
             <Badge className="!bg-white/20 !text-white !backdrop-blur-sm mb-4">
               Classifiche Quiz
             </Badge>
-            <h1 className="text-2xl md:text-3xl font-bold mb-1">Hall of Fame</h1>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-display mb-1">Hall of Fame</h1>
             <p className="text-white/70 text-sm">
               Classifica globale e vincitori per ogni retrospettiva
             </p>
