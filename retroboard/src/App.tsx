@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import { BadgeUnlockedToast } from '@/components/gamification/BadgeUnlockedToast'
+import { ScrollToTop } from '@/components/ui/ScrollToTop'
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
@@ -28,6 +29,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <BadgeUnlockedToast />
+      <ScrollToTop />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
