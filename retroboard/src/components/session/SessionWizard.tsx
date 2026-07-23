@@ -165,7 +165,12 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
             </button>
           </div>
           {isOrganizer && (
-            <Button size="sm" variant="danger" onClick={closeSession} className="shrink-0">
+            <Button
+              size="sm"
+              variant="danger"
+              onClick={closeSession}
+              className={`shrink-0 ${allDone && currentStep === 4 ? 'shadow-mad animate-pulse-glow' : ''}`}
+            >
               <LogOut size={14} />
               <span className="hidden sm:inline">Chiudi retro</span>
             </Button>
@@ -259,7 +264,9 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
             <div className="flex items-center gap-2">
               <div className="w-20 h-1.5 bg-slate-200 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full rounded-full bg-emerald-500"
+                  className={`h-full rounded-full bg-emerald-500 ${
+                    progressPercent === 100 ? 'shadow-glad animate-pulse-glow' : ''
+                  }`}
                   initial={false}
                   animate={{ width: `${progressPercent}%` }}
                   transition={{ duration: 0.4, ease: 'easeOut' }}

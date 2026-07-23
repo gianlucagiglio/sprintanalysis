@@ -41,7 +41,7 @@ export function BadgeUnlockedToast() {
         transition={{ type: 'spring', duration: 0.6 }}
         className="fixed top-4 left-1/2 -translate-x-1/2 z-[200] w-full max-w-md px-4"
       >
-        <div className="relative bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl shadow-2xl p-6 text-white overflow-hidden">
+        <div className="relative bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl shadow-2xl p-6 text-white overflow-hidden animate-pulse-glow">
           {/* Background decoration */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent_70%)]" />
 

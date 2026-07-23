@@ -37,7 +37,9 @@ export function Sidebar() {
         <div className="relative overflow-hidden">
           <div className="h-1.5 rounded-full bg-retro-border overflow-hidden">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-retro-primary to-violet-500 transition-all duration-500"
+              className={`h-full rounded-full bg-gradient-to-r from-retro-primary to-violet-500 transition-all duration-500 ${
+                progressPercent === 100 ? 'shadow-primary animate-pulse-glow' : ''
+              }`}
               style={{ width: `${progressPercent}%` }}
             />
           </div>
