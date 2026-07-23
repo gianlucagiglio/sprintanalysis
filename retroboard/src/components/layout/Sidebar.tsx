@@ -34,11 +34,16 @@ export function Sidebar() {
     <>
       {/* Progress bar */}
       <div className="mb-4">
-        <div className="h-1.5 rounded-full bg-retro-border overflow-hidden">
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-retro-primary to-violet-500 transition-all duration-500"
-            style={{ width: `${progressPercent}%` }}
-          />
+        <div className="relative overflow-hidden">
+          <div className="h-1.5 rounded-full bg-retro-border overflow-hidden">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-retro-primary to-violet-500 transition-all duration-500"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+          {progressPercent > 0 && progressPercent < 100 && (
+            <div className="absolute inset-0 animate-shine" />
+          )}
         </div>
       </div>
 

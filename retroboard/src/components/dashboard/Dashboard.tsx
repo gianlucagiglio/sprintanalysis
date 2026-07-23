@@ -280,23 +280,23 @@ export function Dashboard() {
 
       {/* ── Stats + Filter tabs ── */}
       <div className="flex items-center gap-1.5 bg-slate-100 rounded-xl p-1">
-        {filterTabs.map((tab) => {
+        {filterTabs.map((tab, idx) => {
           const Icon = tab.icon
           const isActive = filter === tab.key
           return (
             <button
               key={tab.key}
               onClick={() => setFilter(tab.key)}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 animate-slide-right stagger-${idx + 1} ${
                 isActive
-                  ? 'bg-white shadow-soft text-retro-text'
+                  ? 'bg-white shadow-soft text-retro-text scale-105'
                   : 'text-retro-text-secondary hover:text-retro-text'
               }`}
             >
               <Icon size={14} />
               {tab.label}
-              <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold ${
-                isActive ? 'bg-retro-primary-light text-retro-primary' : 'bg-slate-200 text-retro-text-secondary'
+              <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold transition-transform ${
+                isActive ? 'bg-retro-primary-light text-retro-primary scale-110' : 'bg-slate-200 text-retro-text-secondary'
               }`}>
                 {tab.count}
               </span>
@@ -315,16 +315,34 @@ export function Dashboard() {
         </div>
       ) : sessions.length === 0 ? (
         <Card className="!rounded-2xl text-center !py-16">
-          <div className="w-16 h-16 rounded-2xl bg-retro-primary-light flex items-center justify-center mx-auto mb-4">
-            <FolderOpen size={28} className="text-retro-primary" />
+          <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-retro-primary-400 to-indigo-600 flex items-center justify-center mx-auto mb-6 shadow-primary animate-pulse-glow">
+            <FolderOpen size={36} className="text-white" />
           </div>
-          <p className="text-lg font-semibold text-retro-text mb-1">Nessuna retrospettiva</p>
-          <p className="text-sm text-retro-text-secondary mb-6">Crea una nuova sessione o unisciti a una esistente</p>
+          <p className="text-xl font-bold text-retro-text-DEFAULT mb-2">
+            Nessuna retrospettiva trovata
+          </p>
+          <p className="text-sm text-retro-text-secondary mb-8 max-w-sm mx-auto">
+            Crea la tua prima sessione per iniziare a raccogliere feedback dal team,
+            oppure unisciti a una retrospettiva esistente.
+          </p>
           {canCreate(user?.email) && (
-            <Button onClick={() => setShowCreate(true)}>
-              <Plus size={16} />
-              Crea la prima sessione
-            </Button>
+            <div className="flex items-center justify-center gap-3">
+              <Button onClick={() => setShowCreate(true)} size="lg">
+                <Plus size={18} />
+                Crea la prima sessione
+              </Button>
+              <Button
+                variant="secondary"
+                size="lg"
+                onClick={() => {
+                  const input = document.querySelector<HTMLInputElement>('input[placeholder*="ID sessione"]')
+                  input?.focus()
+                }}
+              >
+                <LinkIcon size={18} />
+                Ho un codice
+              </Button>
+            </div>
           )}
         </Card>
       ) : filteredSessions.length === 0 ? (
@@ -349,8 +367,8 @@ export function Dashboard() {
                   </span>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {teamSessions.map((s) => (
-                    <SessionCard key={s.id} session={s} participantCount={s.participant_count} onDelete={handleDelete} />
+                  {teamSessions.map((s, idx) => (
+                    <SessionCard key={s.id} session={s} participantCount={s.participant_count} onDelete={handleDelete} index={idx} />
                   ))}
                 </div>
               </div>
@@ -371,8 +389,8 @@ export function Dashboard() {
                 </div>
               )}
               <div className="grid gap-3 sm:grid-cols-2">
-                {teamMap.get(null)!.map((s) => (
-                  <SessionCard key={s.id} session={s} participantCount={s.participant_count} onDelete={handleDelete} />
+                {teamMap.get(null)!.map((s, idx) => (
+                  <SessionCard key={s.id} session={s} participantCount={s.participant_count} onDelete={handleDelete} index={idx} />
                 ))}
               </div>
             </div>

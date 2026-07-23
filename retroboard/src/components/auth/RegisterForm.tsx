@@ -61,7 +61,7 @@ export function RegisterForm() {
         required
       />
       {error && <p className="text-sm text-retro-mad">{error}</p>}
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Button type="submit" className="w-full" disabled={loading} loading={loading}>
         <UserPlus size={16} />
         {loading ? 'Registrazione...' : 'Registrati'}
       </Button>

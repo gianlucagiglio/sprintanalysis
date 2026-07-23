@@ -15,6 +15,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { ListSkeleton } from '@/components/ui/Skeleton'
 import { useGlobalActions, type ActionWithSession } from '@/hooks/useGlobalActions'
 import { ActionEditModal } from '@/components/kanban/ActionEditModal'
 import {
@@ -345,9 +346,7 @@ export function ActionsPage() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-retro-primary" />
-          </div>
+          <ListSkeleton count={5} />
         ) : actions.length === 0 ? (
           <Card className="!rounded-2xl text-center !py-16">
             <div className="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center mx-auto mb-4">

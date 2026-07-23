@@ -36,7 +36,7 @@ export function ProfilePage() {
         {/* Stats & Leaderboard */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recent Activity */}
-          <Card className="!p-5 !rounded-2xl">
+          <Card className="!p-5 !rounded-2xl animate-slide-up stagger-1">
             <h3 className="text-sm font-semibold text-retro-text mb-4 flex items-center gap-2">
               <TrendingUp size={16} className="text-emerald-500" />
               Attività Recente
@@ -78,7 +78,7 @@ export function ProfilePage() {
         </div>
 
         {/* Quick Stats */}
-        <Card className="!p-5 !rounded-2xl">
+        <Card className="!p-5 !rounded-2xl animate-slide-up stagger-3">
           <h3 className="text-sm font-semibold text-retro-text mb-4">
             Statistiche Veloci
           </h3>

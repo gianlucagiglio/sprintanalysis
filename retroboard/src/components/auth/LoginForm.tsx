@@ -56,7 +56,7 @@ export function LoginForm() {
         </div>
       </div>
       {error && <p className="text-sm text-retro-mad">{error}</p>}
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Button type="submit" className="w-full" disabled={loading} loading={loading}>
         <LogIn size={16} />
         {loading ? 'Accesso...' : 'Accedi'}
       </Button>

@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
 import { Calendar, Users, Trash2, ArrowRight, Play, CheckCircle2 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import type { Session } from '@/types/database'
@@ -51,9 +53,10 @@ interface SessionCardProps {
   session: Session
   participantCount?: number
   onDelete?: (sessionId: string) => void
+  index?: number
 }
 
-export function SessionCard({ session, participantCount, onDelete }: SessionCardProps) {
+export function SessionCard({ session, participantCount, onDelete, index }: SessionCardProps) {
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin)
@@ -61,11 +64,24 @@ export function SessionCard({ session, participantCount, onDelete }: SessionCard
   const status = getSessionStatus(session.current_step)
   const StatusIcon = status.icon
   const progress = stepProgress[session.current_step] || 0
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!confirm('Sei sicuro di voler eliminare questa retrospettiva? L\'azione è irreversibile.')) return
+    setIsDeleting(true)
+    if (onDelete) {
+      await onDelete(session.id)
+    }
+    // No need to setIsDeleting(false) - component will unmount after successful delete
+  }
 
   return (
     <Card
       hover
-      className="!p-0 !rounded-2xl overflow-hidden cursor-pointer group"
+      className={`!p-0 !rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 ease-out animate-slide-up ${
+        index !== undefined ? `stagger-${(index % 5) + 1}` : ''
+      }`}
       onClick={() => navigate(`/session/${session.id}`)}
     >
       {/* Progress bar top */}
@@ -84,16 +100,16 @@ export function SessionCard({ session, participantCount, onDelete }: SessionCard
           </h3>
           <div className="flex items-center gap-1.5 shrink-0">
             {isOrganizer && onDelete && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onDelete(session.id)
-                }}
-                className="p-1.5 rounded-lg text-retro-border hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleDelete}
+                loading={isDeleting}
+                className="!p-1.5 !text-retro-border hover:!text-red-500 hover:!bg-red-50 opacity-0 group-hover:opacity-100"
                 title="Elimina retrospettiva"
               >
                 <Trash2 size={14} />
-              </button>
+              </Button>
             )}
           </div>
         </div>

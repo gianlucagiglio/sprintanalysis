@@ -102,13 +102,14 @@ export function TeamsPage() {
           </Card>
         ) : (
           <div className="grid gap-3">
-            {teams.map((team) => {
+            {teams.map((team, idx) => {
               const RoleIcon = roleIcons[team.my_role]
               return (
                 <Card
                   key={team.id}
                   hover
                   onClick={() => navigate(`/team/${team.id}`)}
+                  className={`animate-slide-up stagger-${(idx % 5) + 1}`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">

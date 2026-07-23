@@ -181,7 +181,7 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
         <div className="text-xs text-retro-text-secondary bg-retro-surface rounded-xl px-4 py-3">
           Sezioni predefinite: {DEFAULT_SECTIONS.map((s) => s.name).join(', ')}
         </div>
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button type="submit" className="w-full" disabled={loading} loading={loading}>
           <Plus size={16} />
           {loading ? 'Creazione...' : 'Crea sessione'}
         </Button>

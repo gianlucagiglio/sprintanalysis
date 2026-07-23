@@ -3,6 +3,7 @@ import { useGlobalQuizStats } from '@/hooks/useGlobalQuizStats'
 import { useAuthStore } from '@/stores/authStore'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { Skeleton } from '@/components/ui/Skeleton'
 import {
   Trophy,
   Medal,
@@ -82,8 +83,15 @@ export function LeaderboardPage() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-retro-primary" />
+          <div className="space-y-2">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                <Skeleton variant="text" width={30} />
+                <Skeleton variant="circular" width={40} height={40} />
+                <Skeleton variant="text" width="40%" className="flex-1" />
+                <Skeleton variant="text" width={60} />
+              </div>
+            ))}
           </div>
         ) : globalLeaderboard.length === 0 ? (
           <Card className="!rounded-2xl text-center !py-16">

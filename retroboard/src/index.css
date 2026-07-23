@@ -119,6 +119,26 @@ body {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
+@keyframes shine {
+  0% {
+    background-position: -100%;
+  }
+  100% {
+    background-position: 200%;
+  }
+}
+
+.animate-shine {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shine 2s ease-in-out infinite;
+}
+
 /* Scale utilities */
 .scale-98 {
   transform: scale(0.98);
