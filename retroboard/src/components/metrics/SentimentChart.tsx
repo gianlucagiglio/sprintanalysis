@@ -5,7 +5,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from 'recharts'
 import { Smile } from 'lucide-react'
@@ -49,9 +48,6 @@ export function SentimentChart({ sessionMoods }: SentimentChartProps) {
     Arrabbiato: s.mad,
     Altro: s.custom,
   }))
-
-  const totals = sessionMoods.map(s => s.glad + s.sad + s.mad + s.custom)
-  const maxTotal = Math.max(...totals)
 
   return (
     <div>

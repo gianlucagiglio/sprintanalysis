@@ -34,7 +34,6 @@ export function CommentSentimentChart({ data }: CommentSentimentChartProps) {
     Neutri: d.neutral,
   }))
 
-  const totals = data.map(d => d.positive + d.negative + d.neutral)
   const totalPositive = data.reduce((sum, d) => sum + d.positive, 0)
   const totalNegative = data.reduce((sum, d) => sum + d.negative, 0)
   const totalNeutral = data.reduce((sum, d) => sum + d.neutral, 0)

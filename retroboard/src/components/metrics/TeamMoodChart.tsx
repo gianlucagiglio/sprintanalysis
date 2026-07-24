@@ -51,7 +51,6 @@ export function TeamMoodChart({ sessionTeamMoods }: TeamMoodChartProps) {
     Scarsa: s.scarsa,
   }))
 
-  const totals = sessionsWithVotes.map(s => s.ottima + s.buona + s.sufficiente + s.scarsa)
   const totalOttima = sessionsWithVotes.reduce((sum, s) => sum + s.ottima, 0)
   const totalBuona = sessionsWithVotes.reduce((sum, s) => sum + s.buona, 0)
   const totalSufficiente = sessionsWithVotes.reduce((sum, s) => sum + s.sufficiente, 0)
