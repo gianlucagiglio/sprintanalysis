@@ -38,13 +38,6 @@ const retroPhaseLabels: Record<string, string> = {
   brainstorming: 'Brainstorming',
 }
 
-const retroPhaseDescriptions: Record<string, string> = {
-  comments: 'Aggiungi le tue idee',
-  voting: 'Vota i più importanti',
-  grouping: 'Raggruppa per tema',
-  brainstorming: 'Discuti e crea azioni',
-}
-
 const retroPhaseOrder = ['comments', 'grouping', 'voting', 'brainstorming'] as const
 
 const moodPhaseLabels: Record<string, string> = {
