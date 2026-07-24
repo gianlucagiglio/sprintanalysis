@@ -26,6 +26,35 @@ interface ChangelogEntry {
 
 const changelog: ChangelogEntry[] = [
   {
+    version: '1.14.3',
+    date: '2026-07-22',
+    type: 'improvement',
+    changes: [
+      {
+        category: 'Badge Showcase - Premium Visual Experience',
+        icon: Sparkles,
+        items: [
+          '🎨 Badge Sbloccati: Gradient vibrante indigo→purple→pink con border 3px',
+          '🔄 Animazione 3D flip all\'ingresso (rotateY -180° → 0°)',
+          '⚡ Spring physics per movimento naturale (stiffness: 200, damping: 15)',
+          '✨ Wiggle effect sull\'hover (oscillazione -5° → +5°)',
+          '💫 Glow effect luminoso dietro il badge con blur-xl',
+          '✨ Shimmer animation che attraversa il badge (0.6s)',
+          '🌟 8 sparkle particles dorate che esplodono sull\'hover',
+          '📐 Badge emoji size aumentato a 4xl per maggiore impatto',
+          '💬 Tooltip gradient con freccia triangolare',
+          '🔍 Scale 1.15x sull\'hover con shadow-2xl',
+          '🔒 Badge Bloccati: Grayscale filter + lock icon overlay',
+          '❓ Mystery badges con emoji punto interrogativo',
+          '📝 Tooltip completo con nome + descrizione dettagliata',
+          '🎭 Gradient slate per differenziare badge bloccati',
+          '⏱️ Stagger animation veloce (delay 0.03s)',
+          '🤫 Tooltip separato per badge segreti',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.14.2',
     date: '2026-07-22',
     type: 'improvement',
@@ -128,12 +157,26 @@ const changelog: ChangelogEntry[] = [
         ],
       },
       {
+        category: 'Navbar Enhancement',
+        icon: Palette,
+        items: [
+          'Logo professionale: sostituito emoji 🔄 con icon RotateCcw in container gradient',
+          'Container gradient indigo→purple→pink con shadow',
+          'Testo gradient matching per coerenza visiva',
+          'Hover effects: scale-105 + shadow-lg sul logo',
+          'Icon bianca strokeWidth 2.5 per maggiore leggibilità',
+          'Menu indicator rimosso: eliminato puntino dot sotto voci menu attive',
+          'Cleanup visual per menu più pulito e minimalista',
+        ],
+      },
+      {
         category: 'Bug Fixes',
         icon: CheckCircle2,
         items: [
           'Risolto errore parsing ClosedSessionView (motion.div chiusura)',
           'Rimossi import inutilizzati (Medal, podiumColors)',
           'Fix TypeScript warnings',
+          'PointsWidget contrast fix completo: Risolto contrasto bianco su giallo - Titolo "Livello X": text-white → text-amber-900, Testo punti: text-white → text-amber-800, Bottone refresh: text-white → text-amber-900 + bg più opaco, Progress bar label: text-white → text-amber-900, Progress bar percentuale: text-white → text-amber-900, Progress bar fill: bg-white → gradient amber-400→yellow-400→amber-500, Progress bar container: bg-white/30 → bg-white/20, Contrasto WCAG AA compliant (≥4.5:1)',
         ],
       },
       {

@@ -2,6 +2,44 @@
 
 All notable changes to RetroBoard will be documented in this file.
 
+## [1.14.3] - 2026-07-22
+
+### 🎨 Enhanced
+
+**BadgeShowcase - Premium Visual Experience**:
+- **Badge Sbloccati**: Esperienza visiva completamente ridisegnata
+  - Gradient vibrante indigo→purple→pink con border 3px
+  - Animazione 3D flip all'ingresso (rotateY -180° → 0°)
+  - Spring physics per movimento naturale (stiffness: 200, damping: 15)
+  - Wiggle effect sull'hover (oscillazione -5° → +5° in 0.5s)
+  - Glow effect luminoso dietro il badge con blur-xl
+  - Shimmer animation che attraversa il badge (0.6s duration)
+  - 8 sparkle particles dorate che esplodono sull'hover
+  - Badge emoji size aumentato a 4xl per maggiore impatto
+  - Tooltip gradient (indigo→purple) con freccia triangolare
+  - Scale 1.15x sull'hover con shadow-2xl
+
+- **Badge Bloccati**: Distinzione chiara e UX migliorata
+  - Grayscale filter per badge non sbloccati
+  - Lock icon overlay circolare con backdrop-blur
+  - Mystery badges con emoji punto interrogativo
+  - Tooltip completo con nome + descrizione dettagliata
+  - Gradient slate per differenziare da badge sbloccati
+  - Stagger animation più veloce (delay 0.03s)
+  - Hover opacity 30% → 50% per preview feedback
+  - Tooltip separato per badge segreti ("🤫 Badge Segreto")
+
+- **General**: Polish e coerenza visiva
+  - Grid gap aumentato a 4 per maggiore respiro
+  - Border-radius 2xl per look moderno
+  - Shadow hierarchy: lg → 2xl sull'hover
+  - Tutti gli stati interattivi con feedback immediato
+  - Lock icon import da lucide-react
+  - Hover state gestito con useState per performance
+
+### 📦 Components Modified
+- `src/components/gamification/BadgeShowcase.tsx`
+
 ## [1.14.2] - 2026-07-22
 
 ### 🎨 Enhanced

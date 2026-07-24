@@ -68,10 +68,10 @@ export function PointsWidget({ teamId, compact = false }: PointsWidgetProps) {
               <Trophy size={28} className="text-glass-vibrant-yellow" />
             </div>
             <div>
-              <p className="text-4xl font-display font-bold text-white tracking-tight">
+              <p className="text-4xl font-display font-bold text-amber-900 tracking-tight">
                 Livello {userPoints.level}
               </p>
-              <p className="text-sm font-heading font-semibold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
+              <p className="text-sm font-heading font-semibold text-amber-800">
                 <span className={`font-mono ${showGlow ? 'vibrant-bounce' : ''}`}>
                   {userPoints.points.toLocaleString()}
                 </span> punti
@@ -83,7 +83,7 @@ export function PointsWidget({ teamId, compact = false }: PointsWidgetProps) {
           <button
             onClick={refetch}
             aria-label="Ricarica punti"
-            className="p-3 rounded-xl bg-white/30 hover:bg-white/50 text-white transition-all hover:scale-105 border-2 border-white/40 min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="p-3 rounded-xl bg-white/80 hover:bg-white text-amber-900 transition-all hover:scale-105 border-2 border-white min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-900"
             title="Ricarica punti"
             style={{ transition: 'var(--transition-vibrant)' }}
           >
@@ -102,17 +102,17 @@ export function PointsWidget({ teamId, compact = false }: PointsWidgetProps) {
       {/* Progress Bar - Vibrant Style */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-white font-heading font-semibold text-sm">
+          <span className="text-amber-900 font-heading font-semibold text-sm">
             Progresso livello
           </span>
-          <span className="text-white font-display font-bold text-lg">{progress}%</span>
+          <span className="text-amber-900 font-display font-bold text-lg">{progress}%</span>
         </div>
-        <div className="h-4 bg-white/30 rounded-2xl overflow-hidden shadow-inner border-2 border-white/40">
+        <div className="h-4 bg-white/20 rounded-2xl overflow-hidden shadow-inner border-2 border-white/30">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.8, ease: [0.34, 1.56, 0.64, 1] }}
-            className="h-full bg-white rounded-2xl shadow-lg"
+            className="h-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 rounded-2xl shadow-lg"
           />
         </div>
       </div>
