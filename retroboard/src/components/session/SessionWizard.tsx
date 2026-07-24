@@ -8,7 +8,6 @@ import { RetroBoard } from '@/components/retro/RetroBoard'
 import { VotingPhase } from '@/components/retro/VotingPhase'
 import { GroupingPhase } from '@/components/retro/GroupingPhase'
 import { BrainstormingPhase } from '@/components/retro/BrainstormingPhase'
-import { OnboardingTooltip } from '@/components/session/OnboardingTooltip'
 
 import { PhaseTimer } from '@/components/session/PhaseTimer'
 import { KanbanBoard } from '@/components/kanban/KanbanBoard'
@@ -162,9 +161,6 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
 
   return (
     <div className="space-y-6">
-      {/* Onboarding Tooltip */}
-      <OnboardingTooltip currentStep={currentStep} />
-
       {/* Header - Compact layout */}
       <div className="flex flex-col gap-2">
         {/* Row 1: Title + Buttons */}
