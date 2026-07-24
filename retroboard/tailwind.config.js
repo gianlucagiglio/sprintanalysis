@@ -90,7 +90,7 @@ export default {
       fontFamily: {
         sans: ['Open Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
         heading: ['Poppins', 'sans-serif'],
-        display: ['Righteous', 'sans-serif'],
+        display: ['Poppins', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
     },
