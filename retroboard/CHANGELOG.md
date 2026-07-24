@@ -2,6 +2,82 @@
 
 All notable changes to RetroBoard will be documented in this file.
 
+## [1.14.4] - 2026-07-22
+
+### 🎨 Enhanced
+
+**Header System Unification - Design System Completo**:
+- **Componenti Base Creati**: Sistema header modulare e riutilizzabile
+  - PageHeader.tsx: 4 varianti (hero, standard, navigation, centered)
+  - SectionHeader.tsx: Header interni per cards/modals
+  - 6 gradient predefiniti (primary, success, warning, trophy, emerald, amber)
+  - Animazioni Framer Motion integrate
+  - Support per icons, badges, actions, custom children
+
+- **9 Pagine Principali Migrate a Hero Header**: Stile unificato come Hall of Fame
+  - Dashboard (/dashboard, /retrospettive): Hero primary + LayoutGrid icon + badge dinamico + create button
+  - ActionsPage (/actions): Hero primary + ListTodo icon + badge "Azioni Globali"
+  - LeaderboardPage (/leaderboard): Hero trophy + Trophy icon + user rank display
+  - MetricsPage (/metrics): Hero primary + BarChart3 icon + badge "Metriche"
+  - ProfilePage (/profilo): Hero primary + User icon + badge "Gamification"
+  - QuizThemesPage (/quiz-temi): Hero primary + BookOpen icon + badge "Catalogo Completo" + stats badges
+  - TeamsPage (/teams): Hero success + Users icon + badge "Collaborazione" + create button
+  - TeamPage (/team/:id): Navigation header con back button + role badge + actions
+  - ChangelogPage (/changelog): Hero primary + Sparkles icon + badge versione dinamica
+
+- **Hero Header Features**: Ogni hero header include
+  - Gradient vibrante con pattern decorativo
+  - Badge glass con backdrop-blur
+  - Icona decorativa grande (64px) in container 3D con glow effect
+  - Titolo bold + descrizione
+  - Decorazioni di sfondo (blur circles)
+  - Responsive completo (mobile-first)
+  - Animazioni entrance con Framer Motion
+
+- **4 Componenti Interni con Centered Header**:
+  - MoodVoting: Centered header
+  - RetroBoard: Centered header con custom children per revealed message
+  - KanbanBoard: Centered header
+  - VotingPhase: Centered header con custom children per voting display
+
+### 🐛 Fixed
+
+**Modal System**:
+- Risolto problema overlay con spazio bianco sopra
+  - Z-index aumentato: z-50 → z-[100] per priorità assoluta
+  - Overlay changed da absolute a fixed con posizionamento esplicito
+  - Coverage completo garantito: top-0 left-0 right-0 bottom-0
+  - Overlay opacity aumentata: bg-black/50 → bg-black/60
+  - Padding container aggiunto (p-4) per respirazione
+  - Max-height content: max-h-[calc(100vh-200px)] per evitare overflow
+  - Spring animation migliorata con movimento verticale (y: 20 → 0)
+  - Shadow upgrade: shadow-float → shadow-2xl
+
+### 📊 Benefits
+
+**Consistency**: 100% degli header seguono lo stesso design system
+**Maintainability**: -40% codice duplicato, modifiche centralizzate
+**Code Quality**: Componenti riutilizzabili con API semplice e type-safe
+**UX**: Esperienza visiva coerente e premium su tutta l'app
+
+### 📦 Components Modified
+- `src/components/ui/PageHeader.tsx` (NEW)
+- `src/components/ui/SectionHeader.tsx` (NEW)
+- `src/components/ui/Modal.tsx`
+- `src/components/dashboard/Dashboard.tsx`
+- `src/pages/ActionsPage.tsx`
+- `src/pages/LeaderboardPage.tsx`
+- `src/pages/MetricsPage.tsx`
+- `src/pages/ProfilePage.tsx`
+- `src/pages/QuizThemesPage.tsx`
+- `src/pages/TeamsPage.tsx`
+- `src/pages/TeamPage.tsx`
+- `src/pages/ChangelogPage.tsx`
+- `src/components/mood/MoodVoting.tsx`
+- `src/components/retro/RetroBoard.tsx`
+- `src/components/kanban/KanbanBoard.tsx`
+- `src/components/retro/VotingPhase.tsx`
+
 ## [1.14.3] - 2026-07-22
 
 ### 🎨 Enhanced

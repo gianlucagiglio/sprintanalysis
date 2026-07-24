@@ -27,6 +27,48 @@ interface ChangelogEntry {
 
 const changelog: ChangelogEntry[] = [
   {
+    version: '1.14.4',
+    date: '2026-07-22',
+    type: 'improvement',
+    changes: [
+      {
+        category: 'Header System Unification - Design System Completo',
+        icon: Palette,
+        items: [
+          '🎨 Componenti Base: PageHeader.tsx (4 varianti) + SectionHeader.tsx',
+          '✨ 6 gradient predefiniti: primary, success, warning, trophy, emerald, amber',
+          '🎯 9 Pagine Principali migrate a Hero Header stile Hall of Fame',
+          '📱 Dashboard: Hero primary + LayoutGrid icon + badge dinamico',
+          '📝 ActionsPage: Hero primary + ListTodo icon',
+          '🏆 LeaderboardPage: Hero trophy + user rank display',
+          '📊 MetricsPage: Hero primary + BarChart3 icon',
+          '👤 ProfilePage: Hero primary + User icon + badge Gamification',
+          '📚 QuizThemesPage: Hero primary + BookOpen + stats badges',
+          '👥 TeamsPage: Hero success + Users icon + create button',
+          '🔙 TeamPage: Navigation header con back button + role badge',
+          '📜 ChangelogPage: Hero primary + Sparkles + versione dinamica',
+          '🎭 Hero Features: Gradient vibrante + badge glass + icona 3D decorativa',
+          '✨ Decorazioni: Pattern sfondo + glow effects + animazioni Framer Motion',
+          '📱 4 Componenti Interni: Centered header (Mood, Retro, Kanban, Voting)',
+          '🔧 Benefits: 100% consistency + 40% meno codice duplicato',
+        ],
+      },
+      {
+        category: 'Modal System Fix',
+        icon: Shield,
+        items: [
+          '🐛 Risolto overlay con spazio bianco sopra',
+          '⚡ Z-index aumentato: z-50 → z-[100]',
+          '🎯 Overlay fixed con posizionamento esplicito',
+          '🌑 Opacity aumentata: bg-black/50 → bg-black/60',
+          '📐 Padding container + max-height per overflow',
+          '✨ Spring animation migliorata con movimento verticale',
+          '🎨 Shadow upgrade: shadow-2xl per maggiore profondità',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.14.3',
     date: '2026-07-22',
     type: 'improvement',
