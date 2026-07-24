@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/Card'
-import { Trophy, Medal } from 'lucide-react'
+import { Trophy } from 'lucide-react'
 import { useSessionStore } from '@/stores/sessionStore'
 import { motion } from 'framer-motion'
 
@@ -24,7 +24,6 @@ export function QuizLeaderboard({ leaderboard }: QuizLeaderboardProps) {
   const getName = (userId: string) =>
     participants.find((p) => p.user_id === userId)?.profiles?.name || 'Utente'
 
-  const podiumColors = ['text-yellow-600', 'text-slate-500', 'text-orange-600']
   const podiumIcons = ['🥇', '🥈', '🥉']
 
   return (
