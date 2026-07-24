@@ -8,7 +8,7 @@ interface SectionHeaderProps {
   iconColor?: string
   badge?: {
     label: string
-    variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger'
+    variant?: 'default' | 'primary' | 'success' | 'warning' | 'glad' | 'sad' | 'mad' | 'outline'
   }
   actions?: ReactNode
   className?: string
