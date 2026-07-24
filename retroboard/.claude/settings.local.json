@@ -40,7 +40,9 @@
       "Bash(\"$LOCALAPPDATA/Programs/Python/Python312/python.exe\" scripts/search.py \"modern gradient saas professional team\" --design-system -p \"RetroBoard Alt 1\" -f markdown)",
       "Bash(\"$LOCALAPPDATA/Programs/Python/Python312/python.exe\" scripts/search.py \"vibrant gamification energetic team engagement\" --design-system -p \"RetroBoard Alt 2\" -f markdown)",
       "Bash(\"$LOCALAPPDATA/Programs/Python/Python312/python.exe\" scripts/search.py \"soft depth modern saas productivity collaborative\" --design-system -p \"RetroBoard Alt 3\" -f markdown)",
-      "Bash(\"$LOCALAPPDATA/Programs/Python/Python312/python.exe\" scripts/search.py \"gradient premium elevated sophisticated team\" --design-system -p \"RetroBoard Alt 4\" -f markdown)"
+      "Bash(\"$LOCALAPPDATA/Programs/Python/Python312/python.exe\" scripts/search.py \"gradient premium elevated sophisticated team\" --design-system -p \"RetroBoard Alt 4\" -f markdown)",
+      "Bash(\"C:\\\\Users\\\\Gianluca\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\python3.exe\" scripts/search.py \"productivity retrospective collaboration dashboard data-dense\" --design-system -p \"RetroBoard\")",
+      "Bash(npm run lint:*)"
     ]
   }
 }

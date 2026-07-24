@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card } from '@/components/ui/Card'
 import { SessionCardSkeleton } from '@/components/ui/Skeleton'
+import { motion } from 'framer-motion'
 import {
   Plus,
   Link as LinkIcon,
@@ -16,6 +17,9 @@ import {
   CheckCircle2,
   FolderOpen,
   Users,
+  Search,
+  Activity,
+  Filter,
 } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { canCreate } from '@/config/permissions'
@@ -30,6 +34,8 @@ export function Dashboard() {
   const [showCreate, setShowCreate] = useState(false)
   const [joinCode, setJoinCode] = useState('')
   const [filter, setFilter] = useState<FilterTab>('all')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedTeam, setSelectedTeam] = useState<string | null>(null)
   const user = useAuthStore((s) => s.user)
   const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin)
   const { teams } = useTeams()
@@ -175,13 +181,30 @@ export function Dashboard() {
   // Stats
   const activeSessions = sessions.filter((s) => s.current_step >= 1 && s.current_step <= 4)
   const closedSessions = sessions.filter((s) => s.current_step === 5)
+  const totalParticipants = sessions.reduce((sum, s) => sum + s.participant_count, 0)
 
   // Filtered sessions
   const filteredSessions = useMemo(() => {
-    if (filter === 'active') return sessions.filter((s) => s.current_step >= 1 && s.current_step <= 4)
-    if (filter === 'closed') return sessions.filter((s) => s.current_step === 5)
-    return sessions
-  }, [sessions, filter])
+    let result = sessions
+
+    // Filter by status
+    if (filter === 'active') result = result.filter((s) => s.current_step >= 1 && s.current_step <= 4)
+    if (filter === 'closed') result = result.filter((s) => s.current_step === 5)
+
+    // Filter by team
+    if (selectedTeam) result = result.filter((s) => s.team_id === selectedTeam)
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.trim().toLowerCase()
+      result = result.filter((s) =>
+        s.title.toLowerCase().includes(query) ||
+        s.id.toLowerCase().includes(query)
+      )
+    }
+
+    return result
+  }, [sessions, filter, selectedTeam, searchQuery])
 
   // Group sessions by team
   const teamMap = useMemo(() => {
@@ -235,81 +258,215 @@ export function Dashboard() {
     { key: 'closed', label: 'Concluse', count: closedSessions.length, icon: CheckCircle2 },
   ]
 
+  const stats = [
+    {
+      label: 'Totale Sessioni',
+      value: sessions.length,
+      icon: LayoutGrid,
+      color: 'from-indigo-500 to-purple-600',
+      bgColor: 'bg-indigo-50',
+      iconColor: 'text-indigo-600',
+    },
+    {
+      label: 'In Corso',
+      value: activeSessions.length,
+      icon: Activity,
+      color: 'from-emerald-500 to-teal-600',
+      bgColor: 'bg-emerald-50',
+      iconColor: 'text-emerald-600',
+    },
+    {
+      label: 'Concluse',
+      value: closedSessions.length,
+      icon: CheckCircle2,
+      color: 'from-blue-500 to-cyan-600',
+      bgColor: 'bg-blue-50',
+      iconColor: 'text-blue-600',
+    },
+    {
+      label: 'Partecipanti',
+      value: totalParticipants,
+      icon: Users,
+      color: 'from-purple-500 to-pink-600',
+      bgColor: 'bg-purple-50',
+      iconColor: 'text-purple-600',
+    },
+  ]
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-8">
 
       {/* ── Header ── */}
       <PageHeader
         variant="hero"
         title={isSuperAdmin() ? 'Tutte le retrospettive' : 'Le tue retrospettive'}
-        description={`${sessions.length} ${sessions.length === 1 ? 'sessione' : 'sessioni'} ${isSuperAdmin() ? 'nel sistema' : 'totali'}`}
+        description="Monitora, gestisci e analizza tutte le tue sessioni retrospettive [NUOVO DESIGN v1.14.17]"
         icon={LayoutGrid}
         gradient="primary"
         badge={{
           label: isSuperAdmin() ? 'Super Admin' : 'Dashboard',
           variant: 'default'
         }}
-        actions={
-          canCreate(user?.email) ? (
-            <Button onClick={() => setShowCreate(true)} className="!bg-white !text-indigo-600 hover:!bg-white/90">
-              <Plus size={16} />
-              Nuova sessione
-            </Button>
-          ) : undefined
-        }
       />
 
-      {/* ── Join bar ── */}
-      <Card className="!p-3 !rounded-2xl">
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <LinkIcon size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-retro-text-secondary pointer-events-none" />
-            <Input
-              value={joinCode}
-              onChange={(e) => setJoinCode(e.target.value)}
-              placeholder="Incolla ID sessione per partecipare..."
-              className="!pl-9"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleJoin()
-              }}
-            />
-          </div>
-          <Button variant="secondary" onClick={handleJoin} disabled={!joinCode.trim()}>
-            Unisciti
-          </Button>
+      {/* ── Hero Stats ── */}
+      {!loading && sessions.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {stats.map((stat, idx) => {
+            const Icon = stat.icon
+            return (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.05, type: 'spring', stiffness: 200, damping: 20 }}
+              >
+                <Card className="!p-5 !rounded-2xl hover:scale-[1.02] transition-transform duration-200 cursor-pointer group">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-14 h-14 rounded-xl ${stat.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
+                      <Icon size={24} className={stat.iconColor} />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-retro-text-secondary font-medium mb-1">
+                        {stat.label}
+                      </p>
+                      <p className={`text-3xl font-bold font-display bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
+                        {stat.value}
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            )
+          })}
         </div>
-      </Card>
+      )}
 
-      {/* ── Stats + Filter tabs ── */}
-      <div className="flex items-center gap-1.5 bg-slate-100 rounded-xl p-1">
-        {filterTabs.map((tab, idx) => {
-          const Icon = tab.icon
-          const isActive = filter === tab.key
-          return (
-            <button
-              key={tab.key}
-              onClick={() => setFilter(tab.key)}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 animate-slide-right stagger-${idx + 1} ${
-                isActive
-                  ? 'bg-white shadow-soft text-retro-text scale-105'
-                  : 'text-retro-text-secondary hover:text-retro-text'
-              }`}
-            >
-              <Icon size={14} />
-              {tab.label}
-              <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold transition-transform ${
-                isActive ? 'bg-retro-primary-light text-retro-primary scale-110' : 'bg-slate-200 text-retro-text-secondary'
-              }`}>
-                {tab.count}
-              </span>
-            </button>
-          )
-        })}
+      {/* ── Quick Actions Bar ── */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        {/* Join Session */}
+        <Card className="flex-1 !p-3 !rounded-2xl">
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <LinkIcon size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-retro-text-secondary pointer-events-none" />
+              <Input
+                value={joinCode}
+                onChange={(e) => setJoinCode(e.target.value)}
+                placeholder="Incolla ID sessione per partecipare..."
+                className="!pl-10"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleJoin()
+                }}
+              />
+            </div>
+            <Button variant="secondary" onClick={handleJoin} disabled={!joinCode.trim()}>
+              <LinkIcon size={16} />
+              Unisciti
+            </Button>
+          </div>
+        </Card>
+
+        {/* Create Session */}
+        {canCreate(user?.email) && (
+          <Button
+            onClick={() => setShowCreate(true)}
+            size="lg"
+            className="!bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 !text-white shadow-lg hover:shadow-xl transition-all duration-200"
+          >
+            <Plus size={18} />
+            Nuova Retrospettiva
+          </Button>
+        )}
       </div>
+
+      {/* ── Advanced Filters ── */}
+      {sessions.length > 0 && (
+        <div className="space-y-3">
+          {/* Status Tabs */}
+          <div className="flex items-center gap-1.5 bg-slate-100 rounded-xl p-1">
+            {filterTabs.map((tab) => {
+              const Icon = tab.icon
+              const isActive = filter === tab.key
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => setFilter(tab.key)}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    isActive
+                      ? 'bg-white shadow-soft text-retro-text scale-105'
+                      : 'text-retro-text-secondary hover:text-retro-text'
+                  }`}
+                >
+                  <Icon size={14} />
+                  {tab.label}
+                  <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold transition-transform ${
+                    isActive ? 'bg-retro-primary-light text-retro-primary scale-110' : 'bg-slate-200 text-retro-text-secondary'
+                  }`}>
+                    {tab.count}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Search & Team Filter */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            {/* Search */}
+            <div className="relative flex-1">
+              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-retro-text-secondary pointer-events-none" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Cerca per titolo o ID sessione..."
+                className="!pl-10 !bg-white"
+              />
+            </div>
+
+            {/* Team Filter */}
+            {teams.length > 0 && (
+              <div className="relative sm:w-64">
+                <Filter size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-retro-text-secondary pointer-events-none z-10" />
+                <select
+                  value={selectedTeam || ''}
+                  onChange={(e) => setSelectedTeam(e.target.value || null)}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-medium text-retro-text focus:outline-none focus:ring-2 focus:ring-retro-primary/20 focus:border-retro-primary transition-all appearance-none cursor-pointer"
+                >
+                  <option value="">Tutti i team</option>
+                  {teams.map((team) => (
+                    <option key={team.id} value={team.id}>
+                      {team.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+
+          {/* Active Filters Indicator */}
+          {(searchQuery || selectedTeam) && (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-retro-text-secondary">
+                Mostrando {filteredSessions.length} di {sessions.length} sessioni
+              </span>
+              <button
+                onClick={() => {
+                  setSearchQuery('')
+                  setSelectedTeam(null)
+                }}
+                className="text-sm text-retro-primary hover:text-retro-primary-dark font-medium transition-colors"
+              >
+                Azzera filtri
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Content ── */}
       {loading ? (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <SessionCardSkeleton />
+          <SessionCardSkeleton />
           <SessionCardSkeleton />
           <SessionCardSkeleton />
           <SessionCardSkeleton />
@@ -348,8 +505,16 @@ export function Dashboard() {
           )}
         </Card>
       ) : filteredSessions.length === 0 ? (
-        <div className="text-center py-12 text-retro-text-secondary">
-          <p className="text-sm">Nessuna retrospettiva {filter === 'active' ? 'attiva' : 'conclusa'}</p>
+        <div className="text-center py-12">
+          <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+            <Search size={28} className="text-retro-text-secondary" />
+          </div>
+          <p className="text-lg font-semibold text-retro-text mb-1">
+            Nessun risultato
+          </p>
+          <p className="text-sm text-retro-text-secondary">
+            Prova a modificare i filtri di ricerca
+          </p>
         </div>
       ) : (
         <div className="space-y-8">
@@ -359,18 +524,27 @@ export function Dashboard() {
             .sort(([a], [b]) => teamName(a!).localeCompare(teamName(b!)))
             .map(([teamId, teamSessions]) => (
               <div key={teamId}>
-                <div className="flex items-center gap-2 mb-3">
-                  <Users size={14} className="text-retro-primary" />
-                  <h2 className="text-sm font-bold text-retro-text uppercase tracking-wide">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                    <Users size={16} className="text-white" />
+                  </div>
+                  <h2 className="text-base font-bold text-retro-text tracking-wide">
                     {teamName(teamId!)}
                   </h2>
-                  <span className="text-xs text-retro-text-secondary bg-slate-100 rounded-full px-2 py-0.5">
+                  <span className="text-xs text-retro-text-secondary bg-slate-100 rounded-full px-2.5 py-1 font-semibold">
                     {teamSessions.length}
                   </span>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {teamSessions.map((s, idx) => (
-                    <SessionCard key={s.id} session={s} participantCount={s.participant_count} onDelete={handleDelete} index={idx} />
+                    <motion.div
+                      key={s.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.05, type: 'spring', stiffness: 200, damping: 20 }}
+                    >
+                      <SessionCard session={s} participantCount={s.participant_count} onDelete={handleDelete} index={idx} />
+                    </motion.div>
                   ))}
                 </div>
               </div>
@@ -380,19 +554,28 @@ export function Dashboard() {
           {teamMap.has(null) && (
             <div>
               {teamMap.size > 1 && (
-                <div className="flex items-center gap-2 mb-3">
-                  <FolderOpen size={14} className="text-retro-text-secondary" />
-                  <h2 className="text-sm font-bold text-retro-text uppercase tracking-wide">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center">
+                    <FolderOpen size={16} className="text-retro-text-secondary" />
+                  </div>
+                  <h2 className="text-base font-bold text-retro-text tracking-wide">
                     Senza team
                   </h2>
-                  <span className="text-xs text-retro-text-secondary bg-slate-100 rounded-full px-2 py-0.5">
+                  <span className="text-xs text-retro-text-secondary bg-slate-100 rounded-full px-2.5 py-1 font-semibold">
                     {teamMap.get(null)!.length}
                   </span>
                 </div>
               )}
-              <div className="grid gap-3 sm:grid-cols-2">
-                {teamMap.get(null)!.map((s, idx) => (
-                  <SessionCard key={s.id} session={s} participantCount={s.participant_count} onDelete={handleDelete} index={idx} />
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {teamMap.get(null)!.map((s, index) => (
+                  <motion.div
+                    key={s.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05, type: 'spring', stiffness: 200, damping: 20 }}
+                  >
+                    <SessionCard session={s} participantCount={s.participant_count} onDelete={handleDelete} index={index} />
+                  </motion.div>
                 ))}
               </div>
             </div>
