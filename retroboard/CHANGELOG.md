@@ -2,6 +2,59 @@
 
 All notable changes to RetroBoard will be documented in this file.
 
+## [1.14.2] - 2026-07-22
+
+### 🎨 Enhanced
+
+**Quiz Layout - Visual Polish & Animations**:
+- **QuizQuestion.tsx**: Sistema feedback celebrativo completo
+  - 20 particelle confetti quando risposta corretta
+  - Glass card sul timer con gradient indigo→purple→pink
+  - Timer che pulsa quando rimangono < 3 secondi
+  - Stagger animations sulle scelte (delay 0.08s tra opzioni)
+  - Glass effects con hover scale e shadow colorate
+  - Icone animate (rotate, scale spring al feedback)
+  - Feedback finale celebrativo con emoji e animazione spring
+
+- **QuizLeaderboard.tsx**: Podio ridisegnato con focus sui vincitori
+  - Medaglie emoji (🥇🥈🥉) al posto di icone generiche
+  - Gradients vibranti per podio (oro, argento, bronzo)
+  - Primo posto con pulse animation continua
+  - Stagger animations (delay 0.12s tra righe)
+  - Glass card principale con border doppio
+  - Trophy icon animato che oscilla
+
+- **QuizGame.tsx**: Polish coerente su tutti gli stati
+  - Start screen con icon gradient celebrativo
+  - Progress bar con glass effect
+  - Finished screen con 25 confetti infiniti
+  - Gradients su tutti i pulsanti organizer
+  - Glass effects su empty/loading states
+
+**Header SessionWizard - Reorganizzazione Layout**:
+- Breadcrumb fasi principali (Mood → Icebreaker → Retro → Kanban)
+- Layout compatto: titolo + bottoni su prima riga, breadcrumb su seconda
+- Badge con checkmark sulle fasi completate
+- Ring-2 sulla fase corrente per focus visivo
+- Bottoni "Condividi link" e "Chiudi retro" allineati a destra
+
+### 🗑️ Removed
+- **OnboardingTooltip**: Disabilitato sistema tooltip onboarding (richiesta utente)
+- **StepIndicator**: Rimosso componente step indicator (sostituito da breadcrumb)
+
+### 🐛 Fixed
+- **QuizLeaderboard**: Risolti errori TypeScript variabili non utilizzate
+  - Rimosso componente `Medal` non utilizzato
+  - Rimossa costante `podiumColors` sostituita da inline gradients
+
+### 📦 Components Modified
+- `src/components/quiz/QuizQuestion.tsx`: confetti, glass timer, stagger animations
+- `src/components/quiz/QuizLeaderboard.tsx`: medaglie emoji, gradients podio
+- `src/components/quiz/QuizGame.tsx`: glass effects, gradients, confetti
+- `src/components/session/SessionWizard.tsx`: breadcrumb, layout reorganization
+
+---
+
 ## [1.17.0] - 2026-07-23
 
 ### ✨ UX/UI Enhancements - Phase 1 & 2 Complete

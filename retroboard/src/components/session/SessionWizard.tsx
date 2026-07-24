@@ -236,7 +236,7 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
 
       {/* Mood sub-phase indicator */}
       {currentStep === 1 && (
-        <div className="flex items-center gap-1.5 md:gap-2 overflow-x-auto pb-1 scrollbar-thin">
+        <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
           {moodPhaseOrder.map((phase, i) => (
             <div key={phase} className="flex items-center shrink-0">
               <Badge variant={session.mood_phase === phase ? 'primary' : 'default'} className="text-[10px] md:text-xs whitespace-nowrap">
@@ -253,7 +253,7 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
       {/* Retro sub-phase indicator - Interactive */}
       {currentStep === 3 && (
         <div className="space-y-3">
-          <div className="flex items-center gap-1.5 md:gap-2 overflow-x-auto pb-1 scrollbar-thin">
+          <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
             {retroPhaseOrder.map((phase, i) => {
               const currentIdx = retroPhaseOrder.indexOf(session.retro_phase as typeof retroPhaseOrder[number])
               const isCompleted = i < currentIdx
@@ -274,11 +274,6 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
                       {isCompleted && <Check size={10} className="mr-1 inline" />}
                       {retroPhaseLabels[phase]}
                     </Badge>
-                    {isCurrent && (
-                      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] text-slate-500 whitespace-nowrap hidden md:block">
-                        {retroPhaseDescriptions[phase]}
-                      </div>
-                    )}
                   </button>
                   {i < retroPhaseOrder.length - 1 && (
                     <ArrowRight size={10} className="mx-0.5 md:mx-1 text-retro-border shrink-0" />
