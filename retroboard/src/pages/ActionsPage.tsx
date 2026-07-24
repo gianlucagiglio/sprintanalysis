@@ -16,6 +16,7 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { ListSkeleton } from '@/components/ui/Skeleton'
+import { PageHeader } from '@/components/ui/PageHeader'
 import { useGlobalActions, type ActionWithSession } from '@/hooks/useGlobalActions'
 import { ActionEditModal } from '@/components/kanban/ActionEditModal'
 import {
@@ -329,21 +330,17 @@ export function ActionsPage() {
       <div className="max-w-5xl mx-auto space-y-6">
 
         {/* ── Hero Header ── */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-600 p-8 md:p-10 text-white">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.12),transparent_60%)]" />
-          <div className="absolute -right-8 -bottom-8 opacity-10">
-            <ListTodo size={180} />
-          </div>
-          <div className="relative">
-            <Badge className="!bg-white/20 !text-white !backdrop-blur-sm mb-4">
-              Azioni Globali
-            </Badge>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-display mb-1">Piano d'azione</h1>
-            <p className="text-white/70 text-sm">
-              Tutte le azioni da tutte le retrospettive in un unico posto
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          variant="hero"
+          title="Piano d'azione"
+          description="Tutte le azioni da tutte le retrospettive in un unico posto"
+          icon={ListTodo}
+          gradient="primary"
+          badge={{
+            label: 'Azioni Globali',
+            variant: 'default'
+          }}
+        />
 
         {loading ? (
           <ListSkeleton count={5} />

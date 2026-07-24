@@ -20,6 +20,7 @@ import { useMetrics } from '@/hooks/useMetrics'
 import {
   Crown, Shield, User, Users, Copy, Check, Search, UserPlus, Trash2, ArrowLeft, X, Calendar, CheckCircle2, LogOut,
 } from 'lucide-react'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 type MemberWithProfile = TeamMember & { profiles: Profile }
 
@@ -177,34 +178,33 @@ export function TeamPage() {
     <AppLayout>
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate('/teams')}
-              className="p-1.5 rounded-lg hover:bg-retro-border/30 text-retro-text-secondary"
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <h1 className="text-2xl font-bold tracking-display text-retro-text">{team.name}</h1>
-            {myRole && (
-              <Badge variant="primary">{roleLabels[myRole]}</Badge>
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            {myRole && myRole !== 'owner' && (
-              <Button variant="ghost" onClick={handleLeaveTeam} className="text-orange-500 hover:text-orange-600">
-                <LogOut size={16} />
-                Abbandona
-              </Button>
-            )}
-            {myRole === 'owner' && (
-              <Button variant="ghost" onClick={handleDeleteTeam} className="text-red-500 hover:text-red-600">
-                <Trash2 size={16} />
-                Elimina team
-              </Button>
-            )}
-          </div>
-        </div>
+        <PageHeader
+          variant="navigation"
+          title={team.name}
+          icon={Users}
+          gradient="primary"
+          onBack={() => navigate('/teams')}
+          badge={myRole ? {
+            label: roleLabels[myRole],
+            variant: 'primary'
+          } : undefined}
+          actions={
+            <>
+              {myRole && myRole !== 'owner' && (
+                <Button variant="ghost" onClick={handleLeaveTeam} className="text-orange-500 hover:text-orange-600">
+                  <LogOut size={16} />
+                  Abbandona
+                </Button>
+              )}
+              {myRole === 'owner' && (
+                <Button variant="ghost" onClick={handleDeleteTeam} className="text-red-500 hover:text-red-600">
+                  <Trash2 size={16} />
+                  Elimina team
+                </Button>
+              )}
+            </>
+          }
+        />
 
         {/* Invite section */}
         <Card>

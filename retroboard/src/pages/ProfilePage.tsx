@@ -6,6 +6,7 @@ import { useGamification } from '@/hooks/useGamification'
 import { useBadges } from '@/hooks/useBadges'
 import { Card } from '@/components/ui/Card'
 import { User, TrendingUp, MessageSquare, CheckCircle2, Zap } from 'lucide-react'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 export function ProfilePage() {
   const { userPoints, recentTransactions } = useGamification()
@@ -15,17 +16,17 @@ export function ProfilePage() {
     <AppLayout>
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold tracking-display text-retro-text flex items-center gap-2">
-            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
-              <User size={20} className="text-white" />
-            </span>
-            Il Mio Profilo
-          </h1>
-          <p className="text-sm text-retro-text-secondary mt-1">
-            Progressi, badge e statistiche personali
-          </p>
-        </div>
+        <PageHeader
+          variant="hero"
+          title="Il Mio Profilo"
+          description="Progressi, badge e statistiche personali"
+          icon={User}
+          gradient="primary"
+          badge={{
+            label: 'Gamification',
+            variant: 'default'
+          }}
+        />
 
         {/* Points & Level */}
         <PointsWidget />

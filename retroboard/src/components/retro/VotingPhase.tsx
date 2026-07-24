@@ -4,6 +4,7 @@ import { CommentCard } from './CommentCard'
 import { useSessionStore } from '@/stores/sessionStore'
 import { useMemo } from 'react'
 import { Heart, EyeOff, Vote } from 'lucide-react'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 interface VotingPhaseProps {
   sessionId: string
@@ -30,30 +31,33 @@ export function VotingPhase({ sessionId }: VotingPhaseProps) {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-bold text-retro-text mb-2">Vota i commenti</h2>
-        {maxVotes === 0 ? (
-          <p className="text-sm text-retro-text-secondary">Votazione disabilitata per questa sessione.</p>
-        ) : (
-          <>
-            <p className="text-sm text-retro-text-secondary">Hai {maxVotes} voti a disposizione. Clicca per votare o togliere il voto.</p>
-            <div className="flex items-center justify-center gap-1.5 mt-3">
-              {maxVotes <= 6 ? (
-                Array.from({ length: maxVotes }).map((_, i) => (
-                  <Heart
-                    key={i}
-                    size={18}
-                    className={i < remainingVotes ? 'text-rose-500 fill-rose-500' : 'text-retro-border'}
-                  />
-                ))
-              ) : (
-                <Heart size={18} className={remainingVotes > 0 ? 'text-rose-500 fill-rose-500' : 'text-retro-border'} />
-              )}
-              <span className="text-sm text-retro-text-secondary ml-2">
-                {remainingVotes} voti rimanenti
-              </span>
-            </div>
-          </>
+      <PageHeader
+        variant="centered"
+        title="Vota i commenti"
+        description={
+          maxVotes === 0
+            ? "Votazione disabilitata per questa sessione."
+            : `Hai ${maxVotes} voti a disposizione. Clicca per votare o togliere il voto.`
+        }
+        gradient="primary"
+      >
+        {maxVotes > 0 && (
+          <div className="flex items-center justify-center gap-1.5 mt-3">
+            {maxVotes <= 6 ? (
+              Array.from({ length: maxVotes }).map((_, i) => (
+                <Heart
+                  key={i}
+                  size={18}
+                  className={i < remainingVotes ? 'text-rose-500 fill-rose-500' : 'text-retro-border'}
+                />
+              ))
+            ) : (
+              <Heart size={18} className={remainingVotes > 0 ? 'text-rose-500 fill-rose-500' : 'text-retro-border'} />
+            )}
+            <span className="text-sm text-retro-text-secondary ml-2">
+              {remainingVotes} voti rimanenti
+            </span>
+          </div>
         )}
         {!revealed && (
           <p className="flex items-center justify-center gap-1.5 text-xs text-retro-text-secondary mt-2">
@@ -61,7 +65,7 @@ export function VotingPhase({ sessionId }: VotingPhaseProps) {
             I voti degli altri saranno visibili dopo la rivelazione
           </p>
         )}
-      </div>
+      </PageHeader>
 
       {parentComments.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 px-4 text-center">

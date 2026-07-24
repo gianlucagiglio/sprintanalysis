@@ -7,6 +7,7 @@ import { CommentCard } from './CommentCard'
 import { CommentInput } from './CommentInput'
 import { Card } from '@/components/ui/Card'
 import { EyeOff, Lightbulb, MessageSquarePlus } from 'lucide-react'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 interface RetroBoardProps {
   sessionId: string
@@ -34,16 +35,19 @@ export function RetroBoard({ sessionId }: RetroBoardProps) {
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-bold text-retro-text mb-2">Retrospettiva</h2>
-        <p className="text-sm text-retro-text-secondary">Aggiungi i tuoi commenti in ogni sezione</p>
+      <PageHeader
+        variant="centered"
+        title="Retrospettiva"
+        description="Aggiungi i tuoi commenti in ogni sezione"
+        gradient="primary"
+      >
         {!revealed && (
           <p className="flex items-center justify-center gap-1.5 text-xs text-retro-text-secondary mt-2">
             <EyeOff size={12} />
             I commenti degli altri saranno visibili dopo la rivelazione
           </p>
         )}
-      </div>
+      </PageHeader>
 
       <div className="grid gap-4 md:grid-cols-3">
         {sections.map((section, i) => {

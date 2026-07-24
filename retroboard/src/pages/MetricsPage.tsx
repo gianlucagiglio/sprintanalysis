@@ -12,6 +12,7 @@ import { useGlobalMoods } from '@/hooks/useGlobalMoods'
 import { useMetrics } from '@/hooks/useMetrics'
 import { useTeamStats } from '@/hooks/useTeamStats'
 import { BarChart3, Users } from 'lucide-react'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 export function MetricsPage() {
   const { sessionMoods, sessionTeamMoods, globalCounts, globalTeamMoodCounts, loading: moodsLoading } = useGlobalMoods()
@@ -23,17 +24,17 @@ export function MetricsPage() {
   return (
     <AppLayout>
       <div className="max-w-5xl mx-auto space-y-8">
-        <div>
-          <h1 className="text-2xl font-bold tracking-display text-retro-text flex items-center gap-2">
-            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-retro-primary to-violet-500 flex items-center justify-center">
-              <BarChart3 size={20} className="text-white" />
-            </span>
-            Dashboard
-          </h1>
-          <p className="text-sm text-retro-text-secondary mt-1">
-            Panoramica sentiment delle tue retrospettive
-          </p>
-        </div>
+        <PageHeader
+          variant="hero"
+          title="Dashboard"
+          description="Panoramica sentiment delle tue retrospettive"
+          icon={BarChart3}
+          gradient="primary"
+          badge={{
+            label: 'Metriche',
+            variant: 'default'
+          }}
+        />
 
         {loading ? (
           <div className="flex items-center justify-center py-20">

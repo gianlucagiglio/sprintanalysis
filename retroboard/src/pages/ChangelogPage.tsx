@@ -12,6 +12,7 @@ import {
   Target,
   CheckCircle2
 } from 'lucide-react'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 interface ChangelogEntry {
   version: string
@@ -436,15 +437,17 @@ export function ChangelogPage() {
     <AppLayout>
       <div className="max-w-4xl mx-auto space-y-6 pb-8">
         {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2 text-retro-primary">
-            <Sparkles size={32} />
-          </div>
-          <h1 className="text-3xl font-bold text-retro-text">Changelog</h1>
-          <p className="text-retro-text-secondary">
-            Tutte le modifiche e miglioramenti alla piattaforma
-          </p>
-        </div>
+        <PageHeader
+          variant="hero"
+          title="Changelog"
+          description="Tutte le modifiche e miglioramenti alla piattaforma"
+          icon={Sparkles}
+          gradient="primary"
+          badge={{
+            label: 'Versione ' + changelog[0].version,
+            variant: 'default'
+          }}
+        />
 
         {/* Changelog entries */}
         <div className="space-y-6">

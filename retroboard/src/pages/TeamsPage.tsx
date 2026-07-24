@@ -10,6 +10,7 @@ import { useTeams } from '@/hooks/useTeams'
 import { Plus, Users, LogIn, Crown, Shield, User } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { canCreate } from '@/config/permissions'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 const roleIcons = {
   owner: Crown,
@@ -54,15 +55,25 @@ export function TeamsPage() {
   return (
     <AppLayout>
       <div className="max-w-3xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold tracking-display text-retro-text">I miei Team</h1>
-          {canCreate(user?.email) && (
-            <Button onClick={() => setShowCreate(true)}>
-              <Plus size={16} />
-              Crea team
-            </Button>
-          )}
-        </div>
+        <PageHeader
+          variant="hero"
+          title="I miei Team"
+          description="Gestisci i tuoi team e collabora con i colleghi"
+          icon={Users}
+          gradient="success"
+          badge={{
+            label: 'Collaborazione',
+            variant: 'default'
+          }}
+          actions={
+            canCreate(user?.email) ? (
+              <Button onClick={() => setShowCreate(true)} className="!bg-white !text-emerald-600 hover:!bg-white/90">
+                <Plus size={16} />
+                Crea team
+              </Button>
+            ) : undefined
+          }
+        />
 
         {/* Join by invite code */}
         <Card>

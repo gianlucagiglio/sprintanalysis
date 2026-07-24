@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Skeleton } from '@/components/ui/Skeleton'
+import { PageHeader } from '@/components/ui/PageHeader'
 import {
   Trophy,
   Medal,
@@ -53,34 +54,30 @@ export function LeaderboardPage() {
       <div className="max-w-4xl mx-auto space-y-8">
 
         {/* ── Hero Header ── */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 p-8 md:p-10 text-white">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.15),transparent_60%)]" />
-          <div className="absolute -right-8 -bottom-8 opacity-10">
-            <Trophy size={180} />
-          </div>
-          <div className="relative">
-            <Badge className="!bg-white/20 !text-white !backdrop-blur-sm mb-4">
-              Classifiche Quiz
-            </Badge>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-display mb-1">Hall of Fame</h1>
-            <p className="text-white/70 text-sm">
-              Classifica globale e vincitori per ogni retrospettiva
-            </p>
-
-            {/* Current user rank */}
-            {currentUserRank && currentUserEntry && (
-              <div className="mt-5 inline-flex items-center gap-3 bg-white/15 backdrop-blur-sm rounded-2xl px-4 py-2.5">
-                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold">
-                  #{currentUserRank}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold">La tua posizione</p>
-                  <p className="text-xs text-white/70">{currentUserEntry.totalPoints} punti in {currentUserEntry.sessionsPlayed} {currentUserEntry.sessionsPlayed === 1 ? 'sessione' : 'sessioni'}</p>
-                </div>
+        <PageHeader
+          variant="hero"
+          title="Hall of Fame"
+          description="Classifica globale e vincitori per ogni retrospettiva"
+          icon={Trophy}
+          gradient="trophy"
+          badge={{
+            label: 'Classifiche Quiz',
+            variant: 'default'
+          }}
+        >
+          {/* Current user rank */}
+          {currentUserRank && currentUserEntry && (
+            <div className="inline-flex items-center gap-3 bg-white/15 backdrop-blur-sm rounded-2xl px-4 py-2.5">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold">
+                #{currentUserRank}
               </div>
-            )}
-          </div>
-        </div>
+              <div>
+                <p className="text-sm font-semibold">La tua posizione</p>
+                <p className="text-xs text-white/70">{currentUserEntry.totalPoints} punti in {currentUserEntry.sessionsPlayed} {currentUserEntry.sessionsPlayed === 1 ? 'sessione' : 'sessioni'}</p>
+              </div>
+            </div>
+          )}
+        </PageHeader>
 
         {loading ? (
           <div className="space-y-2">

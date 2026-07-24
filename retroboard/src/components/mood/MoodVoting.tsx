@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { motion } from 'framer-motion'
 import { Smile, Frown, Angry, Sparkles, Check } from 'lucide-react'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 const moods = [
   { value: 'glad' as const, label: 'Contento', icon: Smile, color: 'bg-emerald-50 border-emerald-300 text-emerald-600 hover:bg-emerald-100 hover:border-emerald-400' },
@@ -40,10 +41,12 @@ export function MoodVoting({ sessionId }: MoodVotingProps) {
 
   return (
     <div className="max-w-lg mx-auto space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-retro-text mb-2">Come ti senti oggi?</h2>
-        <p className="text-sm text-retro-text-secondary">Seleziona il tuo stato d'animo per questo sprint</p>
-      </div>
+      <PageHeader
+        variant="centered"
+        title="Come ti senti oggi?"
+        description="Seleziona il tuo stato d'animo per questo sprint"
+        gradient="primary"
+      />
 
       <div className="grid grid-cols-2 gap-3">
         {moods.map((mood) => (

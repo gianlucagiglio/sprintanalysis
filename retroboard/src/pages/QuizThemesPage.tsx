@@ -7,6 +7,7 @@ import { quizThemes, quizCategories, type QuizCategory } from '@/data/quizThemes
 import { useQuizThemeUsage } from '@/hooks/useQuizThemeUsage'
 import { BookOpen, Layers, ChevronDown, ChevronUp, CheckCircle2, ExternalLink, Calendar } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 export function QuizThemesPage() {
   const [expandedCategories, setExpandedCategories] = useState<Set<QuizCategory>>(
@@ -55,26 +56,29 @@ export function QuizThemesPage() {
     <AppLayout>
       <div className="max-w-7xl mx-auto px-3 md:px-6 py-6 md:py-8 space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-display text-retro-text mb-2">
-              📚 Temi Quiz
-            </h1>
-            <p className="text-sm text-retro-text-secondary">
-              Esplora tutti i temi disponibili per i quiz delle retrospettive
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Badge className="bg-retro-primary/10 text-retro-primary text-sm px-3 py-1.5">
-              <Layers size={14} className="mr-1.5" />
-              {Object.keys(quizCategories).length} categorie
-            </Badge>
-            <Badge className="bg-emerald-100 text-emerald-700 text-sm px-3 py-1.5">
-              <BookOpen size={14} className="mr-1.5" />
-              {quizThemes.length} temi
-            </Badge>
-          </div>
-        </div>
+        <PageHeader
+          variant="hero"
+          title="Temi Quiz"
+          description="Esplora tutti i temi disponibili per i quiz delle retrospettive"
+          icon={BookOpen}
+          gradient="primary"
+          badge={{
+            label: 'Catalogo Completo',
+            variant: 'default'
+          }}
+          actions={
+            <>
+              <Badge className="!bg-white/20 !backdrop-blur-md !border-white/40 !text-white !font-bold !shadow-lg">
+                <Layers size={14} className="mr-1.5" />
+                {Object.keys(quizCategories).length} categorie
+              </Badge>
+              <Badge className="!bg-white/20 !backdrop-blur-md !border-white/40 !text-white !font-bold !shadow-lg">
+                <BookOpen size={14} className="mr-1.5" />
+                {quizThemes.length} temi
+              </Badge>
+            </>
+          }
+        />
 
         {/* Expand/Collapse All */}
         <div className="flex justify-end">

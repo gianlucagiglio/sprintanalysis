@@ -20,6 +20,7 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom'
 import { canCreate } from '@/config/permissions'
 import type { Session } from '@/types/database'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 type FilterTab = 'all' | 'active' | 'closed'
 
@@ -238,24 +239,25 @@ export function Dashboard() {
     <div className="max-w-4xl mx-auto space-y-6">
 
       {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl md:text-2xl font-bold tracking-display text-retro-text">
-            {isSuperAdmin() ? 'Tutte le retrospettive' : 'Le tue retrospettive'}
-          </h1>
-          <p className="text-sm text-retro-text-secondary mt-1">
-            {sessions.length} {sessions.length === 1 ? 'sessione' : 'sessioni'} {isSuperAdmin() ? 'nel sistema' : 'totali'}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          {canCreate(user?.email) && (
-            <Button onClick={() => setShowCreate(true)}>
+      <PageHeader
+        variant="hero"
+        title={isSuperAdmin() ? 'Tutte le retrospettive' : 'Le tue retrospettive'}
+        description={`${sessions.length} ${sessions.length === 1 ? 'sessione' : 'sessioni'} ${isSuperAdmin() ? 'nel sistema' : 'totali'}`}
+        icon={LayoutGrid}
+        gradient="primary"
+        badge={{
+          label: isSuperAdmin() ? 'Super Admin' : 'Dashboard',
+          variant: 'default'
+        }}
+        actions={
+          canCreate(user?.email) ? (
+            <Button onClick={() => setShowCreate(true)} className="!bg-white !text-indigo-600 hover:!bg-white/90">
               <Plus size={16} />
               Nuova sessione
             </Button>
-          )}
-        </div>
-      </div>
+          ) : undefined
+        }
+      />
 
       {/* ── Join bar ── */}
       <Card className="!p-3 !rounded-2xl">

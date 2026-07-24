@@ -13,6 +13,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { KanbanColumn } from './KanbanColumn'
 import { ActionEditModal } from './ActionEditModal'
 import type { Action } from '@/types/database'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 const columns: { id: Action['status']; title: string; color: string }[] = [
   { id: 'todo', title: 'Da fare', color: 'bg-retro-text-secondary' },
@@ -75,10 +76,12 @@ export function KanbanBoard({ sessionId }: KanbanBoardProps) {
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-bold text-retro-text mb-2">Kanban Board</h2>
-        <p className="text-sm text-retro-text-secondary">Gestisci le azioni del team</p>
-      </div>
+      <PageHeader
+        variant="centered"
+        title="Kanban Board"
+        description="Gestisci le azioni del team"
+        gradient="primary"
+      />
 
       <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
