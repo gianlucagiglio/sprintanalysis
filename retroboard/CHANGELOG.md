@@ -2,6 +2,34 @@
 
 All notable changes to RetroBoard will be documented in this file.
 
+## [1.14.14] - 2026-07-22
+
+### ✨ Enhanced
+
+**Voting Experience Improvement**:
+- **Intera Card Cliccabile**: Votazione più immediata e intuitiva
+  - Non serve più cliccare solo il cuore
+  - Click ovunque sulla card per votare/devotare
+  - Cuore diventa indicatore visivo con animazione scale
+  - Tooltip "Votato da" ancora disponibile on hover
+  - Feedback visivo migliorato con ring rosa quando votato
+
+**Typography System**:
+- **Font Unificato**: Poppins come font display principale
+  - Righteous rimosso (non più utilizzato)
+  - Poppins per tutti i titoli hero (font-display, font-heading)
+  - Open Sans per testo corpo
+  - JetBrains Mono per numeri/codice
+  - Google Fonts caricati con preconnect per performance ottimali
+
+### 🎨 Technical
+
+**Font Loading Optimization**:
+- Font separati in link individuali per affidabilità
+- Preconnect a fonts.googleapis.com e fonts.gstatic.com
+- Bundle CSS ridotto: ~95KB (40% più leggero rispetto a @fontsource)
+- Consistenza garantita tra locale e produzione
+
 ## [1.14.4] - 2026-07-22
 
 ### 🎨 Enhanced

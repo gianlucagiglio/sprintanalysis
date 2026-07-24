@@ -4,7 +4,6 @@ import { useVotes } from '@/hooks/useVotes'
 import { useActions } from '@/hooks/useActions'
 import { useSessionStore } from '@/stores/sessionStore'
 import { useAuthStore } from '@/stores/authStore'
-import { GroupingPhase } from './GroupingPhase'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -24,7 +23,6 @@ import {
   Zap,
   User,
   Calendar,
-  Layers,
   X,
   Edit,
 } from 'lucide-react'
@@ -85,7 +83,6 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
   const { getVoteCount, getVoterNames } = useVotes(commentIds, sessionId)
   const { actions, addAction, updateAction, deleteAction } = useActions(sessionId)
 
-  const [clusteringView, setClusteringView] = useState(false)
   const [replyingTo, setReplyingTo] = useState<string | null>(null)
   const [replyText, setReplyText] = useState('')
   const [collapsedColumns, setCollapsedColumns] = useState<Set<DiscussionStatus>>(new Set())
@@ -376,30 +373,6 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
     )
   }
 
-  if (clusteringView) {
-    return (
-      <div className="w-full max-w-6xl mx-auto space-y-6">
-        <div className="flex justify-center">
-          <div className="inline-flex items-center bg-retro-sidebar rounded-xl p-1 gap-1">
-            <button
-              onClick={() => setClusteringView(false)}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-retro-text-secondary hover:text-retro-text"
-            >
-              Discussione
-            </button>
-            <button
-              className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-white text-retro-text shadow-sm flex items-center gap-1.5"
-            >
-              <Layers size={12} />
-              Clustering
-            </button>
-          </div>
-        </div>
-        <GroupingPhase sessionId={sessionId} />
-      </div>
-    )
-  }
-
   return (
     <>
       <div className="w-full max-w-6xl mx-auto space-y-6">
@@ -409,22 +382,6 @@ export function BrainstormingPhase({ sessionId }: BrainstormingPhaseProps) {
             <p className="text-sm text-retro-text-secondary">
               Spostate i commenti tra le colonne e create le azioni necessarie.
             </p>
-          </div>
-          <div className="flex justify-center">
-            <div className="inline-flex items-center bg-retro-sidebar rounded-xl p-1 gap-1">
-              <button
-                className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-white text-retro-text shadow-sm"
-              >
-                Discussione
-              </button>
-              <button
-                onClick={() => setClusteringView(true)}
-                className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-retro-text-secondary hover:text-retro-text flex items-center gap-1.5"
-              >
-                <Layers size={12} />
-                Clustering
-              </button>
-            </div>
           </div>
         </div>
 

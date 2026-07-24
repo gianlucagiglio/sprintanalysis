@@ -27,6 +27,40 @@ interface ChangelogEntry {
 
 const changelog: ChangelogEntry[] = [
   {
+    version: '1.14.14',
+    date: '2026-07-22',
+    type: 'improvement',
+    changes: [
+      {
+        category: 'Voting Experience - UX Immediata',
+        icon: Zap,
+        items: [
+          '👆 Intera Card Cliccabile: Vota/devota con un click ovunque',
+          '💝 Cuore come indicatore visivo (non più button separato)',
+          '✨ Animazione scale quando votato (1.1x)',
+          '🔄 Toggle immediato: click per votare, click per rimuovere',
+          '💬 Tooltip "Votato da" ancora disponibile on hover',
+          '🎨 Feedback visivo con ring rosa quando attivo',
+          '⚡ Più immediato: non serve mirare il cuoricino piccolo',
+        ],
+      },
+      {
+        category: 'Typography System - Font Unificato',
+        icon: Palette,
+        items: [
+          '✏️ Poppins come font display principale per tutti i titoli',
+          '❌ Righteous rimosso (sostituito da Poppins)',
+          '📝 Open Sans per testo corpo',
+          '🔢 JetBrains Mono per numeri/codice',
+          '⚡ Google Fonts con preconnect per performance',
+          '📦 Bundle CSS ridotto: ~95KB (-40% vs @fontsource)',
+          '🌍 Consistenza garantita locale/online',
+          '🔗 Font separati in link individuali per affidabilità',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.14.4',
     date: '2026-07-22',
     type: 'improvement',

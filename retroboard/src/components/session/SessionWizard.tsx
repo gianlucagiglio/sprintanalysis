@@ -6,7 +6,6 @@ import { TeamMoodVoting } from '@/components/mood/TeamMoodVoting'
 import { QuizGame } from '@/components/quiz/QuizGame'
 import { RetroBoard } from '@/components/retro/RetroBoard'
 import { VotingPhase } from '@/components/retro/VotingPhase'
-import { GroupingPhase } from '@/components/retro/GroupingPhase'
 import { BrainstormingPhase } from '@/components/retro/BrainstormingPhase'
 
 import { PhaseTimer } from '@/components/session/PhaseTimer'
@@ -34,11 +33,10 @@ interface SessionWizardProps {
 const retroPhaseLabels: Record<string, string> = {
   comments: 'Commenti',
   voting: 'Votazione',
-  grouping: 'Raggruppamento',
   brainstorming: 'Brainstorming',
 }
 
-const retroPhaseOrder = ['comments', 'grouping', 'voting', 'brainstorming'] as const
+const retroPhaseOrder = ['comments', 'voting', 'brainstorming'] as const
 
 const moodPhaseLabels: Record<string, string> = {
   personal: 'Personale',
@@ -135,8 +133,6 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
             return <RetroBoard sessionId={sessionId} />
           case 'voting':
             return <VotingPhase sessionId={sessionId} />
-          case 'grouping':
-            return <GroupingPhase sessionId={sessionId} />
           case 'brainstorming':
           case 'action_plan':
             return <BrainstormingPhase sessionId={sessionId} />

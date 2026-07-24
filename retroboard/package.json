@@ -1,7 +1,7 @@
 {
   "name": "retroboard",
   "private": true,
-  "version": "1.14.13",
+  "version": "1.14.16",
   "type": "module",
   "scripts": {
     "dev": "vite",

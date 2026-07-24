@@ -94,8 +94,11 @@ export function CommentCard({
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
     >
-      <Card className={`!p-3 !rounded-2xl transition-all duration-300 group/card
-        hover:scale-102 hover:shadow-card-hover hover:-translate-y-0.5 cursor-default
+      <Card
+        onClick={votingMode && onToggleVote && (hasVoted || canVote) ? onToggleVote : undefined}
+        className={`!p-3 !rounded-2xl transition-all duration-300 group/card
+        hover:scale-102 hover:shadow-card-hover hover:-translate-y-0.5
+        ${votingMode && onToggleVote && (hasVoted || canVote) ? 'cursor-pointer' : 'cursor-default'}
         ${isDragging ? 'shadow-float rotate-1 scale-105' : 'shadow-card'}
         ${isOver ? 'ring-2 ring-indigo-400/50 bg-indigo-50/50 scale-102' : ''}
         ${hasChildren ? 'border-l-4 border-l-indigo-500 shadow-md' : ''}
@@ -179,25 +182,23 @@ export function CommentCard({
             )}
           </div>
           {votingMode && onToggleVote && (
-            <div className="relative group/vote">
-              <motion.button
-                whileTap={{ scale: 1.3 }}
+            <div className="relative group/vote pointer-events-none">
+              <motion.div
+                animate={{ scale: hasVoted ? 1.1 : 1 }}
                 transition={{ type: 'spring', stiffness: 400 }}
-                onClick={onToggleVote}
-                disabled={!hasVoted && !canVote}
                 className={`flex items-center gap-1 px-2 py-1 rounded-xl text-sm transition-all duration-200
                   ${hasVoted
                     ? 'bg-rose-50 text-rose-500'
                     : canVote
-                      ? 'text-retro-text-secondary hover:bg-rose-50 hover:text-rose-400'
-                      : 'text-retro-border cursor-not-allowed'
+                      ? 'text-retro-text-secondary'
+                      : 'text-retro-border'
                   }`}
               >
-                <Heart size={14} className={hasVoted ? 'fill-rose-500' : ''} />
+                <Heart size={16} className={hasVoted ? 'fill-rose-500' : ''} strokeWidth={2} />
                 {(voteCount ?? 0) > 0 && <span className="font-medium">{voteCount}</span>}
-              </motion.button>
+              </motion.div>
               {voterNames && voterNames.length > 0 && (
-                <div className="absolute bottom-full right-0 mb-2 hidden group-hover/vote:block z-50 pointer-events-none">
+                <div className="absolute bottom-full right-0 mb-2 hidden group-hover/vote:block z-50">
                   <div className="bg-retro-text text-white text-xs rounded-xl px-3 py-2 shadow-float whitespace-nowrap">
                     <p className="font-semibold text-white/60 mb-1">Votato da</p>
                     {voterNames.map((name, i) => (
