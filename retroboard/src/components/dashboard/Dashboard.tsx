@@ -300,7 +300,7 @@ export function Dashboard() {
       <PageHeader
         variant="hero"
         title={isSuperAdmin() ? 'Tutte le retrospettive' : 'Le tue retrospettive'}
-        description="Monitora, gestisci e analizza tutte le tue sessioni retrospettive [NUOVO DESIGN v1.14.17]"
+        description="Monitora, gestisci e analizza tutte le tue sessioni retrospettive"
         icon={LayoutGrid}
         gradient="primary"
         badge={{

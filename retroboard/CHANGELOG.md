@@ -2,6 +2,115 @@
 
 All notable changes to RetroBoard will be documented in this file.
 
+## [1.14.15] - 2026-07-22
+
+### 🎨 Enhanced - Dashboard Sentiment Redesign
+
+**MetricsPage Complete Redesign**:
+- **Layout Modernizzato**: Blocchi singoli puliti e coerenti con resto interfaccia
+  - Rimossi mega wrapper gradient
+  - Ogni grafico in Card bianca indipendente
+  - Spacing uniforme tra sezioni
+  - Animazioni staggered con Framer Motion
+
+**TeamStatsCard Redesign**:
+- **Gradient Header**: Header colorato con pattern SVG overlay
+  - Gradiente indigo → purple → pink
+  - SVG pattern grid semi-trasparente
+  - Badge ruolo con Sparkles icon e shadow
+- **Elevated Happiness Card**: Card bianca floating con shadow
+  - Numero grande con trend indicator (TrendingUp/Down/Minus)
+  - Badge colorato per trend (verde/giallo/rosso)
+- **Gradient Icon KPIs**: Mini KPI con icone circolari gradient
+  - Background gradient per ogni metrica
+  - Numeri bold con label descrittive
+  - Grid responsive 3 colonne
+- **Hover Animation**: Card si solleva on hover (-4px translateY)
+  - Arrow animata on hover
+  - Click navigazione verso team detail
+
+**Grafici Trend Globale - Complete Redesign**:
+- **HappinessTrendLine**:
+  - Area chart con gradient fill (verde positivo / rosso negativo)
+  - Stats box con media e trend icon
+  - ReferenceLine per media con label
+  - Dots bianchi con stroke per evidenza
+  - Header moderno con icona gradient
+- **SentimentChart**:
+  - Stacked bars con emoji legend (😊😢😠💭)
+  - Legend inline con pallini colorati
+  - Border radius top bars (8px)
+  - Colori vivaci per ogni categoria
+- **CommentSentimentChart**:
+  - Area chart con gradient fills
+  - Stats boxes per Positivi/Negativi/Neutri
+  - Percentuali calcolate sul totale
+  - Gradient backgrounds per stats
+- **SentimentDelta**:
+  - Bar chart con gradient cells (verde/rosso)
+  - Stats boxes: Miglioramenti/Peggioramenti/Delta Medio
+  - Celle colorate dinamicamente per valore positivo/negativo
+  - Gradient su ogni barra
+- **SentimentOverview**:
+  - Donut chart compatto (220px) con legend emoji
+  - Numero centrale "Voti Totali" centrato perfettamente
+  - Grid 2×2 legend boxes con emoji, valore e percentuale
+  - Tabella sessioni moderna con progress bars
+  - Badge mood prevalente con emoji
+  - Scrollable list con hover effects
+
+**Grafici Collaborazione Team - Complete Redesign**:
+- **TeamMoodChart**:
+  - Stacked bars con emoji legend (🌟👍😐👎)
+  - Stats boxes per Ottima/Buona/Sufficiente/Scarsa
+  - Grid 4 colonne con gradienti e percentuali
+  - Legend inline con emoji e colori
+- **TeamMoodOverview**:
+  - Donut chart compatto con legend emoji
+  - Struttura identica a SentimentOverview
+  - Tabella sessioni con mood prevalente
+  - Colori tematici purple/pink
+
+**Design System Unificato**:
+- **Header con Icone Gradient**: Tutte le sezioni hanno icona gradient (w-10 h-10)
+  - Emerald/Teal per Trend Globale
+  - Purple/Pink per Collaborazione Team
+  - Violet/Purple, Cyan/Blue per Overview
+- **Stats Boxes Pattern**: Mini cards gradient per metriche chiave
+  - Border gradient sottile
+  - Numeri grandi + label piccola
+  - Percentuali dove applicabile
+- **Empty States Moderni**: Card gradient con icona e messaggio
+  - Background from-slate-50 to-slate-100
+  - Icona in card bianca semi-trasparente
+  - Testo descrittivo secondario
+- **Tooltip Eleganti**: Tutti i grafici Recharts con tooltip unificato
+  - Border 2px solid
+  - Border radius 16px
+  - Shadow 12px blur
+  - Padding 12×16px
+- **Typography Hierarchy**: Font sizes e weights coerenti
+  - Titoli: text-lg font-bold
+  - Descrizioni: text-sm text-secondary
+  - Numeri: text-3xl / text-2xl font-bold
+  - Labels: text-xs / text-[10px]
+- **Color Palette**: Colori semantici per sentiment/mood
+  - Verde emerald (#10B981) → Contento/Ottima
+  - Giallo amber (#F59E0B) → Triste/Sufficiente
+  - Rosso rose (#EF4444) → Arrabbiato/Scarsa
+  - Indigo/Purple (#6366F1) → Altro/Custom
+  - Cyan/Blue (#0EA5E9) → Buona
+
+### 🐛 Fixed
+- **Card Import**: Aggiunti import mancanti in SentimentOverview e TeamMoodOverview
+- **Donut Chart Centering**: Numero centrale ora perfettamente centrato (h-[220px])
+- **Legend Overflow**: Ridotte dimensioni legend per fit nel box (gap-2, px-2 py-1.5)
+- **TypeScript Errors**: Rimossi import e variabili non utilizzate
+  - Legend da SentimentChart
+  - LineChart e Line da HappinessTrendLine
+  - Variabili totals e maxTotal non usate
+- **Description Tag**: Rimossa tag temporanea "[NUOVO DESIGN v1.14.17]" da Dashboard
+
 ## [1.14.14] - 2026-07-22
 
 ### ✨ Enhanced
