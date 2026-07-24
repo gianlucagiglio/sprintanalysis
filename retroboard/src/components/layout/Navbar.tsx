@@ -2,7 +2,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { PointsWidget } from '@/components/gamification/PointsWidget'
-import { LayoutDashboard, LogOut, BarChart3, ListTodo, UsersRound, Trophy, Sparkles, BookOpen, User } from 'lucide-react'
+import { LayoutDashboard, LogOut, BarChart3, ListTodo, UsersRound, Trophy, Sparkles, BookOpen, User, RotateCcw } from 'lucide-react'
 import packageJson from '../../../package.json'
 
 const navItems = [
@@ -38,10 +38,12 @@ export function Navbar() {
           <div className="flex items-center gap-1.5 md:gap-2">
             <button
               onClick={() => navigate('/dashboard')}
-              className="flex items-center gap-1.5 md:gap-2 font-heading font-bold text-base md:text-lg"
+              className="flex items-center gap-2 md:gap-2.5 group"
             >
-              <span className="text-lg md:text-xl">🔄</span>
-              <span className="text-glass-primary">
+              <div className="w-8 h-8 md:w-9 md:h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-200">
+                <RotateCcw size={16} className="text-white" strokeWidth={2.5} />
+              </div>
+              <span className="font-heading font-bold text-base md:text-lg bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                 RetroBoard
               </span>
             </button>
