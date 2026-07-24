@@ -183,23 +183,29 @@ export function MetricsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, type: 'spring', stiffness: 200, damping: 20 }}
               >
-                <HappinessTrendLine data={happinessData} />
+                <Card className="!p-6 !rounded-2xl">
+                  <HappinessTrendLine data={happinessData} />
+                </Card>
               </motion.div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.6, type: 'spring', stiffness: 200, damping: 20 }}
                 >
-                  <CommentSentimentChart data={commentSentiments} />
+                  <Card className="!p-6 !rounded-2xl">
+                    <CommentSentimentChart data={commentSentiments} />
+                  </Card>
                 </motion.div>
                 <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.6, type: 'spring', stiffness: 200, damping: 20 }}
                 >
-                  <SentimentChart sessionMoods={sessionMoods} />
+                  <Card className="!p-6 !rounded-2xl">
+                    <SentimentChart sessionMoods={sessionMoods} />
+                  </Card>
                 </motion.div>
               </div>
 
@@ -208,7 +214,9 @@ export function MetricsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7, type: 'spring', stiffness: 200, damping: 20 }}
               >
-                <SentimentDelta data={sentimentDeltas} />
+                <Card className="!p-6 !rounded-2xl">
+                  <SentimentDelta data={sentimentDeltas} />
+                </Card>
               </motion.div>
 
               <motion.div
@@ -248,7 +256,9 @@ export function MetricsPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 1.0, type: 'spring', stiffness: 200, damping: 20 }}
                   >
-                    <TeamMoodChart sessionTeamMoods={sessionTeamMoods} />
+                    <Card className="!p-6 !rounded-2xl">
+                      <TeamMoodChart sessionTeamMoods={sessionTeamMoods} />
+                    </Card>
                   </motion.div>
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}

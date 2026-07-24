@@ -1,4 +1,5 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
+import { PieChart as PieChartIcon, Table } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import type { SessionTeamMoodData } from '@/hooks/useGlobalMoods'
 
@@ -16,11 +17,11 @@ const LABELS: Record<string, string> = {
   scarsa: 'Scarsa',
 }
 
-const DOMINANT_LABELS: Record<string, string> = {
-  ottima: 'Ottima',
-  buona: 'Buona',
-  sufficiente: 'Sufficiente',
-  scarsa: 'Scarsa',
+const EMOJI: Record<string, string> = {
+  ottima: '🌟',
+  buona: '👍',
+  sufficiente: '😐',
+  scarsa: '👎',
 }
 
 interface TeamMoodOverviewProps {
@@ -35,89 +36,173 @@ export function TeamMoodOverview({ sessionTeamMoods, globalTeamMoodCounts }: Tea
       name: LABELS[mood] || mood,
       value: count,
       color: COLORS[mood] || '#94A3B8',
+      emoji: EMOJI[mood] || '💬',
     }))
+
+  const total = Object.values(globalTeamMoodCounts).reduce((sum, val) => sum + val, 0)
+  const sessionsWithVotes = sessionTeamMoods.filter(s => s.total > 0)
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* Pie Chart */}
-      <Card className="!rounded-2xl">
-        <h3 className="text-sm font-semibold text-retro-text mb-3">Distribuzione globale collaborazione team</h3>
+      {/* Donut Chart */}
+      <Card className="!p-6 !rounded-2xl">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
+            <PieChartIcon size={20} className="text-white" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-retro-text">Distribuzione Globale</h3>
+            <p className="text-sm text-retro-text-secondary">Collaborazione complessiva</p>
+          </div>
+        </div>
+
         {pieData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                innerRadius={55}
-                outerRadius={90}
-                paddingAngle={3}
-                dataKey="value"
-              >
-                {pieData.map((entry, i) => (
-                  <Cell key={i} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #E2E8F0',
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 24px 0 rgb(0 0 0 / 0.12)',
-                }}
-              />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
+          <div className="relative h-[220px]">
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={55}
+                  outerRadius={85}
+                  paddingAngle={4}
+                  dataKey="value"
+                >
+                  {pieData.map((entry, i) => (
+                    <Cell
+                      key={i}
+                      fill={entry.color}
+                      strokeWidth={2}
+                      stroke="#FFFFFF"
+                    />
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#FFFFFF',
+                    border: '2px solid #E2E8F0',
+                    borderRadius: '16px',
+                    boxShadow: '0 12px 32px 0 rgb(0 0 0 / 0.15)',
+                    padding: '12px 16px',
+                  }}
+                  formatter={(value: number) => [
+                    `${value} (${total > 0 ? Math.round((value / total) * 100) : 0}%)`,
+                    '',
+                  ]}
+                  labelStyle={{ fontWeight: 600 }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+
+            {/* Center label */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <p className="text-3xl font-bold text-retro-text">{total}</p>
+              <p className="text-xs text-retro-text-secondary font-medium">Voti Totali</p>
+            </div>
+
+            {/* Legend */}
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              {pieData.map((entry) => (
+                <div
+                  key={entry.name}
+                  className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-slate-50"
+                >
+                  <span className="text-base">{entry.emoji}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] text-retro-text-secondary truncate">{entry.name}</p>
+                    <div className="flex items-baseline gap-1">
+                      <p className="text-sm font-bold" style={{ color: entry.color }}>
+                        {entry.value}
+                      </p>
+                      <p className="text-[10px] font-semibold text-retro-text-secondary">
+                        {total > 0 ? Math.round((entry.value / total) * 100) : 0}%
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         ) : (
-          <p className="text-sm text-retro-text-secondary">Nessun voto registrato</p>
+          <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-8 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/80 flex items-center justify-center">
+              <PieChartIcon size={32} className="text-slate-400" />
+            </div>
+            <p className="text-sm text-retro-text-secondary">Nessun voto registrato</p>
+          </div>
         )}
       </Card>
 
       {/* Summary Table */}
-      <Card className="!rounded-2xl">
-        <h3 className="text-sm font-semibold text-retro-text mb-3">Riepilogo per sessione</h3>
-        {sessionTeamMoods.filter(s => s.total > 0).length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-retro-border">
-                  <th className="text-left py-2.5 px-2 text-retro-text-secondary font-medium">Sessione</th>
-                  <th className="text-left py-2.5 px-2 text-retro-text-secondary font-medium">Data</th>
-                  <th className="text-center py-2.5 px-2 text-retro-text-secondary font-medium">Voti</th>
-                  <th className="text-left py-2.5 px-2 text-retro-text-secondary font-medium">Prevalente</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sessionTeamMoods.filter(s => s.total > 0).map((s) => (
-                  <tr key={s.sessionId} className="border-b border-retro-border/50 hover:bg-slate-50 transition-colors rounded-lg">
-                    <td className="py-2.5 px-2 text-retro-text truncate max-w-[150px]">{s.sessionTitle}</td>
-                    <td className="py-2.5 px-2 text-retro-text-secondary">
-                      {new Date(s.sessionDate).toLocaleDateString('it-IT')}
-                    </td>
-                    <td className="py-2.5 px-2 text-center text-retro-text font-medium">{s.total}</td>
-                    <td className="py-2.5 px-2">
-                      <span
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full"
+      <Card className="!p-6 !rounded-2xl">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500 to-pink-600 flex items-center justify-center shadow-lg">
+            <Table size={20} className="text-white" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-retro-text">Riepilogo Sessioni</h3>
+            <p className="text-sm text-retro-text-secondary">Mood prevalente</p>
+          </div>
+        </div>
+
+        {sessionsWithVotes.length > 0 ? (
+          <div className="bg-slate-50 rounded-2xl p-4 max-h-[330px] overflow-y-auto">
+            <div className="space-y-2">
+              {sessionsWithVotes.map((s) => (
+                <div
+                  key={s.sessionId}
+                  className="bg-white rounded-xl p-3 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-retro-text truncate">
+                        {s.sessionTitle}
+                      </p>
+                      <p className="text-xs text-retro-text-secondary">
+                        {new Date(s.sessionDate).toLocaleDateString('it-IT', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                        })}
+                      </p>
+                    </div>
+                    <span
+                      className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-lg shrink-0"
+                      style={{
+                        backgroundColor: COLORS[s.dominant] + '20',
+                        color: COLORS[s.dominant],
+                      }}
+                    >
+                      <span className="text-sm">{EMOJI[s.dominant]}</span>
+                      {LABELS[s.dominant]}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all"
                         style={{
-                          backgroundColor: COLORS[s.dominant] + '20',
-                          color: COLORS[s.dominant],
+                          width: `${s.total > 0 ? (s[s.dominant as keyof typeof s] as number / s.total) * 100 : 0}%`,
+                          backgroundColor: COLORS[s.dominant],
                         }}
-                      >
-                        <span
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ backgroundColor: COLORS[s.dominant] }}
-                        />
-                        {DOMINANT_LABELS[s.dominant]}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      />
+                    </div>
+                    <span className="text-xs font-semibold text-retro-text-secondary shrink-0">
+                      {s.total} voti
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ) : (
-          <p className="text-sm text-retro-text-secondary">Nessuna sessione trovata</p>
+          <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-8 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/80 flex items-center justify-center">
+              <Table size={32} className="text-slate-400" />
+            </div>
+            <p className="text-sm text-retro-text-secondary">Nessuna sessione trovata</p>
+          </div>
         )}
       </Card>
     </div>
