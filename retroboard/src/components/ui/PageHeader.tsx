@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { ArrowLeft, LucideIcon } from 'lucide-react'
-import { Badge } from './Badge'
+import { Badge, BadgeVariant } from './Badge'
 import { Button } from './Button'
 import { motion } from 'framer-motion'
 
@@ -21,7 +21,7 @@ interface PageHeaderProps {
   // Metadata
   badge?: {
     label: string
-    variant?: 'default' | 'primary' | 'success' | 'warning' | 'glad' | 'sad' | 'mad' | 'outline'
+    variant?: BadgeVariant
   }
 
   // Actions

@@ -1,6 +1,6 @@
 import { HTMLAttributes } from 'react'
 
-type BadgeVariant = 'default' | 'glad' | 'sad' | 'mad' | 'primary' | 'success' | 'warning' | 'outline'
+export type BadgeVariant = 'default' | 'glad' | 'sad' | 'mad' | 'primary' | 'success' | 'warning' | 'outline'
 
 const variantStyles: Record<BadgeVariant, string> = {
   default: 'bg-retro-sidebar text-retro-text-secondary',

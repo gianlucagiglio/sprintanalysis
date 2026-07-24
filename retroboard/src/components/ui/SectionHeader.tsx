@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { LucideIcon } from 'lucide-react'
-import { Badge } from './Badge'
+import { Badge, BadgeVariant } from './Badge'
 
 interface SectionHeaderProps {
   title: string
@@ -8,7 +8,7 @@ interface SectionHeaderProps {
   iconColor?: string
   badge?: {
     label: string
-    variant?: 'default' | 'primary' | 'success' | 'warning' | 'glad' | 'sad' | 'mad' | 'outline'
+    variant?: BadgeVariant
   }
   actions?: ReactNode
   className?: string
