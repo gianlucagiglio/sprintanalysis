@@ -1,9 +1,4 @@
-/* === Google Fonts CDN - Garantisce consistenza locale/online === */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+/* Google Fonts caricati in index.html per performance ottimali */
 
 @tailwind base;
 @tailwind components;
