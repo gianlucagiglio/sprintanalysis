@@ -86,16 +86,33 @@ export function GroupingPhase({ sessionId }: GroupingPhaseProps) {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-bold text-retro-text mb-2">Raggruppa i commenti</h2>
-        <p className="text-sm text-retro-text-secondary">
-          Trascina un commento su un altro per raggrupparli
-        </p>
-        <p className="text-xs text-retro-text-secondary/60 mt-1 flex items-center justify-center gap-1">
-          <Unlink size={12} />
-          Clicca la <strong>X</strong> su un commento raggruppato per sgrupparlo
-        </p>
-      </div>
+      <Card className="!p-6 !rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-100">
+        <div className="text-center space-y-3">
+          <div className="flex items-center justify-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-retro-text">Raggruppa Commenti Simili</h2>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-base text-retro-text font-medium">
+              🎯 <strong>Trascina</strong> un commento su un altro per raggrupparli insieme
+            </p>
+            <p className="text-sm text-retro-text-secondary">
+              💡 Chiunque nel team può raggruppare i commenti
+            </p>
+            <div className="flex items-center justify-center gap-2 text-sm text-retro-text-secondary bg-white/60 rounded-lg px-4 py-2 mt-2">
+              <Unlink size={14} className="text-rose-500" />
+              <span>
+                Sbagliato? Passa il mouse su un commento raggruppato e clicca la <strong className="text-rose-600">X rossa</strong> per sgrupparlo
+              </span>
+            </div>
+          </div>
+        </div>
+      </Card>
 
       <DndContext
         sensors={sensors}

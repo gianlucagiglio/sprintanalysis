@@ -2,6 +2,52 @@
 
 All notable changes to RetroBoard will be documented in this file.
 
+## [1.14.16] - 2026-07-22
+
+### ✨ Added
+
+**Fase di Raggruppamento Commenti**:
+- **Nuova Fase**: Aggiunta fase 'grouping' tra 'comments' e 'voting'
+  - Trascina commenti simili per raggrupparli
+  - Facilita discussione temi comuni
+  - Qualsiasi membro team può raggruppare
+- **GroupingPhase Component**:
+  - Drag & drop con @dnd-kit
+  - Istruzioni chiare con emoji e esempi
+  - Ungroup function per correggere errori (icona X rossa on hover)
+  - Visual feedback durante drag (overlay, isOver state)
+  - Separazione per section (Cosa è andato bene, Da migliorare, Idee)
+- **SessionWizard Integration**:
+  - Aggiunto 'grouping' a retroPhaseOrder
+  - Label localizzata 'Raggruppamento'
+  - Switch case per renderizzare GroupingPhase component
+
+### 🎨 Enhanced
+
+**ActionFunnel Restructure**:
+- **Due Cluster Distinti**: Separati lifecycle commenti e azioni
+  - **Cluster 1 - Ciclo Commenti**: Scritti → Votati → Discussi
+  - **Cluster 2 - Ciclo Azioni**: Create → Completate
+  - Arrow connector tra cluster con % conversione discussi→azioni
+  - Indicator colorato per ogni cluster (blu commenti, verde azioni)
+- **Logica Migliorata**: Conversioni calcolate per cluster (non globale)
+  - Comments cluster: max = totalComments
+  - Actions cluster: max = actionsCreated
+- **Animazioni Staggered**: Delay diverso per ogni cluster (0 / 0.6s)
+- **End-to-End Metric**: Conversione totale commenti→azioni completate invariata
+
+### 🔧 Fixed
+
+**Team Delete Cascade** (migrations 018 + 019):
+- Migration 018: Foreign key constraints base
+  - ON DELETE CASCADE per team_members
+  - ON DELETE SET NULL per sessions.team_id
+- Migration 019: Fix conflict user_points
+  - Problema: user_points aveva ON DELETE SET NULL causando duplicate key constraint
+  - Soluzione: Cambiato a ON DELETE CASCADE per user_points.team_id
+  - Logica: eliminando team, elimina anche i punti associati (sono inutili senza team)
+  - Fix: "elimina team" ora funziona correttamente ✅
+
 ## [1.14.15] - 2026-07-22
 
 ### 🎨 Enhanced - Dashboard Sentiment Redesign

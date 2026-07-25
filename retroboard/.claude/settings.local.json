@@ -42,7 +42,11 @@
       "Bash(\"$LOCALAPPDATA/Programs/Python/Python312/python.exe\" scripts/search.py \"soft depth modern saas productivity collaborative\" --design-system -p \"RetroBoard Alt 3\" -f markdown)",
       "Bash(\"$LOCALAPPDATA/Programs/Python/Python312/python.exe\" scripts/search.py \"gradient premium elevated sophisticated team\" --design-system -p \"RetroBoard Alt 4\" -f markdown)",
       "Bash(\"C:\\\\Users\\\\Gianluca\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\python3.exe\" scripts/search.py \"productivity retrospective collaboration dashboard data-dense\" --design-system -p \"RetroBoard\")",
-      "Bash(npm run lint:*)"
+      "Bash(npm run lint:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(npx supabase --version)",
+      "Bash(node run-migration.js:*)"
     ]
   }
 }
