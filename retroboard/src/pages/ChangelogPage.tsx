@@ -27,6 +27,86 @@ interface ChangelogEntry {
 
 const changelog: ChangelogEntry[] = [
   {
+    version: '1.14.16',
+    date: '2026-07-22',
+    type: 'improvement',
+    changes: [
+      {
+        category: 'Fase Raggruppamento Commenti',
+        icon: MessageSquare,
+        items: [
+          '🎯 Nuova fase "Raggruppamento" tra Comments e Voting',
+          '🖱️ Drag & drop per raggruppare commenti simili (@dnd-kit)',
+          '👥 Qualsiasi membro del team può raggruppare',
+          '❌ Funzione ungroup per correggere errori (icona X rossa on hover)',
+          '✨ Visual feedback durante drag (overlay, isOver state)',
+          '📊 Separazione per section (Cosa è andato bene, Da migliorare, Idee)',
+          '📝 Istruzioni chiare con emoji ed esempi',
+        ],
+      },
+      {
+        category: 'ActionFunnel Restructure',
+        icon: BarChart3,
+        items: [
+          '🔄 Ristrutturazione in due cluster logici distinti',
+          '💬 Cluster 1 - Ciclo Commenti: Scritti → Votati → Discussi',
+          '🎯 Cluster 2 - Ciclo Azioni: Create → Completate',
+          '⬇️ Arrow connector tra cluster con % conversione',
+          '🎨 Indicator colorati per ogni cluster (blu commenti, verde azioni)',
+          '📊 Conversioni calcolate per cluster (non più globale)',
+          '⚡ Animazioni staggered con delay diverso per ogni cluster',
+          '📈 End-to-End Metric: conversione totale invariata',
+        ],
+      },
+      {
+        category: 'Team Delete Fix',
+        icon: Shield,
+        items: [
+          '🐛 Risolto errore 409 Conflict su eliminazione team',
+          '🔑 Migration 018: ON DELETE CASCADE per team_members',
+          '🔑 Migration 019: ON DELETE CASCADE per user_points.team_id',
+          '💡 Fix conflict "duplicate key violates unique constraint"',
+          '🗑️ Eliminazione team ora funziona correttamente',
+          '🧹 Cleanup automatico record orphaned',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.14.15',
+    date: '2026-07-22',
+    type: 'improvement',
+    changes: [
+      {
+        category: 'Dashboard Sentiment Redesign',
+        icon: Palette,
+        items: [
+          '🎨 MetricsPage complete redesign con layout modernizzato',
+          '📊 HappinessTrendLine: Area chart con gradient fill dinamico',
+          '😊 SentimentChart: Stacked bars con emoji legend',
+          '💬 CommentSentimentChart: Stats boxes con percentuali',
+          '📈 SentimentDelta: Bar chart con gradient cells (verde/rosso)',
+          '🍩 SentimentOverview: Donut chart ottimizzato (220px)',
+          '👥 TeamMoodChart: Emoji legend con 4 livelli',
+          '🎯 TeamMoodOverview: Donut compatto con legend ottimizzata',
+          '✨ Card individuali per ogni grafico con spacing uniforme',
+          '🎬 Animazioni staggered con Framer Motion',
+        ],
+      },
+      {
+        category: 'TeamStatsCard Redesign',
+        icon: Sparkles,
+        items: [
+          '🌈 Gradient header indigo→purple→pink con pattern SVG',
+          '💎 Elevated happiness card con trend indicator',
+          '📊 Gradient icon KPIs con grid responsive',
+          '🎭 Hover animation con -4px translateY',
+          '🔗 Click navigation verso team detail',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.14.14',
     date: '2026-07-22',
     type: 'improvement',

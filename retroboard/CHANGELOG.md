@@ -39,14 +39,39 @@ All notable changes to RetroBoard will be documented in this file.
 ### 🔧 Fixed
 
 **Team Delete Cascade** (migrations 018 + 019):
-- Migration 018: Foreign key constraints base
-  - ON DELETE CASCADE per team_members
-  - ON DELETE SET NULL per sessions.team_id
-- Migration 019: Fix conflict user_points
-  - Problema: user_points aveva ON DELETE SET NULL causando duplicate key constraint
-  - Soluzione: Cambiato a ON DELETE CASCADE per user_points.team_id
-  - Logica: eliminando team, elimina anche i punti associati (sono inutili senza team)
-  - Fix: "elimina team" ora funziona correttamente ✅
+
+**Problema Iniziale**:
+- La funzione "Elimina team" falliva con errore 409 Conflict
+- Errore: `duplicate key value violates unique constraint "idx_user_points_user_null_team"`
+
+**Root Cause**:
+- Quando si elimina un team, `user_points.team_id` veniva impostato a NULL (ON DELETE SET NULL)
+- Ma l'utente aveva già un record con `team_id = NULL` (punti globali)
+- Conflict con constraint UNIQUE(user_id, team_id)
+
+**Migration 018** - Foreign key constraints base:
+- `team_members.team_id`: ON DELETE CASCADE
+  - Quando elimini team → elimina automaticamente tutti i membri
+- `sessions.team_id`: ON DELETE SET NULL
+  - Quando elimini team → sessioni mantengono dati ma perdono riferimento team
+- Indici per performance (idx_team_members_team_id, idx_sessions_team_id)
+
+**Migration 019** - Fix definitivo user_points:
+- **Problema**: Migration 018 non risolveva conflict su user_points
+- **Soluzione**: Cambiato `user_points.team_id` da ON DELETE SET NULL → ON DELETE CASCADE
+- **Logica**: Punti di un team eliminato sono inutili → eliminali insieme al team
+- **Cleanup**: Rimossi orphaned user_points records di team già eliminati
+- ✅ **Risultato**: "Elimina team" funziona correttamente!
+
+**File Modificati**:
+- `supabase/migrations/018_fix_team_delete_cascade.sql` (nuovo)
+- `supabase/migrations/019_fix_user_points_team_delete.sql` (nuovo)
+- `APPLY_MIGRATION_018.md` (documentazione)
+
+**Per Applicare**:
+1. Vai su Supabase Dashboard → SQL Editor
+2. Esegui migration 019 (la 018 è opzionale, la 019 include il fix completo)
+3. Test: crea team → aggiungi membri → elimina team ✅
 
 ## [1.14.15] - 2026-07-22
 
