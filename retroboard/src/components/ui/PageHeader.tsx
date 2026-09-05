@@ -180,7 +180,7 @@ export function PageHeader({
                 {title}
               </h1>
               {description && (
-                <p className="text-sm text-retro-text-secondary mt-1">
+                <p className="text-sm text-[var(--secondary-text-color)] mt-1">
                   {description}
                 </p>
               )}
@@ -220,7 +220,7 @@ export function PageHeader({
         </h2>
 
         {description && (
-          <p className="text-sm text-retro-text-secondary max-w-xl mx-auto">
+          <p className="text-sm text-[var(--secondary-text-color)] max-w-xl mx-auto">
             {description}
           </p>
         )}
@@ -258,7 +258,7 @@ export function PageHeader({
           </div>
 
           {description && (
-            <p className="text-sm text-retro-text-secondary max-w-2xl">
+            <p className="text-sm text-[var(--secondary-text-color)] max-w-2xl">
               {description}
             </p>
           )}

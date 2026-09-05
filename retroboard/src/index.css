@@ -4,6 +4,157 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ==============================================
+   VIBE TOKEN OVERRIDES — RetroBoard Theme
+   Sovrascrive i default di @vibe/core/tokens
+   per allineare i componenti Vibe al tema RetroBoard.
+   ============================================== */
+:root {
+  /* --- Primary (Indigo) --- */
+  --primary-color: #6366F1;
+  --primary-hover-color: #4F46E5;
+  --primary-selected-color: #E0E7FF;
+  --primary-selected-hover-color: #C7D2FE;
+  --primary-highlighted-color: #EEF2FF;
+  --primary-surface-color: #EEF2FF;
+  --brand-color: #6366F1;
+  --brand-hover-color: #4F46E5;
+  --brand-selected-color: #E0E7FF;
+  --brand-selected-hover-color: #C7D2FE;
+
+  /* --- Text --- */
+  --primary-text-color: #111827;
+  --secondary-text-color: #6B7280;
+  --text-color-on-primary: #FFFFFF;
+  --text-color-on-inverted: #FFFFFF;
+
+  /* --- Backgrounds --- */
+  --primary-background-color: #FFFFFF;
+  --secondary-background-color: #FFFFFF;
+  --allgrey-background-color: #F3F4F6;
+  --modal-background-color: #FFFFFF;
+  --dialog-background-color: #FFFFFF;
+  --inverted-color-background: #111827;
+
+  /* --- Borders --- */
+  --ui-border-color: #D1D5DB;
+  --layout-border-color: #E5E7EB;
+
+  /* --- UI surfaces --- */
+  --ui-background-color: #F1F5F9;
+  --ui-background-hover-color: #E2E8F0;
+  --disabled-background-color: #F3F4F6;
+  --placeholder-color: #9CA3AF;
+  --icon-color: #6B7280;
+
+  /* --- Semantic: Positive (retro-glad) --- */
+  --positive-color: #059669;
+  --positive-color-hover: #047857;
+  --positive-color-selected: #ECFDF5;
+  --positive-color-selected-hover: #D1FAE5;
+
+  /* --- Semantic: Negative (retro-mad) --- */
+  --negative-color: #DC2626;
+  --negative-color-hover: #B91C1C;
+  --negative-color-selected: #FEF2F2;
+  --negative-color-selected-hover: #FEE2E2;
+
+  /* --- Semantic: Warning (retro-sad) --- */
+  --warning-color: #D97706;
+  --warning-color-hover: #B45309;
+  --warning-color-selected: #FFFBEB;
+  --warning-color-selected-hover: #FEF3C7;
+
+  /* --- Link --- */
+  --link-color: #4F46E5;
+
+  /* --- Typography --- */
+  --font-family: 'Open Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  --title-font-family: 'Poppins', sans-serif;
+  --h1-font-family: var(--title-font-family);
+
+  /* --- Label background (used by Vibe Label) --- */
+  --label-background-color: #E0E7FF;
+}
+
+/* ==============================================
+   VIBE BUTTON VARIANTS
+   Classi CSS che usano i token Vibe per colori,
+   con supporto hover/active via pseudo-classi.
+   ============================================== */
+.vibe-btn-primary {
+  background-color: var(--primary-color);
+  color: var(--text-color-on-primary);
+}
+.vibe-btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-hover-color);
+}
+.vibe-btn-primary:active:not(:disabled) {
+  filter: brightness(0.9);
+}
+
+.vibe-btn-secondary {
+  background-color: var(--primary-background-color);
+  color: var(--primary-text-color);
+  border: 2px solid var(--ui-border-color);
+}
+.vibe-btn-secondary:hover:not(:disabled) {
+  background-color: var(--allgrey-background-color);
+  border-color: var(--layout-border-color);
+}
+
+.vibe-btn-danger {
+  background-color: var(--negative-color);
+  color: var(--text-color-on-primary);
+}
+.vibe-btn-danger:hover:not(:disabled) {
+  background-color: var(--negative-color-hover);
+}
+.vibe-btn-danger:active:not(:disabled) {
+  filter: brightness(0.9);
+}
+
+.vibe-btn-ghost {
+  color: var(--secondary-text-color);
+  background-color: transparent;
+}
+.vibe-btn-ghost:hover:not(:disabled) {
+  background-color: var(--primary-background-hover-color);
+  color: var(--primary-text-color);
+}
+
+.vibe-btn-success {
+  background-color: var(--positive-color);
+  color: var(--text-color-on-primary);
+}
+.vibe-btn-success:hover:not(:disabled) {
+  background-color: var(--positive-color-hover);
+}
+.vibe-btn-success:active:not(:disabled) {
+  filter: brightness(0.9);
+}
+
+/* ==============================================
+   VIBE INPUT
+   Classi CSS che usano i token Vibe per colori.
+   ============================================== */
+.vibe-input {
+  color: var(--primary-text-color);
+  border-color: var(--ui-border-color);
+}
+.vibe-input::placeholder {
+  color: var(--placeholder-color);
+}
+.vibe-input:focus {
+  border-color: var(--primary-color);
+}
+.vibe-input-error {
+  border-color: var(--negative-color);
+}
+.vibe-input-error:focus {
+  border-color: var(--negative-color);
+}
+
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;

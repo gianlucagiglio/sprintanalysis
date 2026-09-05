@@ -1,5 +1,13 @@
 # CLAUDE.md
 
+## Design system
+- Usa SOLO componenti @vibe/core. Mai CSS custom se esiste un token.
+- Prima di usare un componente: get-vibe-component-metadata per le prop reali.
+  Non inventare mai prop "plausibili".
+- Icone: list-vibe-icons SEMPRE con query e limit. Mai listare tutto.
+- Token: list-vibe-tokens con category. Mai listare tutto.
+- Un componente per volta. Non toccare file fuori dallo scope del task.
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Progetto

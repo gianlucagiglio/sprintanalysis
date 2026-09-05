@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "vibe": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@vibe/mcp"
+      ],
+      "env": {}
+    }
+  }
+}

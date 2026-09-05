@@ -46,7 +46,8 @@
       "Bash(find:*)",
       "Bash(grep:*)",
       "Bash(npx supabase --version)",
-      "Bash(node run-migration.js:*)"
+      "Bash(node run-migration.js:*)",
+      "Bash(claude mcp add:*)"
     ]
   }
 }

@@ -21,7 +21,12 @@ export function ScrollToTop() {
   return (
     <button
       onClick={scrollToTop}
-      className="fixed bottom-8 right-8 p-3 rounded-full bg-retro-primary text-white shadow-float hover:scale-110 transition-all duration-200 animate-fade-in z-40"
+      className="fixed bottom-8 right-8 p-3 rounded-full hover:scale-110 transition-all duration-200 animate-fade-in z-40"
+      style={{
+        backgroundColor: 'var(--primary-color)',
+        color: 'var(--text-color-on-primary)',
+        boxShadow: 'var(--box-shadow-medium)',
+      }}
       aria-label="Scroll to top"
     >
       <ArrowUp size={20} />

@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react'
+import { type ReactNode, useEffect } from 'react'
 import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -27,7 +27,8 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 top-0 left-0 right-0 bottom-0 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 top-0 left-0 right-0 bottom-0 backdrop-blur-sm"
+            style={{ backgroundColor: 'var(--backdrop-color)' }}
             onClick={onClose}
           />
           <motion.div
@@ -35,14 +36,16 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2, type: "spring", stiffness: 300, damping: 30 }}
-            className="relative z-10 w-full max-w-md glass-card rounded-2xl shadow-2xl"
+            className="relative z-10 w-full max-w-md glass-card rounded-2xl"
+            style={{ boxShadow: 'var(--box-shadow-large)' }}
           >
-            <div className="flex items-center justify-between p-5 border-b border-white/20">
-              <h2 className="text-lg font-heading font-semibold text-retro-text">{title}</h2>
+            <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid var(--layout-border-color)' }}>
+              <h2 className="text-lg font-heading font-semibold" style={{ color: 'var(--primary-text-color)' }}>{title}</h2>
               <button
                 onClick={onClose}
                 aria-label="Chiudi finestra"
-                className="flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full hover:bg-white/50 text-retro-text-secondary transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-glass-primary/50"
+                className="flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full hover:bg-white/50 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)]/50"
+                style={{ color: 'var(--secondary-text-color)' }}
               >
                 <X size={18} />
               </button>

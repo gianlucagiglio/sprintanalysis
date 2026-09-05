@@ -1,7 +1,7 @@
 {
   "name": "retroboard",
   "private": true,
-  "version": "1.14.18",
+  "version": "1.14.23",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,6 +15,7 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@supabase/supabase-js": "^2.45.0",
+    "@vibe/core": "^4.5.30",
     "framer-motion": "^11.3.0",
     "lucide-react": "^0.441.0",
     "react": "^18.3.1",

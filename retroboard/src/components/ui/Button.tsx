@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, forwardRef } from 'react'
+import { type ButtonHTMLAttributes, forwardRef } from 'react'
 import { Loader2 } from 'lucide-react'
 
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost' | 'success'
@@ -10,12 +10,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean
 }
 
-const variantStyles: Record<Variant, string> = {
-  primary: 'bg-indigo-600 text-white shadow-soft hover:bg-indigo-700 active:bg-indigo-800',
-  secondary: 'bg-white text-slate-800 border-2 border-slate-300 hover:bg-slate-50 hover:border-slate-400 active:scale-98 shadow-sm',
-  danger: 'bg-red-600 text-white shadow-soft hover:bg-red-700 active:bg-red-800',
-  ghost: 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:scale-98',
-  success: 'bg-emerald-600 text-white shadow-soft hover:bg-emerald-700 active:bg-emerald-800',
+const variantClasses: Record<Variant, string> = {
+  primary: 'vibe-btn-primary shadow-soft',
+  secondary: 'vibe-btn-secondary shadow-sm',
+  danger: 'vibe-btn-danger shadow-soft',
+  ghost: 'vibe-btn-ghost',
+  success: 'vibe-btn-success shadow-soft',
 }
 
 const sizeStyles: Record<Size, string> = {
@@ -31,8 +31,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className={`inline-flex items-center justify-center gap-2 rounded-xl font-medium
         transition-all duration-150 ease-out
         focus:outline-none focus-visible:ring-2 focus-visible:ring-retro-primary-400/50 focus-visible:ring-offset-2
-        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-soft
-        ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+        disabled:opacity-50 disabled:cursor-not-allowed
+        ${variantClasses[variant]} ${sizeStyles[size]} ${className}`}
       disabled={disabled || loading}
       {...props}
     >
