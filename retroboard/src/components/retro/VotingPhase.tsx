@@ -1,10 +1,12 @@
 import { useComments } from '@/hooks/useComments'
 import { useVotes } from '@/hooks/useVotes'
 import { CommentCard } from './CommentCard'
+import { LiveVotingChart } from './LiveVotingChart'
 import { useSessionStore } from '@/stores/sessionStore'
-import { useMemo } from 'react'
-import { Heart, EyeOff, Vote } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { Heart, EyeOff, Vote, BarChart3 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { Button } from '@/components/ui/Button'
 
 interface VotingPhaseProps {
   sessionId: string
@@ -23,11 +25,21 @@ export function VotingPhase({ sessionId }: VotingPhaseProps) {
   const { comments } = useComments(sessionId, sections)
   const maxVotes = session?.max_votes ?? 3
   const commentIds = useMemo(() => comments.map((c) => c.id), [comments])
-  const { toggleVote, getVoteCount, hasUserVoted, getVoterNames, remainingVotes } = useVotes(commentIds, sessionId, maxVotes)
+  const { votes, toggleVote, getVoteCount, hasUserVoted, getVoterNames, remainingVotes } = useVotes(commentIds, sessionId, maxVotes)
+  const [showChart, setShowChart] = useState(false)
 
   // Only show parent comments (not grouped)
   const parentComments = comments.filter((c) => !c.group_id)
   const getGrouped = (parentId: string) => comments.filter((c) => c.group_id === parentId)
+
+  // Build voter names map for chart
+  const voterNamesMap = useMemo(() => {
+    const map = new Map<string, string[]>()
+    commentIds.forEach((commentId) => {
+      map.set(commentId, getVoterNames(commentId))
+    })
+    return map
+  }, [commentIds, getVoterNames])
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -66,6 +78,33 @@ export function VotingPhase({ sessionId }: VotingPhaseProps) {
           </p>
         )}
       </PageHeader>
+
+      {/* Toggle chart button */}
+      {maxVotes > 0 && parentComments.length > 0 && (
+        <div className="flex justify-center mb-4">
+          <Button
+            variant={showChart ? 'primary' : 'secondary'}
+            size="sm"
+            onClick={() => setShowChart(!showChart)}
+          >
+            <BarChart3 size={16} />
+            {showChart ? 'Nascondi risultati' : 'Mostra risultati'}
+          </Button>
+        </div>
+      )}
+
+      {/* Live chart */}
+      {showChart && (
+        <div className="mb-6 glass-card rounded-2xl p-5">
+          <LiveVotingChart
+            comments={parentComments}
+            votes={votes}
+            sections={sections}
+            revealed={revealed}
+            voterNames={voterNamesMap}
+          />
+        </div>
+      )}
 
       {parentComments.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 px-4 text-center">

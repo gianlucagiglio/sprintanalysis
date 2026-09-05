@@ -170,6 +170,16 @@ export type UserBadge = {
   seen: boolean
 }
 
+export type ParkingLotItem = {
+  id: string
+  session_id: string
+  user_id: string
+  text: string
+  is_converted: boolean
+  action_id: string | null
+  created_at: string
+}
+
 export type Database = {
   public: {
     Tables: {
@@ -190,6 +200,7 @@ export type Database = {
       point_transactions: { Row: PointTransaction; Insert: Omit<PointTransaction, 'id' | 'created_at'>; Update: Partial<PointTransaction> }
       badge_definitions: { Row: BadgeDefinition; Insert: Omit<BadgeDefinition, 'created_at'>; Update: Partial<BadgeDefinition> }
       user_badges: { Row: UserBadge; Insert: Omit<UserBadge, 'id' | 'unlocked_at' | 'seen'>; Update: Partial<UserBadge> }
+      parking_lot_items: { Row: ParkingLotItem; Insert: Omit<ParkingLotItem, 'id' | 'created_at' | 'is_converted' | 'action_id'>; Update: Partial<ParkingLotItem> }
     }
   }
 }

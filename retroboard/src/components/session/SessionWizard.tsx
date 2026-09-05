@@ -1,5 +1,6 @@
 import { useSession } from '@/hooks/useSession'
 import { useParticipants } from '@/hooks/useParticipants'
+import { useParkingLot } from '@/hooks/useParkingLot'
 import { Button } from '@/components/ui/Button'
 import { MoodVoting } from '@/components/mood/MoodVoting'
 import { TeamMoodVoting } from '@/components/mood/TeamMoodVoting'
@@ -8,6 +9,8 @@ import { RetroBoard } from '@/components/retro/RetroBoard'
 import { GroupingPhase } from '@/components/retro/GroupingPhase'
 import { VotingPhase } from '@/components/retro/VotingPhase'
 import { BrainstormingPhase } from '@/components/retro/BrainstormingPhase'
+import { ParkingLot } from '@/components/retro/ParkingLot'
+import { ParkingLotButton } from '@/components/retro/ParkingLotButton'
 
 import { PhaseTimer } from '@/components/session/PhaseTimer'
 import { KanbanBoard } from '@/components/kanban/KanbanBoard'
@@ -47,12 +50,17 @@ const moodPhaseLabels: Record<string, string> = {
 
 const moodPhaseOrder = ['personal', 'team'] as const
 
+// Steps where Parking Lot is visible
+const PARKING_LOT_STEPS = [1, 2, 3, 4]
+
 export function SessionWizard({ sessionId }: SessionWizardProps) {
   const { session, isOrganizer, advanceStep, goToStep, setRetroPhase, setMoodPhase, markDone, resetDone, closeSession, startPhaseTimer, stopPhaseTimer } =
     useSession(sessionId)
   const { isDone, doneCount, totalParticipants, allDone, participants } = useParticipants()
+  const { items } = useParkingLot(sessionId)
   const [copied, setCopied] = useState(false)
   const [showParticipantList, setShowParticipantList] = useState(false)
+  const [showParkingLot, setShowParkingLot] = useState(false)
   const [prevStep, setPrevStep] = useState(session?.current_step || 1)
   const popoverRef = useRef<HTMLDivElement>(null)
 
@@ -559,6 +567,21 @@ export function SessionWizard({ sessionId }: SessionWizardProps) {
           {renderStep()}
         </motion.div>
       </AnimatePresence>
+
+      {/* Parking Lot */}
+      {PARKING_LOT_STEPS.includes(currentStep) && (
+        <>
+          <ParkingLotButton
+            onClick={() => setShowParkingLot(true)}
+            count={items.filter((item) => !item.is_converted).length}
+          />
+          <ParkingLot
+            sessionId={sessionId}
+            isOpen={showParkingLot}
+            onClose={() => setShowParkingLot(false)}
+          />
+        </>
+      )}
     </div>
   )
 }
