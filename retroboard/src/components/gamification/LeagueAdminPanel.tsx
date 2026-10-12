@@ -15,7 +15,6 @@ import {
   CheckCircle,
   ExternalLink,
   Crown,
-  TrendingUp,
   Clock,
 } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'

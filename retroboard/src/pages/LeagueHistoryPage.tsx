@@ -561,7 +561,7 @@ export function LeagueHistoryPage() {
                           labelFormatter={(label) => `Giocatore: ${label}`}
                         />
                         <Bar dataKey="points" radius={[8, 8, 0, 0]}>
-                          {chartData.map((entry, index) => (
+                          {chartData.map((_, index) => (
                             <Cell
                               key={`cell-${index}`}
                               fill={
