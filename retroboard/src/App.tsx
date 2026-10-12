@@ -19,6 +19,7 @@ import { QuizThemesPage } from '@/pages/QuizThemesPage'
 import { TeamsPage } from '@/pages/TeamsPage'
 import { TeamPage } from '@/pages/TeamPage'
 import { ChangelogPage } from '@/pages/ChangelogPage'
+import { AdminUsersPage } from '@/pages/AdminUsersPage'
 
 export default function App() {
   const initialize = useAuthStore((s) => s.initialize)
@@ -121,6 +122,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <SessionPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute>
+              <AdminUsersPage />
             </ProtectedRoute>
           }
         />

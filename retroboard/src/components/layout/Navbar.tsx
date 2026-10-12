@@ -2,7 +2,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { PointsWidget } from '@/components/gamification/PointsWidget'
-import { LayoutDashboard, LogOut, BarChart3, ListTodo, UsersRound, Trophy, Sparkles, BookOpen, User, RotateCcw, Archive } from 'lucide-react'
+import { LayoutDashboard, LogOut, BarChart3, ListTodo, UsersRound, Trophy, Sparkles, BookOpen, User, RotateCcw, Archive, Shield } from 'lucide-react'
 import packageJson from '../../../package.json'
 
 const navItems = [
@@ -78,6 +78,21 @@ export function Navbar() {
                   </button>
                 )
               })}
+              {/* Admin only - User Management */}
+              {isSuper && (
+                <button
+                  onClick={() => navigate('/admin/users')}
+                  className={`relative flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200
+                    focus:outline-none focus-visible:ring-2 focus-visible:ring-glass-primary/50 focus-visible:ring-offset-2
+                    ${location.pathname === '/admin/users'
+                      ? 'bg-amber-500/10 text-amber-600 font-semibold ring-1 ring-amber-500/20'
+                      : 'text-amber-600 hover:text-amber-700 hover:bg-amber-50'
+                    }`}
+                >
+                  <Shield size={16} />
+                  Admin
+                </button>
+              )}
             </div>
           )}
         </div>
