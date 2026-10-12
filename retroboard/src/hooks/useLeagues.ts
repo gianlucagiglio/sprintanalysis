@@ -110,6 +110,29 @@ export function useLeagues() {
   )
 
   /**
+   * Preview chiusura league (dry-run senza modificare dati)
+   */
+  const previewCloseLeague = useCallback(async (leagueId: string) => {
+    const { data, error } = await supabase.rpc('preview_close_quiz_league', {
+      p_league_id: leagueId,
+    })
+
+    if (error) throw error
+
+    if (!data || !data.success) {
+      throw new Error(data?.error || 'Errore durante la preview')
+    }
+
+    return {
+      leagueId: data.league_id,
+      leagueName: data.league_name,
+      currentStatus: data.current_status,
+      expectedRankings: data.expected_rankings_to_save,
+      warning: data.warning,
+    }
+  }, [])
+
+  /**
    * Chiude la league corrente e opzionalmente apre una nuova
    */
   const closeLeagueAndOpenNew = useCallback(
@@ -147,6 +170,7 @@ export function useLeagues() {
     activeLeague,
     loading,
     createLeague,
+    previewCloseLeague,
     closeLeagueAndOpenNew,
     refreshLeagues: fetchLeagues,
   }

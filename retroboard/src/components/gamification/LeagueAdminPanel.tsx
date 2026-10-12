@@ -22,9 +22,11 @@ import { it } from 'date-fns/locale'
 import { Link } from 'react-router-dom'
 
 export function LeagueAdminPanel() {
-  const { activeLeague, leagues, closeLeagueAndOpenNew, loading } = useLeagues()
+  const { activeLeague, leagues, previewCloseLeague, closeLeagueAndOpenNew, loading } = useLeagues()
   const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin())
   const [isClosing, setIsClosing] = useState(false)
+  const [isPreviewing, setIsPreviewing] = useState(false)
+  const [previewData, setPreviewData] = useState<any>(null)
   const [newLeagueName, setNewLeagueName] = useState('')
   const [newLeagueDescription, setNewLeagueDescription] = useState('')
   const [showForm, setShowForm] = useState(false)
@@ -45,6 +47,24 @@ export function LeagueAdminPanel() {
         </div>
       </Card>
     )
+  }
+
+  const handlePreview = async () => {
+    if (!activeLeague) return
+
+    setIsPreviewing(true)
+    setError(null)
+    setPreviewData(null)
+
+    try {
+      const preview = await previewCloseLeague(activeLeague.id)
+      setPreviewData(preview)
+    } catch (err: any) {
+      setError(err.message || 'Errore durante la preview')
+      console.error('Error preview league:', err)
+    } finally {
+      setIsPreviewing(false)
+    }
   }
 
   const handleCloseAndOpenNew = async () => {
@@ -71,6 +91,7 @@ export function LeagueAdminPanel() {
       setNewLeagueName('')
       setNewLeagueDescription('')
       setShowForm(false)
+      setPreviewData(null)
     } catch (err: any) {
       setError(err.message || 'Errore durante la chiusura della league')
       console.error('Error closing league:', err)
@@ -156,17 +177,87 @@ export function LeagueAdminPanel() {
               </div>
             </div>
 
+            {/* Preview Button */}
+            {!showForm && !previewData && (
+              <div className="space-y-3">
+                <Button
+                  onClick={handlePreview}
+                  disabled={isPreviewing}
+                  variant="secondary"
+                  className="w-full border-blue-500/30 hover:bg-blue-500/10"
+                >
+                  {isPreviewing ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-400 mr-2"></div>
+                      Verifica in corso...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      🔍 Preview Chiusura (sicuro)
+                    </>
+                  )}
+                </Button>
+                <p className="text-xs text-retro-text/50 text-center">
+                  ⚠️ Usa la preview per verificare PRIMA di chiudere la league
+                </p>
+              </div>
+            )}
+
+            {/* Preview Results */}
+            {previewData && !showForm && (
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 space-y-3">
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-blue-300 mb-2">
+                      Preview Chiusura League
+                    </h4>
+                    <div className="space-y-2 text-sm text-retro-text/80">
+                      <div className="flex justify-between">
+                        <span>League:</span>
+                        <span className="font-bold">{previewData.leagueName}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Classifiche da salvare:</span>
+                        <span className="font-bold text-green-400">
+                          {previewData.expectedRankings} utenti
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Stato attuale:</span>
+                        <span className="font-bold">{previewData.currentStatus}</span>
+                      </div>
+                    </div>
+                    <div className="mt-3 pt-3 border-t border-blue-500/30">
+                      <p className="text-xs text-blue-300/70">
+                        ✅ {previewData.warning}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => setShowForm(true)}
+                    variant="secondary"
+                    className="flex-1 border-orange-500/30 hover:bg-orange-500/10"
+                  >
+                    <Archive className="w-4 h-4 mr-2" />
+                    Procedi con Chiusura
+                  </Button>
+                  <Button
+                    onClick={() => setPreviewData(null)}
+                    variant="secondary"
+                  >
+                    Annulla
+                  </Button>
+                </div>
+              </div>
+            )}
+
             {/* Close League Form */}
-            {!showForm ? (
-              <Button
-                onClick={() => setShowForm(true)}
-                variant="secondary"
-                className="w-full border-orange-500/30 hover:bg-orange-500/10"
-              >
-                <Archive className="w-4 h-4 mr-2" />
-                Chiudi League e Apri Nuova Stagione
-              </Button>
-            ) : (
+            {showForm && (
               <div className="bg-black/20 rounded-lg p-4 space-y-4">
                 <h4 className="font-semibold text-retro-text flex items-center gap-2">
                   <Plus className="w-4 h-4" />
