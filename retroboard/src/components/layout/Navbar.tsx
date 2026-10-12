@@ -2,7 +2,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { PointsWidget } from '@/components/gamification/PointsWidget'
-import { LayoutDashboard, LogOut, BarChart3, ListTodo, UsersRound, Trophy, Sparkles, BookOpen, User, RotateCcw } from 'lucide-react'
+import { LayoutDashboard, LogOut, BarChart3, ListTodo, UsersRound, Trophy, Sparkles, BookOpen, User, RotateCcw, Archive } from 'lucide-react'
 import packageJson from '../../../package.json'
 
 const navItems = [
@@ -11,6 +11,7 @@ const navItems = [
   { path: '/teams', label: 'Team', icon: UsersRound },
   { path: '/profilo', label: 'Profilo', icon: User },
   { path: '/leaderboard', label: 'Classifica', icon: Trophy },
+  { path: '/league-history', label: 'Storico League', icon: Archive },
   { path: '/actions', label: 'Azioni', icon: ListTodo },
   { path: '/quiz-temi', label: 'Quiz', icon: BookOpen },
 ]

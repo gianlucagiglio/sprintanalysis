@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
 import { useTeams } from '@/hooks/useTeams'
+import { useLeagues } from '@/hooks/useLeagues'
 import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
@@ -33,6 +34,7 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
   const filteredThemes = quizThemes.filter((t) => t.category === quizCategory)
   const user = useAuthStore((s) => s.user)
   const { teams } = useTeams()
+  const { activeLeague } = useLeagues()
   const navigate = useNavigate()
 
   // Handle category change - reset theme to first of new category
@@ -87,6 +89,7 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
       await supabase.from('quiz_questions').insert(
         theme.questions.map((q, i) => ({
           session_id: session.id,
+          league_id: activeLeague?.id || null, // Associa alla league attiva
           question: q.question,
           choices: JSON.stringify(q.choices),
           correct_choice: q.correct_choice,

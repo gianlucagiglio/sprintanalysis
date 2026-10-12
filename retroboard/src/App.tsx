@@ -13,6 +13,7 @@ import { SessionPage } from '@/pages/SessionPage'
 import { MetricsPage } from '@/pages/MetricsPage'
 import { ProfilePage } from '@/pages/ProfilePage'
 import { LeaderboardPage } from '@/pages/LeaderboardPage'
+import { LeagueHistoryPage } from '@/pages/LeagueHistoryPage'
 import { ActionsPage } from '@/pages/ActionsPage'
 import { QuizThemesPage } from '@/pages/QuizThemesPage'
 import { TeamsPage } from '@/pages/TeamsPage'
@@ -56,6 +57,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <LeaderboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/league-history"
+          element={
+            <ProtectedRoute>
+              <LeagueHistoryPage />
             </ProtectedRoute>
           }
         />

@@ -13,7 +13,8 @@
       "Bash(npx vite --open)",
       "Bash(npx tsc:*)",
       "Bash(grep:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(npm run lint:*)"
     ]
   },
   "hooks": {

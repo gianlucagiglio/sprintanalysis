@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
+import { useLeagues } from './useLeagues'
 
 export type SessionWinner = {
   sessionId: string
@@ -24,6 +25,7 @@ export function useGlobalQuizStats() {
   const [sessionWinners, setSessionWinners] = useState<SessionWinner[]>([])
   const [loading, setLoading] = useState(true)
   const user = useAuthStore((s) => s.user)
+  const { activeLeague } = useLeagues()
 
   const fetchStats = useCallback(async () => {
     if (!user) return
@@ -42,16 +44,24 @@ export function useGlobalQuizStats() {
     const sessionIds = participations.map((p) => p.session_id)
 
     // 2. Fetch sessions and quiz_questions in parallel
+    // IMPORTANTE: Filtra solo le domande della league attiva
+    let questionsQuery = supabase
+      .from('quiz_questions')
+      .select('id, session_id')
+      .in('session_id', sessionIds)
+
+    // Filtra per league attiva se esiste
+    if (activeLeague) {
+      questionsQuery = questionsQuery.eq('league_id', activeLeague.id)
+    }
+
     const [sessionsRes, questionsRes] = await Promise.all([
       supabase
         .from('sessions')
         .select('id, title, created_at')
         .in('id', sessionIds)
         .order('created_at', { ascending: false }),
-      supabase
-        .from('quiz_questions')
-        .select('id, session_id')
-        .in('session_id', sessionIds),
+      questionsQuery,
     ])
 
     const sessions = sessionsRes.data || []
@@ -150,7 +160,7 @@ export function useGlobalQuizStats() {
     setSessionWinners(winners)
     setGlobalLeaderboard(leaderboard)
     setLoading(false)
-  }, [user])
+  }, [user, activeLeague])
 
   useEffect(() => {
     fetchStats()

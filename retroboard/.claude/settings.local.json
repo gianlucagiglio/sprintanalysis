@@ -47,7 +47,9 @@
       "Bash(grep:*)",
       "Bash(npx supabase --version)",
       "Bash(node run-migration.js:*)",
-      "Bash(claude mcp add:*)"
+      "Bash(claude mcp add:*)",
+      "Bash(timeout 3 tail:*)",
+      "Bash(exit 0)"
     ]
   }
 }

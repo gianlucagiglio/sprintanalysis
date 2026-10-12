@@ -80,6 +80,7 @@ export type Action = {
 export type QuizQuestion = {
   id: string
   session_id: string
+  league_id: string | null
   question: string
   choices: string[]
   correct_choice: number
@@ -93,6 +94,27 @@ export type QuizAnswer = {
   choice: number
   time_taken: number
   points: number
+}
+
+export type QuizLeague = {
+  id: string
+  name: string
+  description: string | null
+  start_date: string
+  end_date: string | null
+  status: 'active' | 'closed'
+  created_at: string
+  created_by: string | null
+}
+
+export type LeagueRanking = {
+  id: string
+  league_id: string
+  user_id: string
+  total_points: number
+  games_played: number
+  rank: number
+  snapshot_at: string
 }
 
 export type Team = {
