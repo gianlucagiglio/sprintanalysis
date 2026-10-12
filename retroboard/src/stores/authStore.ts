@@ -56,6 +56,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         .select('*')
         .eq('id', session.user.id)
         .single()
+
+      // 🚫 CHECK BAN: Se utente bannato, logout immediato
+      if (profile?.is_banned) {
+        console.warn('⚠️ Utente bannato rilevato, logout forzato')
+        await supabase.auth.signOut()
+        set({ user: null, loading: false })
+        alert(
+          '🚫 Account Sospeso\n\n' +
+          'Il tuo account è stato sospeso dall\'amministratore.\n' +
+          'Contatta il supporto per maggiori informazioni.'
+        )
+        return
+      }
+
       set({ user: profile, loading: false })
     } else {
       set({ loading: false })
@@ -77,6 +91,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           .select('*')
           .eq('id', session.user.id)
           .single()
+
+        // 🚫 CHECK BAN: Se utente bannato, logout immediato
+        if (profile?.is_banned) {
+          console.warn('⚠️ Utente bannato rilevato durante auth change, logout forzato')
+          await supabase.auth.signOut()
+          set({ user: null })
+          alert(
+            '🚫 Account Sospeso\n\n' +
+            'Il tuo account è stato sospeso dall\'amministratore.\n' +
+            'Contatta il supporto per maggiori informazioni.'
+          )
+          return
+        }
+
         if (profile) set({ user: profile })
       } else if (event === 'SIGNED_OUT') {
         // Supabase fires SIGNED_OUT also on token refresh failure.
@@ -93,15 +121,27 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (document.visibilityState !== 'visible') return
       const { data: { session } } = await supabase.auth.refreshSession()
       if (session?.user) {
-        // Only re-fetch profile if we somehow lost it
-        if (!get().user) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single()
-          if (profile) set({ user: profile })
+        // Re-fetch profile per controllare ban status
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single()
+
+        // 🚫 CHECK BAN: Se bannato nel frattempo, logout
+        if (profile?.is_banned) {
+          console.warn('⚠️ Utente bannato rilevato dopo visibility change, logout forzato')
+          await supabase.auth.signOut()
+          set({ user: null })
+          alert(
+            '🚫 Account Sospeso\n\n' +
+            'Il tuo account è stato sospeso dall\'amministratore.\n' +
+            'Contatta il supporto per maggiori informazioni.'
+          )
+          return
         }
+
+        if (profile) set({ user: profile })
       }
     }
     document.addEventListener('visibilitychange', _visibilityHandler)
