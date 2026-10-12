@@ -30,6 +30,8 @@ export function useGlobalQuizStats() {
   const fetchStats = useCallback(async () => {
     if (!user) return
 
+    console.log('🔍 [LEADERBOARD DEBUG] activeLeague:', activeLeague)
+
     // 1. Get all sessions the user participated in
     const { data: participations, error: partError } = await supabase
       .from('session_participants')
@@ -47,12 +49,19 @@ export function useGlobalQuizStats() {
     // IMPORTANTE: Filtra solo le domande della league attiva
     let questionsQuery = supabase
       .from('quiz_questions')
-      .select('id, session_id')
+      .select('id, session_id, league_id')
       .in('session_id', sessionIds)
 
-    // Filtra per league attiva se esiste
+    // ⚠️ CRITICAL: Mostra solo quiz della league attiva
+    // Se non c'è league attiva, NON mostrare quiz di league chiuse
     if (activeLeague) {
+      console.log('🔍 [LEADERBOARD DEBUG] Filtrando per league:', activeLeague.name, activeLeague.id)
       questionsQuery = questionsQuery.eq('league_id', activeLeague.id)
+    } else {
+      console.log('⚠️ [LEADERBOARD DEBUG] Nessuna league attiva, mostrando solo legacy')
+      // Nessuna league attiva: mostra solo quiz senza league (legacy)
+      // oppure niente se vuoi che la leaderboard sia vuota
+      questionsQuery = questionsQuery.is('league_id', null)
     }
 
     const [sessionsRes, questionsRes] = await Promise.all([
@@ -66,6 +75,11 @@ export function useGlobalQuizStats() {
 
     const sessions = sessionsRes.data || []
     const questions = questionsRes.data || []
+
+    console.log('🔍 [LEADERBOARD DEBUG] Questions trovate:', questions.length)
+    if (questions.length > 0) {
+      console.log('🔍 [LEADERBOARD DEBUG] Prime 3 domande:', questions.slice(0, 3))
+    }
 
     if (!questions.length) {
       setLoading(false)
