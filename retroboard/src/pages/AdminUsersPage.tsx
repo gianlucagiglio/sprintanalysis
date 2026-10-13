@@ -23,7 +23,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { it } from 'date-fns/locale'
 
 export function AdminUsersPage() {
-  const { users, loading, banUser, deleteUser, setSuperAdmin, setCanCreateSessions } = useUserManagement()
+  const { users, loading, banUser, deleteUser, setCanCreateSessions } = useUserManagement()
   const user = useAuthStore((s) => s.user)
   const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin())
 
@@ -123,37 +123,11 @@ export function AdminUsersPage() {
     }
   }
 
-  const handleToggleSuperAdmin = async (userId: string, userName: string, currentlyAdmin: boolean) => {
-    if (!confirm(
-      currentlyAdmin
-        ? `Rimuovere privilegi Super Admin da ${userName}?\n\nNon potrà più:\n- Gestire utenti\n- Chiudere league\n- Vedere tutte le sessioni`
-        : `Promuovere ${userName} a Super Admin?\n\nPotrà:\n- Gestire tutti gli utenti\n- Chiudere league\n- Vedere tutte le sessioni\n\n⚠️ Assicurati che sia una persona fidata!`
-    )) return
-
-    setActionLoading(userId)
-    setError(null)
-    setSuccess(null)
-
-    try {
-      const result = await setSuperAdmin(userId, !currentlyAdmin)
-      setSuccess(
-        currentlyAdmin
-          ? `${result.userName} non è più Super Admin`
-          : `${result.userName} è ora Super Admin 👑`
-      )
-    } catch (err: any) {
-      setError(err.message || 'Errore durante la modifica privilegi')
-      console.error('Error toggle super admin:', err)
-    } finally {
-      setActionLoading(null)
-    }
-  }
 
   const totalUsers = users.length
   const bannedUsers = users.filter((u) => u.is_banned).length
   const adminUsers = users.filter((u) => u.is_super_admin).length
   const ownerUsers = users.filter((u) => u.can_create_sessions && !u.is_super_admin).length
-  const usersWithTeams = users.filter((u) => u.teams_count > 0).length
 
   return (
     <AppLayout>
