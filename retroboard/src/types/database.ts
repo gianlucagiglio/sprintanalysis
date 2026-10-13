@@ -4,6 +4,10 @@ export type Profile = {
   email: string
   avatar_url: string | null
   is_super_admin: boolean
+  can_create_sessions: boolean
+  is_banned: boolean
+  banned_at: string | null
+  banned_by: string | null
   created_at: string
 }
 

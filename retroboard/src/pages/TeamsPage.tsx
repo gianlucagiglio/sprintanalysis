@@ -66,7 +66,7 @@ export function TeamsPage() {
             variant: 'default'
           }}
           actions={
-            canCreate(user?.email) ? (
+            canCreate(user) ? (
               <Button onClick={() => setShowCreate(true)} className="!bg-white !text-emerald-600 hover:!bg-white/90">
                 <Plus size={16} />
                 Crea team

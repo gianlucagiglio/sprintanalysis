@@ -190,6 +190,7 @@ RETURNS TABLE (
   name TEXT,
   email TEXT,
   is_super_admin BOOLEAN,
+  can_create_sessions BOOLEAN,
   is_banned BOOLEAN,
   banned_at TIMESTAMPTZ,
   banned_by_name TEXT,
@@ -222,6 +223,7 @@ BEGIN
     p.name,
     p.email,
     p.is_super_admin,
+    COALESCE(p.can_create_sessions, false) as can_create_sessions,
     COALESCE(p.is_banned, false) as is_banned,
     p.banned_at,
     banner.name as banned_by_name,
@@ -230,7 +232,7 @@ BEGIN
   FROM profiles p
   LEFT JOIN team_members tm ON tm.user_id = p.id
   LEFT JOIN profiles banner ON banner.id = p.banned_by
-  GROUP BY p.id, p.name, p.email, p.is_super_admin, p.is_banned, p.banned_at, banner.name, p.created_at
+  GROUP BY p.id, p.name, p.email, p.is_super_admin, p.can_create_sessions, p.is_banned, p.banned_at, banner.name, p.created_at
   ORDER BY p.created_at DESC;
 END;
 $$;

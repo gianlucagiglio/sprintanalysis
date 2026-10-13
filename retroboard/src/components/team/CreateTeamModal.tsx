@@ -23,7 +23,7 @@ export function CreateTeamModal({ open, onClose }: CreateTeamModalProps) {
 
   const handleCreate = async (e: FormEvent) => {
     e.preventDefault()
-    if (!name.trim() || !canCreate(user?.email)) return
+    if (!name.trim() || !canCreate(user)) return
     setLoading(true)
 
     try {

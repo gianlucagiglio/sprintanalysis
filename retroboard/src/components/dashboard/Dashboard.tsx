@@ -367,7 +367,7 @@ export function Dashboard() {
         </Card>
 
         {/* Create Session */}
-        {canCreate(user?.email) && (
+        {canCreate(user) && (
           <Button
             onClick={() => setShowCreate(true)}
             size="lg"
@@ -484,7 +484,7 @@ export function Dashboard() {
             Crea la tua prima sessione per iniziare a raccogliere feedback dal team,
             oppure unisciti a una retrospettiva esistente.
           </p>
-          {canCreate(user?.email) && (
+          {canCreate(user) && (
             <div className="flex items-center justify-center gap-3">
               <Button onClick={() => setShowCreate(true)} size="lg">
                 <Plus size={18} />

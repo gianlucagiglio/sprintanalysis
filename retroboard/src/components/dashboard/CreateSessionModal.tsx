@@ -48,7 +48,7 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
 
   const handleCreate = async (e: FormEvent) => {
     e.preventDefault()
-    if (!user || !title.trim() || !canCreate(user.email)) return
+    if (!user || !title.trim() || !canCreate(user)) return
     setLoading(true)
 
     try {
