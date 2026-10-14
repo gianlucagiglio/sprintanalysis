@@ -1,1 +1,4 @@
 retroboard/supabase/migrations/020_super_admin_full_permissions.sql
+official retroboard/AGENT_TEAM_INSTRUCTIONS.md
+official retroboard/REBUILD_SPEC.md
+.gitignore
