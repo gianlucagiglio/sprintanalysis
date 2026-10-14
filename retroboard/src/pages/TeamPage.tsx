@@ -134,29 +134,43 @@ export function TeamPage() {
 
   const handleAddMember = async (userId: string) => {
     if (!id) return
-    const ok = await addMember(id, userId)
-    if (ok) {
+    const result = await addMember(id, userId)
+    if (result.success) {
       setSearchResults((prev) => prev.filter((u) => u.id !== userId))
       await fetchMembers()
+    } else {
+      alert(result.error || 'Impossibile aggiungere il membro')
     }
   }
 
   const handleRemoveMember = async (userId: string) => {
     if (!id) return
-    const ok = await removeMember(id, userId)
-    if (ok) await fetchMembers()
+    const result = await removeMember(id, userId)
+    if (result.success) {
+      await fetchMembers()
+    } else {
+      alert(result.error || 'Impossibile rimuovere il membro')
+    }
   }
 
   const handleLeaveTeam = async () => {
     if (!id || !confirm('Sei sicuro di voler abbandonare questo team?')) return
-    const ok = await leaveTeam(id)
-    if (ok) navigate('/teams')
+    const result = await leaveTeam(id)
+    if (result.success) {
+      navigate('/teams')
+    } else {
+      alert(result.error || 'Impossibile abbandonare il team')
+    }
   }
 
   const handleDeleteTeam = async () => {
     if (!id || !confirm('Sei sicuro di voler eliminare questo team?')) return
-    const ok = await deleteTeam(id)
-    if (ok) navigate('/teams')
+    const result = await deleteTeam(id)
+    if (result.success) {
+      navigate('/teams')
+    } else {
+      alert(result.error || 'Impossibile eliminare il team')
+    }
   }
 
   if (loading) {

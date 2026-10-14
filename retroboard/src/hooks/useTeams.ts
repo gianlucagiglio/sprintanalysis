@@ -158,51 +158,74 @@ export function useTeams() {
     return data || []
   }
 
-  const addMember = async (teamId: string, userId: string): Promise<boolean> => {
+  const addMember = async (teamId: string, userId: string): Promise<{ success: boolean; error?: string }> => {
+    // Check if already a member
+    const { data: existing } = await supabase
+      .from('team_members')
+      .select('id')
+      .eq('team_id', teamId)
+      .eq('user_id', userId)
+      .single()
+
+    if (existing) {
+      return { success: false, error: 'Utente già membro del team' }
+    }
+
     const { error } = await supabase.from('team_members').insert({
       team_id: teamId,
       user_id: userId,
       role: 'member',
     })
+
     if (error) {
-      return false
+      return { success: false, error: error.message }
     }
-    return true
+
+    await fetchTeams()
+    return { success: true }
   }
 
-  const removeMember = async (teamId: string, userId: string): Promise<boolean> => {
+  const removeMember = async (teamId: string, userId: string): Promise<{ success: boolean; error?: string }> => {
     const { error } = await supabase
       .from('team_members')
       .delete()
       .eq('team_id', teamId)
       .eq('user_id', userId)
+
     if (error) {
-      return false
+      return { success: false, error: error.message }
     }
-    return true
+
+    await fetchTeams()
+    return { success: true }
   }
 
-  const leaveTeam = async (teamId: string): Promise<boolean> => {
-    if (!user) return false
+  const leaveTeam = async (teamId: string): Promise<{ success: boolean; error?: string }> => {
+    if (!user) return { success: false, error: 'Non autenticato' }
+
     const { error } = await supabase
       .from('team_members')
       .delete()
       .eq('team_id', teamId)
       .eq('user_id', user.id)
+
     if (error) {
-      return false
+      return { success: false, error: error.message }
     }
+
     await fetchTeams()
-    return true
+    return { success: true }
   }
 
-  const deleteTeam = async (teamId: string): Promise<boolean> => {
+  const deleteTeam = async (teamId: string): Promise<{ success: boolean; error?: string }> => {
     const { error } = await supabase.from('teams').delete().eq('id', teamId)
+
     if (error) {
-      return false
+      return { success: false, error: error.message }
     }
+
     await fetchTeams()
-    return true
+    return { success: true }
   }
 
   return {
