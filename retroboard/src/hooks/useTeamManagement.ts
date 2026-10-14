@@ -93,13 +93,18 @@ export function useTeamManagement() {
   }
 
   const removeMember = async (memberId: string) => {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('team_members')
       .delete()
       .eq('id', memberId)
+      .select()
 
-    if (error) throw error
+    if (error) {
+      console.error('❌ Error removing member:', error)
+      throw new Error(`Impossibile rimuovere il membro: ${error.message}`)
+    }
 
+    console.log('✅ Member removed successfully:', data)
     await fetchTeams()
   }
 

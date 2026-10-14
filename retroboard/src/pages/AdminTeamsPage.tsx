@@ -114,35 +114,27 @@ export function AdminTeamsPage() {
     (acc, t) => acc + t.members.filter(m => m.role === 'owner').length,
     0
   )
-  const totalAdmins = teams.reduce(
-    (acc, t) => acc + t.members.filter(m => m.role === 'admin').length,
+  const totalRegularMembers = teams.reduce(
+    (acc, t) => acc + t.members.filter(m => m.role === 'member' || m.role === 'admin').length,
     0
   )
 
   const getRoleBadge = (role: string) => {
-    switch (role) {
-      case 'owner':
-        return (
-          <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30 text-xs">
-            <Crown className="w-3 h-3 mr-1" />
-            Owner
-          </Badge>
-        )
-      case 'admin':
-        return (
-          <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-xs">
-            <Shield className="w-3 h-3 mr-1" />
-            Admin
-          </Badge>
-        )
-      default:
-        return (
-          <Badge variant="outline" className="text-xs">
-            <Users className="w-3 h-3 mr-1" />
-            Member
-          </Badge>
-        )
+    if (role === 'owner') {
+      return (
+        <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30 text-xs">
+          <Crown className="w-3 h-3 mr-1" />
+          Owner
+        </Badge>
+      )
     }
+    // Treat both 'member' and 'admin' as Member in UI
+    return (
+      <Badge variant="outline" className="text-xs">
+        <Users className="w-3 h-3 mr-1" />
+        Member
+      </Badge>
+    )
   }
 
   return (
@@ -219,11 +211,11 @@ export function AdminTeamsPage() {
           <Card className="p-4 bg-gradient-to-br from-blue-500/10 to-cyan-500/10">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-blue-500/10">
-                <Shield className="w-5 h-5 text-blue-400" />
+                <Users className="w-5 h-5 text-blue-400" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-retro-text">{totalAdmins}</div>
-                <div className="text-xs text-retro-text/60">Admin</div>
+                <div className="text-2xl font-bold text-retro-text">{totalRegularMembers}</div>
+                <div className="text-xs text-retro-text/60">Members</div>
               </div>
             </div>
           </Card>
@@ -335,7 +327,7 @@ export function AdminTeamsPage() {
                                 </div>
 
                                 <div className="flex items-center gap-2">
-                                  {/* Role Buttons */}
+                                  {/* Role Buttons - Only Owner and Member */}
                                   {member.role !== 'owner' && (
                                     <Button
                                       onClick={() =>
@@ -357,28 +349,7 @@ export function AdminTeamsPage() {
                                     </Button>
                                   )}
 
-                                  {member.role !== 'admin' && (
-                                    <Button
-                                      onClick={() =>
-                                        handleRoleChange(
-                                          member.id,
-                                          member.user_name,
-                                          team.name,
-                                          member.role,
-                                          'admin'
-                                        )
-                                      }
-                                      disabled={isLoading}
-                                      size="sm"
-                                      variant="secondary"
-                                      className="border-blue-500/30 hover:bg-blue-500/10 text-blue-400"
-                                    >
-                                      <Shield className="w-4 h-4 mr-1" />
-                                      Admin
-                                    </Button>
-                                  )}
-
-                                  {member.role !== 'member' && (
+                                  {member.role === 'owner' && (
                                     <Button
                                       onClick={() =>
                                         handleRoleChange(

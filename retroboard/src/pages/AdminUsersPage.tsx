@@ -24,7 +24,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { it } from 'date-fns/locale'
 
 export function AdminUsersPage() {
-  const { users, loading, banUser, deleteUser, setCanCreateSessions } = useUserManagement()
+  const { users, loading, banUser, deleteUser } = useUserManagement()
   const user = useAuthStore((s) => s.user)
   const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin())
   const navigate = useNavigate()
@@ -99,37 +99,12 @@ export function AdminUsersPage() {
     }
   }
 
-  const handleToggleOwner = async (userId: string, userName: string, canCurrentlyCreate: boolean) => {
-    if (!confirm(
-      canCurrentlyCreate
-        ? `Rimuovere permesso di creazione da ${userName}?\n\nNon potrà più creare nuove retrospettive.`
-        : `Dare permesso di creazione a ${userName}?\n\nPotrà creare nuove retrospettive.`
-    )) return
-
-    setActionLoading(userId)
-    setError(null)
-    setSuccess(null)
-
-    try {
-      const result = await setCanCreateSessions(userId, !canCurrentlyCreate)
-      setSuccess(
-        canCurrentlyCreate
-          ? `${result.userName} non può più creare retrospettive`
-          : `${result.userName} può ora creare retrospettive 📝`
-      )
-    } catch (err: any) {
-      setError(err.message || 'Errore durante la modifica permessi')
-      console.error('Error toggle owner:', err)
-    } finally {
-      setActionLoading(null)
-    }
-  }
 
 
   const totalUsers = users.length
   const bannedUsers = users.filter((u) => u.is_banned).length
-  const adminUsers = users.filter((u) => u.is_super_admin).length
-  const ownerUsers = users.filter((u) => u.can_create_sessions && !u.is_super_admin).length
+  const superAdmins = users.filter((u) => u.is_super_admin).length
+  const activeUsers = users.filter((u) => !u.is_banned && !u.is_super_admin).length
 
   return (
     <AppLayout>
@@ -178,13 +153,25 @@ export function AdminUsersPage() {
             </div>
           </Card>
 
+          <Card className="p-4 bg-gradient-to-br from-green-500/10 to-emerald-500/10">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-green-500/10">
+                <CheckCircle className="w-5 h-5 text-green-400" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-retro-text">{activeUsers}</div>
+                <div className="text-xs text-retro-text/60">Utenti Attivi</div>
+              </div>
+            </div>
+          </Card>
+
           <Card className="p-4 bg-gradient-to-br from-yellow-500/10 to-orange-500/10">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-yellow-500/10">
                 <Crown className="w-5 h-5 text-yellow-400" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-retro-text">{adminUsers}</div>
+                <div className="text-2xl font-bold text-retro-text">{superAdmins}</div>
                 <div className="text-xs text-retro-text/60">Super Admin</div>
               </div>
             </div>
@@ -198,18 +185,6 @@ export function AdminUsersPage() {
               <div>
                 <div className="text-2xl font-bold text-retro-text">{bannedUsers}</div>
                 <div className="text-xs text-retro-text/60">Bannati</div>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-4 bg-gradient-to-br from-blue-500/10 to-cyan-500/10">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-500/10">
-                <CheckCircle className="w-5 h-5 text-blue-400" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-retro-text">{ownerUsers}</div>
-                <div className="text-xs text-retro-text/60">Owner (Creator)</div>
               </div>
             </div>
           </Card>
@@ -286,12 +261,6 @@ export function AdminUsersPage() {
                               Super Admin
                             </Badge>
                           )}
-                          {u.can_create_sessions && !u.is_super_admin && (
-                            <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-xs">
-                              <CheckCircle className="w-3 h-3 mr-1" />
-                              Owner
-                            </Badge>
-                          )}
                           {u.is_banned && (
                             <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-xs">
                               <Ban className="w-3 h-3 mr-1" />
@@ -341,34 +310,6 @@ export function AdminUsersPage() {
                       {/* Actions */}
                       {!isCurrentUser && (
                         <div className="flex items-center gap-2 flex-wrap">
-                          {/* Toggle Owner/Creator Permission */}
-                          {!u.is_super_admin && (
-                            <Button
-                              onClick={() => handleToggleOwner(u.id, u.name, u.can_create_sessions)}
-                              disabled={isLoading}
-                              size="sm"
-                              variant="secondary"
-                              className={
-                                u.can_create_sessions
-                                  ? 'border-blue-500/30 hover:bg-blue-500/10 text-blue-400'
-                                  : 'border-slate-500/30 hover:bg-slate-500/10 text-slate-400'
-                              }
-                            >
-                              {isLoading ? (
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-                              ) : u.can_create_sessions ? (
-                                <>
-                                  <XCircle className="w-4 h-4 mr-1" />
-                                  Rimuovi Owner
-                                </>
-                              ) : (
-                                <>
-                                  <CheckCircle className="w-4 h-4 mr-1" />
-                                  Rendi Owner
-                                </>
-                              )}
-                            </Button>
-                          )}
 
                           <Button
                             onClick={() => handleBan(u.id, u.name, u.is_banned)}
