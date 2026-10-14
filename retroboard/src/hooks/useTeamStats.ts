@@ -218,7 +218,9 @@ export function useTeamStats(teamId?: string | null) {
 
   useEffect(() => {
     fetchStats()
-  }, [fetchStats])
+    // fetchStats captured in closure - NOT in deps to avoid infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, teamId, teamsLoading])
 
   return { teamStats, noTeamStats, loading: loading || teamsLoading }
 }

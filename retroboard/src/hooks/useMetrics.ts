@@ -236,7 +236,9 @@ export function useMetrics(teamId?: string) {
 
   useEffect(() => {
     fetchMetrics()
-  }, [fetchMetrics])
+    // fetchMetrics captured in closure - NOT in deps to avoid infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, teamId])
 
   return { commentSentiments, happinessData, trendKPIs, sentimentDeltas, loading }
 }

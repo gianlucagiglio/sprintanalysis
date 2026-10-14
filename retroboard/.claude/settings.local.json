@@ -52,7 +52,8 @@
       "Bash(exit 0)",
       "Bash(node scripts/check-orphaned-sessions.js:*)",
       "Bash(node scripts/check-data-distribution.js:*)",
-      "Bash(node scripts/backup-database.js:*)"
+      "Bash(node scripts/backup-database.js:*)",
+      "Bash(supabase db push:*)"
     ]
   }
 }

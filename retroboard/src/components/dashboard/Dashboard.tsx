@@ -148,13 +148,17 @@ export function Dashboard() {
     setLoading(false)
   }, [user, currentTeamId, isSuperAdmin])
 
-  // Fetch on mount, when fetchSessions changes (user/team), or when navigating to this page
+  // Fetch on mount, when team/user changes, or when navigating to this page
   useEffect(() => {
     if (location.pathname === '/retrospettive' || location.pathname === '/dashboard') {
       setLoading(true)
+      // Reset scroll to top when team filter changes to prevent flickering
+      window.scrollTo({ top: 0, behavior: 'instant' })
       fetchSessions()
     }
-  }, [fetchSessions, location.pathname])
+    // fetchSessions is captured in closure - NOT in deps to avoid infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, currentTeamId, location.pathname])
 
   // Realtime: refetch when sessions are created or deleted
   useEffect(() => {
@@ -187,7 +191,9 @@ export function Dashboard() {
       clearTimeout(timeout)
       supabase.removeChannel(channel)
     }
-  }, [user, fetchSessions])
+    // fetchSessions captured in closure - NO in deps to avoid recreation on every team change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id])
 
   // Stats
   const activeSessions = sessions.filter((s) => s.current_step >= 1 && s.current_step <= 4)
@@ -325,8 +331,8 @@ export function Dashboard() {
             return (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: idx * 0.05, type: 'spring', stiffness: 200, damping: 20 }}
               >
                 <Card className="!p-5 !rounded-2xl hover:scale-[1.02] transition-transform duration-200 cursor-pointer group">
@@ -527,8 +533,8 @@ export function Dashboard() {
                   {teamSessions.map((s, idx) => (
                     <motion.div
                       key={s.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
                       transition={{ delay: idx * 0.05, type: 'spring', stiffness: 200, damping: 20 }}
                     >
                       <SessionCard session={s} participantCount={s.participant_count} onDelete={handleDelete} index={idx} />

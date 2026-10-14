@@ -79,9 +79,7 @@ export function SessionCard({ session, participantCount, onDelete, index }: Sess
   return (
     <Card
       hover
-      className={`!p-0 !rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 ease-out animate-slide-up ${
-        index !== undefined ? `stagger-${(index % 5) + 1}` : ''
-      }`}
+      className="!p-0 !rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 ease-out"
       onClick={() => navigate(`/session/${session.id}`)}
     >
       {/* Progress bar top */}

@@ -138,7 +138,11 @@ export function useGlobalMoods(teamId?: string) {
     setLoading(true)
   }, [teamId])
 
-  useEffect(() => { fetchGlobalMoods() }, [fetchGlobalMoods])
+  useEffect(() => {
+    fetchGlobalMoods()
+    // fetchGlobalMoods captured in closure - NOT in deps to avoid infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, teamId])
 
   const globalCounts = {
     glad: allMoodVotes.filter((m) => m.mood === 'glad').length,

@@ -158,6 +158,7 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  overflow-y: scroll; /* Force scrollbar always visible to prevent flickering */
 }
 
 body {
