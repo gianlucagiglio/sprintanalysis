@@ -48,6 +48,8 @@ export function useTeamStats(teamId?: string | null) {
   const fetchStats = useCallback(async () => {
     if (!user || teamsLoading) return
 
+    setLoading(true)
+
     // Get all sessions the user participated in
     const { data: participations } = await supabase
       .from('session_participants')
@@ -206,6 +208,13 @@ export function useTeamStats(teamId?: string | null) {
 
     setLoading(false)
   }, [user, teams, teamsLoading, teamId])
+
+  // Reset state when teamId changes (before fetch completes)
+  useEffect(() => {
+    setTeamStats([])
+    setNoTeamStats(null)
+    setLoading(true)
+  }, [teamId])
 
   useEffect(() => {
     fetchStats()

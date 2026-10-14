@@ -38,6 +38,8 @@ export function useGlobalMoods(teamId?: string) {
   const fetchGlobalMoods = useCallback(async () => {
     if (!user) return
 
+    setLoading(true)
+
     // Get all teams the user is a member of
     const { data: memberships } = await supabase
       .from('team_members')
@@ -126,6 +128,15 @@ export function useGlobalMoods(teamId?: string) {
     setSessionTeamMoods(groupedTeam)
     setLoading(false)
   }, [user, teamId])
+
+  // Reset state when teamId changes (before fetch completes)
+  useEffect(() => {
+    setSessionMoods([])
+    setSessionTeamMoods([])
+    setAllMoodVotes([])
+    setAllTeamMoodVotes([])
+    setLoading(true)
+  }, [teamId])
 
   useEffect(() => { fetchGlobalMoods() }, [fetchGlobalMoods])
 

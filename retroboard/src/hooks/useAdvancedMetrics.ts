@@ -40,6 +40,11 @@ export function useAdvancedMetrics(teamId?: string | null) {
     if (!user) return
 
     const fetchMetrics = async () => {
+      // Reset state before fetching new team data
+      setTeamHealth(null)
+      setEngagement(null)
+      setActionFunnel(null)
+      setRedFlags([])
       setLoading(true)
 
       try {

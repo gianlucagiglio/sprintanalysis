@@ -58,6 +58,8 @@ export function useMetrics(teamId?: string) {
   const fetchMetrics = useCallback(async () => {
     if (!user) return
 
+    setLoading(true)
+
     // 1. Get all teams the user is a member of
     const { data: memberships } = await supabase
       .from('team_members')
@@ -214,6 +216,23 @@ export function useMetrics(teamId?: string) {
 
     setLoading(false)
   }, [user, teamId])
+
+  // Reset state when teamId changes (before fetch completes)
+  useEffect(() => {
+    setCommentSentiments([])
+    setHappinessData([])
+    setSentimentDeltas([])
+    setTrendKPIs({
+      currentScore: 0,
+      averageScore: 0,
+      trend: 'stable',
+      deltaPercent: 0,
+      totalSessions: 0,
+      uniqueParticipants: 0,
+      resolutionRate: 0,
+    })
+    setLoading(true)
+  }, [teamId])
 
   useEffect(() => {
     fetchMetrics()

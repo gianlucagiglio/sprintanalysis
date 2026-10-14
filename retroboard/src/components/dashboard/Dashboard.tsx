@@ -148,23 +148,13 @@ export function Dashboard() {
     setLoading(false)
   }, [user, currentTeamId, isSuperAdmin])
 
-  // Fetch on mount and when user changes
+  // Fetch on mount, when fetchSessions changes (user/team), or when navigating to this page
   useEffect(() => {
-    setLoading(true)
-    fetchSessions()
-  }, [fetchSessions])
-
-  // Re-fetch when team changes
-  useEffect(() => {
-    fetchSessions()
-  }, [currentTeamId, fetchSessions])
-
-  // Re-fetch every time the user navigates to this page
-  useEffect(() => {
-    if (location.pathname === '/retrospettive') {
+    if (location.pathname === '/retrospettive' || location.pathname === '/dashboard') {
+      setLoading(true)
       fetchSessions()
     }
-  }, [location.pathname, fetchSessions])
+  }, [fetchSessions, location.pathname])
 
   // Realtime: refetch when sessions are created or deleted
   useEffect(() => {
