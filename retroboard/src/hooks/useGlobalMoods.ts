@@ -38,25 +38,39 @@ export function useGlobalMoods(teamId?: string) {
   const fetchGlobalMoods = useCallback(async () => {
     if (!user) return
 
-    let sessionIds: string[]
+    // Get all teams the user is a member of
+    const { data: memberships } = await supabase
+      .from('team_members')
+      .select('team_id')
+      .eq('user_id', user.id)
 
-    if (teamId) {
-      // Team mode: get all sessions of this team
-      const { data: teamSessions } = await supabase
-        .from('sessions')
-        .select('id')
-        .eq('team_id', teamId)
-      if (!teamSessions?.length) { setLoading(false); return }
-      sessionIds = teamSessions.map((s) => s.id)
-    } else {
-      // Personal mode: get sessions user participated in
-      const { data: participations, error: partError } = await supabase
-        .from('session_participants')
-        .select('session_id')
-        .eq('user_id', user.id)
-      if (partError || !participations?.length) { setLoading(false); return }
-      sessionIds = participations.map((p) => p.session_id)
+    const teamIds = memberships?.map(m => m.team_id) || []
+
+    if (teamIds.length === 0) {
+      setLoading(false)
+      return
     }
+
+    // Filter by specific team if provided, otherwise get all user's teams
+    const filteredTeamIds = teamId ? teamIds.filter(id => id === teamId) : teamIds
+
+    if (filteredTeamIds.length === 0) {
+      setLoading(false)
+      return
+    }
+
+    // Get all sessions from user's teams
+    const { data: teamSessions } = await supabase
+      .from('sessions')
+      .select('id')
+      .in('team_id', filteredTeamIds)
+
+    if (!teamSessions?.length) {
+      setLoading(false)
+      return
+    }
+
+    const sessionIds = teamSessions.map(s => s.id)
 
     const [sessionsRes, moodsRes, teamMoodsRes] = await Promise.all([
       supabase

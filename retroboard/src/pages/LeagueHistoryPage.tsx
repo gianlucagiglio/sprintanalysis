@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useLeagues, useLeagueHistory } from '@/hooks/useLeagues'
 import { useAuthStore } from '@/stores/authStore'
+import { useTeamStore } from '@/stores/teamStore'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { PageHeader } from '@/components/ui/PageHeader'
@@ -38,7 +39,8 @@ const podiumPositions = [
 ]
 
 export function LeagueHistoryPage() {
-  const { leagues, loading: leaguesLoading } = useLeagues()
+  const currentTeamId = useTeamStore(s => s.currentTeamId)
+  const { leagues, loading: leaguesLoading } = useLeagues(currentTeamId)
   const user = useAuthStore((s) => s.user)
   const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin())
 

@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useTeamStore } from '@/stores/teamStore'
 import {
   DndContext,
   closestCorners,
@@ -231,7 +232,8 @@ function GlobalKanbanColumn({
 }
 
 export function ActionsPage() {
-  const { actions, loading, updateActionStatus, updateAction, deleteAction } = useGlobalActions()
+  const currentTeamId = useTeamStore(s => s.currentTeamId)
+  const { actions, loading, updateActionStatus, updateAction, deleteAction } = useGlobalActions(currentTeamId)
   const [editingAction, setEditingAction] = useState<ActionWithSession | null>(null)
   const [sessionParticipants, setSessionParticipants] = useState<{ user_id: string; name: string }[]>([])
   const [selectedPerson, setSelectedPerson] = useState<string | null>(null)

@@ -49,7 +49,10 @@
       "Bash(node run-migration.js:*)",
       "Bash(claude mcp add:*)",
       "Bash(timeout 3 tail:*)",
-      "Bash(exit 0)"
+      "Bash(exit 0)",
+      "Bash(node scripts/check-orphaned-sessions.js:*)",
+      "Bash(node scripts/check-data-distribution.js:*)",
+      "Bash(node scripts/backup-database.js:*)"
     ]
   }
 }

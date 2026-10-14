@@ -1,8 +1,10 @@
+import { useState, useRef, useEffect } from 'react'
 import { useAuthStore } from '@/stores/authStore'
+import { useTeamStore } from '@/stores/teamStore'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { PointsWidget } from '@/components/gamification/PointsWidget'
-import { LayoutDashboard, LogOut, BarChart3, ListTodo, UsersRound, Trophy, Sparkles, BookOpen, User, RotateCcw, Archive, Shield } from 'lucide-react'
+import { LayoutDashboard, LogOut, BarChart3, ListTodo, UsersRound, Trophy, Sparkles, BookOpen, User, RotateCcw, Archive, Shield, Users, ChevronDown } from 'lucide-react'
 import packageJson from '../../../package.json'
 
 const navItems = [
@@ -18,9 +20,12 @@ const navItems = [
 
 export function Navbar() {
   const { user, signOut, isSuperAdmin } = useAuthStore()
+  const { currentTeamId, teams, setCurrentTeamId } = useTeamStore()
   const navigate = useNavigate()
   const location = useLocation()
   const isSuper = isSuperAdmin()
+  const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const handleSignOut = async () => {
     try {
@@ -30,6 +35,20 @@ export function Navbar() {
     }
     navigate('/login')
   }
+
+  // Chiudi dropdown quando si clicca fuori
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsTeamDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const currentTeam = teams.find(t => t.id === currentTeamId)
+  const showTeamSelector = teams.length > 1 || isSuper // Show if multiple teams OR super admin
 
   return (
     <>
@@ -57,6 +76,53 @@ export function Navbar() {
               v{packageJson.version}
             </button>
           </div>
+          {/* Team Selector */}
+          {user && showTeamSelector && (
+            <div className="relative hidden md:block" ref={dropdownRef}>
+              <button
+                onClick={() => setIsTeamDropdownOpen(!isTeamDropdownOpen)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-retro-text-secondary hover:text-retro-text hover:bg-slate-100 transition-all border border-slate-200"
+              >
+                <Users size={14} />
+                <span className="max-w-[120px] truncate">
+                  {currentTeam?.name || 'Tutti i team'}
+                </span>
+                <ChevronDown size={14} className={`transition-transform ${isTeamDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {isTeamDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border border-slate-200 min-w-[180px] py-1 z-50">
+                  {/* "Tutti i team" only for super admin */}
+                  {isSuper && (
+                    <button
+                      onClick={() => {
+                        setCurrentTeamId(null)
+                        setIsTeamDropdownOpen(false)
+                      }}
+                      className={`w-full text-left px-3 py-2 text-sm hover:bg-slate-50 transition-colors ${
+                        !currentTeamId ? 'bg-retro-primary/10 text-retro-primary font-semibold' : 'text-retro-text'
+                      }`}
+                    >
+                      Tutti i team
+                    </button>
+                  )}
+                  {teams.map(team => (
+                    <button
+                      key={team.id}
+                      onClick={() => {
+                        setCurrentTeamId(team.id)
+                        setIsTeamDropdownOpen(false)
+                      }}
+                      className={`w-full text-left px-3 py-2 text-sm hover:bg-slate-50 transition-colors ${
+                        currentTeamId === team.id ? 'bg-retro-primary/10 text-retro-primary font-semibold' : 'text-retro-text'
+                      }`}
+                    >
+                      {team.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
           {/* Desktop nav links */}
           {user && (
             <div className="hidden md:flex items-center gap-1">
@@ -99,7 +165,7 @@ export function Navbar() {
         {user && (
           <div className="flex items-center gap-2 md:gap-3">
             <div className="hidden md:block">
-              <PointsWidget compact />
+              <PointsWidget compact teamId={currentTeamId} />
             </div>
             <div className="flex items-center gap-2">
               <div className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-white text-xs md:text-sm font-semibold ${

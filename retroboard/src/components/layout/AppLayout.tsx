@@ -1,7 +1,9 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 import { Navbar } from './Navbar'
 import { BadgeUnlockModal } from '@/components/gamification/BadgeUnlockModal'
 import { OverdueActionsModal } from '@/components/actions/OverdueActionsModal'
+import { useTeams } from '@/hooks/useTeams'
+import { useTeamStore } from '@/stores/teamStore'
 
 interface AppLayoutProps {
   children: ReactNode
@@ -9,6 +11,16 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children, sidebar }: AppLayoutProps) {
+  const { teams } = useTeams()
+  const initialize = useTeamStore(s => s.initialize)
+
+  // Inizializza teamStore quando i team sono caricati
+  useEffect(() => {
+    if (teams.length > 0) {
+      initialize(teams)
+    }
+  }, [teams, initialize])
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar />

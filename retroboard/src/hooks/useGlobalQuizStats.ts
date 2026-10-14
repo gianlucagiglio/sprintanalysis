@@ -20,32 +20,67 @@ export type GlobalLeaderboardEntry = {
   sessionsPlayed: number
 }
 
-export function useGlobalQuizStats() {
+export function useGlobalQuizStats(teamId?: string | null) {
   const [globalLeaderboard, setGlobalLeaderboard] = useState<GlobalLeaderboardEntry[]>([])
   const [sessionWinners, setSessionWinners] = useState<SessionWinner[]>([])
   const [loading, setLoading] = useState(true)
   const user = useAuthStore((s) => s.user)
-  const { activeLeague } = useLeagues()
+  const { activeLeague } = useLeagues(teamId ?? undefined)
 
   const fetchStats = useCallback(async () => {
     if (!user) return
 
     console.log('🔍 [LEADERBOARD DEBUG] activeLeague:', activeLeague)
 
-    // 1. Get all sessions the user participated in
-    const { data: participations, error: partError } = await supabase
-      .from('session_participants')
-      .select('session_id')
+    // 1. Get all teams the user is a member of
+    const { data: memberships, error: membershipsError } = await supabase
+      .from('team_members')
+      .select('team_id')
       .eq('user_id', user.id)
 
-    if (partError || !participations?.length) {
+    if (membershipsError) {
       setLoading(false)
       return
     }
 
-    const sessionIds = participations.map((p) => p.session_id)
+    const teamIds = memberships?.map(m => m.team_id) || []
 
-    // 2. Fetch sessions and quiz_questions in parallel
+    if (teamIds.length === 0) {
+      setGlobalLeaderboard([])
+      setSessionWinners([])
+      setLoading(false)
+      return
+    }
+
+    // Filter by specific team if provided
+    const filteredTeamIds = teamId ? teamIds.filter(id => id === teamId) : teamIds
+
+    if (filteredTeamIds.length === 0) {
+      setGlobalLeaderboard([])
+      setSessionWinners([])
+      setLoading(false)
+      return
+    }
+
+    // 2. Fetch all sessions from user's teams
+    let sessionsQuery = supabase
+      .from('sessions')
+      .select('id, title, created_at')
+      .in('team_id', filteredTeamIds)
+      .order('created_at', { ascending: false })
+
+    const { data: sessions, error: sessionsError } = await sessionsQuery
+
+    if (sessionsError || !sessions?.length) {
+      setGlobalLeaderboard([])
+      setSessionWinners([])
+      setLoading(false)
+      return
+    }
+
+    const sessionIds = sessions.map(s => s.id)
+
+    // 3. Fetch quiz_questions for these sessions
     // IMPORTANTE: Filtra solo le domande della league attiva
     let questionsQuery = supabase
       .from('quiz_questions')
@@ -64,17 +99,8 @@ export function useGlobalQuizStats() {
       questionsQuery = questionsQuery.is('league_id', null)
     }
 
-    const [sessionsRes, questionsRes] = await Promise.all([
-      supabase
-        .from('sessions')
-        .select('id, title, created_at')
-        .in('id', sessionIds)
-        .order('created_at', { ascending: false }),
-      questionsQuery,
-    ])
-
-    const sessions = sessionsRes.data || []
-    const questions = questionsRes.data || []
+    const { data: allQuestions } = await questionsQuery
+    const questions = allQuestions || []
 
     console.log('🔍 [LEADERBOARD DEBUG] Questions trovate:', questions.length)
     if (questions.length > 0) {
@@ -174,7 +200,7 @@ export function useGlobalQuizStats() {
     setSessionWinners(winners)
     setGlobalLeaderboard(leaderboard)
     setLoading(false)
-  }, [user, activeLeague])
+  }, [user, activeLeague, teamId])
 
   useEffect(() => {
     fetchStats()

@@ -16,16 +16,18 @@ import { useGlobalMoods } from '@/hooks/useGlobalMoods'
 import { useMetrics } from '@/hooks/useMetrics'
 import { useTeamStats } from '@/hooks/useTeamStats'
 import { useAdvancedMetrics } from '@/hooks/useAdvancedMetrics'
+import { useTeamStore } from '@/stores/teamStore'
 import { BarChart3, Users, TrendingUp, Activity, Target } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { motion } from 'framer-motion'
 import { Card } from '@/components/ui/Card'
 
 export function MetricsPage() {
-  const { sessionMoods, sessionTeamMoods, globalCounts, globalTeamMoodCounts, loading: moodsLoading } = useGlobalMoods()
-  const { commentSentiments, happinessData, trendKPIs, sentimentDeltas, loading: metricsLoading } = useMetrics()
-  const { teamStats, noTeamStats, loading: teamStatsLoading } = useTeamStats()
-  const { teamHealth, engagement, actionFunnel, redFlags, loading: advancedLoading } = useAdvancedMetrics()
+  const currentTeamId = useTeamStore(s => s.currentTeamId)
+  const { sessionMoods, sessionTeamMoods, globalCounts, globalTeamMoodCounts, loading: moodsLoading } = useGlobalMoods(currentTeamId ?? undefined)
+  const { commentSentiments, happinessData, trendKPIs, sentimentDeltas, loading: metricsLoading } = useMetrics(currentTeamId ?? undefined)
+  const { teamStats, noTeamStats, loading: teamStatsLoading } = useTeamStats(currentTeamId)
+  const { teamHealth, engagement, actionFunnel, redFlags, loading: advancedLoading } = useAdvancedMetrics(currentTeamId ?? undefined)
 
   const loading = moodsLoading || metricsLoading || advancedLoading
 

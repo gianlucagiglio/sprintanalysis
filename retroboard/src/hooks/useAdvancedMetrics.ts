@@ -28,7 +28,7 @@ interface ActionFunnelData {
   actionsCompleted: number
 }
 
-export function useAdvancedMetrics() {
+export function useAdvancedMetrics(teamId?: string | null) {
   const [loading, setLoading] = useState(true)
   const [teamHealth, setTeamHealth] = useState<TeamHealthData | null>(null)
   const [engagement, setEngagement] = useState<EngagementData | null>(null)
@@ -43,15 +43,15 @@ export function useAdvancedMetrics() {
       setLoading(true)
 
       try {
-        // Fetch sessions per l'utente
-        const { data: participations } = await supabase
-          .from('session_participants')
-          .select('session_id')
+        // Get all teams the user is a member of
+        const { data: memberships } = await supabase
+          .from('team_members')
+          .select('team_id')
           .eq('user_id', user.id)
 
-        const sessionIds = participations?.map(p => p.session_id) || []
+        const teamIds = memberships?.map(m => m.team_id) || []
 
-        if (sessionIds.length === 0) {
+        if (teamIds.length === 0) {
           // Imposta dati a zero invece di return
           setTeamHealth({
             score: 0,
@@ -76,24 +76,79 @@ export function useAdvancedMetrics() {
           return
         }
 
-        // Limita a max 20 sessioni e usa approccio batch
-        const limitedSessionIds = sessionIds.slice(0, 20)
+        // Filter by specific team if provided
+        const filteredTeamIds = teamId ? teamIds.filter(id => id === teamId) : teamIds
 
-        // Fetch sessions
+        if (filteredTeamIds.length === 0) {
+          setTeamHealth({
+            score: 0,
+            trend: 'stable',
+            details: { sentiment: 0, engagement: 0, actionCompletion: 0 }
+          })
+          setEngagement({
+            participationRate: 0,
+            commentsPerPerson: 0,
+            avgSessionDuration: 0,
+            silentParticipants: 0,
+          })
+          setActionFunnel({
+            totalComments: 0,
+            votedComments: 0,
+            discussedComments: 0,
+            actionsCreated: 0,
+            actionsCompleted: 0,
+          })
+          setRedFlags([])
+          setLoading(false)
+          return
+        }
+
+        // Fetch all sessions from user's teams (limit to 20 most recent)
         const { data: sessions, error: sessError } = await supabase
           .from('sessions')
           .select('*')
-          .in('id', limitedSessionIds)
+          .in('team_id', filteredTeamIds)
+          .order('created_at', { ascending: false })
+          .limit(20)
 
-        if (sessError) {
+        if (sessError || !sessions?.length) {
           console.error('Error fetching sessions:', sessError)
+          setTeamHealth({
+            score: 0,
+            trend: 'stable',
+            details: { sentiment: 0, engagement: 0, actionCompletion: 0 }
+          })
+          setEngagement({
+            participationRate: 0,
+            commentsPerPerson: 0,
+            avgSessionDuration: 0,
+            silentParticipants: 0,
+          })
+          setActionFunnel({
+            totalComments: 0,
+            votedComments: 0,
+            discussedComments: 0,
+            actionsCreated: 0,
+            actionsCompleted: 0,
+          })
+          setRedFlags([])
+          setLoading(false)
+          return
         }
+
+        const sessionIds = sessions.map(s => s.id)
+
+        // Fetch participants for these sessions (needed for engagement metrics)
+        const { data: participations } = await supabase
+          .from('session_participants')
+          .select('session_id, user_id')
+          .in('session_id', sessionIds)
 
         // Fetch sections per ottenere section_ids
         const { data: sections, error: sectError } = await supabase
           .from('sections')
           .select('id')
-          .in('session_id', limitedSessionIds)
+          .in('session_id', sessionIds)
 
         if (sectError) {
           console.error('Error fetching sections:', sectError)
@@ -122,8 +177,8 @@ export function useAdvancedMetrics() {
 
         // Fetch azioni in batch
         let allActions: any[] = []
-        for (let i = 0; i < limitedSessionIds.length; i += 5) {
-          const batch = limitedSessionIds.slice(i, i + 5)
+        for (let i = 0; i < sessionIds.length; i += 5) {
+          const batch = sessionIds.slice(i, i + 5)
           const { data: batchActions, error: actError } = await supabase
             .from('actions')
             .select('*')
@@ -289,7 +344,7 @@ export function useAdvancedMetrics() {
     }
 
     fetchMetrics()
-  }, [user])
+  }, [user, teamId])
 
   return {
     loading,

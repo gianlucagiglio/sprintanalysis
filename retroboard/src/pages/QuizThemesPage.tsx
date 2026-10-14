@@ -5,16 +5,18 @@ import { Badge } from '@/components/ui/Badge'
 import { Modal } from '@/components/ui/Modal'
 import { quizThemes, quizCategories, type QuizCategory } from '@/data/quizThemes'
 import { useQuizThemeUsage } from '@/hooks/useQuizThemeUsage'
+import { useTeamStore } from '@/stores/teamStore'
 import { BookOpen, Layers, ChevronDown, ChevronUp, CheckCircle2, ExternalLink, Calendar } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '@/components/ui/PageHeader'
 
 export function QuizThemesPage() {
+  const currentTeamId = useTeamStore(s => s.currentTeamId)
   const [expandedCategories, setExpandedCategories] = useState<Set<QuizCategory>>(
     new Set(Object.keys(quizCategories) as QuizCategory[])
   )
   const [selectedTheme, setSelectedTheme] = useState<{ id: string; label: string } | null>(null)
-  const { usage } = useQuizThemeUsage()
+  const { usage } = useQuizThemeUsage(currentTeamId)
   const navigate = useNavigate()
 
   // Close modal if selected theme has no more sessions

@@ -9,7 +9,7 @@ export type ActionWithSession = Action & {
   assigneeNames: string[]
 }
 
-export function useGlobalActions() {
+export function useGlobalActions(teamId?: string | null) {
   const [actions, setActions] = useState<ActionWithSession[]>([])
   const [loading, setLoading] = useState(true)
   const user = useAuthStore((s) => s.user)
@@ -17,25 +17,52 @@ export function useGlobalActions() {
   const fetchGlobalActions = useCallback(async () => {
     if (!user) return
 
-    // 1. Get all sessions the user participated in
-    const { data: participations, error: partError } = await supabase
-      .from('session_participants')
-      .select('session_id')
+    // 1. Get all teams the user is a member of
+    const { data: memberships, error: membershipsError } = await supabase
+      .from('team_members')
+      .select('team_id')
       .eq('user_id', user.id)
 
-    if (partError || !participations?.length) {
+    if (membershipsError) {
       setLoading(false)
       return
     }
 
-    const sessionIds = participations.map((p) => p.session_id)
+    const teamIds = memberships?.map(m => m.team_id) || []
 
-    // 2. Fetch sessions and actions in parallel
+    if (teamIds.length === 0) {
+      setActions([])
+      setLoading(false)
+      return
+    }
+
+    // Filter by specific team if provided
+    const filteredTeamIds = teamId ? teamIds.filter(id => id === teamId) : teamIds
+
+    if (filteredTeamIds.length === 0) {
+      setActions([])
+      setLoading(false)
+      return
+    }
+
+    // 2. Fetch all sessions from user's teams
+    const { data: teamSessions, error: sessionsError } = await supabase
+      .from('sessions')
+      .select('id, title')
+      .in('team_id', filteredTeamIds)
+      .order('created_at', { ascending: false })
+
+    if (sessionsError || !teamSessions?.length) {
+      setActions([])
+      setLoading(false)
+      return
+    }
+
+    const sessionIds = teamSessions.map(s => s.id)
+
+    // 3. Fetch actions for these sessions
     const [sessionsRes, actionsRes] = await Promise.all([
-      supabase
-        .from('sessions')
-        .select('id, title')
-        .in('id', sessionIds),
+      Promise.resolve({ data: teamSessions }),
       supabase
         .from('actions')
         .select('*')
@@ -44,7 +71,11 @@ export function useGlobalActions() {
     ])
 
     const sessions = sessionsRes.data || []
-    const rawActions = actionsRes.data || []
+    const allActions = actionsRes.data || []
+
+    // Filter actions to only include those from filtered sessions
+    const filteredSessionIds = new Set(sessions.map(s => s.id))
+    const rawActions = allActions.filter(a => filteredSessionIds.has(a.session_id))
 
     // 3. Fetch assignee profiles from assigned_to_multi
     const allAssigneeIds = [...new Set(rawActions.flatMap((a) => a.assigned_to_multi || []))]
@@ -74,7 +105,7 @@ export function useGlobalActions() {
 
     setActions(enriched)
     setLoading(false)
-  }, [user])
+  }, [user, teamId])
 
   useEffect(() => {
     fetchGlobalActions()

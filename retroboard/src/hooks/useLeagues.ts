@@ -11,6 +11,7 @@ export type QuizLeague = {
   status: 'active' | 'closed'
   created_at: string
   created_by: string | null
+  team_id: string
 }
 
 export type LeagueRanking = {
@@ -32,7 +33,7 @@ export type ActiveLeagueRanking = {
   rank: number
 }
 
-export function useLeagues() {
+export function useLeagues(teamId?: string | null) {
   const [leagues, setLeagues] = useState<QuizLeague[]>([])
   const [activeLeague, setActiveLeague] = useState<QuizLeague | null>(null)
   const [loading, setLoading] = useState(true)
@@ -40,17 +41,43 @@ export function useLeagues() {
 
   const fetchLeagues = useCallback(async () => {
     try {
-      // Fetch tutte le league ordinate per data creazione (più recenti prime)
+      // Get user's teams first
+      const { data: memberships } = await supabase
+        .from('team_members')
+        .select('team_id')
+        .eq('user_id', user?.id || '')
+
+      const userTeamIds = memberships?.map(m => m.team_id) || []
+
+      if (userTeamIds.length === 0) {
+        setLeagues([])
+        setActiveLeague(null)
+        setLoading(false)
+        return
+      }
+
+      // Filter by specific team if provided, otherwise get all user's teams
+      const filteredTeamIds = teamId ? userTeamIds.filter(id => id === teamId) : userTeamIds
+
+      if (filteredTeamIds.length === 0) {
+        setLeagues([])
+        setActiveLeague(null)
+        setLoading(false)
+        return
+      }
+
+      // Fetch league filtrate per team
       const { data, error } = await supabase
         .from('quiz_leagues')
         .select('*')
+        .in('team_id', filteredTeamIds)
         .order('created_at', { ascending: false })
 
       if (error) throw error
 
       setLeagues(data || [])
 
-      // Trova la league attiva
+      // Trova la league attiva (per il team selezionato)
       const active = data?.find((l) => l.status === 'active') || null
       setActiveLeague(active)
     } catch (error) {
@@ -58,7 +85,7 @@ export function useLeagues() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [user, teamId])
 
   useEffect(() => {
     fetchLeagues()
@@ -85,9 +112,12 @@ export function useLeagues() {
 
   /**
    * Crea una nuova league (solo super admin)
+   * @param name Nome della league
+   * @param teamId ID del team per cui creare la league
+   * @param description Descrizione opzionale
    */
   const createLeague = useCallback(
-    async (name: string, description?: string) => {
+    async (name: string, teamId: string, description?: string) => {
       if (!user) throw new Error('User not authenticated')
 
       const { data, error } = await supabase
@@ -97,6 +127,7 @@ export function useLeagues() {
           description: description || null,
           status: 'active',
           created_by: user.id,
+          team_id: teamId,
         })
         .select()
         .single()

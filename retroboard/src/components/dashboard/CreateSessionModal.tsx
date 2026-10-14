@@ -34,7 +34,7 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
   const filteredThemes = quizThemes.filter((t) => t.category === quizCategory)
   const user = useAuthStore((s) => s.user)
   const { teams } = useTeams()
-  const { activeLeague } = useLeagues()
+  const { activeLeague } = useLeagues(teamId || null)
   const navigate = useNavigate()
 
   // Handle category change - reset theme to first of new category

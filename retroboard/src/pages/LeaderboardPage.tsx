@@ -1,6 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useGlobalQuizStats } from '@/hooks/useGlobalQuizStats'
 import { useAuthStore } from '@/stores/authStore'
+import { useTeamStore } from '@/stores/teamStore'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Skeleton } from '@/components/ui/Skeleton'
@@ -32,7 +33,8 @@ const podiumBg = [
 const podiumHeights = ['h-28', 'h-20', 'h-16']
 
 export function LeaderboardPage() {
-  const { globalLeaderboard, sessionWinners, loading } = useGlobalQuizStats()
+  const currentTeamId = useTeamStore(s => s.currentTeamId)
+  const { globalLeaderboard, sessionWinners, loading } = useGlobalQuizStats(currentTeamId)
   const user = useAuthStore((s) => s.user)
 
   const totalPoints = globalLeaderboard.reduce((sum, e) => sum + e.totalPoints, 0)

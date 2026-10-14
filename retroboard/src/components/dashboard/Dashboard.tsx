@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
+import { useTeamStore } from '@/stores/teamStore'
 import { useTeams } from '@/hooks/useTeams'
 import { SessionCard } from './SessionCard'
 import { CreateSessionModal } from './CreateSessionModal'
@@ -19,7 +20,6 @@ import {
   Users,
   Search,
   Activity,
-  Filter,
 } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { canCreate } from '@/config/permissions'
@@ -35,7 +35,7 @@ export function Dashboard() {
   const [joinCode, setJoinCode] = useState('')
   const [filter, setFilter] = useState<FilterTab>('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedTeam, setSelectedTeam] = useState<string | null>(null)
+  const currentTeamId = useTeamStore(s => s.currentTeamId)
   const user = useAuthStore((s) => s.user)
   const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin)
   const { teams } = useTeams()
@@ -45,12 +45,18 @@ export function Dashboard() {
   const fetchSessions = useCallback(async () => {
     if (!user) return
 
-    // Super admin sees ALL sessions
+    // Super admin sees ALL sessions (filtered by team if selected)
     if (isSuperAdmin()) {
-      const { data: sessionsData, error: sessError } = await supabase
+      let query = supabase
         .from('sessions')
         .select('*')
         .order('created_at', { ascending: false })
+
+      if (currentTeamId) {
+        query = query.eq('team_id', currentTeamId)
+      }
+
+      const { data: sessionsData, error: sessError } = await query
 
       if (sessError) return
 
@@ -88,7 +94,7 @@ export function Dashboard() {
 
     const participantSessionIds = participations?.map((p) => p.session_id) || []
 
-    // 2. Sessions belonging to teams the user is a member of
+    // 2. Sessions belonging to teams the user is a member of (filtered by currentTeamId if selected)
     const { data: memberships } = await supabase
       .from('team_members')
       .select('team_id')
@@ -96,12 +102,20 @@ export function Dashboard() {
 
     let teamSessionIds: string[] = []
     if (memberships?.length) {
-      const teamIds = memberships.map((m) => m.team_id)
-      const { data: teamSessions } = await supabase
-        .from('sessions')
-        .select('id')
-        .in('team_id', teamIds)
-      teamSessionIds = teamSessions?.map((s) => s.id) || []
+      let teamIds = memberships.map((m) => m.team_id)
+
+      // Filter by currentTeamId if selected
+      if (currentTeamId) {
+        teamIds = teamIds.filter(id => id === currentTeamId)
+      }
+
+      if (teamIds.length > 0) {
+        const { data: teamSessions } = await supabase
+          .from('sessions')
+          .select('id')
+          .in('team_id', teamIds)
+        teamSessionIds = teamSessions?.map((s) => s.id) || []
+      }
     }
 
     // Merge and deduplicate
@@ -142,7 +156,7 @@ export function Dashboard() {
       setSessions(withCounts)
     }
     setLoading(false)
-  }, [user])
+  }, [user, currentTeamId, isSuperAdmin])
 
   // Fetch on mount and when user changes
   useEffect(() => {
@@ -191,9 +205,6 @@ export function Dashboard() {
     if (filter === 'active') result = result.filter((s) => s.current_step >= 1 && s.current_step <= 4)
     if (filter === 'closed') result = result.filter((s) => s.current_step === 5)
 
-    // Filter by team
-    if (selectedTeam) result = result.filter((s) => s.team_id === selectedTeam)
-
     // Filter by search query
     if (searchQuery.trim()) {
       const query = searchQuery.trim().toLowerCase()
@@ -204,7 +215,7 @@ export function Dashboard() {
     }
 
     return result
-  }, [sessions, filter, selectedTeam, searchQuery])
+  }, [sessions, filter, searchQuery])
 
   // Group sessions by team
   const teamMap = useMemo(() => {
@@ -421,29 +432,10 @@ export function Dashboard() {
                 className="!pl-10 !bg-white"
               />
             </div>
-
-            {/* Team Filter */}
-            {teams.length > 0 && (
-              <div className="relative sm:w-64">
-                <Filter size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-retro-text-secondary pointer-events-none z-10" />
-                <select
-                  value={selectedTeam || ''}
-                  onChange={(e) => setSelectedTeam(e.target.value || null)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-medium text-retro-text focus:outline-none focus:ring-2 focus:ring-retro-primary/20 focus:border-retro-primary transition-all appearance-none cursor-pointer"
-                >
-                  <option value="">Tutti i team</option>
-                  {teams.map((team) => (
-                    <option key={team.id} value={team.id}>
-                      {team.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
           </div>
 
           {/* Active Filters Indicator */}
-          {(searchQuery || selectedTeam) && (
+          {searchQuery && (
             <div className="flex items-center gap-2">
               <span className="text-sm text-retro-text-secondary">
                 Mostrando {filteredSessions.length} di {sessions.length} sessioni
@@ -451,7 +443,6 @@ export function Dashboard() {
               <button
                 onClick={() => {
                   setSearchQuery('')
-                  setSelectedTeam(null)
                 }}
                 className="text-sm text-retro-primary hover:text-retro-primary-dark font-medium transition-colors"
               >

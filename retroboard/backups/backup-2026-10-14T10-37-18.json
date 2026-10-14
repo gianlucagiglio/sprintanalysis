@@ -1,0 +1,328 @@
+{
+  "timestamp": "2026-10-14T10:37:18.280Z",
+  "supabaseUrl": "https://cwyqrigyikbssummvuoo.supabase.co",
+  "tables": {
+    "profiles": {
+      "table": "profiles",
+      "count": 0,
+      "data": []
+    },
+    "teams": {
+      "table": "teams",
+      "count": 0,
+      "data": []
+    },
+    "team_members": {
+      "table": "team_members",
+      "count": 0,
+      "data": []
+    },
+    "sessions": {
+      "table": "sessions",
+      "count": 0,
+      "data": []
+    },
+    "session_participants": {
+      "table": "session_participants",
+      "count": 0,
+      "data": []
+    },
+    "sections": {
+      "table": "sections",
+      "count": 0,
+      "data": []
+    },
+    "comments": {
+      "table": "comments",
+      "count": 0,
+      "data": []
+    },
+    "votes": {
+      "table": "votes",
+      "count": 0,
+      "data": []
+    },
+    "actions": {
+      "table": "actions",
+      "count": 0,
+      "data": []
+    },
+    "mood_votes": {
+      "table": "mood_votes",
+      "count": 0,
+      "data": []
+    },
+    "team_mood_votes": {
+      "table": "team_mood_votes",
+      "count": 0,
+      "data": []
+    },
+    "quiz_themes": {
+      "table": "quiz_themes",
+      "count": 0,
+      "data": []
+    },
+    "quiz_questions": {
+      "table": "quiz_questions",
+      "count": 0,
+      "data": []
+    },
+    "quiz_answers": {
+      "table": "quiz_answers",
+      "count": 0,
+      "data": []
+    },
+    "quiz_leagues": {
+      "table": "quiz_leagues",
+      "count": 0,
+      "data": []
+    },
+    "user_points": {
+      "table": "user_points",
+      "count": 0,
+      "data": []
+    },
+    "point_transactions": {
+      "table": "point_transactions",
+      "count": 0,
+      "data": []
+    },
+    "badge_definitions": {
+      "table": "badge_definitions",
+      "count": 16,
+      "data": [
+        {
+          "code": "first_action",
+          "name": "First Action",
+          "description": "Completa la tua prima azione assegnata",
+          "icon": "✅",
+          "category": "contribution",
+          "criteria": {
+            "type": "actions_completed",
+            "threshold": 1
+          },
+          "sort_order": 5,
+          "is_secret": false,
+          "created_at": "2026-07-05T20:17:14.255542+00:00"
+        },
+        {
+          "code": "action_creator",
+          "name": "Action Creator",
+          "description": "Crea 5 azioni durante le retrospettive",
+          "icon": "📝",
+          "category": "contribution",
+          "criteria": {
+            "type": "actions_created",
+            "threshold": 5
+          },
+          "sort_order": 13,
+          "is_secret": false,
+          "created_at": "2026-07-05T20:17:14.255542+00:00"
+        },
+        {
+          "code": "veteran",
+          "name": "Veteran",
+          "description": "Partecipa a 20 retrospettive",
+          "icon": "🥇",
+          "category": "participation",
+          "criteria": {
+            "type": "retrospectives_count",
+            "threshold": 20
+          },
+          "sort_order": 3,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        },
+        {
+          "code": "legend",
+          "name": "Legend",
+          "description": "Partecipa a 50 retrospettive",
+          "icon": "💎",
+          "category": "participation",
+          "criteria": {
+            "type": "retrospectives_count",
+            "threshold": 50
+          },
+          "sort_order": 4,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        },
+        {
+          "code": "chatterbox",
+          "name": "Chatterbox",
+          "description": "Scrivi 50 commenti in totale",
+          "icon": "💬",
+          "category": "contribution",
+          "criteria": {
+            "type": "comments_count",
+            "threshold": 50
+          },
+          "sort_order": 10,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        },
+        {
+          "code": "action_hero",
+          "name": "Action Hero",
+          "description": "Completa 10 azioni assegnate",
+          "icon": "🎯",
+          "category": "contribution",
+          "criteria": {
+            "type": "actions_completed",
+            "threshold": 10
+          },
+          "sort_order": 11,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        },
+        {
+          "code": "streak_master",
+          "name": "Streak Master",
+          "description": "Partecipa a 10 retrospettive consecutive",
+          "icon": "🔥",
+          "category": "contribution",
+          "criteria": {
+            "type": "streak",
+            "threshold": 10
+          },
+          "sort_order": 20,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        },
+        {
+          "code": "team_player",
+          "name": "Team Player",
+          "description": "Vota 20 commenti di altri membri",
+          "icon": "🤝",
+          "category": "team",
+          "criteria": {
+            "type": "votes_given",
+            "threshold": 20
+          },
+          "sort_order": 30,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        },
+        {
+          "code": "newcomer",
+          "name": "Newcomer",
+          "description": "Partecipa alla tua prima retrospettiva",
+          "icon": "🥉",
+          "category": "participation",
+          "criteria": {
+            "type": "retrospectives_count",
+            "threshold": 1
+          },
+          "sort_order": 1,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        },
+        {
+          "code": "problem_solver",
+          "name": "Problem Solver",
+          "description": "Crea 3 azioni con alta priorità",
+          "icon": "🚀",
+          "category": "team",
+          "criteria": {
+            "type": "actions_high_priority",
+            "threshold": 3
+          },
+          "sort_order": 32,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        },
+        {
+          "code": "organizer_pro",
+          "name": "Organizer Pro",
+          "description": "Organizza 10 retrospettive",
+          "icon": "👑",
+          "category": "special",
+          "criteria": {
+            "type": "sessions_organized",
+            "threshold": 10
+          },
+          "sort_order": 40,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        },
+        {
+          "code": "quiz_master",
+          "name": "Quiz Master",
+          "description": "Vinci 5 quiz",
+          "icon": "🎓",
+          "category": "special",
+          "criteria": {
+            "type": "quiz_wins",
+            "threshold": 5
+          },
+          "sort_order": 41,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        },
+        {
+          "code": "unicorn",
+          "name": "Unicorn",
+          "description": "Badge segreto - Scoprilo!",
+          "icon": "🦄",
+          "category": "special",
+          "criteria": {
+            "type": "secret",
+            "threshold": 1
+          },
+          "sort_order": 50,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        },
+        {
+          "code": "speed_demon",
+          "name": "Speed Demon",
+          "description": "Completa 5 azioni in meno di 3 giorni",
+          "icon": "⚡",
+          "category": "contribution",
+          "criteria": {
+            "days": 3,
+            "type": "actions_fast",
+            "enabled": false,
+            "threshold": 5
+          },
+          "sort_order": 12,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        },
+        {
+          "code": "motivator",
+          "name": "Motivator",
+          "description": "Mood positivo per 5 retrospettive consecutive",
+          "icon": "🌟",
+          "category": "team",
+          "criteria": {
+            "type": "mood_streak_positive",
+            "threshold": 5
+          },
+          "sort_order": 31,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        },
+        {
+          "code": "regular",
+          "name": "Regular",
+          "description": "Partecipa a 5 retrospettive",
+          "icon": "🥈",
+          "category": "participation",
+          "criteria": {
+            "type": "retrospectives_count",
+            "threshold": 5
+          },
+          "sort_order": 2,
+          "is_secret": false,
+          "created_at": "2026-07-03T15:15:57.446695+00:00"
+        }
+      ]
+    },
+    "user_badges": {
+      "table": "user_badges",
+      "count": 0,
+      "data": []
+    }
+  }
+}

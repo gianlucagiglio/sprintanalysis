@@ -35,12 +35,15 @@ export type NoTeamStats = {
   lastSessionDate: string | null
 }
 
-export function useTeamStats() {
+export function useTeamStats(teamId?: string | null) {
   const user = useAuthStore((s) => s.user)
-  const { teams, loading: teamsLoading } = useTeams()
+  const { teams: allTeams, loading: teamsLoading } = useTeams()
   const [teamStats, setTeamStats] = useState<TeamStats[]>([])
   const [noTeamStats, setNoTeamStats] = useState<NoTeamStats | null>(null)
   const [loading, setLoading] = useState(true)
+
+  // Filter teams based on selected teamId
+  const teams = teamId ? allTeams.filter(t => t.id === teamId) : allTeams
 
   const fetchStats = useCallback(async () => {
     if (!user || teamsLoading) return
@@ -202,7 +205,7 @@ export function useTeamStats() {
     }
 
     setLoading(false)
-  }, [user, teams, teamsLoading])
+  }, [user, teams, teamsLoading, teamId])
 
   useEffect(() => {
     fetchStats()

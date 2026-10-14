@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/Input'
 import { Badge } from '@/components/ui/Badge'
 import { useLeagues } from '@/hooks/useLeagues'
 import { useAuthStore } from '@/stores/authStore'
+import { useTeamStore } from '@/stores/teamStore'
 import {
   Trophy,
   Calendar,
@@ -22,7 +23,8 @@ import { it } from 'date-fns/locale'
 import { Link } from 'react-router-dom'
 
 export function LeagueAdminPanel() {
-  const { activeLeague, leagues, previewCloseLeague, closeLeagueAndOpenNew, loading } = useLeagues()
+  const currentTeamId = useTeamStore(s => s.currentTeamId)
+  const { activeLeague, leagues, previewCloseLeague, closeLeagueAndOpenNew, loading } = useLeagues(currentTeamId)
   const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin())
   const [isClosing, setIsClosing] = useState(false)
   const [isPreviewing, setIsPreviewing] = useState(false)
