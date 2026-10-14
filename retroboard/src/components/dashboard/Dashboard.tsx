@@ -537,7 +537,7 @@ export function Dashboard() {
                       animate={{ opacity: 1 }}
                       transition={{ delay: idx * 0.05, type: 'spring', stiffness: 200, damping: 20 }}
                     >
-                      <SessionCard session={s} participantCount={s.participant_count} onDelete={handleDelete} index={idx} />
+                      <SessionCard session={s} participantCount={s.participant_count} onDelete={handleDelete} />
                     </motion.div>
                   ))}
                 </div>

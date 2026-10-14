@@ -53,10 +53,9 @@ interface SessionCardProps {
   session: Session
   participantCount?: number
   onDelete?: (sessionId: string) => void
-  index?: number
 }
 
-export function SessionCard({ session, participantCount, onDelete, index }: SessionCardProps) {
+export function SessionCard({ session, participantCount, onDelete }: SessionCardProps) {
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin)
