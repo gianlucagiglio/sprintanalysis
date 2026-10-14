@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useUserManagement } from '@/hooks/useUserManagement'
 import { useAuthStore } from '@/stores/authStore'
@@ -26,6 +27,7 @@ export function AdminUsersPage() {
   const { users, loading, banUser, deleteUser, setCanCreateSessions } = useUserManagement()
   const user = useAuthStore((s) => s.user)
   const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin())
+  const navigate = useNavigate()
 
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -135,15 +137,32 @@ export function AdminUsersPage() {
         {/* Header */}
         <PageHeader
           variant="hero"
-          title="Gestione Utenti"
-          description="Gestisci tutti gli utenti registrati"
-          icon={Users}
+          title="Pannello Admin"
+          description="Gestisci utenti e team"
+          icon={Shield}
           gradient="primary"
           badge={{
-            label: `${totalUsers} utenti`,
+            label: 'Super Admin',
             variant: 'default',
           }}
         />
+
+        {/* Admin Navigation Tabs */}
+        <div className="flex gap-2 border-b border-retro-border pb-4">
+          <button
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-retro-primary text-white"
+          >
+            <Users className="w-4 h-4 inline mr-2" />
+            Gestione Utenti
+          </button>
+          <button
+            onClick={() => navigate('/admin/teams')}
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-colors text-retro-text/60 hover:text-retro-text hover:bg-slate-50"
+          >
+            <Shield className="w-4 h-4 inline mr-2" />
+            Gestione Team
+          </button>
+        </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

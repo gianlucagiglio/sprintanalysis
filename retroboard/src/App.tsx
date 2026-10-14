@@ -20,6 +20,7 @@ import { TeamsPage } from '@/pages/TeamsPage'
 import { TeamPage } from '@/pages/TeamPage'
 import { ChangelogPage } from '@/pages/ChangelogPage'
 import { AdminUsersPage } from '@/pages/AdminUsersPage'
+import { AdminTeamsPage } from '@/pages/AdminTeamsPage'
 
 export default function App() {
   const initialize = useAuthStore((s) => s.initialize)
@@ -130,6 +131,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <AdminUsersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/teams"
+          element={
+            <ProtectedRoute>
+              <AdminTeamsPage />
             </ProtectedRoute>
           }
         />

@@ -144,13 +144,13 @@ export function Navbar() {
                   </button>
                 )
               })}
-              {/* Admin only - User Management */}
+              {/* Admin only - Team Management */}
               {isSuper && (
                 <button
-                  onClick={() => navigate('/admin/users')}
+                  onClick={() => navigate('/admin/teams')}
                   className={`relative flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200
                     focus:outline-none focus-visible:ring-2 focus-visible:ring-glass-primary/50 focus-visible:ring-offset-2
-                    ${location.pathname === '/admin/users'
+                    ${location.pathname.startsWith('/admin')
                       ? 'bg-amber-500/10 text-amber-600 font-semibold ring-1 ring-amber-500/20'
                       : 'text-amber-600 hover:text-amber-700 hover:bg-amber-50'
                     }`}
