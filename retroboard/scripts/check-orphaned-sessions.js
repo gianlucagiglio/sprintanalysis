@@ -8,7 +8,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 async function checkOrphanedSessions() {
-  console.log('🔍 Verifico sessioni senza team_id...\n')
+  // console.log('🔍 Verifico sessioni senza team_id...\n')
 
   const { data, error, count } = await supabase
     .from('sessions')
@@ -17,26 +17,26 @@ async function checkOrphanedSessions() {
     .order('created_at', { ascending: false })
 
   if (error) {
-    console.error('❌ Errore:', error.message)
+    // console.error('❌ Errore:', error.message)
     return
   }
 
-  console.log(`📊 Trovate ${count} sessioni senza team_id\n`)
+  // console.log(`📊 Trovate ${count} sessioni senza team_id\n`)
 
   if (count > 0) {
-    console.log('Sessioni orfane:\n')
+    // console.log('Sessioni orfane:\n')
     data.forEach((s, i) => {
-      console.log(`${i + 1}. "${s.title}"`)
-      console.log(`   ID: ${s.id}`)
-      console.log(`   Organizer: ${s.organizer_id}`)
-      console.log(`   Creata: ${new Date(s.created_at).toLocaleDateString('it-IT')}`)
-      console.log('')
+      // console.log(`${i + 1}. "${s.title}"`)
+      // console.log(`   ID: ${s.id}`)
+      // console.log(`   Organizer: ${s.organizer_id}`)
+      // console.log(`   Creata: ${new Date(s.created_at).toLocaleDateString('it-IT')}`)
+      // console.log('')
     })
 
-    console.log('\n⚠️  Queste sessioni vengono mostrate a TUTTI i team!')
-    console.log('📋 Prossimo passo: esegui la migration 028 per fixare.\n')
+    // console.log('\n⚠️  Queste sessioni vengono mostrate a TUTTI i team!')
+    // console.log('📋 Prossimo passo: esegui la migration 028 per fixare.\n')
   } else {
-    console.log('✅ Nessuna sessione orfana! Database OK!\n')
+    // console.log('✅ Nessuna sessione orfana! Database OK!\n')
   }
 
   // Check total sessions
@@ -44,9 +44,9 @@ async function checkOrphanedSessions() {
     .from('sessions')
     .select('*', { count: 'exact', head: true })
 
-  console.log(`ℹ️  Totale sessioni nel database: ${totalCount}`)
-  console.log(`ℹ️  Sessioni con team: ${totalCount - count}`)
-  console.log(`ℹ️  Sessioni senza team: ${count}\n`)
+  // console.log(`ℹ️  Totale sessioni nel database: ${totalCount}`)
+  // console.log(`ℹ️  Sessioni con team: ${totalCount - count}`)
+  // console.log(`ℹ️  Sessioni senza team: ${count}\n`)
 }
 
-checkOrphanedSessions().catch(console.error)
+checkOrphanedSessions().catch(// console.error)

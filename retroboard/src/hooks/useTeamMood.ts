@@ -18,7 +18,6 @@ export function useTeamMood(sessionId: string | undefined) {
       .select('*')
       .eq('session_id', sessionId)
     if (error) {
-      console.error('fetchTeamMoodVotes failed:', error)
       return
     }
     if (data) setTeamMoodVotes(data)
@@ -39,7 +38,7 @@ export function useTeamMood(sessionId: string | undefined) {
         () => fetchTeamMoodVotes()
       )
       .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR') console.error('team mood channel error:', err)
+        if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
     return () => { supabase.removeChannel(channel) }
   }, [sessionId, fetchTeamMoodVotes])
@@ -58,7 +57,6 @@ export function useTeamMood(sessionId: string | undefined) {
       { onConflict: 'session_id,user_id' }
     )
     if (error) {
-      console.error('submitTeamMood failed:', error)
       return
     }
 

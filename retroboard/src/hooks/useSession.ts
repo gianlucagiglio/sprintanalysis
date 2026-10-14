@@ -73,7 +73,6 @@ export function useSession(sessionId: string | undefined) {
           role: 'participant',
         })
         if (error) {
-          console.error('Failed to join session:', error)
           return
         }
 
@@ -112,7 +111,7 @@ export function useSession(sessionId: string | undefined) {
         () => fetchParticipants()
       )
       .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR') console.error('session channel error:', err)
+        if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
 
     channelRef.current = channel
@@ -161,7 +160,6 @@ export function useSession(sessionId: string | undefined) {
       .update({ current_step: nextStep, retro_phase: 'comments', retro_revealed: false, mood_phase: 'personal', quiz_current_index: -1, phase_timer_duration: 0, phase_timer_started_at: null })
       .eq('id', session.id)
     if (error) {
-      console.error('advanceStep failed:', error)
       updateSession({ current_step: prevStep, retro_phase: prevPhase })
     }
   }
@@ -178,7 +176,6 @@ export function useSession(sessionId: string | undefined) {
       .update({ retro_phase: phase, retro_revealed: revealed, phase_timer_duration: 0, phase_timer_started_at: null })
       .eq('id', session.id)
     if (error) {
-      console.error('setRetroPhase failed:', error)
       updateSession({ retro_phase: prevPhase, retro_revealed: prevRevealed })
     }
   }
@@ -191,7 +188,6 @@ export function useSession(sessionId: string | undefined) {
       .update({ retro_revealed: true })
       .eq('id', session.id)
     if (error) {
-      console.error('revealRetro failed:', error)
       updateSession({ retro_revealed: false })
     }
   }
@@ -204,7 +200,7 @@ export function useSession(sessionId: string | undefined) {
       .eq('session_id', session.id)
       .eq('user_id', user.id)
     if (error) {
-      console.error('markDone failed:', error)
+      // Error handling
     } else {
       await fetchParticipants()
     }
@@ -217,7 +213,7 @@ export function useSession(sessionId: string | undefined) {
       .update({ is_done: false })
       .eq('session_id', session.id)
     if (error) {
-      console.error('resetDone failed:', error)
+      // Error handling
     } else {
       await fetchParticipants()
     }
@@ -232,7 +228,6 @@ export function useSession(sessionId: string | undefined) {
       .update({ quiz_current_index: nextIndex })
       .eq('id', session.id)
     if (error) {
-      console.error('advanceQuiz failed:', error)
       updateSession({ quiz_current_index: session.quiz_current_index })
     }
   }
@@ -260,7 +255,6 @@ export function useSession(sessionId: string | undefined) {
       .update(updates)
       .eq('id', session.id)
     if (error) {
-      console.error('goToStep failed:', error)
       updateSession({ current_step: prevStep })
     }
   }
@@ -274,7 +268,6 @@ export function useSession(sessionId: string | undefined) {
       .update({ phase_timer_duration: durationSeconds, phase_timer_started_at: startedAt })
       .eq('id', session.id)
     if (error) {
-      console.error('startPhaseTimer failed:', error)
       updateSession({ phase_timer_duration: 0, phase_timer_started_at: null })
     }
   }
@@ -287,7 +280,7 @@ export function useSession(sessionId: string | undefined) {
       .update({ phase_timer_duration: 0, phase_timer_started_at: null })
       .eq('id', session.id)
     if (error) {
-      console.error('stopPhaseTimer failed:', error)
+      // Error handling
     }
   }
 
@@ -300,7 +293,6 @@ export function useSession(sessionId: string | undefined) {
       .update({ mood_phase: phase })
       .eq('id', session.id)
     if (error) {
-      console.error('setMoodPhase failed:', error)
       updateSession({ mood_phase: prevPhase })
     }
   }
@@ -313,7 +305,6 @@ export function useSession(sessionId: string | undefined) {
       .update({ current_step: 5 })
       .eq('id', session.id)
     if (error) {
-      console.error('closeSession failed:', error)
       updateSession({ current_step: session.current_step })
     }
   }

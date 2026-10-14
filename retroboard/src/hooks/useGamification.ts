@@ -29,7 +29,7 @@ export function useGamification(teamId?: string | null) {
     const { data, error } = await query.maybeSingle()
 
     if (error) {
-      console.error('fetchUserPoints failed:', error)
+      // console.error('fetchUserPoints failed:', error)
       setLoading(false)
       return
     }
@@ -63,7 +63,7 @@ export function useGamification(teamId?: string | null) {
       .limit(10)
 
     if (error) {
-      console.error('fetchRecentTransactions failed:', error)
+      // console.error('fetchRecentTransactions failed:', error)
       return
     }
 
@@ -133,7 +133,7 @@ export function useGamification(teamId?: string | null) {
     })
 
     if (error) {
-      console.error('awardPoints failed:', error)
+      // console.error('awardPoints failed:', error)
     } else {
       // Refresh data
       await fetchUserPoints()

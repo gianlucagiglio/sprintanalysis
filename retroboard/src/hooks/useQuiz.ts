@@ -22,7 +22,7 @@ export function useQuiz(sessionId: string | undefined) {
       .eq('session_id', sessionId)
       .order('sort_order')
     if (error) {
-      console.error('fetchQuestions failed:', error)
+      // console.error('fetchQuestions failed:', error)
       setLoading(false)
       return
     }
@@ -40,7 +40,7 @@ export function useQuiz(sessionId: string | undefined) {
       .select('*')
       .in('question_id', questionIdsRef.current)
     if (error) {
-      console.error('fetchAnswers failed:', error)
+      // console.error('fetchAnswers failed:', error)
       return
     }
     if (data) setAnswers(data)
@@ -65,7 +65,7 @@ export function useQuiz(sessionId: string | undefined) {
         () => fetchAnswers()
       )
       .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR') console.error('quiz channel error:', err)
+        if (status === 'CHANNEL_ERROR') // console.error('quiz channel error:', err)
       })
     return () => { supabase.removeChannel(channel) }
   }, [sessionId, fetchAnswers])
@@ -96,7 +96,7 @@ export function useQuiz(sessionId: string | undefined) {
       time_taken: timeTaken,
     } as any) // points computed server-side by trigger
     if (error) {
-      console.error('submitAnswer failed:', error)
+      // console.error('submitAnswer failed:', error)
     } else {
       await fetchAnswers()
       // Award gamification points if correct

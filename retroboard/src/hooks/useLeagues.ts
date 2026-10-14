@@ -81,7 +81,7 @@ export function useLeagues(teamId?: string | null) {
       const active = data?.find((l) => l.status === 'active') || null
       setActiveLeague(active)
     } catch (error) {
-      console.error('Error fetching leagues:', error)
+      // console.error('Error fetching leagues:', error)
     } finally {
       setLoading(false)
     }
@@ -230,7 +230,7 @@ export function useActiveLeagueRankings() {
 
       setRankings(data || [])
     } catch (error) {
-      console.error('Error fetching active league rankings:', error)
+      // console.error('Error fetching active league rankings:', error)
       setRankings([])
     } finally {
       setLoading(false)
@@ -318,7 +318,7 @@ export function useLeagueHistory(leagueId: string | null) {
 
         setRankings(mappedRankings)
       } catch (error) {
-        console.error('Error fetching league history:', error)
+        // console.error('Error fetching league history:', error)
       } finally {
         setLoading(false)
       }

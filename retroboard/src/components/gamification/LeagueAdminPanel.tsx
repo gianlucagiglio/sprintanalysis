@@ -63,7 +63,7 @@ export function LeagueAdminPanel() {
       setPreviewData(preview)
     } catch (err: any) {
       setError(err.message || 'Errore durante la preview')
-      console.error('Error preview league:', err)
+      // console.error('Error preview league:', err)
     } finally {
       setIsPreviewing(false)
     }
@@ -96,7 +96,7 @@ export function LeagueAdminPanel() {
       setPreviewData(null)
     } catch (err: any) {
       setError(err.message || 'Errore durante la chiusura della league')
-      console.error('Error closing league:', err)
+      // console.error('Error closing league:', err)
     } finally {
       setIsClosing(false)
     }

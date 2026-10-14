@@ -33,7 +33,7 @@ export function useOverdueActions() {
       .order('deadline', { ascending: true })
 
     if (error) {
-      console.error('fetchOverdueActions failed:', error)
+      // console.error('fetchOverdueActions failed:', error)
       setLoading(false)
       return
     }

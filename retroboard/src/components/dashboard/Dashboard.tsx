@@ -182,7 +182,7 @@ export function Dashboard() {
         () => fetchSessions()
       )
       .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR') console.error('dashboard sessions channel error:', err)
+        if (status === 'CHANNEL_ERROR') // console.error('dashboard sessions channel error:', err)
       })
     return () => { supabase.removeChannel(channel) }
   }, [user, fetchSessions])
@@ -232,7 +232,7 @@ export function Dashboard() {
     // All child tables have ON DELETE CASCADE — deleting the session removes everything
     const { error } = await supabase.from('sessions').delete().eq('id', sessionId)
     if (error) {
-      console.error('Error deleting session:', error)
+      // console.error('Error deleting session:', error)
       return
     }
 

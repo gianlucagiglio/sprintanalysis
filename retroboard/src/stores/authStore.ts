@@ -59,7 +59,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       // 🚫 CHECK BAN: Se utente bannato, logout immediato
       if (profile?.is_banned) {
-        console.warn('⚠️ Utente bannato rilevato, logout forzato')
         await supabase.auth.signOut()
         set({ user: null, loading: false })
         alert(
@@ -94,7 +93,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
         // 🚫 CHECK BAN: Se utente bannato, logout immediato
         if (profile?.is_banned) {
-          console.warn('⚠️ Utente bannato rilevato durante auth change, logout forzato')
           await supabase.auth.signOut()
           set({ user: null })
           alert(
@@ -130,7 +128,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
         // 🚫 CHECK BAN: Se bannato nel frattempo, logout
         if (profile?.is_banned) {
-          console.warn('⚠️ Utente bannato rilevato dopo visibility change, logout forzato')
           await supabase.auth.signOut()
           set({ user: null })
           alert(
@@ -148,7 +145,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signUp: async (email, password, name) => {
-    console.log('[Auth] Attempting signUp for', email)
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -156,20 +152,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         data: { name },
       },
     })
-    console.log('[Auth] signUp response:', { data, error })
 
     if (error) {
-      console.error('[Auth] signUp error:', error.message)
       throw new Error(error.message)
     }
 
     if (!data.session) {
-      console.warn('[Auth] No session returned - email confirmation may be enabled')
       throw new Error('Controlla la tua email per confermare la registrazione, oppure disattiva "Confirm email" in Supabase Dashboard > Authentication > Providers > Email')
     }
 
     if (data.user) {
-      console.log('[Auth] User created, inserting profile...')
       const { error: profileError } = await supabase.from('profiles').insert({
         id: data.user.id,
         name,
@@ -178,25 +170,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         is_super_admin: false,
       })
       if (profileError) {
-        console.error('[Auth] Profile insert error:', profileError)
         throw new Error('Profilo: ' + profileError.message)
       }
-      console.log('[Auth] Profile created successfully')
     }
   },
 
   signIn: async (email, password) => {
-    console.log('[Auth] Attempting signIn for', email)
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    console.log('[Auth] signIn response:', { data, error })
     if (error) {
-      console.error('[Auth] signIn error:', error.message)
       throw new Error(error.message)
     }
   },
 
   signOut: async () => {
-    console.log('[Auth] Starting logout...')
     set({ user: null })
 
     // Clear session storage
@@ -206,12 +192,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Close all Supabase realtime channels to prevent locks
     try {
       const channels = supabase.getChannels()
-      console.log('[Auth] Closing', channels.length, 'channels before logout')
       for (const channel of channels) {
         await supabase.removeChannel(channel)
       }
     } catch (e) {
-      console.error('Error closing channels:', e)
+      // Error handling
     }
 
     // Reset auth initialization flag
@@ -219,39 +204,31 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     try {
       await supabase.auth.signOut({ scope: 'local' })
-      console.log('[Auth] Logout complete')
     } catch (e) {
-      console.error('supabase signOut error:', e)
+      // Error handling
     }
 
     // Force reload to clean all state
-    console.log('[Auth] Reloading page to clean state...')
     window.location.href = '/login'
   },
 
   requestPasswordReset: async (email: string) => {
-    console.log('[Auth] Requesting password reset for', email)
     const redirectUrl = import.meta.env.VITE_APP_URL || window.location.origin
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${redirectUrl}/reset-password`,
     })
     if (error) {
-      console.error('[Auth] Password reset request error:', error.message)
       throw new Error(error.message)
     }
-    console.log('[Auth] Password reset email sent')
   },
 
   resetPassword: async (newPassword: string) => {
-    console.log('[Auth] Updating password')
     const { data, error } = await supabase.auth.updateUser({
       password: newPassword,
     })
     if (error) {
-      console.error('[Auth] Password update error:', error.message)
       throw new Error(error.message)
     }
-    console.log('[Auth] Password updated successfully')
 
     // Fetch profile after password reset
     if (data.user) {

@@ -78,7 +78,7 @@ export function AdminTeamsPage() {
       setSuccess(`${userName} è ora ${newRole} del team "${teamName}"`)
     } catch (err: any) {
       setError(err.message || 'Errore durante il cambio ruolo')
-      console.error('Error changing role:', err)
+      // console.error('Error changing role:', err)
     } finally {
       setActionLoading(null)
     }
@@ -102,7 +102,7 @@ export function AdminTeamsPage() {
       setSuccess(`${userName} rimosso dal team "${teamName}"`)
     } catch (err: any) {
       setError(err.message || 'Errore durante la rimozione')
-      console.error('Error removing member:', err)
+      // console.error('Error removing member:', err)
     } finally {
       setActionLoading(null)
     }

@@ -15,7 +15,7 @@ export function useParkingLot(sessionId: string | undefined) {
       .eq('session_id', sessionId)
       .order('created_at', { ascending: false })
     if (error) {
-      console.error('fetchItems failed:', error)
+      // console.error('fetchItems failed:', error)
       return
     }
     if (data) setItems(data)
@@ -35,7 +35,7 @@ export function useParkingLot(sessionId: string | undefined) {
         () => fetchItems()
       )
       .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR') console.error('parking lot channel error:', err)
+        if (status === 'CHANNEL_ERROR') // console.error('parking lot channel error:', err)
       })
     return () => { supabase.removeChannel(channel) }
     // fetchItems catturato in closure - NON in deps (infinite loop prevention)
@@ -49,13 +49,13 @@ export function useParkingLot(sessionId: string | undefined) {
       user_id: user.id,
       text,
     })
-    if (error) console.error('addItem failed:', error)
+    if (error) // console.error('addItem failed:', error)
     else await fetchItems()
   }
 
   const deleteItem = async (itemId: string) => {
     const { error } = await supabase.from('parking_lot_items').delete().eq('id', itemId)
-    if (error) console.error('deleteItem failed:', error)
+    if (error) // console.error('deleteItem failed:', error)
     else await fetchItems()
   }
 
@@ -65,7 +65,7 @@ export function useParkingLot(sessionId: string | undefined) {
       .from('parking_lot_items')
       .update({ is_converted: true, action_id: actionId })
       .eq('id', itemId)
-    if (error) console.error('convertToAction failed:', error)
+    if (error) // console.error('convertToAction failed:', error)
     else await fetchItems()
   }
 

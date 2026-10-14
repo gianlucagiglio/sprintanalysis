@@ -18,7 +18,7 @@ export function useMood(sessionId: string | undefined) {
       .select('*')
       .eq('session_id', sessionId)
     if (error) {
-      console.error('fetchMoodVotes failed:', error)
+      // console.error('fetchMoodVotes failed:', error)
       return
     }
     if (data) setMoodVotes(data)
@@ -39,7 +39,7 @@ export function useMood(sessionId: string | undefined) {
         () => fetchMoodVotes()
       )
       .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR') console.error('mood channel error:', err)
+        if (status === 'CHANNEL_ERROR') // console.error('mood channel error:', err)
       })
     return () => { supabase.removeChannel(channel) }
   }, [sessionId, fetchMoodVotes])
@@ -59,7 +59,7 @@ export function useMood(sessionId: string | undefined) {
       { onConflict: 'session_id,user_id' }
     )
     if (error) {
-      console.error('submitMood failed:', error)
+      // console.error('submitMood failed:', error)
       return
     }
 

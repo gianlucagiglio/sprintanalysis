@@ -24,7 +24,7 @@ export function useUnseenBadges() {
     })
 
     if (error) {
-      console.error('checkBadges failed:', error)
+      // Error handling
     }
   }
 
@@ -42,7 +42,6 @@ export function useUnseenBadges() {
       .order('unlocked_at', { ascending: false })
 
     if (error) {
-      console.error('fetchUnseenBadges failed:', error)
       setLoading(false)
       return
     }
@@ -60,7 +59,6 @@ export function useUnseenBadges() {
       .eq('id', badgeId)
 
     if (error) {
-      console.error('markAsSeen failed:', error)
       return
     }
 
@@ -78,7 +76,6 @@ export function useUnseenBadges() {
       .eq('seen', false)
 
     if (error) {
-      console.error('markAllAsSeen failed:', error)
       return
     }
 
@@ -92,13 +89,11 @@ export function useUnseenBadges() {
       // Wait 3 seconds after login to let everything load
       await new Promise(resolve => setTimeout(resolve, 3000))
 
-      console.log('[Badges] Checking for new badges...')
       // Check for new badges in background
       await checkBadges()
 
       // Fetch unseen badges to show modal
       await fetchUnseenBadges()
-      console.log('[Badges] Badge check complete')
     }
 
     initializeBadges()

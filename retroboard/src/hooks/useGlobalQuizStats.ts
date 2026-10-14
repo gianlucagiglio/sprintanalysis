@@ -30,8 +30,6 @@ export function useGlobalQuizStats(teamId?: string | null) {
   const fetchStats = useCallback(async () => {
     if (!user) return
 
-    console.log('🔍 [LEADERBOARD DEBUG] activeLeague:', activeLeague)
-
     // 1. Get all teams the user is a member of
     const { data: memberships, error: membershipsError } = await supabase
       .from('team_members')
@@ -90,10 +88,8 @@ export function useGlobalQuizStats(teamId?: string | null) {
     // ⚠️ CRITICAL: Mostra solo quiz della league attiva
     // Se non c'è league attiva, NON mostrare quiz di league chiuse
     if (activeLeague) {
-      console.log('🔍 [LEADERBOARD DEBUG] Filtrando per league:', activeLeague.name, activeLeague.id)
       questionsQuery = questionsQuery.eq('league_id', activeLeague.id)
     } else {
-      console.log('⚠️ [LEADERBOARD DEBUG] Nessuna league attiva, mostrando solo legacy')
       // Nessuna league attiva: mostra solo quiz senza league (legacy)
       // oppure niente se vuoi che la leaderboard sia vuota
       questionsQuery = questionsQuery.is('league_id', null)
@@ -101,11 +97,6 @@ export function useGlobalQuizStats(teamId?: string | null) {
 
     const { data: allQuestions } = await questionsQuery
     const questions = allQuestions || []
-
-    console.log('🔍 [LEADERBOARD DEBUG] Questions trovate:', questions.length)
-    if (questions.length > 0) {
-      console.log('🔍 [LEADERBOARD DEBUG] Prime 3 domande:', questions.slice(0, 3))
-    }
 
     if (!questions.length) {
       setLoading(false)

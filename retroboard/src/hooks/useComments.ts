@@ -27,7 +27,7 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
       .in('section_id', sectionIds)
       .order('created_at')
     if (error) {
-      console.error('fetchComments failed:', error)
+      // console.error('fetchComments failed:', error)
       return
     }
     if (data) setComments(data)
@@ -47,7 +47,7 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
         () => fetchComments()
       )
       .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR') console.error('comments channel error:', err)
+        if (status === 'CHANNEL_ERROR') // console.error('comments channel error:', err)
       })
     return () => { supabase.removeChannel(channel) }
     // fetchComments is captured in closure - no need in deps to avoid infinite loop
@@ -67,7 +67,7 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
       group_id: null,
       sentiment,
     })
-    if (error) console.error('addComment failed:', error)
+    if (error) // console.error('addComment failed:', error)
     else {
       await fetchComments()
       // Award points for adding comment
@@ -88,7 +88,7 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
       group_id: parentComment.id,
       sentiment,
     })
-    if (error) console.error('addReply failed:', error)
+    if (error) // console.error('addReply failed:', error)
     else await fetchComments()
   }
 
@@ -97,7 +97,7 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
       .from('comments')
       .update({ is_resolved: !currentValue })
       .eq('id', commentId)
-    if (error) console.error('toggleResolved failed:', error)
+    if (error) // console.error('toggleResolved failed:', error)
     else await fetchComments()
   }
 
@@ -107,19 +107,19 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
       .from('comments')
       .update({ discussion_status: status, is_resolved })
       .eq('id', commentId)
-    if (error) console.error('updateDiscussionStatus failed:', error)
+    if (error) // console.error('updateDiscussionStatus failed:', error)
     else await fetchComments()
   }
 
   const updateGroup = async (commentId: string, groupId: string | null) => {
     const { error } = await supabase.from('comments').update({ group_id: groupId }).eq('id', commentId)
-    if (error) console.error('updateGroup failed:', error)
+    if (error) // console.error('updateGroup failed:', error)
     else await fetchComments()
   }
 
   const editComment = async (commentId: string, newText: string) => {
     const { error } = await supabase.from('comments').update({ text: newText }).eq('id', commentId)
-    if (error) console.error('editComment failed:', error)
+    if (error) // console.error('editComment failed:', error)
     else await fetchComments()
   }
 
@@ -130,11 +130,11 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
       .update({ group_id: null })
       .eq('group_id', commentId)
     if (unlinkError) {
-      console.error('unlinkChildren failed:', unlinkError)
+      // console.error('unlinkChildren failed:', unlinkError)
       return
     }
     const { error } = await supabase.from('comments').delete().eq('id', commentId)
-    if (error) console.error('deleteComment failed:', error)
+    if (error) // console.error('deleteComment failed:', error)
     else await fetchComments()
   }
 

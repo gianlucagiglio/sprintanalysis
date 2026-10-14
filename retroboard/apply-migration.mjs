@@ -21,11 +21,11 @@ const supabaseUrl = process.env.VITE_SUPABASE_URL?.trim()
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || process.env.VITE_SUPABASE_ANON_KEY?.trim()
 
 if (!supabaseUrl || !supabaseServiceKey) {
-  console.error('❌ Errore: VITE_SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY mancanti nel file .env')
-  console.error('\nAggiungi al file .env:')
-  console.error('VITE_SUPABASE_URL=your_url')
-  console.error('SUPABASE_SERVICE_ROLE_KEY=your_service_role_key')
-  console.error('\nOppure applica manualmente la migration tramite Supabase Dashboard.')
+  // console.error('❌ Errore: VITE_SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY mancanti nel file .env')
+  // console.error('\nAggiungi al file .env:')
+  // console.error('VITE_SUPABASE_URL=your_url')
+  // console.error('SUPABASE_SERVICE_ROLE_KEY=your_service_role_key')
+  // console.error('\nOppure applica manualmente la migration tramite Supabase Dashboard.')
   process.exit(1)
 }
 
@@ -43,14 +43,14 @@ let migrationSQL
 
 try {
   migrationSQL = readFileSync(migrationPath, 'utf-8')
-  console.log('✅ Migration 018 caricata da:', migrationPath)
+  // console.log('✅ Migration 018 caricata da:', migrationPath)
 } catch (error) {
-  console.error('❌ Errore nel leggere il file migration:', error.message)
+  // console.error('❌ Errore nel leggere il file migration:', error.message)
   process.exit(1)
 }
 
 // Esegui la migration
-console.log('\n🚀 Applicando migration 018...\n')
+// console.log('\n🚀 Applicando migration 018...\n')
 
 try {
   const { data, error } = await supabase.rpc('exec_sql', { sql: migrationSQL })
@@ -58,7 +58,7 @@ try {
   if (error) {
     // Se la funzione exec_sql non esiste, prova con query diretta
     // (richiede service_role key con privilegi admin)
-    console.log('⚠️  Tentativo con query diretta...')
+    // console.log('⚠️  Tentativo con query diretta...')
 
     // Dividi in statement singoli ed eseguili uno alla volta
     const statements = migrationSQL
@@ -68,7 +68,7 @@ try {
 
     for (const statement of statements) {
       if (statement.trim()) {
-        console.log(`\n📝 Eseguendo: ${statement.substring(0, 60)}...`)
+        // console.log(`\n📝 Eseguendo: ${statement.substring(0, 60)}...`)
 
         // Usa la connessione diretta al database
         const result = await fetch(`${supabaseUrl}/rest/v1/rpc/exec`, {
@@ -87,21 +87,21 @@ try {
       }
     }
 
-    console.log('\n✅ Migration 018 applicata con successo!')
+    // console.log('\n✅ Migration 018 applicata con successo!')
   } else {
-    console.log('✅ Migration 018 applicata con successo!')
-    if (data) console.log('📊 Risultato:', data)
+    // console.log('✅ Migration 018 applicata con successo!')
+    if (data) // console.log('📊 Risultato:', data)
   }
 
-  console.log('\n🎉 Ora puoi eliminare i team senza problemi!')
-  console.log('🧪 Testa la funzionalità dal TeamPage')
+  // console.log('\n🎉 Ora puoi eliminare i team senza problemi!')
+  // console.log('🧪 Testa la funzionalità dal TeamPage')
 
 } catch (error) {
-  console.error('\n❌ Errore durante l\'applicazione della migration:', error.message)
-  console.error('\n💡 Soluzione alternativa:')
-  console.error('1. Vai su https://supabase.com/dashboard/project/YOUR_PROJECT/editor')
-  console.error('2. Apri SQL Editor')
-  console.error('3. Copia e incolla il contenuto di supabase/migrations/018_fix_team_delete_cascade.sql')
-  console.error('4. Esegui la query')
+  // console.error('\n❌ Errore durante l\'applicazione della migration:', error.message)
+  // console.error('\n💡 Soluzione alternativa:')
+  // console.error('1. Vai su https://supabase.com/dashboard/project/YOUR_PROJECT/editor')
+  // console.error('2. Apri SQL Editor')
+  // console.error('3. Copia e incolla il contenuto di supabase/migrations/018_fix_team_delete_cascade.sql')
+  // console.error('4. Esegui la query')
   process.exit(1)
 }

@@ -36,7 +36,7 @@ const TABLES = [
 ]
 
 async function backupTable(tableName) {
-  console.log(`📦 Backup ${tableName}...`)
+  // console.log(`📦 Backup ${tableName}...`)
 
   const { data, error, count } = await supabase
     .from(tableName)
@@ -45,24 +45,24 @@ async function backupTable(tableName) {
     .limit(10000)
 
   if (error) {
-    console.error(`  ❌ Errore: ${error.message}`)
+    // console.error(`  ❌ Errore: ${error.message}`)
     return { table: tableName, count: 0, data: [] }
   }
 
-  console.log(`  ✅ ${count} record`)
+  // console.log(`  ✅ ${count} record`)
   return { table: tableName, count, data }
 }
 
 async function main() {
-  console.log('💾 Backup Database RetroBoard')
-  console.log('============================\n')
+  // console.log('💾 Backup Database RetroBoard')
+  // console.log('============================\n')
 
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19)
   const backupDir = join(__dirname, '..', 'backups')
   const backupFile = join(backupDir, `backup-${timestamp}.json`)
 
-  console.log(`📁 Directory backup: ${backupDir}`)
-  console.log(`📄 File backup: backup-${timestamp}.json\n`)
+  // console.log(`📁 Directory backup: ${backupDir}`)
+  // console.log(`📄 File backup: backup-${timestamp}.json\n`)
 
   // Create backups directory if not exists
   try {
@@ -89,23 +89,23 @@ async function main() {
   // Save backup
   writeFileSync(backupFile, JSON.stringify(backup, null, 2))
 
-  console.log('\n📊 Riepilogo Backup')
-  console.log('===================')
-  console.log(`Totale record: ${totalRecords}`)
-  console.log(`Tabelle: ${TABLES.length}`)
-  console.log(`\n✅ Backup salvato in: ${backupFile}`)
-  console.log(`📦 Dimensione: ${(Buffer.byteLength(JSON.stringify(backup)) / 1024).toFixed(2)} KB\n`)
+  // console.log('\n📊 Riepilogo Backup')
+  // console.log('===================')
+  // console.log(`Totale record: ${totalRecords}`)
+  // console.log(`Tabelle: ${TABLES.length}`)
+  // console.log(`\n✅ Backup salvato in: ${backupFile}`)
+  // console.log(`📦 Dimensione: ${(Buffer.byteLength(JSON.stringify(backup)) / 1024).toFixed(2)} KB\n`)
 
-  console.log('🔒 Il backup è sicuro localmente.')
-  console.log('📋 Ora puoi eseguire la migration con tranquillità!\n')
+  // console.log('🔒 Il backup è sicuro localmente.')
+  // console.log('📋 Ora puoi eseguire la migration con tranquillità!\n')
 
   // Summary by table
-  console.log('Dettaglio per tabella:')
+  // console.log('Dettaglio per tabella:')
   Object.entries(backup.tables).forEach(([table, data]) => {
     if (data.count > 0) {
-      console.log(`  ${table}: ${data.count} record`)
+      // console.log(`  ${table}: ${data.count} record`)
     }
   })
 }
 
-main().catch(console.error)
+main().catch(// console.error)

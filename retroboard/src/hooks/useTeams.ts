@@ -79,7 +79,6 @@ export function useTeams() {
       .single()
 
     if (error || !team) {
-      console.error('createTeam error:', error)
       return null
     }
 
@@ -166,7 +165,6 @@ export function useTeams() {
       role: 'member',
     })
     if (error) {
-      console.error('addMember error:', error)
       return false
     }
     return true
@@ -179,7 +177,6 @@ export function useTeams() {
       .eq('team_id', teamId)
       .eq('user_id', userId)
     if (error) {
-      console.error('removeMember error:', error)
       return false
     }
     return true
@@ -193,7 +190,6 @@ export function useTeams() {
       .eq('team_id', teamId)
       .eq('user_id', user.id)
     if (error) {
-      console.error('leaveTeam error:', error)
       return false
     }
     await fetchTeams()
@@ -203,7 +199,6 @@ export function useTeams() {
   const deleteTeam = async (teamId: string): Promise<boolean> => {
     const { error } = await supabase.from('teams').delete().eq('id', teamId)
     if (error) {
-      console.error('deleteTeam error:', error)
       return false
     }
     await fetchTeams()

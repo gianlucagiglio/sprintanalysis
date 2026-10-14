@@ -8,7 +8,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 async function checkDataDistribution() {
-  console.log('🔍 Verifico distribuzione dati tra team...\n')
+  // console.log('🔍 Verifico distribuzione dati tra team...\n')
 
   // Check teams
   const { data: teams } = await supabase
@@ -17,13 +17,13 @@ async function checkDataDistribution() {
     .order('name')
 
   if (!teams || teams.length === 0) {
-    console.log('❌ Nessun team trovato!')
+    // console.log('❌ Nessun team trovato!')
     return
   }
 
-  console.log(`📊 Team trovati: ${teams.length}\n`)
-  teams.forEach(t => console.log(`  - ${t.name} (${t.id.substring(0, 8)}...)`))
-  console.log('')
+  // console.log(`📊 Team trovati: ${teams.length}\n`)
+  teams.forEach(t => // console.log(`  - ${t.name} (${t.id.substring(0, 8)}...)`))
+  // console.log('')
 
   // Check sessions per team
   for (const team of teams) {
@@ -32,8 +32,8 @@ async function checkDataDistribution() {
       .select('*', { count: 'exact', head: true })
       .eq('team_id', team.id)
 
-    console.log(`Team "${team.name}":`)
-    console.log(`  Sessioni: ${sessionCount}`)
+    // console.log(`Team "${team.name}":`)
+    // console.log(`  Sessioni: ${sessionCount}`)
 
     if (sessionCount > 0) {
       // Get session IDs for this team
@@ -61,11 +61,11 @@ async function checkDataDistribution() {
         commentCount = count
       }
 
-      console.log(`  Commenti: ${commentCount}`)
-      console.log(`  Azioni: ${actionsRes.count}`)
-      console.log(`  Mood votes: ${moodsRes.count}`)
+      // console.log(`  Commenti: ${commentCount}`)
+      // console.log(`  Azioni: ${actionsRes.count}`)
+      // console.log(`  Mood votes: ${moodsRes.count}`)
     }
-    console.log('')
+    // console.log('')
   }
 
   // Check for sessions without team_id
@@ -75,8 +75,8 @@ async function checkDataDistribution() {
     .is('team_id', null)
 
   if (orphanedCount > 0) {
-    console.log(`⚠️  ATTENZIONE: ${orphanedCount} sessioni senza team_id!\n`)
+    // console.log(`⚠️  ATTENZIONE: ${orphanedCount} sessioni senza team_id!\n`)
   }
 }
 
-checkDataDistribution().catch(console.error)
+checkDataDistribution().catch(// console.error)

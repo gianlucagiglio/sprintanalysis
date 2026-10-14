@@ -67,7 +67,7 @@ export function AdminUsersPage() {
       )
     } catch (err: any) {
       setError(err.message || 'Errore durante il ban/unban')
-      console.error('Error ban/unban:', err)
+      // console.error('Error ban/unban:', err)
     } finally {
       setActionLoading(null)
     }
@@ -93,7 +93,7 @@ export function AdminUsersPage() {
       setSuccess(`${result.userName} è stato eliminato`)
     } catch (err: any) {
       setError(err.message || 'Errore durante l\'eliminazione')
-      console.error('Error delete user:', err)
+      // console.error('Error delete user:', err)
     } finally {
       setActionLoading(null)
     }

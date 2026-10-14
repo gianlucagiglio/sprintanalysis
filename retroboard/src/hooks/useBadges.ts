@@ -22,7 +22,7 @@ export function useBadges() {
       .order('sort_order')
 
     if (error) {
-      console.error('fetchAllBadges failed:', error)
+      // console.error('fetchAllBadges failed:', error)
       return
     }
 
@@ -43,7 +43,7 @@ export function useBadges() {
       .order('unlocked_at', { ascending: false })
 
     if (error) {
-      console.error('fetchUserBadges failed:', error)
+      // console.error('fetchUserBadges failed:', error)
       return
     }
 
@@ -106,7 +106,7 @@ export function useBadges() {
       .eq('user_id', user.id)
 
     if (error) {
-      console.error('markBadgeSeen failed:', error)
+      // console.error('markBadgeSeen failed:', error)
     } else {
       await fetchUserBadges()
     }
@@ -123,7 +123,7 @@ export function useBadges() {
       .eq('seen', false)
 
     if (error) {
-      console.error('markAllBadgesSeen failed:', error)
+      // console.error('markAllBadgesSeen failed:', error)
     } else {
       await fetchUserBadges()
     }

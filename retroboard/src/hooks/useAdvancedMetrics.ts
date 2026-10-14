@@ -112,7 +112,7 @@ export function useAdvancedMetrics(teamId?: string | null) {
           .limit(20)
 
         if (sessError || !sessions?.length) {
-          console.error('Error fetching sessions:', sessError)
+          // console.error('Error fetching sessions:', sessError)
           setTeamHealth({
             score: 0,
             trend: 'stable',
@@ -151,7 +151,7 @@ export function useAdvancedMetrics(teamId?: string | null) {
           .in('session_id', sessionIds)
 
         if (sectError) {
-          console.error('Error fetching sections:', sectError)
+          // console.error('Error fetching sections:', sectError)
         }
 
         const sectionIds = sections?.map(s => s.id) || []
@@ -167,7 +167,7 @@ export function useAdvancedMetrics(teamId?: string | null) {
               .in('section_id', batch)
 
             if (commError) {
-              console.error('Error fetching comments batch:', commError)
+              // console.error('Error fetching comments batch:', commError)
             } else if (batchComments) {
               allComments = [...allComments, ...batchComments]
             }
@@ -185,7 +185,7 @@ export function useAdvancedMetrics(teamId?: string | null) {
             .in('session_id', batch)
 
           if (actError) {
-            console.error('Error fetching actions batch:', actError)
+            // console.error('Error fetching actions batch:', actError)
           } else if (batchActions) {
             allActions = [...allActions, ...batchActions]
           }
@@ -265,7 +265,7 @@ export function useAdvancedMetrics(teamId?: string | null) {
             .in('comment_id', comments.map(c => c.id))
 
           if (votesError) {
-            console.error('Error fetching votes:', votesError)
+            // console.error('Error fetching votes:', votesError)
           }
 
           const votedCommentIds = new Set(votes?.map(v => v.comment_id) || [])
@@ -337,7 +337,7 @@ export function useAdvancedMetrics(teamId?: string | null) {
         setRedFlags(flags)
 
       } catch (error) {
-        console.error('Error fetching advanced metrics:', error)
+        // console.error('Error fetching advanced metrics:', error)
       } finally {
         setLoading(false)
       }

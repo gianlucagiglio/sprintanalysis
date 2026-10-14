@@ -66,7 +66,7 @@ export function useQuizThemeUsage(teamId?: string | null) {
 
         setUsage(grouped)
       } catch (err) {
-        console.error('Error fetching quiz theme usage:', err)
+        // console.error('Error fetching quiz theme usage:', err)
       } finally {
         setLoading(false)
       }

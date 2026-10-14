@@ -31,7 +31,7 @@ export function Navbar() {
     try {
       await signOut()
     } catch (e) {
-      console.error('signOut error:', e)
+      // console.error('signOut error:', e)
     }
     navigate('/login')
   }

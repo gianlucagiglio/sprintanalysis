@@ -33,7 +33,6 @@ export function useUserManagement() {
 
       setUsers(data || [])
     } catch (error) {
-      console.error('Error fetching users:', error)
       setUsers([])
     } finally {
       setLoading(false)

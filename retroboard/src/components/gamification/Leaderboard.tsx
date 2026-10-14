@@ -41,7 +41,7 @@ export function Leaderboard({ teamId, limit = 10 }: LeaderboardProps) {
     const { data, error } = await query
 
     if (error) {
-      console.error('fetchLeaderboard failed:', error)
+      // console.error('fetchLeaderboard failed:', error)
       setLoading(false)
       return
     }

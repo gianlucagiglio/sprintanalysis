@@ -19,7 +19,6 @@ export function useVotes(commentIds: string[], sessionId: string | undefined, ma
       .select('*')
       .in('comment_id', commentIds)
     if (error) {
-      console.error('fetchVotes failed:', error)
       return
     }
     if (data) {
@@ -53,7 +52,7 @@ export function useVotes(commentIds: string[], sessionId: string | undefined, ma
         () => fetchVotes()
       )
       .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR') console.error('votes channel error:', err)
+        if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
     return () => { supabase.removeChannel(channel) }
   }, [sessionId, commentIds, fetchVotes])
@@ -71,7 +70,7 @@ export function useVotes(commentIds: string[], sessionId: string | undefined, ma
       // Remove vote
       const { error } = await supabase.from('votes').delete().eq('id', existing.id)
       if (error) {
-        console.error('removeVote failed:', error)
+        // Error handling
       } else {
         await fetchVotes()
       }
@@ -84,7 +83,7 @@ export function useVotes(commentIds: string[], sessionId: string | undefined, ma
         value: 1,
       })
       if (error) {
-        console.error('castVote failed:', error)
+        // Error handling
       } else {
         await fetchVotes()
 

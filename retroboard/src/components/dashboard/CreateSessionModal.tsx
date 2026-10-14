@@ -99,7 +99,7 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
 
       navigate(`/session/${session.id}`)
     } catch (err) {
-      console.error('Error creating session:', err)
+      // console.error('Error creating session:', err)
     } finally {
       setLoading(false)
     }
