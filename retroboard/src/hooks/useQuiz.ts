@@ -64,7 +64,7 @@ export function useQuiz(sessionId: string | undefined) {
         { event: '*', schema: 'public', table: 'quiz_answers' },
         () => fetchAnswers()
       )
-      .subscribe((status, err) => {
+      .subscribe((status) => {
         if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
     return () => { supabase.removeChannel(channel) }

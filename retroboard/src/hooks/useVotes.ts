@@ -51,7 +51,7 @@ export function useVotes(commentIds: string[], sessionId: string | undefined, ma
         { event: '*', schema: 'public', table: 'votes' },
         () => fetchVotes()
       )
-      .subscribe((status, err) => {
+      .subscribe((status) => {
         if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
     return () => { supabase.removeChannel(channel) }

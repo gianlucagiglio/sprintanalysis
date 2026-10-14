@@ -181,7 +181,7 @@ export function Dashboard() {
         { event: 'DELETE', schema: 'public', table: 'sessions' },
         () => fetchSessions()
       )
-      .subscribe((status, err) => {
+      .subscribe((status) => {
         if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
     return () => { supabase.removeChannel(channel) }

@@ -37,7 +37,7 @@ export function useTeamMood(sessionId: string | undefined) {
         { event: '*', schema: 'public', table: 'team_mood_votes', filter: `session_id=eq.${sessionId}` },
         () => fetchTeamMoodVotes()
       )
-      .subscribe((status, err) => {
+      .subscribe((status) => {
         if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
     return () => { supabase.removeChannel(channel) }

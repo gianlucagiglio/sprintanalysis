@@ -46,7 +46,7 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
         { event: '*', schema: 'public', table: 'comments' },
         () => fetchComments()
       )
-      .subscribe((status, err) => {
+      .subscribe((status) => {
         if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
     return () => { supabase.removeChannel(channel) }

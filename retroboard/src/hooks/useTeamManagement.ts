@@ -93,14 +93,7 @@ export function useTeamManagement() {
   }
 
   const removeMember = async (memberId: string) => {
-    // Check if member exists BEFORE delete
-    const { data: beforeCheck } = await supabase
-      .from('team_members')
-      .select('*')
-      .eq('id', memberId)
-      .single()
-
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('team_members')
       .delete()
       .eq('id', memberId)
@@ -109,13 +102,6 @@ export function useTeamManagement() {
     if (error) {
       throw new Error(`Impossibile rimuovere il membro: ${error.message}`)
     }
-
-    // Check if member still exists AFTER delete
-    const { data: afterCheck } = await supabase
-      .from('team_members')
-      .select('*')
-      .eq('id', memberId)
-      .single()
 
     await fetchTeams()
   }

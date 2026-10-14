@@ -34,7 +34,7 @@ export function useParkingLot(sessionId: string | undefined) {
         { event: '*', schema: 'public', table: 'parking_lot_items', filter: `session_id=eq.${sessionId}` },
         () => fetchItems()
       )
-      .subscribe((status, err) => {
+      .subscribe((status) => {
         if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
     return () => { supabase.removeChannel(channel) }

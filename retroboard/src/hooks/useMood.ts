@@ -38,7 +38,7 @@ export function useMood(sessionId: string | undefined) {
         { event: '*', schema: 'public', table: 'mood_votes', filter: `session_id=eq.${sessionId}` },
         () => fetchMoodVotes()
       )
-      .subscribe((status, err) => {
+      .subscribe((status) => {
         if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
     return () => { supabase.removeChannel(channel) }

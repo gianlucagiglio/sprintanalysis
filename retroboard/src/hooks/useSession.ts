@@ -110,7 +110,7 @@ export function useSession(sessionId: string | undefined) {
         { event: '*', schema: 'public', table: 'session_participants', filter: `session_id=eq.${sessionId}` },
         () => fetchParticipants()
       )
-      .subscribe((status, err) => {
+      .subscribe((status) => {
         if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
 
