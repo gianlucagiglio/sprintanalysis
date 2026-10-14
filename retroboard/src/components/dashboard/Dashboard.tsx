@@ -154,6 +154,11 @@ export function Dashboard() {
     fetchSessions()
   }, [fetchSessions])
 
+  // Re-fetch when team changes
+  useEffect(() => {
+    fetchSessions()
+  }, [currentTeamId, fetchSessions])
+
   // Re-fetch every time the user navigates to this page
   useEffect(() => {
     if (location.pathname === '/retrospettive') {

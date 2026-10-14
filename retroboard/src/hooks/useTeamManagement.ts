@@ -21,6 +21,7 @@ export function useTeamManagement() {
   const [loading, setLoading] = useState(true)
 
   const fetchTeams = useCallback(async () => {
+    console.log('🔄 Fetching teams...')
     setLoading(true)
     try {
       // Fetch all teams
@@ -45,6 +46,8 @@ export function useTeamManagement() {
         .order('role', { ascending: true })
 
       if (membersError) throw membersError
+
+      console.log('📊 Fetched members:', membersData?.length || 0)
 
       // Group members by team
       const teamsWithMembers: TeamWithMembers[] = (teamsData || []).map((team) => {
@@ -93,6 +96,15 @@ export function useTeamManagement() {
   }
 
   const removeMember = async (memberId: string) => {
+    // Check if member exists BEFORE delete
+    const { data: beforeCheck } = await supabase
+      .from('team_members')
+      .select('*')
+      .eq('id', memberId)
+      .single()
+
+    console.log('🔍 Member BEFORE delete:', beforeCheck)
+
     const { data, error } = await supabase
       .from('team_members')
       .delete()
@@ -104,7 +116,17 @@ export function useTeamManagement() {
       throw new Error(`Impossibile rimuovere il membro: ${error.message}`)
     }
 
-    console.log('✅ Member removed successfully:', data)
+    console.log('✅ DELETE returned:', data)
+
+    // Check if member still exists AFTER delete
+    const { data: afterCheck } = await supabase
+      .from('team_members')
+      .select('*')
+      .eq('id', memberId)
+      .single()
+
+    console.log('🔍 Member AFTER delete (should be null):', afterCheck)
+
     await fetchTeams()
   }
 
