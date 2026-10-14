@@ -8,15 +8,17 @@ interface Team {
 interface TeamStore {
   currentTeamId: string | null
   teams: Team[]
+  initialized: boolean
   setCurrentTeamId: (id: string | null) => void
   initialize: (teams: Team[]) => void
 }
 
 const STORAGE_KEY = 'retroboard_currentTeamId'
 
-export const useTeamStore = create<TeamStore>((set) => ({
+export const useTeamStore = create<TeamStore>((set, get) => ({
   currentTeamId: null,
   teams: [],
+  initialized: false,
 
   setCurrentTeamId: (id) => {
     set({ currentTeamId: id })
@@ -28,7 +30,13 @@ export const useTeamStore = create<TeamStore>((set) => ({
   },
 
   initialize: (teams) => {
-    set({ teams })
+    // Se già inizializzato, aggiorna solo la lista teams senza toccare currentTeamId
+    if (get().initialized) {
+      set({ teams })
+      return
+    }
+
+    set({ teams, initialized: true })
 
     if (teams.length === 0) {
       set({ currentTeamId: null })
