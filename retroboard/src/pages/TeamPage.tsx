@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, FormEvent } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
+import { useTeamStore } from '@/stores/teamStore'
 import { useTeams } from '@/hooks/useTeams'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card } from '@/components/ui/Card'
@@ -31,6 +32,7 @@ export function TeamPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
+  const setCurrentTeamId = useTeamStore((s) => s.setCurrentTeamId)
   const { searchUsers, addMember, removeMember, leaveTeam, deleteTeam } = useTeams()
 
   const [team, setTeam] = useState<Team | null>(null)
@@ -105,7 +107,12 @@ export function TeamPage() {
     Promise.all([fetchTeam(), fetchMembers(), fetchSessions(), fetchActions()]).finally(() =>
       setLoading(false)
     )
-  }, [fetchTeam, fetchMembers, fetchSessions, fetchActions])
+
+    // Aggiorna il team corrente nello store quando si visualizza questa pagina
+    if (id) {
+      setCurrentTeamId(id)
+    }
+  }, [fetchTeam, fetchMembers, fetchSessions, fetchActions, id, setCurrentTeamId])
 
   const canManage = myRole === 'owner' || myRole === 'admin'
 
