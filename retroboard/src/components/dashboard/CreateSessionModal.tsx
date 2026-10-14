@@ -23,7 +23,7 @@ const DEFAULT_SECTIONS = [
 ]
 
 export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
-  const [title, setTitle] = useState('')
+  const [sprintNumber, setSprintNumber] = useState('')
   const [teamId, setTeamId] = useState<string>('')
   const [maxVotes, setMaxVotes] = useState(3)
   const [quizCategory, setQuizCategory] = useState<QuizCategory>('gen-z-tech')
@@ -48,14 +48,17 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
 
   const handleCreate = async (e: FormEvent) => {
     e.preventDefault()
-    if (!user || !title.trim() || !canCreate(user)) return
+    if (!user || !sprintNumber.trim() || !canCreate(user)) return
     setLoading(true)
 
     try {
+      // Genera automaticamente il titolo nel formato "Retro {numero}"
+      const title = `Retro ${sprintNumber.trim()}`
+
       const { data: session, error } = await supabase
         .from('sessions')
         .insert({
-          title: title.trim(),
+          title,
           organizer_id: user.id,
           max_participants: 20,
           max_votes: maxVotes,
@@ -108,14 +111,25 @@ export function CreateSessionModal({ open, onClose }: CreateSessionModalProps) {
   return (
     <Modal open={open} onClose={onClose} title="Nuova Retrospettiva">
       <form onSubmit={handleCreate} className="space-y-5">
-        <Input
-          label="Titolo sessione"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Es. Sprint 42 - Retrospettiva di fine ciclo"
-          required
-          autoFocus
-        />
+        <div className="space-y-1.5">
+          <label className="block text-sm font-medium text-retro-text">
+            Numero Sprint
+          </label>
+          <input
+            type="text"
+            value={sprintNumber}
+            onChange={(e) => setSprintNumber(e.target.value)}
+            placeholder="Es. 177"
+            required
+            autoFocus
+            className="w-full px-4 py-2.5 rounded-xl border border-white/40 bg-white/70 backdrop-blur-sm text-retro-text text-sm transition-all duration-200 focus:outline-none focus:border-glass-primary focus:ring-4 focus:ring-glass-primary/10 focus:bg-white/90"
+          />
+          {sprintNumber && (
+            <p className="text-xs text-retro-text-secondary">
+              Titolo generato: <span className="font-semibold text-retro-primary">Retro {sprintNumber}</span>
+            </p>
+          )}
+        </div>
         {teams.length > 0 && (
           <div className="space-y-1.5">
             <label className="block text-sm font-medium text-retro-text">
