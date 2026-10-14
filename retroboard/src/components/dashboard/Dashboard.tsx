@@ -159,22 +159,34 @@ export function Dashboard() {
   // Realtime: refetch when sessions are created or deleted
   useEffect(() => {
     if (!user) return
+
+    // Debounce refetch to avoid too many updates
+    let timeout: NodeJS.Timeout
+    const debouncedFetch = () => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => fetchSessions(), 300)
+    }
+
     const channel = supabase
       .channel('dashboard-sessions')
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'sessions' },
-        () => fetchSessions()
+        debouncedFetch
       )
       .on(
         'postgres_changes',
         { event: 'DELETE', schema: 'public', table: 'sessions' },
-        () => fetchSessions()
+        debouncedFetch
       )
       .subscribe((status) => {
         if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
-    return () => { supabase.removeChannel(channel) }
+
+    return () => {
+      clearTimeout(timeout)
+      supabase.removeChannel(channel)
+    }
   }, [user, fetchSessions])
 
   // Stats
@@ -290,7 +302,7 @@ export function Dashboard() {
   ]
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8 min-h-screen pb-20">
 
       {/* ── Header ── */}
       <PageHeader
