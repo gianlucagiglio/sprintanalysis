@@ -84,42 +84,32 @@ export function Dashboard() {
       return
     }
 
-    // 1. Sessions where user is a participant
-    const { data: participations, error: partError } = await supabase
-      .from('session_participants')
-      .select('session_id')
-      .eq('user_id', user.id)
-
-    if (partError) return // Don't clear sessions on transient error
-
-    const participantSessionIds = participations?.map((p) => p.session_id) || []
-
-    // 2. Sessions belonging to teams the user is a member of (filtered by currentTeamId if selected)
+    // Get user's team memberships
     const { data: memberships } = await supabase
       .from('team_members')
       .select('team_id')
       .eq('user_id', user.id)
 
-    let teamSessionIds: string[] = []
-    if (memberships?.length) {
-      let teamIds = memberships.map((m) => m.team_id)
+    let teamIds = memberships?.map((m) => m.team_id) || []
 
-      // Filter by currentTeamId if selected
-      if (currentTeamId) {
-        teamIds = teamIds.filter(id => id === currentTeamId)
-      }
-
-      if (teamIds.length > 0) {
-        const { data: teamSessions } = await supabase
-          .from('sessions')
-          .select('id')
-          .in('team_id', teamIds)
-        teamSessionIds = teamSessions?.map((s) => s.id) || []
-      }
+    // Filter by currentTeamId if selected
+    if (currentTeamId) {
+      teamIds = teamIds.filter(id => id === currentTeamId)
     }
 
-    // Merge and deduplicate
-    const allSessionIds = [...new Set([...participantSessionIds, ...teamSessionIds])]
+    if (teamIds.length === 0) {
+      setSessions([])
+      setLoading(false)
+      return
+    }
+
+    // Fetch ALL sessions from these teams (no participation filter needed)
+    const { data: teamSessions } = await supabase
+      .from('sessions')
+      .select('id')
+      .in('team_id', teamIds)
+
+    const allSessionIds = teamSessions?.map((s) => s.id) || []
 
     if (!allSessionIds.length) {
       setSessions([])
