@@ -17,10 +17,7 @@ export function canCreate(
   // Se è una stringa (email), non possiamo controllare permessi DB
   // Questo case è per backward compatibility, sempre false per sicurezza
   if (typeof userOrEmail === 'string') {
-    // console.warn(
-      '[permissions] canCreate chiamato con email invece di Profile. ' +
-      'Usa il profilo completo per controllo accurato.'
-    )
+    // Warning: canCreate chiamato con email invece di Profile
     return false
   }
 

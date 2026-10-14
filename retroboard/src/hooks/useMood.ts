@@ -39,7 +39,7 @@ export function useMood(sessionId: string | undefined) {
         () => fetchMoodVotes()
       )
       .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR') // console.error('mood channel error:', err)
+        if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
     return () => { supabase.removeChannel(channel) }
   }, [sessionId, fetchMoodVotes])

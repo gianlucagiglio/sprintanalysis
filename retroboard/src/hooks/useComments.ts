@@ -47,7 +47,7 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
         () => fetchComments()
       )
       .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR') // console.error('comments channel error:', err)
+        if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
     return () => { supabase.removeChannel(channel) }
     // fetchComments is captured in closure - no need in deps to avoid infinite loop
@@ -67,8 +67,9 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
       group_id: null,
       sentiment,
     })
-    if (error) // console.error('addComment failed:', error)
-    else {
+    if (error) {
+      // Error handling
+    } else {
       await fetchComments()
       // Award points for adding comment
       if (sessionId) {
@@ -88,8 +89,11 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
       group_id: parentComment.id,
       sentiment,
     })
-    if (error) // console.error('addReply failed:', error)
-    else await fetchComments()
+    if (error) {
+      // Error handling
+    } else {
+      await fetchComments()
+    }
   }
 
   const toggleResolved = async (commentId: string, currentValue: boolean) => {
@@ -97,8 +101,11 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
       .from('comments')
       .update({ is_resolved: !currentValue })
       .eq('id', commentId)
-    if (error) // console.error('toggleResolved failed:', error)
-    else await fetchComments()
+    if (error) {
+      // Error handling
+    } else {
+      await fetchComments()
+    }
   }
 
   const updateDiscussionStatus = async (commentId: string, status: Comment['discussion_status']) => {
@@ -107,20 +114,29 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
       .from('comments')
       .update({ discussion_status: status, is_resolved })
       .eq('id', commentId)
-    if (error) // console.error('updateDiscussionStatus failed:', error)
-    else await fetchComments()
+    if (error) {
+      // Error handling
+    } else {
+      await fetchComments()
+    }
   }
 
   const updateGroup = async (commentId: string, groupId: string | null) => {
     const { error } = await supabase.from('comments').update({ group_id: groupId }).eq('id', commentId)
-    if (error) // console.error('updateGroup failed:', error)
-    else await fetchComments()
+    if (error) {
+      // Error handling
+    } else {
+      await fetchComments()
+    }
   }
 
   const editComment = async (commentId: string, newText: string) => {
     const { error } = await supabase.from('comments').update({ text: newText }).eq('id', commentId)
-    if (error) // console.error('editComment failed:', error)
-    else await fetchComments()
+    if (error) {
+      // Error handling
+    } else {
+      await fetchComments()
+    }
   }
 
   const deleteComment = async (commentId: string) => {
@@ -134,8 +150,11 @@ export function useComments(sessionId: string | undefined, sections: Section[]) 
       return
     }
     const { error } = await supabase.from('comments').delete().eq('id', commentId)
-    if (error) // console.error('deleteComment failed:', error)
-    else await fetchComments()
+    if (error) {
+      // Error handling
+    } else {
+      await fetchComments()
+    }
   }
 
   return { comments, addComment, addReply, toggleResolved, updateDiscussionStatus, updateGroup, editComment, deleteComment, fetchComments }

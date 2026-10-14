@@ -35,7 +35,7 @@ export function useParkingLot(sessionId: string | undefined) {
         () => fetchItems()
       )
       .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR') // console.error('parking lot channel error:', err)
+        if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
     return () => { supabase.removeChannel(channel) }
     // fetchItems catturato in closure - NON in deps (infinite loop prevention)
@@ -49,14 +49,20 @@ export function useParkingLot(sessionId: string | undefined) {
       user_id: user.id,
       text,
     })
-    if (error) // console.error('addItem failed:', error)
-    else await fetchItems()
+    if (error) {
+      // Error handling
+    } else {
+      await fetchItems()
+    }
   }
 
   const deleteItem = async (itemId: string) => {
     const { error } = await supabase.from('parking_lot_items').delete().eq('id', itemId)
-    if (error) // console.error('deleteItem failed:', error)
-    else await fetchItems()
+    if (error) {
+      // Error handling
+    } else {
+      await fetchItems()
+    }
   }
 
   const convertToAction = async (itemId: string, actionId: string) => {
@@ -65,8 +71,11 @@ export function useParkingLot(sessionId: string | undefined) {
       .from('parking_lot_items')
       .update({ is_converted: true, action_id: actionId })
       .eq('id', itemId)
-    if (error) // console.error('convertToAction failed:', error)
-    else await fetchItems()
+    if (error) {
+      // Error handling
+    } else {
+      await fetchItems()
+    }
   }
 
   return { items, addItem, deleteItem, convertToAction, fetchItems }

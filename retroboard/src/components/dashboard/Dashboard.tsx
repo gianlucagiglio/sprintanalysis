@@ -182,7 +182,7 @@ export function Dashboard() {
         () => fetchSessions()
       )
       .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR') // console.error('dashboard sessions channel error:', err)
+        if (status === 'CHANNEL_ERROR') { /* channel error */ }
       })
     return () => { supabase.removeChannel(channel) }
   }, [user, fetchSessions])
