@@ -14,12 +14,14 @@ export function AppLayout({ children, sidebar }: AppLayoutProps) {
   const { teams } = useTeams()
   const initialize = useTeamStore(s => s.initialize)
 
-  // Inizializza teamStore quando i team sono caricati
+  // Inizializza teamStore quando i team sono caricati (solo una volta)
   useEffect(() => {
     if (teams.length > 0) {
       initialize(teams)
     }
-  }, [teams, initialize])
+    // initialize è stabile (Zustand), chiamalo solo quando team IDs cambiano realmente
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teams.map(t => t.id).join(',')])
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
